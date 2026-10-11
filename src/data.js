@@ -1,0 +1,12 @@
+export const verses = [
+ {text:'بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ',translation:'In the name of Allah, the Most Compassionate, the Most Merciful.',roman:['Bismi','Allāhi','ar-raḥmāni','ar-raḥīm']},
+ {text:'ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَـٰلَمِينَ',translation:'All praise is for Allah—Lord of all worlds.',roman:['Al-ḥamdu','lillāhi','rabbi','al-ʿālamīn']},
+ {text:'ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ',translation:'The Most Compassionate, the Most Merciful.',roman:['Ar-raḥmāni','ar-raḥīm']},
+ {text:'مَـٰلِكِ يَوْمِ ٱلدِّينِ',translation:'Master of the Day of Judgment.',roman:['Māliki','yawmi','ad-dīn']},
+ {text:'إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ',translation:'You alone we worship and You alone we ask for help.',roman:['Iyyāka','naʿbudu','wa-iyyāka','nastaʿīn']},
+ {text:'ٱهْدِنَا ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ',translation:'Guide us along the Straight Path.',roman:['Ihdinā','aṣ-ṣirāṭa','al-mustaqīm']},
+ {text:'صِرَٰطَ ٱلَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ ٱلْمَغْضُوبِ عَلَيْهِمْ وَلَا ٱلضَّآلِّينَ',translation:'The Path of those You have blessed—not those You are displeased with, or those who are astray.',roman:['Ṣirāṭa','alladhīna','anʿamta','ʿalayhim','ghayri','al-maghḍūbi','ʿalayhim','wa-lā','aḍ-ḍāllīn']}
+].map((v,i)=>({...v,id:i+1,words:v.text.split(' ')}));
+export function shuffled(n){const a=Array.from({length:n},(_,i)=>i);for(let i=n-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}if(n>1&&a.every((v,i)=>v===i))a.reverse();return a;}
+export const wordAudio=(ayah,index)=>`/audio/001_${String(ayah).padStart(3,'0')}_${String(index+1).padStart(3,'0')}.mp3`;
+export const verseAudio=ayah=>`/audio/001${String(ayah).padStart(3,'0')}.mp3`;

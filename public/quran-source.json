@@ -1,0 +1,156 @@
+{
+  "source": "https://api.quran.com/api/v4/verses/by_chapter/1?words=true&word_fields=text_uthmani,audio_url&per_page=50",
+  "verses": [
+    {
+      "verse_key": "1:1",
+      "words": [
+        {
+          "text": "بِسْمِ",
+          "audio_url": "wbw/001_001_001.mp3"
+        },
+        {
+          "text": "ٱللَّهِ",
+          "audio_url": "wbw/001_001_002.mp3"
+        },
+        {
+          "text": "ٱلرَّحْمَـٰنِ",
+          "audio_url": "wbw/001_001_003.mp3"
+        },
+        {
+          "text": "ٱلرَّحِيمِ",
+          "audio_url": "wbw/001_001_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "1:2",
+      "words": [
+        {
+          "text": "ٱلْحَمْدُ",
+          "audio_url": "wbw/001_002_001.mp3"
+        },
+        {
+          "text": "لِلَّهِ",
+          "audio_url": "wbw/001_002_002.mp3"
+        },
+        {
+          "text": "رَبِّ",
+          "audio_url": "wbw/001_002_003.mp3"
+        },
+        {
+          "text": "ٱلْعَـٰلَمِينَ",
+          "audio_url": "wbw/001_002_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "1:3",
+      "words": [
+        {
+          "text": "ٱلرَّحْمَـٰنِ",
+          "audio_url": "wbw/001_003_001.mp3"
+        },
+        {
+          "text": "ٱلرَّحِيمِ",
+          "audio_url": "wbw/001_003_002.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "1:4",
+      "words": [
+        {
+          "text": "مَـٰلِكِ",
+          "audio_url": "wbw/001_004_001.mp3"
+        },
+        {
+          "text": "يَوْمِ",
+          "audio_url": "wbw/001_004_002.mp3"
+        },
+        {
+          "text": "ٱلدِّينِ",
+          "audio_url": "wbw/001_004_003.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "1:5",
+      "words": [
+        {
+          "text": "إِيَّاكَ",
+          "audio_url": "wbw/001_005_001.mp3"
+        },
+        {
+          "text": "نَعْبُدُ",
+          "audio_url": "wbw/001_005_002.mp3"
+        },
+        {
+          "text": "وَإِيَّاكَ",
+          "audio_url": "wbw/001_005_003.mp3"
+        },
+        {
+          "text": "نَسْتَعِينُ",
+          "audio_url": "wbw/001_005_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "1:6",
+      "words": [
+        {
+          "text": "ٱهْدِنَا",
+          "audio_url": "wbw/001_006_001.mp3"
+        },
+        {
+          "text": "ٱلصِّرَٰطَ",
+          "audio_url": "wbw/001_006_002.mp3"
+        },
+        {
+          "text": "ٱلْمُسْتَقِيمَ",
+          "audio_url": "wbw/001_006_003.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "1:7",
+      "words": [
+        {
+          "text": "صِرَٰطَ",
+          "audio_url": "wbw/001_007_001.mp3"
+        },
+        {
+          "text": "ٱلَّذِينَ",
+          "audio_url": "wbw/001_007_002.mp3"
+        },
+        {
+          "text": "أَنْعَمْتَ",
+          "audio_url": "wbw/001_007_003.mp3"
+        },
+        {
+          "text": "عَلَيْهِمْ",
+          "audio_url": "wbw/001_007_004.mp3"
+        },
+        {
+          "text": "غَيْرِ",
+          "audio_url": "wbw/001_007_005.mp3"
+        },
+        {
+          "text": "ٱلْمَغْضُوبِ",
+          "audio_url": "wbw/001_007_006.mp3"
+        },
+        {
+          "text": "عَلَيْهِمْ",
+          "audio_url": "wbw/001_007_007.mp3"
+        },
+        {
+          "text": "وَلَا",
+          "audio_url": "wbw/001_007_008.mp3"
+        },
+        {
+          "text": "ٱلضَّآلِّينَ",
+          "audio_url": "wbw/001_007_009.mp3"
+        }
+      ]
+    }
+  ]
+}
