@@ -48,3 +48,11 @@ The library includes Al-Fatihah, An-Nas, Al-Falaq, Al-Ikhlas, Al-Masad, An-Nasr,
 Use the headphones button on a piece to hear that word once without adding or removing it. This works in the word bank, building zone, and hidden-word challenges. **Listen to my pieces** reads the learner's selected sequence exactly as arranged, including incorrect extra words, with the chosen repetition count and speed. It is a learning sequence, not a verified ayah. Remove a wrong piece by clicking its main body.
 
 All six distractors have Quran word recordings matched to their exact Arabic spelling and conjunctions. `src/distractor-audio.json` records each word's verse, position, local file, and original Quran.com CDN URL. No synthetic text-to-speech is needed. Quran.com's audio links have word-number offsets after pause marks in 110:3 and 104:4; the source manifest preserves the API's original links in `api_audio_url` and records the corrected ordinal filenames in `audio_url`. The app uses those word-order filenames for playback.
+
+## Advanced Ayah Chain mode
+
+Open **Ayah chain**, choose two or more ayahs from the current surah (or **Choose all**), and start a fresh chain. Multiple shuffled word puzzles are available together. Build each ayah from right to left, listen to individual words or partial word sequences, then add the completed ayah to the chain. Incorrect word order must be corrected before adding it.
+
+The finished ayah cards can be moved earlier/later with buttons or reordered by dragging onto another card. Return a card to its puzzle to edit its words. **Check my sequence** checks that every selected ayah is present in its Quranic order. Nonconsecutive selections are supported and explicitly labeled as skipping unselected ayahs.
+
+**Listen to my chain** plays full-ayah recordings in the learner's chosen order; **Listen in surah order** plays the selected ayahs in their canonical order for comparison. Both respect repeat and speed controls. References can be hidden for recall. Changing surahs clears incompatible chain selections. Chain work is held in memory for the current session and does not grant challenge XP or persist through page reloads.

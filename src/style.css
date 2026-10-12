@@ -1777,3 +1777,203 @@ footer {
   color: #7d8a78;
   margin: -13px 0 19px;
 }
+.sequence-panel {
+  margin-top: 20px;
+}
+.sequence-panel h3 {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: #365d5a;
+  margin: 0 0 10px;
+}
+.sequence-panel p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #788478;
+}
+.chain-config,
+.chain-reference,
+.chain-target,
+.chain-puzzle {
+  border: 2px solid #eadfc9;
+  border-radius: 20px;
+  background: #fff;
+  padding: 22px;
+  margin-bottom: 22px;
+  box-shadow: 0 5px 0 #f0e6d4;
+}
+.chain-config {
+  background: #f7f0ff;
+  border-color: #e4d8f1;
+  box-shadow: 0 5px 0 #ece2f6;
+}
+.chain-config fieldset {
+  border: 0;
+  padding: 0;
+  margin: 20px 0;
+}
+.chain-config legend {
+  font-size: 11px;
+  font-weight: bold;
+  color: #766585;
+  margin-bottom: 13px;
+}
+.chain-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.chain-choices label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fff;
+  color: #657d66;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid #e4dbe9;
+}
+.chain-choices input {
+  accent-color: #328d7a;
+  width: 17px;
+  height: 17px;
+}
+.chain-config-actions {
+  display: flex;
+  justify-content: space-between;
+}
+.chain-reference {
+  background: #edf7f2;
+  border-color: #d5e9df;
+}
+.chain-reference-ayah {
+  border-top: 1px solid #d4e5dc;
+  padding: 17px 0;
+}
+.chain-reference-ayah > span {
+  font-size: 10px;
+  color: #668a72;
+}
+.sequence-panel .arabic {
+  font-family: Uthmanic;
+}
+.chain-reference-ayah p {
+  font-size: 30px;
+  margin: 9px 0;
+  color: #285d4b;
+  line-height: 1.9;
+}
+.chain-reference-ayah small {
+  color: #819181;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.chain-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin: 20px 0;
+  border: 2px dashed #d6ddc4;
+  border-radius: 15px;
+  padding: 16px;
+  background: #faf8f0;
+}
+.chain-slot {
+  border: 1px solid #d4e3c6;
+  background: #eef5e5;
+  border-radius: 13px;
+  padding: 15px;
+}
+.chain-step {
+  font-size: 12px;
+  background: #d5e8c4;
+  padding: 7px 10px;
+  border-radius: 50%;
+  color: #547143;
+}
+.chain-slot .arabic {
+  font-size: 28px;
+  color: #315c48;
+  margin: 10px 0;
+}
+.chain-slot > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.chain-slot button {
+  background: #fff;
+  border: 1px solid #cadabc;
+  border-radius: 7px;
+  padding: 8px 11px;
+  font-size: 11px;
+  color: #638054;
+}
+.chain-playback {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 14px;
+}
+.chain-playback label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #728066;
+}
+.chain-puzzles > p {
+  margin-bottom: 20px;
+}
+.chain-puzzle .build-zone p {
+  direction: ltr;
+}
+.chain-puzzle-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.chain-target .builder-heading > span {
+  font-size: 12px;
+  color: #849577;
+}
+.sequence-panel .sequence-hint {
+  margin: 12px 0 18px;
+  font-size: 10px;
+}
+@media (max-width: 760px) {
+  .mode-row .tabs {
+    flex-wrap: wrap;
+  }
+  .mode-row .tab {
+    flex: 1 0 40%;
+    justify-content: center;
+  }
+  .chain-config,
+  .chain-reference,
+  .chain-target,
+  .chain-puzzle {
+    padding: 18px 10px;
+  }
+  .chain-puzzle .word-bank {
+    gap: 8px;
+  }
+  .chain-reference-ayah p {
+    font-size: 27px;
+  }
+  .chain-slot .arabic {
+    font-size: 26px;
+  }
+  .chain-puzzle-actions .primary {
+    font-size: 10px;
+    padding: 12px 10px;
+  }
+  .chain-puzzle-actions .text-button {
+    font-size: 10px;
+  }
+}

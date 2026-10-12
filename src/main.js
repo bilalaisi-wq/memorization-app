@@ -1,3 +1,4 @@
+import { mountSequence, stopSequence } from "./sequence.js";
 import "./style.css";
 import {
   surahs,
@@ -155,6 +156,7 @@ function render() {
     ["practice", "grid", "Practice"],
     ["quiz", "praise", "Puzzle quest"],
     ["recall", "eye", "Active recall"],
+    ["sequence", "book", "Ayah chain"],
   ]
     .map(
       ([m, ic, label]) =>
@@ -172,8 +174,10 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
   }</div><div class="builder-footer">${icon("grid")}<span>Match a left tab with the next right socket. Pictures are memory cues, not literal translations.</span></div></section>
 <section class="practice-controls"><div class="repeat-label"><span class="control-icon">${icon("repeat")}</span><div><strong>Little repetitions, lasting memory</strong><p>Give your selected words a few more moments.</p></div></div><div class="control-fields"><label>Repeat <select id="repeat"><option value="1" ${repeats === 1 ? "selected" : ""}>1 time</option><option value="3" ${repeats === 3 ? "selected" : ""}>3 times</option><option value="5" ${repeats === 5 ? "selected" : ""}>5 times</option><option value="10" ${repeats === 10 ? "selected" : ""}>10 times</option></select></label><label>Speed <select id="speed">${[0.75, 1, 1.25].map((s) => `<option value="${s}" ${speed === s ? "selected" : ""}>${s}×</option>`).join("")}</select></label></div></section><div class="feedback ${feedback.startsWith("Beautiful") ? "success" : ""}" role="status" aria-live="polite">${feedback}</div><div class="bottom-row">${mode === "quiz" ? '<button class="text-button" id="next-ayah">Next ayah →</button>' : ""}<span>✧ Progress is a practice, not a race.</span><button class="primary" id="next">${mode === "practice" ? "Complete & next ayah" : quizSolved ? "Play again →" : "Check my order"} ${icon(mode === "practice" ? "arrow" : "check")}</button></div><footer>Made for a mindful moment with the Quran.<span>Recitation: Mishary Rashid Alafasy · Uthmanic Hafs script</span></footer></main></div>`;
   bind();
+  if (mode === "sequence") mountSequence(document.querySelector("main"), surah);
 }
 function stop() {
+  stopSequence();
   run++;
   if (audio) {
     audio.pause();

@@ -547,3 +547,166 @@ test("audio is available on hidden pieces without revealing text", async ({
   await expect(page.locator(".feedback")).toContainText("Listening complete");
   await expect(blank).toHaveCount(count);
 });
+
+test("custom ayah chain builds multiple puzzles and checks word order and ayah order", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-mode="sequence"]').click();
+  await page.locator("#chain-start").click();
+  await expect(page.locator(".chain-puzzle")).toHaveCount(2);
+  await expect(page.locator(".chain-reference-ayah")).toHaveCount(2);
+  for (const i of [1, 0, 2, 3])
+    await page
+      .locator(`[data-puzzle="1"] .word-bank [data-chain-word="1:${i}"]`)
+      .click();
+  await page.locator('[data-chain-add="1"]').click();
+  await expect(page.locator(".sequence-panel .feedback")).toContainText(
+    "words in that puzzle are out of order",
+  );
+  await page.locator('[data-chain-reset="1"]').click();
+  for (const id of [2, 1]) {
+    for (let i = 0; i < 4; i++)
+      await page
+        .locator(
+          `[data-puzzle="${id}"] .word-bank [data-chain-word="${id}:${i}"]`,
+        )
+        .click();
+    await page.locator(`[data-chain-add="${id}"]`).click();
+  }
+  await page.locator("#chain-check").click();
+  await expect(page.locator(".sequence-panel .feedback")).toContainText(
+    "ayahs are out of order",
+  );
+  await page.locator('[data-chain-move="2:1"]').click();
+  await page.locator("#chain-check").click();
+  await expect(page.locator(".sequence-panel .feedback")).toContainText(
+    "Beautiful work",
+  );
+  await page.locator('[data-chain-remove="1"]').click();
+  await expect(
+    page.locator('[data-puzzle="1"] .build-zone .piece'),
+  ).toHaveCount(4);
+  await page.locator("#chain-check").click();
+  await expect(page.locator(".sequence-panel .feedback")).toContainText(
+    "Add all",
+  );
+  await page.locator('[data-chain-choice="2"]').uncheck();
+  await expect(page.locator("#chain-start")).toBeDisabled();
+  await page.locator('[data-chain-choice="3"]').check();
+  await page.locator("#chain-start").click();
+  await expect(page.locator(".chain-reference")).toContainText(
+    "nonconsecutive",
+  );
+  await expect(page.locator('[data-puzzle="3"] .word-bank .piece')).toHaveCount(
+    2,
+  );
+  await expect(page.locator('[data-puzzle="2"]')).toHaveCount(0);
+  await page.locator("#chain-reference-toggle").click();
+  await expect(page.locator(".chain-reference-ayah")).toHaveCount(0);
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.evaluate(() => scrollTo(0, 0));
+  await page.screenshot({ path: "/tmp/ayah-chain-mobile.png", fullPage: true });
+  await page.setViewportSize({ width: 1440, height: 1100 });
+  await page.evaluate(() => scrollTo(0, 0));
+  await page.screenshot({
+    path: "/tmp/ayah-chain-desktop.png",
+    fullPage: true,
+  });
+});
+
+test("chain audio follows learner order and reference order with repeats", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    window.played = [];
+    window.Audio = class {
+      constructor(url) {
+        this.url = url;
+      }
+      play() {
+        window.played.push(this.url);
+        setTimeout(() => this.onended?.(), 10);
+        return Promise.resolve();
+      }
+      pause() {}
+    };
+  });
+  await page.goto("/");
+  await page.locator("#surah-picker").selectOption("3");
+  await page.locator('[data-mode="sequence"]').click();
+  await page.locator("#chain-start").click();
+  await page.locator('[data-puzzle="1"] [data-chain-listen="1:0"]').click();
+  await expect(page.locator(".sequence-panel .feedback")).toContainText(
+    "Listening complete",
+  );
+  expect(await page.evaluate(() => window.played.at(-1))).toBe(
+    "/audio/112_001_001.mp3",
+  );
+  for (const [id, n] of [
+    [2, 2],
+    [1, 4],
+  ]) {
+    for (let i = 0; i < n; i++)
+      await page
+        .locator(
+          `[data-puzzle="${id}"] .word-bank [data-chain-word="${id}:${i}"]`,
+        )
+        .click();
+    await page.locator(`[data-chain-add="${id}"]`).click();
+  }
+  await page.evaluate(() => (window.played = []));
+  await page.locator("#chain-repeat").selectOption("3");
+  await page.locator("#chain-play").click();
+  await expect(page.locator(".sequence-panel .feedback")).toContainText(
+    "Listening complete",
+  );
+  expect(await page.evaluate(() => window.played)).toEqual([
+    "/audio/112002.mp3",
+    "/audio/112001.mp3",
+    "/audio/112002.mp3",
+    "/audio/112001.mp3",
+    "/audio/112002.mp3",
+    "/audio/112001.mp3",
+  ]);
+  await page.evaluate(() => (window.played = []));
+  await page.locator("#chain-repeat").selectOption("1");
+  await page.locator("#chain-reference-audio").click();
+  await expect(page.locator(".sequence-panel .feedback")).toContainText(
+    "Listening complete",
+  );
+  expect(await page.evaluate(() => window.played)).toEqual([
+    "/audio/112001.mp3",
+    "/audio/112002.mp3",
+  ]);
+});
+
+test("chain configuration works across all surahs and clears incompatible selections", async ({
+  page,
+}) => {
+  const { surahs } = await import("../src/data.js");
+  await page.goto("/");
+  await page.locator('[data-mode="sequence"]').click();
+  for (let c = 0; c < surahs.length; c++) {
+    await page.locator("#surah-picker").selectOption(String(c));
+    await page.locator("#chain-all").click();
+    await expect(page.locator("[data-chain-choice]:checked")).toHaveCount(
+      surahs[c].verses.length,
+    );
+    await page.locator("#chain-start").click();
+    await expect(page.locator(".chain-puzzle")).toHaveCount(
+      surahs[c].verses.length,
+    );
+    await expect(page.locator(".chain-slots")).toContainText(
+      "Finish a word puzzle",
+    );
+  }
+  await page.locator('[data-mode="practice"]').click();
+  await expect(page.locator(".sequence-panel")).toHaveCount(0);
+  await expect(page.locator(".word-bank .piece")).toHaveCount(1);
+});
