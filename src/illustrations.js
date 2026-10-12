@@ -1,5 +1,14 @@
 // Abstract learning cues, never depictions of Allah or divine attributes.
 const art = {
+  fire: '<path d="M20 4c4 8-1 10 5 14l3-6c10 13 3 23-8 23S3 24 12 15c-1 8 3 7 5 5s2-7 3-16z"/>',
+  elephant:
+    '<path d="M7 30V17C7 4 29 4 29 17v8h5v8c-9 3-10-3-10-8M9 24v10h6V24M19 24v10h5M11 14c12-6 12 14 1 10z"/><circle cx="26" cy="14" r="1"/>',
+  bird: '<path d="M5 22c7-17 16-1 20-8 5-6 9 0 8 6l5 2-6 2c-4 15-17 10-27-2zM8 22c5 9 15 7 16-2"/>',
+  food: '<path d="M4 22h32c-2 16-30 16-32 0zM10 16c-5-5 5-6 0-11M20 16c-5-5 5-6 0-11M30 16c-5-5 5-6 0-11"/>',
+  rope: '<path d="M12 4c25 0-15 13 9 15S0 34 28 36M18 4c25 0-15 13 9 15S6 34 34 36"/>',
+  stone:
+    '<path d="m6 26 5-17 17-3 8 15-8 14H12zM11 9l8 11 9-14M19 20l-7 15M19 20l17 1"/>',
+
   name: '<rect x="7" y="9" width="26" height="23" rx="6"/><path d="M13 17h14M13 24h8"/>',
   praise: '<path d="m20 5 4 10 11 1-8 7 2 11-9-6-9 6 2-11-8-7 11-1z"/>',
   worlds:

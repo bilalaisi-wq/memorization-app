@@ -307,6 +307,998 @@
           "audio_url": "wbw/112_004_005.mp3"
         }
       ]
+    },
+    {
+      "verse_key": "111:1",
+      "words": [
+        {
+          "text": "تَبَّتْ",
+          "audio_url": "wbw/111_001_001.mp3"
+        },
+        {
+          "text": "يَدَآ",
+          "audio_url": "wbw/111_001_002.mp3"
+        },
+        {
+          "text": "أَبِى",
+          "audio_url": "wbw/111_001_003.mp3"
+        },
+        {
+          "text": "لَهَبٍۢ",
+          "audio_url": "wbw/111_001_004.mp3"
+        },
+        {
+          "text": "وَتَبَّ",
+          "audio_url": "wbw/111_001_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "111:2",
+      "words": [
+        {
+          "text": "مَآ",
+          "audio_url": "wbw/111_002_001.mp3"
+        },
+        {
+          "text": "أَغْنَىٰ",
+          "audio_url": "wbw/111_002_002.mp3"
+        },
+        {
+          "text": "عَنْهُ",
+          "audio_url": "wbw/111_002_003.mp3"
+        },
+        {
+          "text": "مَالُهُۥ",
+          "audio_url": "wbw/111_002_004.mp3"
+        },
+        {
+          "text": "وَمَا",
+          "audio_url": "wbw/111_002_005.mp3"
+        },
+        {
+          "text": "كَسَبَ",
+          "audio_url": "wbw/111_002_006.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "111:3",
+      "words": [
+        {
+          "text": "سَيَصْلَىٰ",
+          "audio_url": "wbw/111_003_001.mp3"
+        },
+        {
+          "text": "نَارًۭا",
+          "audio_url": "wbw/111_003_002.mp3"
+        },
+        {
+          "text": "ذَاتَ",
+          "audio_url": "wbw/111_003_003.mp3"
+        },
+        {
+          "text": "لَهَبٍۢ",
+          "audio_url": "wbw/111_003_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "111:4",
+      "words": [
+        {
+          "text": "وَٱمْرَأَتُهُۥ",
+          "audio_url": "wbw/111_004_001.mp3"
+        },
+        {
+          "text": "حَمَّالَةَ",
+          "audio_url": "wbw/111_004_002.mp3"
+        },
+        {
+          "text": "ٱلْحَطَبِ",
+          "audio_url": "wbw/111_004_003.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "111:5",
+      "words": [
+        {
+          "text": "فِى",
+          "audio_url": "wbw/111_005_001.mp3"
+        },
+        {
+          "text": "جِيدِهَا",
+          "audio_url": "wbw/111_005_002.mp3"
+        },
+        {
+          "text": "حَبْلٌۭ",
+          "audio_url": "wbw/111_005_003.mp3"
+        },
+        {
+          "text": "مِّن",
+          "audio_url": "wbw/111_005_004.mp3"
+        },
+        {
+          "text": "مَّسَدٍۭ",
+          "audio_url": "wbw/111_005_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "110:1",
+      "words": [
+        {
+          "text": "إِذَا",
+          "audio_url": "wbw/110_001_001.mp3"
+        },
+        {
+          "text": "جَآءَ",
+          "audio_url": "wbw/110_001_002.mp3"
+        },
+        {
+          "text": "نَصْرُ",
+          "audio_url": "wbw/110_001_003.mp3"
+        },
+        {
+          "text": "ٱللَّهِ",
+          "audio_url": "wbw/110_001_004.mp3"
+        },
+        {
+          "text": "وَٱلْفَتْحُ",
+          "audio_url": "wbw/110_001_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "110:2",
+      "words": [
+        {
+          "text": "وَرَأَيْتَ",
+          "audio_url": "wbw/110_002_001.mp3"
+        },
+        {
+          "text": "ٱلنَّاسَ",
+          "audio_url": "wbw/110_002_002.mp3"
+        },
+        {
+          "text": "يَدْخُلُونَ",
+          "audio_url": "wbw/110_002_003.mp3"
+        },
+        {
+          "text": "فِى",
+          "audio_url": "wbw/110_002_004.mp3"
+        },
+        {
+          "text": "دِينِ",
+          "audio_url": "wbw/110_002_005.mp3"
+        },
+        {
+          "text": "ٱللَّهِ",
+          "audio_url": "wbw/110_002_006.mp3"
+        },
+        {
+          "text": "أَفْوَاجًۭا",
+          "audio_url": "wbw/110_002_007.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "110:3",
+      "words": [
+        {
+          "text": "فَسَبِّحْ",
+          "audio_url": "wbw/110_003_001.mp3"
+        },
+        {
+          "text": "بِحَمْدِ",
+          "audio_url": "wbw/110_003_002.mp3"
+        },
+        {
+          "text": "رَبِّكَ",
+          "audio_url": "wbw/110_003_003.mp3"
+        },
+        {
+          "text": "وَٱسْتَغْفِرْهُ ۚ",
+          "audio_url": "wbw/110_003_004.mp3"
+        },
+        {
+          "text": "إِنَّهُۥ",
+          "audio_url": "wbw/110_003_005.mp3",
+          "api_audio_url": "wbw/110_003_006.mp3"
+        },
+        {
+          "text": "كَانَ",
+          "audio_url": "wbw/110_003_006.mp3",
+          "api_audio_url": "wbw/110_003_007.mp3"
+        },
+        {
+          "text": "تَوَّابًۢا",
+          "audio_url": "wbw/110_003_007.mp3",
+          "api_audio_url": "wbw/110_003_008.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "109:1",
+      "words": [
+        {
+          "text": "قُلْ",
+          "audio_url": "wbw/109_001_001.mp3"
+        },
+        {
+          "text": "يَـٰٓأَيُّهَا",
+          "audio_url": "wbw/109_001_002.mp3"
+        },
+        {
+          "text": "ٱلْكَـٰفِرُونَ",
+          "audio_url": "wbw/109_001_003.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "109:2",
+      "words": [
+        {
+          "text": "لَآ",
+          "audio_url": "wbw/109_002_001.mp3"
+        },
+        {
+          "text": "أَعْبُدُ",
+          "audio_url": "wbw/109_002_002.mp3"
+        },
+        {
+          "text": "مَا",
+          "audio_url": "wbw/109_002_003.mp3"
+        },
+        {
+          "text": "تَعْبُدُونَ",
+          "audio_url": "wbw/109_002_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "109:3",
+      "words": [
+        {
+          "text": "وَلَآ",
+          "audio_url": "wbw/109_003_001.mp3"
+        },
+        {
+          "text": "أَنتُمْ",
+          "audio_url": "wbw/109_003_002.mp3"
+        },
+        {
+          "text": "عَـٰبِدُونَ",
+          "audio_url": "wbw/109_003_003.mp3"
+        },
+        {
+          "text": "مَآ",
+          "audio_url": "wbw/109_003_004.mp3"
+        },
+        {
+          "text": "أَعْبُدُ",
+          "audio_url": "wbw/109_003_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "109:4",
+      "words": [
+        {
+          "text": "وَلَآ",
+          "audio_url": "wbw/109_004_001.mp3"
+        },
+        {
+          "text": "أَنَا۠",
+          "audio_url": "wbw/109_004_002.mp3"
+        },
+        {
+          "text": "عَابِدٌۭ",
+          "audio_url": "wbw/109_004_003.mp3"
+        },
+        {
+          "text": "مَّا",
+          "audio_url": "wbw/109_004_004.mp3"
+        },
+        {
+          "text": "عَبَدتُّمْ",
+          "audio_url": "wbw/109_004_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "109:5",
+      "words": [
+        {
+          "text": "وَلَآ",
+          "audio_url": "wbw/109_005_001.mp3"
+        },
+        {
+          "text": "أَنتُمْ",
+          "audio_url": "wbw/109_005_002.mp3"
+        },
+        {
+          "text": "عَـٰبِدُونَ",
+          "audio_url": "wbw/109_005_003.mp3"
+        },
+        {
+          "text": "مَآ",
+          "audio_url": "wbw/109_005_004.mp3"
+        },
+        {
+          "text": "أَعْبُدُ",
+          "audio_url": "wbw/109_005_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "109:6",
+      "words": [
+        {
+          "text": "لَكُمْ",
+          "audio_url": "wbw/109_006_001.mp3"
+        },
+        {
+          "text": "دِينُكُمْ",
+          "audio_url": "wbw/109_006_002.mp3"
+        },
+        {
+          "text": "وَلِىَ",
+          "audio_url": "wbw/109_006_003.mp3"
+        },
+        {
+          "text": "دِينِ",
+          "audio_url": "wbw/109_006_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "108:1",
+      "words": [
+        {
+          "text": "إِنَّآ",
+          "audio_url": "wbw/108_001_001.mp3"
+        },
+        {
+          "text": "أَعْطَيْنَـٰكَ",
+          "audio_url": "wbw/108_001_002.mp3"
+        },
+        {
+          "text": "ٱلْكَوْثَرَ",
+          "audio_url": "wbw/108_001_003.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "108:2",
+      "words": [
+        {
+          "text": "فَصَلِّ",
+          "audio_url": "wbw/108_002_001.mp3"
+        },
+        {
+          "text": "لِرَبِّكَ",
+          "audio_url": "wbw/108_002_002.mp3"
+        },
+        {
+          "text": "وَٱنْحَرْ",
+          "audio_url": "wbw/108_002_003.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "108:3",
+      "words": [
+        {
+          "text": "إِنَّ",
+          "audio_url": "wbw/108_003_001.mp3"
+        },
+        {
+          "text": "شَانِئَكَ",
+          "audio_url": "wbw/108_003_002.mp3"
+        },
+        {
+          "text": "هُوَ",
+          "audio_url": "wbw/108_003_003.mp3"
+        },
+        {
+          "text": "ٱلْأَبْتَرُ",
+          "audio_url": "wbw/108_003_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "107:1",
+      "words": [
+        {
+          "text": "أَرَءَيْتَ",
+          "audio_url": "wbw/107_001_001.mp3"
+        },
+        {
+          "text": "ٱلَّذِى",
+          "audio_url": "wbw/107_001_002.mp3"
+        },
+        {
+          "text": "يُكَذِّبُ",
+          "audio_url": "wbw/107_001_003.mp3"
+        },
+        {
+          "text": "بِٱلدِّينِ",
+          "audio_url": "wbw/107_001_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "107:2",
+      "words": [
+        {
+          "text": "فَذَٰلِكَ",
+          "audio_url": "wbw/107_002_001.mp3"
+        },
+        {
+          "text": "ٱلَّذِى",
+          "audio_url": "wbw/107_002_002.mp3"
+        },
+        {
+          "text": "يَدُعُّ",
+          "audio_url": "wbw/107_002_003.mp3"
+        },
+        {
+          "text": "ٱلْيَتِيمَ",
+          "audio_url": "wbw/107_002_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "107:3",
+      "words": [
+        {
+          "text": "وَلَا",
+          "audio_url": "wbw/107_003_001.mp3"
+        },
+        {
+          "text": "يَحُضُّ",
+          "audio_url": "wbw/107_003_002.mp3"
+        },
+        {
+          "text": "عَلَىٰ",
+          "audio_url": "wbw/107_003_003.mp3"
+        },
+        {
+          "text": "طَعَامِ",
+          "audio_url": "wbw/107_003_004.mp3"
+        },
+        {
+          "text": "ٱلْمِسْكِينِ",
+          "audio_url": "wbw/107_003_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "107:4",
+      "words": [
+        {
+          "text": "فَوَيْلٌۭ",
+          "audio_url": "wbw/107_004_001.mp3"
+        },
+        {
+          "text": "لِّلْمُصَلِّينَ",
+          "audio_url": "wbw/107_004_002.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "107:5",
+      "words": [
+        {
+          "text": "ٱلَّذِينَ",
+          "audio_url": "wbw/107_005_001.mp3"
+        },
+        {
+          "text": "هُمْ",
+          "audio_url": "wbw/107_005_002.mp3"
+        },
+        {
+          "text": "عَن",
+          "audio_url": "wbw/107_005_003.mp3"
+        },
+        {
+          "text": "صَلَاتِهِمْ",
+          "audio_url": "wbw/107_005_004.mp3"
+        },
+        {
+          "text": "سَاهُونَ",
+          "audio_url": "wbw/107_005_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "107:6",
+      "words": [
+        {
+          "text": "ٱلَّذِينَ",
+          "audio_url": "wbw/107_006_001.mp3"
+        },
+        {
+          "text": "هُمْ",
+          "audio_url": "wbw/107_006_002.mp3"
+        },
+        {
+          "text": "يُرَآءُونَ",
+          "audio_url": "wbw/107_006_003.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "107:7",
+      "words": [
+        {
+          "text": "وَيَمْنَعُونَ",
+          "audio_url": "wbw/107_007_001.mp3"
+        },
+        {
+          "text": "ٱلْمَاعُونَ",
+          "audio_url": "wbw/107_007_002.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "106:1",
+      "words": [
+        {
+          "text": "لِإِيلَـٰفِ",
+          "audio_url": "wbw/106_001_001.mp3"
+        },
+        {
+          "text": "قُرَيْشٍ",
+          "audio_url": "wbw/106_001_002.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "106:2",
+      "words": [
+        {
+          "text": "إِۦلَـٰفِهِمْ",
+          "audio_url": "wbw/106_002_001.mp3"
+        },
+        {
+          "text": "رِحْلَةَ",
+          "audio_url": "wbw/106_002_002.mp3"
+        },
+        {
+          "text": "ٱلشِّتَآءِ",
+          "audio_url": "wbw/106_002_003.mp3"
+        },
+        {
+          "text": "وَٱلصَّيْفِ",
+          "audio_url": "wbw/106_002_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "106:3",
+      "words": [
+        {
+          "text": "فَلْيَعْبُدُوا۟",
+          "audio_url": "wbw/106_003_001.mp3"
+        },
+        {
+          "text": "رَبَّ",
+          "audio_url": "wbw/106_003_002.mp3"
+        },
+        {
+          "text": "هَـٰذَا",
+          "audio_url": "wbw/106_003_003.mp3"
+        },
+        {
+          "text": "ٱلْبَيْتِ",
+          "audio_url": "wbw/106_003_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "106:4",
+      "words": [
+        {
+          "text": "ٱلَّذِىٓ",
+          "audio_url": "wbw/106_004_001.mp3"
+        },
+        {
+          "text": "أَطْعَمَهُم",
+          "audio_url": "wbw/106_004_002.mp3"
+        },
+        {
+          "text": "مِّن",
+          "audio_url": "wbw/106_004_003.mp3"
+        },
+        {
+          "text": "جُوعٍۢ",
+          "audio_url": "wbw/106_004_004.mp3"
+        },
+        {
+          "text": "وَءَامَنَهُم",
+          "audio_url": "wbw/106_004_005.mp3"
+        },
+        {
+          "text": "مِّنْ",
+          "audio_url": "wbw/106_004_006.mp3"
+        },
+        {
+          "text": "خَوْفٍۭ",
+          "audio_url": "wbw/106_004_007.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "105:1",
+      "words": [
+        {
+          "text": "أَلَمْ",
+          "audio_url": "wbw/105_001_001.mp3"
+        },
+        {
+          "text": "تَرَ",
+          "audio_url": "wbw/105_001_002.mp3"
+        },
+        {
+          "text": "كَيْفَ",
+          "audio_url": "wbw/105_001_003.mp3"
+        },
+        {
+          "text": "فَعَلَ",
+          "audio_url": "wbw/105_001_004.mp3"
+        },
+        {
+          "text": "رَبُّكَ",
+          "audio_url": "wbw/105_001_005.mp3"
+        },
+        {
+          "text": "بِأَصْحَـٰبِ",
+          "audio_url": "wbw/105_001_006.mp3"
+        },
+        {
+          "text": "ٱلْفِيلِ",
+          "audio_url": "wbw/105_001_007.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "105:2",
+      "words": [
+        {
+          "text": "أَلَمْ",
+          "audio_url": "wbw/105_002_001.mp3"
+        },
+        {
+          "text": "يَجْعَلْ",
+          "audio_url": "wbw/105_002_002.mp3"
+        },
+        {
+          "text": "كَيْدَهُمْ",
+          "audio_url": "wbw/105_002_003.mp3"
+        },
+        {
+          "text": "فِى",
+          "audio_url": "wbw/105_002_004.mp3"
+        },
+        {
+          "text": "تَضْلِيلٍۢ",
+          "audio_url": "wbw/105_002_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "105:3",
+      "words": [
+        {
+          "text": "وَأَرْسَلَ",
+          "audio_url": "wbw/105_003_001.mp3"
+        },
+        {
+          "text": "عَلَيْهِمْ",
+          "audio_url": "wbw/105_003_002.mp3"
+        },
+        {
+          "text": "طَيْرًا",
+          "audio_url": "wbw/105_003_003.mp3"
+        },
+        {
+          "text": "أَبَابِيلَ",
+          "audio_url": "wbw/105_003_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "105:4",
+      "words": [
+        {
+          "text": "تَرْمِيهِم",
+          "audio_url": "wbw/105_004_001.mp3"
+        },
+        {
+          "text": "بِحِجَارَةٍۢ",
+          "audio_url": "wbw/105_004_002.mp3"
+        },
+        {
+          "text": "مِّن",
+          "audio_url": "wbw/105_004_003.mp3"
+        },
+        {
+          "text": "سِجِّيلٍۢ",
+          "audio_url": "wbw/105_004_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "105:5",
+      "words": [
+        {
+          "text": "فَجَعَلَهُمْ",
+          "audio_url": "wbw/105_005_001.mp3"
+        },
+        {
+          "text": "كَعَصْفٍۢ",
+          "audio_url": "wbw/105_005_002.mp3"
+        },
+        {
+          "text": "مَّأْكُولٍۭ",
+          "audio_url": "wbw/105_005_003.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "104:1",
+      "words": [
+        {
+          "text": "وَيْلٌۭ",
+          "audio_url": "wbw/104_001_001.mp3"
+        },
+        {
+          "text": "لِّكُلِّ",
+          "audio_url": "wbw/104_001_002.mp3"
+        },
+        {
+          "text": "هُمَزَةٍۢ",
+          "audio_url": "wbw/104_001_003.mp3"
+        },
+        {
+          "text": "لُّمَزَةٍ",
+          "audio_url": "wbw/104_001_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "104:2",
+      "words": [
+        {
+          "text": "ٱلَّذِى",
+          "audio_url": "wbw/104_002_001.mp3"
+        },
+        {
+          "text": "جَمَعَ",
+          "audio_url": "wbw/104_002_002.mp3"
+        },
+        {
+          "text": "مَالًۭا",
+          "audio_url": "wbw/104_002_003.mp3"
+        },
+        {
+          "text": "وَعَدَّدَهُۥ",
+          "audio_url": "wbw/104_002_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "104:3",
+      "words": [
+        {
+          "text": "يَحْسَبُ",
+          "audio_url": "wbw/104_003_001.mp3"
+        },
+        {
+          "text": "أَنَّ",
+          "audio_url": "wbw/104_003_002.mp3"
+        },
+        {
+          "text": "مَالَهُۥٓ",
+          "audio_url": "wbw/104_003_003.mp3"
+        },
+        {
+          "text": "أَخْلَدَهُۥ",
+          "audio_url": "wbw/104_003_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "104:4",
+      "words": [
+        {
+          "text": "كَلَّا ۖ",
+          "audio_url": "wbw/104_004_001.mp3"
+        },
+        {
+          "text": "لَيُنۢبَذَنَّ",
+          "audio_url": "wbw/104_004_002.mp3",
+          "api_audio_url": "wbw/104_004_003.mp3"
+        },
+        {
+          "text": "فِى",
+          "audio_url": "wbw/104_004_003.mp3",
+          "api_audio_url": "wbw/104_004_004.mp3"
+        },
+        {
+          "text": "ٱلْحُطَمَةِ",
+          "audio_url": "wbw/104_004_004.mp3",
+          "api_audio_url": "wbw/104_004_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "104:5",
+      "words": [
+        {
+          "text": "وَمَآ",
+          "audio_url": "wbw/104_005_001.mp3"
+        },
+        {
+          "text": "أَدْرَىٰكَ",
+          "audio_url": "wbw/104_005_002.mp3"
+        },
+        {
+          "text": "مَا",
+          "audio_url": "wbw/104_005_003.mp3"
+        },
+        {
+          "text": "ٱلْحُطَمَةُ",
+          "audio_url": "wbw/104_005_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "104:6",
+      "words": [
+        {
+          "text": "نَارُ",
+          "audio_url": "wbw/104_006_001.mp3"
+        },
+        {
+          "text": "ٱللَّهِ",
+          "audio_url": "wbw/104_006_002.mp3"
+        },
+        {
+          "text": "ٱلْمُوقَدَةُ",
+          "audio_url": "wbw/104_006_003.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "104:7",
+      "words": [
+        {
+          "text": "ٱلَّتِى",
+          "audio_url": "wbw/104_007_001.mp3"
+        },
+        {
+          "text": "تَطَّلِعُ",
+          "audio_url": "wbw/104_007_002.mp3"
+        },
+        {
+          "text": "عَلَى",
+          "audio_url": "wbw/104_007_003.mp3"
+        },
+        {
+          "text": "ٱلْأَفْـِٔدَةِ",
+          "audio_url": "wbw/104_007_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "104:8",
+      "words": [
+        {
+          "text": "إِنَّهَا",
+          "audio_url": "wbw/104_008_001.mp3"
+        },
+        {
+          "text": "عَلَيْهِم",
+          "audio_url": "wbw/104_008_002.mp3"
+        },
+        {
+          "text": "مُّؤْصَدَةٌۭ",
+          "audio_url": "wbw/104_008_003.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "104:9",
+      "words": [
+        {
+          "text": "فِى",
+          "audio_url": "wbw/104_009_001.mp3"
+        },
+        {
+          "text": "عَمَدٍۢ",
+          "audio_url": "wbw/104_009_002.mp3"
+        },
+        {
+          "text": "مُّمَدَّدَةٍۭ",
+          "audio_url": "wbw/104_009_003.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "103:1",
+      "words": [
+        {
+          "text": "وَٱلْعَصْرِ",
+          "audio_url": "wbw/103_001_001.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "103:2",
+      "words": [
+        {
+          "text": "إِنَّ",
+          "audio_url": "wbw/103_002_001.mp3"
+        },
+        {
+          "text": "ٱلْإِنسَـٰنَ",
+          "audio_url": "wbw/103_002_002.mp3"
+        },
+        {
+          "text": "لَفِى",
+          "audio_url": "wbw/103_002_003.mp3"
+        },
+        {
+          "text": "خُسْرٍ",
+          "audio_url": "wbw/103_002_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "103:3",
+      "words": [
+        {
+          "text": "إِلَّا",
+          "audio_url": "wbw/103_003_001.mp3"
+        },
+        {
+          "text": "ٱلَّذِينَ",
+          "audio_url": "wbw/103_003_002.mp3"
+        },
+        {
+          "text": "ءَامَنُوا۟",
+          "audio_url": "wbw/103_003_003.mp3"
+        },
+        {
+          "text": "وَعَمِلُوا۟",
+          "audio_url": "wbw/103_003_004.mp3"
+        },
+        {
+          "text": "ٱلصَّـٰلِحَـٰتِ",
+          "audio_url": "wbw/103_003_005.mp3"
+        },
+        {
+          "text": "وَتَوَاصَوْا۟",
+          "audio_url": "wbw/103_003_006.mp3"
+        },
+        {
+          "text": "بِٱلْحَقِّ",
+          "audio_url": "wbw/103_003_007.mp3"
+        },
+        {
+          "text": "وَتَوَاصَوْا۟",
+          "audio_url": "wbw/103_003_008.mp3"
+        },
+        {
+          "text": "بِٱلصَّبْرِ",
+          "audio_url": "wbw/103_003_009.mp3"
+        }
+      ]
     }
-  ]
+  ],
+  "audio_note": "Word recording filenames follow word ordinal. The API audio_url has offset errors after pause marks in 110:3 and 104:4; api_audio_url preserves those original values where corrected."
 }

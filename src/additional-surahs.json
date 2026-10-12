@@ -538,5 +538,1721 @@
         ]
       }
     ]
+  },
+  {
+    "id": 111,
+    "name": "Al-Masad",
+    "arabic": "المسد",
+    "meaning": "The Palm Fiber",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "تَبَّتْ يَدَآ أَبِى لَهَبٍۢ وَتَبَّ",
+        "words": [
+          "تَبَّتْ",
+          "يَدَآ",
+          "أَبِى",
+          "لَهَبٍۢ",
+          "وَتَبَّ"
+        ],
+        "roman": [
+          "tabbat",
+          "yadā",
+          "abī",
+          "lahabin",
+          "watabba"
+        ],
+        "translation": "May the hands of Abū Lahab be ruined, and ruined is he.",
+        "meanings": [
+          [
+            "Perish",
+            "name"
+          ],
+          [
+            "(the) hands",
+            "name"
+          ],
+          [
+            "(of) Abu",
+            "name"
+          ],
+          [
+            "Lahab",
+            "name"
+          ],
+          [
+            "and perish he",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "مَآ أَغْنَىٰ عَنْهُ مَالُهُۥ وَمَا كَسَبَ",
+        "words": [
+          "مَآ",
+          "أَغْنَىٰ",
+          "عَنْهُ",
+          "مَالُهُۥ",
+          "وَمَا",
+          "كَسَبَ"
+        ],
+        "roman": [
+          "mā",
+          "aghnā",
+          "ʿanhu",
+          "māluhu",
+          "wamā",
+          "kasaba"
+        ],
+        "translation": "His wealth will not avail him or that which he gained.",
+        "meanings": [
+          [
+            "Not",
+            "not"
+          ],
+          [
+            "(will) avail",
+            "name"
+          ],
+          [
+            "him",
+            "name"
+          ],
+          [
+            "his wealth",
+            "gift"
+          ],
+          [
+            "and what",
+            "name"
+          ],
+          [
+            "he earned",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "سَيَصْلَىٰ نَارًۭا ذَاتَ لَهَبٍۢ",
+        "words": [
+          "سَيَصْلَىٰ",
+          "نَارًۭا",
+          "ذَاتَ",
+          "لَهَبٍۢ"
+        ],
+        "roman": [
+          "sayaṣlā",
+          "nāran",
+          "dhāta",
+          "lahabin"
+        ],
+        "translation": "He will [enter to] burn in a Fire of [blazing] flame",
+        "meanings": [
+          [
+            "He will be burnt",
+            "name"
+          ],
+          [
+            "(in) a Fire",
+            "fire"
+          ],
+          [
+            "of",
+            "name"
+          ],
+          [
+            "Blazing Flames",
+            "fire"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "وَٱمْرَأَتُهُۥ حَمَّالَةَ ٱلْحَطَبِ",
+        "words": [
+          "وَٱمْرَأَتُهُۥ",
+          "حَمَّالَةَ",
+          "ٱلْحَطَبِ"
+        ],
+        "roman": [
+          "wa-im'ra-atuhu",
+          "ḥammālata",
+          "l-ḥaṭabi"
+        ],
+        "translation": "And his wife [as well] - the carrier of firewood.",
+        "meanings": [
+          [
+            "And his wife",
+            "name"
+          ],
+          [
+            "(the) carrier",
+            "name"
+          ],
+          [
+            "(of) firewood",
+            "fire"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "فِى جِيدِهَا حَبْلٌۭ مِّن مَّسَدٍۭ",
+        "words": [
+          "فِى",
+          "جِيدِهَا",
+          "حَبْلٌۭ",
+          "مِّن",
+          "مَّسَدٍۭ"
+        ],
+        "roman": [
+          "fī",
+          "jīdihā",
+          "ḥablun",
+          "min",
+          "masadin"
+        ],
+        "translation": "Around her neck is a rope of [twisted] fiber.",
+        "meanings": [
+          [
+            "In",
+            "name"
+          ],
+          [
+            "her neck",
+            "name"
+          ],
+          [
+            "(will be) a rope",
+            "rope"
+          ],
+          [
+            "of",
+            "name"
+          ],
+          [
+            "palm-fiber",
+            "rope"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 110,
+    "name": "An-Nasr",
+    "arabic": "النصر",
+    "meaning": "The Victory",
+    "origin": "Medinan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "إِذَا جَآءَ نَصْرُ ٱللَّهِ وَٱلْفَتْحُ",
+        "words": [
+          "إِذَا",
+          "جَآءَ",
+          "نَصْرُ",
+          "ٱللَّهِ",
+          "وَٱلْفَتْحُ"
+        ],
+        "roman": [
+          "idhā",
+          "jāa",
+          "naṣru",
+          "l-lahi",
+          "wal-fatḥu"
+        ],
+        "translation": "When the victory of Allāh has come and the conquest,",
+        "meanings": [
+          [
+            "When",
+            "name"
+          ],
+          [
+            "comes",
+            "name"
+          ],
+          [
+            "(the) Help",
+            "name"
+          ],
+          [
+            "(of) Allah",
+            "gold"
+          ],
+          [
+            "and the Victory",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "وَرَأَيْتَ ٱلنَّاسَ يَدْخُلُونَ فِى دِينِ ٱللَّهِ أَفْوَاجًۭا",
+        "words": [
+          "وَرَأَيْتَ",
+          "ٱلنَّاسَ",
+          "يَدْخُلُونَ",
+          "فِى",
+          "دِينِ",
+          "ٱللَّهِ",
+          "أَفْوَاجًۭا"
+        ],
+        "roman": [
+          "wara-ayta",
+          "l-nāsa",
+          "yadkhulūna",
+          "fī",
+          "dīni",
+          "l-lahi",
+          "afwājan"
+        ],
+        "translation": "And you see the people entering into the religion of Allāh in multitudes,",
+        "meanings": [
+          [
+            "And you see",
+            "name"
+          ],
+          [
+            "the people",
+            "people"
+          ],
+          [
+            "entering",
+            "name"
+          ],
+          [
+            "into",
+            "name"
+          ],
+          [
+            "(the) religion",
+            "name"
+          ],
+          [
+            "(of) Allah",
+            "gold"
+          ],
+          [
+            "(in) multitudes",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَٱسْتَغْفِرْهُ ۚ إِنَّهُۥ كَانَ تَوَّابًۢا",
+        "words": [
+          "فَسَبِّحْ",
+          "بِحَمْدِ",
+          "رَبِّكَ",
+          "وَٱسْتَغْفِرْهُ ۚ",
+          "إِنَّهُۥ",
+          "كَانَ",
+          "تَوَّابًۢا"
+        ],
+        "roman": [
+          "fasabbiḥ",
+          "biḥamdi",
+          "rabbika",
+          "wa-is'taghfir'hu",
+          "innahu",
+          "kāna",
+          "tawwāban"
+        ],
+        "translation": "Then exalt [Him] with praise of your Lord and ask forgiveness of Him. Indeed, He is ever Accepting of Repentance.",
+        "meanings": [
+          [
+            "Then glorify",
+            "name"
+          ],
+          [
+            "with (the) praises",
+            "name"
+          ],
+          [
+            "(of) your Lord",
+            "gold"
+          ],
+          [
+            "and ask His forgiveness",
+            "gift"
+          ],
+          [
+            "Indeed, He",
+            "name"
+          ],
+          [
+            "is",
+            "name"
+          ],
+          [
+            "Oft-Returning",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 109,
+    "name": "Al-Kafirun",
+    "arabic": "الكافرون",
+    "meaning": "The Disbelievers",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "قُلْ يَـٰٓأَيُّهَا ٱلْكَـٰفِرُونَ",
+        "words": [
+          "قُلْ",
+          "يَـٰٓأَيُّهَا",
+          "ٱلْكَـٰفِرُونَ"
+        ],
+        "roman": [
+          "qul",
+          "yāayyuhā",
+          "l-kāfirūna"
+        ],
+        "translation": "Say, \"O disbelievers,",
+        "meanings": [
+          [
+            "Say",
+            "name"
+          ],
+          [
+            "O",
+            "name"
+          ],
+          [
+            "disbelievers",
+            "people"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "لَآ أَعْبُدُ مَا تَعْبُدُونَ",
+        "words": [
+          "لَآ",
+          "أَعْبُدُ",
+          "مَا",
+          "تَعْبُدُونَ"
+        ],
+        "roman": [
+          "lā",
+          "aʿbudu",
+          "mā",
+          "taʿbudūna"
+        ],
+        "translation": "I do not worship what you worship.",
+        "meanings": [
+          [
+            "Not",
+            "not"
+          ],
+          [
+            "I worship",
+            "worship"
+          ],
+          [
+            "what",
+            "name"
+          ],
+          [
+            "you worship",
+            "worship"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "وَلَآ أَنتُمْ عَـٰبِدُونَ مَآ أَعْبُدُ",
+        "words": [
+          "وَلَآ",
+          "أَنتُمْ",
+          "عَـٰبِدُونَ",
+          "مَآ",
+          "أَعْبُدُ"
+        ],
+        "roman": [
+          "walā",
+          "antum",
+          "ʿābidūna",
+          "mā",
+          "aʿbudu"
+        ],
+        "translation": "Nor are you worshippers of what I worship.",
+        "meanings": [
+          [
+            "And not",
+            "not"
+          ],
+          [
+            "you",
+            "name"
+          ],
+          [
+            "(are) worshippers",
+            "worship"
+          ],
+          [
+            "(of) what",
+            "name"
+          ],
+          [
+            "I worship",
+            "worship"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "وَلَآ أَنَا۠ عَابِدٌۭ مَّا عَبَدتُّمْ",
+        "words": [
+          "وَلَآ",
+          "أَنَا۠",
+          "عَابِدٌۭ",
+          "مَّا",
+          "عَبَدتُّمْ"
+        ],
+        "roman": [
+          "walā",
+          "anā",
+          "ʿābidun",
+          "mā",
+          "ʿabadttum"
+        ],
+        "translation": "Nor will I be a worshipper of what you worship.",
+        "meanings": [
+          [
+            "And not",
+            "not"
+          ],
+          [
+            "I am",
+            "name"
+          ],
+          [
+            "a worshipper",
+            "worship"
+          ],
+          [
+            "(of) what",
+            "name"
+          ],
+          [
+            "you worship",
+            "worship"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "وَلَآ أَنتُمْ عَـٰبِدُونَ مَآ أَعْبُدُ",
+        "words": [
+          "وَلَآ",
+          "أَنتُمْ",
+          "عَـٰبِدُونَ",
+          "مَآ",
+          "أَعْبُدُ"
+        ],
+        "roman": [
+          "walā",
+          "antum",
+          "ʿābidūna",
+          "mā",
+          "aʿbudu"
+        ],
+        "translation": "Nor will you be worshippers of what I worship.",
+        "meanings": [
+          [
+            "And not",
+            "not"
+          ],
+          [
+            "you",
+            "name"
+          ],
+          [
+            "(are) worshippers",
+            "worship"
+          ],
+          [
+            "(of) what",
+            "name"
+          ],
+          [
+            "I worship",
+            "worship"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "لَكُمْ دِينُكُمْ وَلِىَ دِينِ",
+        "words": [
+          "لَكُمْ",
+          "دِينُكُمْ",
+          "وَلِىَ",
+          "دِينِ"
+        ],
+        "roman": [
+          "lakum",
+          "dīnukum",
+          "waliya",
+          "dīni"
+        ],
+        "translation": "For you is your religion, and for me is my religion.\"",
+        "meanings": [
+          [
+            "For you",
+            "name"
+          ],
+          [
+            "(is) your religion",
+            "name"
+          ],
+          [
+            "and for me",
+            "name"
+          ],
+          [
+            "(is) my religion",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 108,
+    "name": "Al-Kawthar",
+    "arabic": "الكوثر",
+    "meaning": "Abundance",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "إِنَّآ أَعْطَيْنَـٰكَ ٱلْكَوْثَرَ",
+        "words": [
+          "إِنَّآ",
+          "أَعْطَيْنَـٰكَ",
+          "ٱلْكَوْثَرَ"
+        ],
+        "roman": [
+          "innā",
+          "aʿṭaynāka",
+          "l-kawthara"
+        ],
+        "translation": "Indeed, We have granted you, [O Muḥammad], al-Kawthar.",
+        "meanings": [
+          [
+            "Indeed, We",
+            "name"
+          ],
+          [
+            "We have given you",
+            "gift"
+          ],
+          [
+            "Al-Kauthar",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "فَصَلِّ لِرَبِّكَ وَٱنْحَرْ",
+        "words": [
+          "فَصَلِّ",
+          "لِرَبِّكَ",
+          "وَٱنْحَرْ"
+        ],
+        "roman": [
+          "faṣalli",
+          "lirabbika",
+          "wa-in'ḥar"
+        ],
+        "translation": "So pray to your Lord and offer sacrifice [to Him alone].",
+        "meanings": [
+          [
+            "So pray",
+            "worship"
+          ],
+          [
+            "to your Lord",
+            "gold"
+          ],
+          [
+            "and sacrifice",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "إِنَّ شَانِئَكَ هُوَ ٱلْأَبْتَرُ",
+        "words": [
+          "إِنَّ",
+          "شَانِئَكَ",
+          "هُوَ",
+          "ٱلْأَبْتَرُ"
+        ],
+        "roman": [
+          "inna",
+          "shāni-aka",
+          "huwa",
+          "l-abtaru"
+        ],
+        "translation": "Indeed, your enemy is the one cut off.",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "your enemy ",
+            "name"
+          ],
+          [
+            "he (is)",
+            "name"
+          ],
+          [
+            "the one cut off",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 107,
+    "name": "Al-Ma’un",
+    "arabic": "الماعون",
+    "meaning": "Small Kindnesses",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "أَرَءَيْتَ ٱلَّذِى يُكَذِّبُ بِٱلدِّينِ",
+        "words": [
+          "أَرَءَيْتَ",
+          "ٱلَّذِى",
+          "يُكَذِّبُ",
+          "بِٱلدِّينِ"
+        ],
+        "roman": [
+          "ara-ayta",
+          "alladhī",
+          "yukadhibu",
+          "bil-dīni"
+        ],
+        "translation": "Have you seen the one who denies the Recompense?",
+        "meanings": [
+          [
+            "Have you seen",
+            "name"
+          ],
+          [
+            "the one who",
+            "name"
+          ],
+          [
+            "denies",
+            "name"
+          ],
+          [
+            "the Judgment",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "فَذَٰلِكَ ٱلَّذِى يَدُعُّ ٱلْيَتِيمَ",
+        "words": [
+          "فَذَٰلِكَ",
+          "ٱلَّذِى",
+          "يَدُعُّ",
+          "ٱلْيَتِيمَ"
+        ],
+        "roman": [
+          "fadhālika",
+          "alladhī",
+          "yaduʿʿu",
+          "l-yatīma"
+        ],
+        "translation": "For that is the one who drives away the orphan",
+        "meanings": [
+          [
+            "Then that",
+            "name"
+          ],
+          [
+            "(is) the one who",
+            "name"
+          ],
+          [
+            "repulses",
+            "name"
+          ],
+          [
+            "the orphan",
+            "people"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "وَلَا يَحُضُّ عَلَىٰ طَعَامِ ٱلْمِسْكِينِ",
+        "words": [
+          "وَلَا",
+          "يَحُضُّ",
+          "عَلَىٰ",
+          "طَعَامِ",
+          "ٱلْمِسْكِينِ"
+        ],
+        "roman": [
+          "walā",
+          "yaḥuḍḍu",
+          "ʿalā",
+          "ṭaʿāmi",
+          "l-mis'kīni"
+        ],
+        "translation": "And does not encourage the feeding of the poor.",
+        "meanings": [
+          [
+            "And (does) not",
+            "not"
+          ],
+          [
+            "feel the urge",
+            "name"
+          ],
+          [
+            "to",
+            "name"
+          ],
+          [
+            "feed",
+            "food"
+          ],
+          [
+            "the poor",
+            "people"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "فَوَيْلٌۭ لِّلْمُصَلِّينَ",
+        "words": [
+          "فَوَيْلٌۭ",
+          "لِّلْمُصَلِّينَ"
+        ],
+        "roman": [
+          "fawaylun",
+          "lil'muṣallīna"
+        ],
+        "translation": "So woe to those who pray",
+        "meanings": [
+          [
+            "So woe",
+            "not"
+          ],
+          [
+            "to those who pray",
+            "worship"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "ٱلَّذِينَ هُمْ عَن صَلَاتِهِمْ سَاهُونَ",
+        "words": [
+          "ٱلَّذِينَ",
+          "هُمْ",
+          "عَن",
+          "صَلَاتِهِمْ",
+          "سَاهُونَ"
+        ],
+        "roman": [
+          "alladhīna",
+          "hum",
+          "ʿan",
+          "ṣalātihim",
+          "sāhūna"
+        ],
+        "translation": "[But] who are heedless of their prayer -",
+        "meanings": [
+          [
+            "Those who",
+            "name"
+          ],
+          [
+            "[they]",
+            "name"
+          ],
+          [
+            "about",
+            "name"
+          ],
+          [
+            "their prayers",
+            "worship"
+          ],
+          [
+            "(are) neglectful",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "ٱلَّذِينَ هُمْ يُرَآءُونَ",
+        "words": [
+          "ٱلَّذِينَ",
+          "هُمْ",
+          "يُرَآءُونَ"
+        ],
+        "roman": [
+          "alladhīna",
+          "hum",
+          "yurāūna"
+        ],
+        "translation": "Those who make show [of their deeds]",
+        "meanings": [
+          [
+            "Those who",
+            "name"
+          ],
+          [
+            "[they]",
+            "name"
+          ],
+          [
+            "make show",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "وَيَمْنَعُونَ ٱلْمَاعُونَ",
+        "words": [
+          "وَيَمْنَعُونَ",
+          "ٱلْمَاعُونَ"
+        ],
+        "roman": [
+          "wayamnaʿūna",
+          "l-māʿūna"
+        ],
+        "translation": "And withhold [simple] assistance.",
+        "meanings": [
+          [
+            "And they deny",
+            "name"
+          ],
+          [
+            "[the] small kindnesses",
+            "gift"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 106,
+    "name": "Quraysh",
+    "arabic": "قريش",
+    "meaning": "Quraysh",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "لِإِيلَـٰفِ قُرَيْشٍ",
+        "words": [
+          "لِإِيلَـٰفِ",
+          "قُرَيْشٍ"
+        ],
+        "roman": [
+          "liīlāfi",
+          "qurayshin"
+        ],
+        "translation": "For the accustomed security of the Quraysh -",
+        "meanings": [
+          [
+            "For (the) familiarity",
+            "name"
+          ],
+          [
+            "(of the) Quraish",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "إِۦلَـٰفِهِمْ رِحْلَةَ ٱلشِّتَآءِ وَٱلصَّيْفِ",
+        "words": [
+          "إِۦلَـٰفِهِمْ",
+          "رِحْلَةَ",
+          "ٱلشِّتَآءِ",
+          "وَٱلصَّيْفِ"
+        ],
+        "roman": [
+          "īlāfihim",
+          "riḥ'lata",
+          "l-shitāi",
+          "wal-ṣayfi"
+        ],
+        "translation": "Their accustomed security [in] the caravan of winter and summer -",
+        "meanings": [
+          [
+            "Their familiarity",
+            "name"
+          ],
+          [
+            "(with the) journey",
+            "name"
+          ],
+          [
+            "(of) winter",
+            "name"
+          ],
+          [
+            "and summer",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "فَلْيَعْبُدُوا۟ رَبَّ هَـٰذَا ٱلْبَيْتِ",
+        "words": [
+          "فَلْيَعْبُدُوا۟",
+          "رَبَّ",
+          "هَـٰذَا",
+          "ٱلْبَيْتِ"
+        ],
+        "roman": [
+          "falyaʿbudū",
+          "rabba",
+          "hādhā",
+          "l-bayti"
+        ],
+        "translation": "Let them worship the Lord of this House,",
+        "meanings": [
+          [
+            "So let them worship",
+            "worship"
+          ],
+          [
+            "(the) Lord",
+            "name"
+          ],
+          [
+            "(of) this",
+            "name"
+          ],
+          [
+            "House",
+            "worship"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "ٱلَّذِىٓ أَطْعَمَهُم مِّن جُوعٍۢ وَءَامَنَهُم مِّنْ خَوْفٍۭ",
+        "words": [
+          "ٱلَّذِىٓ",
+          "أَطْعَمَهُم",
+          "مِّن",
+          "جُوعٍۢ",
+          "وَءَامَنَهُم",
+          "مِّنْ",
+          "خَوْفٍۭ"
+        ],
+        "roman": [
+          "alladhī",
+          "aṭʿamahum",
+          "min",
+          "jūʿin",
+          "waāmanahum",
+          "min",
+          "khawfin"
+        ],
+        "translation": "Who has fed them, [saving them] from hunger and made them safe, [saving them] from fear.",
+        "meanings": [
+          [
+            "The One Who",
+            "name"
+          ],
+          [
+            "feeds them",
+            "food"
+          ],
+          [
+            "[from]",
+            "name"
+          ],
+          [
+            "(against) hunger",
+            "food"
+          ],
+          [
+            "and gives them security",
+            "gift"
+          ],
+          [
+            "from",
+            "name"
+          ],
+          [
+            "fear",
+            "help"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 105,
+    "name": "Al-Fil",
+    "arabic": "الفيل",
+    "meaning": "The Elephant",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَـٰبِ ٱلْفِيلِ",
+        "words": [
+          "أَلَمْ",
+          "تَرَ",
+          "كَيْفَ",
+          "فَعَلَ",
+          "رَبُّكَ",
+          "بِأَصْحَـٰبِ",
+          "ٱلْفِيلِ"
+        ],
+        "roman": [
+          "alam",
+          "tara",
+          "kayfa",
+          "faʿala",
+          "rabbuka",
+          "bi-aṣḥābi",
+          "l-fīli"
+        ],
+        "translation": "Have you not considered, [O Muḥammad], how your Lord dealt with the companions of the elephant?",
+        "meanings": [
+          [
+            "Have not",
+            "not"
+          ],
+          [
+            "you seen",
+            "name"
+          ],
+          [
+            "how",
+            "name"
+          ],
+          [
+            "dealt",
+            "name"
+          ],
+          [
+            "your Lord",
+            "gold"
+          ],
+          [
+            "with (the) Companions",
+            "name"
+          ],
+          [
+            "(of the) Elephant",
+            "elephant"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "أَلَمْ يَجْعَلْ كَيْدَهُمْ فِى تَضْلِيلٍۢ",
+        "words": [
+          "أَلَمْ",
+          "يَجْعَلْ",
+          "كَيْدَهُمْ",
+          "فِى",
+          "تَضْلِيلٍۢ"
+        ],
+        "roman": [
+          "alam",
+          "yajʿal",
+          "kaydahum",
+          "fī",
+          "taḍlīlin"
+        ],
+        "translation": "Did He not make their plan into misguidance?",
+        "meanings": [
+          [
+            "Did not",
+            "not"
+          ],
+          [
+            "He make",
+            "name"
+          ],
+          [
+            "their plan",
+            "name"
+          ],
+          [
+            "go",
+            "name"
+          ],
+          [
+            "astray",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ",
+        "words": [
+          "وَأَرْسَلَ",
+          "عَلَيْهِمْ",
+          "طَيْرًا",
+          "أَبَابِيلَ"
+        ],
+        "roman": [
+          "wa-arsala",
+          "ʿalayhim",
+          "ṭayran",
+          "abābīla"
+        ],
+        "translation": "And He sent against them birds in flocks,",
+        "meanings": [
+          [
+            "And He sent",
+            "name"
+          ],
+          [
+            "against them",
+            "name"
+          ],
+          [
+            "birds",
+            "bird"
+          ],
+          [
+            "(in) flocks",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "تَرْمِيهِم بِحِجَارَةٍۢ مِّن سِجِّيلٍۢ",
+        "words": [
+          "تَرْمِيهِم",
+          "بِحِجَارَةٍۢ",
+          "مِّن",
+          "سِجِّيلٍۢ"
+        ],
+        "roman": [
+          "tarmīhim",
+          "biḥijāratin",
+          "min",
+          "sijjīlin"
+        ],
+        "translation": "Striking them with stones of hard clay,",
+        "meanings": [
+          [
+            "Striking them",
+            "name"
+          ],
+          [
+            "with stones",
+            "stone"
+          ],
+          [
+            "of",
+            "name"
+          ],
+          [
+            "baked clay",
+            "stone"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "فَجَعَلَهُمْ كَعَصْفٍۢ مَّأْكُولٍۭ",
+        "words": [
+          "فَجَعَلَهُمْ",
+          "كَعَصْفٍۢ",
+          "مَّأْكُولٍۭ"
+        ],
+        "roman": [
+          "fajaʿalahum",
+          "kaʿaṣfin",
+          "makūlin"
+        ],
+        "translation": "And He made them like eaten straw.",
+        "meanings": [
+          [
+            "Then He made them",
+            "name"
+          ],
+          [
+            "like straw",
+            "name"
+          ],
+          [
+            "eaten up",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 104,
+    "name": "Al-Humazah",
+    "arabic": "الهمزة",
+    "meaning": "The Slanderer",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَيْلٌۭ لِّكُلِّ هُمَزَةٍۢ لُّمَزَةٍ",
+        "words": [
+          "وَيْلٌۭ",
+          "لِّكُلِّ",
+          "هُمَزَةٍۢ",
+          "لُّمَزَةٍ"
+        ],
+        "roman": [
+          "waylun",
+          "likulli",
+          "humazatin",
+          "lumazatin"
+        ],
+        "translation": "Woe to every scorner and mocker",
+        "meanings": [
+          [
+            "Woe",
+            "not"
+          ],
+          [
+            "to every",
+            "name"
+          ],
+          [
+            "slanderer",
+            "name"
+          ],
+          [
+            "backbiter",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "ٱلَّذِى جَمَعَ مَالًۭا وَعَدَّدَهُۥ",
+        "words": [
+          "ٱلَّذِى",
+          "جَمَعَ",
+          "مَالًۭا",
+          "وَعَدَّدَهُۥ"
+        ],
+        "roman": [
+          "alladhī",
+          "jamaʿa",
+          "mālan",
+          "waʿaddadahu"
+        ],
+        "translation": "Who collects wealth and [continuously] counts it.",
+        "meanings": [
+          [
+            "The one who",
+            "name"
+          ],
+          [
+            "collects",
+            "name"
+          ],
+          [
+            "wealth",
+            "gift"
+          ],
+          [
+            "and counts it",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "يَحْسَبُ أَنَّ مَالَهُۥٓ أَخْلَدَهُۥ",
+        "words": [
+          "يَحْسَبُ",
+          "أَنَّ",
+          "مَالَهُۥٓ",
+          "أَخْلَدَهُۥ"
+        ],
+        "roman": [
+          "yaḥsabu",
+          "anna",
+          "mālahu",
+          "akhladahu"
+        ],
+        "translation": "He thinks that his wealth will make him immortal.",
+        "meanings": [
+          [
+            "Thinking",
+            "name"
+          ],
+          [
+            "that",
+            "name"
+          ],
+          [
+            "his wealth",
+            "gift"
+          ],
+          [
+            "will make him immortal",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "كَلَّا ۖ لَيُنۢبَذَنَّ فِى ٱلْحُطَمَةِ",
+        "words": [
+          "كَلَّا ۖ",
+          "لَيُنۢبَذَنَّ",
+          "فِى",
+          "ٱلْحُطَمَةِ"
+        ],
+        "roman": [
+          "kallā",
+          "layunbadhanna",
+          "fī",
+          "l-ḥuṭamati"
+        ],
+        "translation": "No! He will surely be thrown into the Crusher.",
+        "meanings": [
+          [
+            "Nay",
+            "name"
+          ],
+          [
+            "Surely he will be thrown",
+            "name"
+          ],
+          [
+            "in",
+            "name"
+          ],
+          [
+            "the Crusher",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "وَمَآ أَدْرَىٰكَ مَا ٱلْحُطَمَةُ",
+        "words": [
+          "وَمَآ",
+          "أَدْرَىٰكَ",
+          "مَا",
+          "ٱلْحُطَمَةُ"
+        ],
+        "roman": [
+          "wamā",
+          "adrāka",
+          "mā",
+          "l-ḥuṭamatu"
+        ],
+        "translation": "And what can make you know what is the Crusher?",
+        "meanings": [
+          [
+            "And what",
+            "name"
+          ],
+          [
+            "will make you know",
+            "name"
+          ],
+          [
+            "what",
+            "name"
+          ],
+          [
+            "the Crusher (is)",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "نَارُ ٱللَّهِ ٱلْمُوقَدَةُ",
+        "words": [
+          "نَارُ",
+          "ٱللَّهِ",
+          "ٱلْمُوقَدَةُ"
+        ],
+        "roman": [
+          "nāru",
+          "l-lahi",
+          "l-mūqadatu"
+        ],
+        "translation": "It is the fire of Allāh, [eternally] fueled,",
+        "meanings": [
+          [
+            "A Fire",
+            "fire"
+          ],
+          [
+            "Allah",
+            "gold"
+          ],
+          [
+            "kindled",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "ٱلَّتِى تَطَّلِعُ عَلَى ٱلْأَفْـِٔدَةِ",
+        "words": [
+          "ٱلَّتِى",
+          "تَطَّلِعُ",
+          "عَلَى",
+          "ٱلْأَفْـِٔدَةِ"
+        ],
+        "roman": [
+          "allatī",
+          "taṭṭaliʿu",
+          "ʿalā",
+          "l-afidati"
+        ],
+        "translation": "Which mounts directed at the hearts.",
+        "meanings": [
+          [
+            "Which",
+            "name"
+          ],
+          [
+            "mounts up",
+            "name"
+          ],
+          [
+            "to",
+            "name"
+          ],
+          [
+            "the hearts",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "إِنَّهَا عَلَيْهِم مُّؤْصَدَةٌۭ",
+        "words": [
+          "إِنَّهَا",
+          "عَلَيْهِم",
+          "مُّؤْصَدَةٌۭ"
+        ],
+        "roman": [
+          "innahā",
+          "ʿalayhim",
+          "mu'ṣadatun"
+        ],
+        "translation": "Indeed, it [i.e., Hellfire] will be closed down upon them",
+        "meanings": [
+          [
+            "Indeed, it",
+            "name"
+          ],
+          [
+            "(will be) upon them",
+            "name"
+          ],
+          [
+            "closed over",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 9,
+        "text": "فِى عَمَدٍۢ مُّمَدَّدَةٍۭ",
+        "words": [
+          "فِى",
+          "عَمَدٍۢ",
+          "مُّمَدَّدَةٍۭ"
+        ],
+        "roman": [
+          "fī",
+          "ʿamadin",
+          "mumaddadatin"
+        ],
+        "translation": "In extended columns.",
+        "meanings": [
+          [
+            "In",
+            "name"
+          ],
+          [
+            "columns",
+            "name"
+          ],
+          [
+            "extended",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 103,
+    "name": "Al-Asr",
+    "arabic": "العصر",
+    "meaning": "Time",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلْعَصْرِ",
+        "words": [
+          "وَٱلْعَصْرِ"
+        ],
+        "roman": [
+          "wal-ʿaṣri"
+        ],
+        "translation": "By time,",
+        "meanings": [
+          [
+            "By the time",
+            "day"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "إِنَّ ٱلْإِنسَـٰنَ لَفِى خُسْرٍ",
+        "words": [
+          "إِنَّ",
+          "ٱلْإِنسَـٰنَ",
+          "لَفِى",
+          "خُسْرٍ"
+        ],
+        "roman": [
+          "inna",
+          "l-insāna",
+          "lafī",
+          "khus'rin"
+        ],
+        "translation": "Indeed, mankind is in loss,",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "mankind",
+            "people"
+          ],
+          [
+            "(is) surely, in",
+            "name"
+          ],
+          [
+            "loss",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "إِلَّا ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّـٰلِحَـٰتِ وَتَوَاصَوْا۟ بِٱلْحَقِّ وَتَوَاصَوْا۟ بِٱلصَّبْرِ",
+        "words": [
+          "إِلَّا",
+          "ٱلَّذِينَ",
+          "ءَامَنُوا۟",
+          "وَعَمِلُوا۟",
+          "ٱلصَّـٰلِحَـٰتِ",
+          "وَتَوَاصَوْا۟",
+          "بِٱلْحَقِّ",
+          "وَتَوَاصَوْا۟",
+          "بِٱلصَّبْرِ"
+        ],
+        "roman": [
+          "illā",
+          "alladhīna",
+          "āmanū",
+          "waʿamilū",
+          "l-ṣāliḥāti",
+          "watawāṣaw",
+          "bil-ḥaqi",
+          "watawāṣaw",
+          "bil-ṣabri"
+        ],
+        "translation": "Except for those who have believed and done righteous deeds and advised each other to truth and advised each other to patience.",
+        "meanings": [
+          [
+            "Except",
+            "name"
+          ],
+          [
+            "those who",
+            "name"
+          ],
+          [
+            "believe",
+            "path"
+          ],
+          [
+            "and do",
+            "name"
+          ],
+          [
+            "righteous deeds",
+            "name"
+          ],
+          [
+            "and enjoin (each other)",
+            "name"
+          ],
+          [
+            "to the truth",
+            "path"
+          ],
+          [
+            "and enjoin (each other)",
+            "name"
+          ],
+          [
+            "to [the] patience",
+            "path"
+          ]
+        ]
+      }
+    ]
   }
 ]

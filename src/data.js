@@ -1,3 +1,4 @@
+import distractorAudio from "./distractor-audio.json" with { type: "json" };
 import additionalSurahs from "./additional-surahs.json" with { type: "json" };
 export const verses = [
   {
@@ -149,7 +150,7 @@ export const distractors = [
     art: "tree",
     source: "Ar-Rahman 55:6",
   },
-];
+].map((d) => ({ ...d, audio: distractorAudio[d.text].audio }));
 export function quizCorrect(selection, words, extras) {
   return (
     selection.length === words.length &&
@@ -200,3 +201,8 @@ export function challengeReward(level, attempts, hinted) {
       : Math.max(5, level * 10 + (attempts === 0 ? 5 : 0) - attempts * 2),
   };
 }
+
+export const totalAyahs = surahs.reduce(
+  (count, surah) => count + surah.verses.length,
+  0,
+);

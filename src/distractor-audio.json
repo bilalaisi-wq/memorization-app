@@ -1,0 +1,38 @@
+{
+  "ٱلشَّمْسُ": {
+    "audio": "/audio/055_005_001.mp3",
+    "verse_key": "55:5",
+    "position": 1,
+    "source_url": "https://audio.qurancdn.com/wbw/055_005_001.mp3"
+  },
+  "وَٱلْقَمَرُ": {
+    "audio": "/audio/055_005_002.mp3",
+    "verse_key": "55:5",
+    "position": 2,
+    "source_url": "https://audio.qurancdn.com/wbw/055_005_002.mp3"
+  },
+  "وَٱلنَّجْمُ": {
+    "audio": "/audio/055_006_001.mp3",
+    "verse_key": "55:6",
+    "position": 1,
+    "source_url": "https://audio.qurancdn.com/wbw/055_006_001.mp3"
+  },
+  "وَٱلشَّجَرُ": {
+    "audio": "/audio/055_006_002.mp3",
+    "verse_key": "55:6",
+    "position": 2,
+    "source_url": "https://audio.qurancdn.com/wbw/055_006_002.mp3"
+  },
+  "ٱلْبَحْرِ": {
+    "audio": "/audio/002_164_013.mp3",
+    "verse_key": "2:164",
+    "position": 13,
+    "source_url": "https://audio.qurancdn.com/wbw/002_164_013.mp3"
+  },
+  "ٱلْكِتَـٰبُ": {
+    "audio": "/audio/002_002_002.mp3",
+    "verse_key": "2:2",
+    "position": 2,
+    "source_url": "https://audio.qurancdn.com/wbw/002_002_002.mp3"
+  }
+}

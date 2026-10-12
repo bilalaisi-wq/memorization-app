@@ -233,13 +233,15 @@ test("revealing then hiding reference still limits stars; practice rejects wrong
   await expect(page.locator(".star-score")).toContainText("1 stars");
 });
 
-test("all four surahs have aligned verified words and readable learning modes", async ({
+test("all thirteen surahs have aligned verified words and readable learning modes", async ({
   page,
 }) => {
   const { surahs } = await import("../src/data.js");
-  expect(surahs.map((s) => s.verses.length)).toEqual([7, 6, 5, 4]);
+  expect(surahs.map((s) => s.verses.length)).toEqual([
+    7, 6, 5, 4, 5, 3, 6, 3, 7, 4, 5, 9, 3,
+  ]);
   await page.goto("/");
-  await expect(page.locator("#surah-picker option")).toHaveCount(4);
+  await expect(page.locator("#surah-picker option")).toHaveCount(13);
   for (let c = 0; c < surahs.length; c++) {
     await page.locator("#surah-picker").selectOption(String(c));
     await expect(page.locator(".surah-heading h2")).toContainText(
@@ -367,7 +369,7 @@ test("new audio files decode and playback chooses the selected surah", async ({
         ),
     );
   });
-  expect(results).toHaveLength(73);
+  expect(results).toHaveLength(308);
   expect(results.every(Boolean)).toBe(true);
   await page.evaluate(() => {
     window.played = [];
@@ -419,4 +421,129 @@ test("legacy progress migrates and stays independent across surahs", async ({
   await expect(page.locator(".progress-summary")).toContainText("1 / 6");
   await page.locator("#surah-picker").selectOption("0");
   await expect(page.locator(".progress-summary")).toContainText("2 / 7");
+});
+
+test("every distractor has verified playable audio, individually and in a wrong sequence", async ({
+  page,
+}) => {
+  const { distractors } = await import("../src/data.js");
+  await page.addInitScript(() => {
+    window.played = [];
+    window.Audio = class {
+      constructor(url) {
+        this.url = url;
+      }
+      play() {
+        window.played.push(this.url);
+        setTimeout(() => this.onended?.(), 10);
+        return Promise.resolve();
+      }
+      pause() {}
+    };
+  });
+  await page.goto("/");
+  await page.locator('[data-mode="quiz"]').click();
+  await expect(page.locator(".word-bank .piece-listen")).toHaveCount(8);
+  for (let i = 0; i < 8; i++) {
+    await page.locator(`.word-bank [data-listen="${i}"]`).click();
+    await expect(page.locator(".feedback")).toContainText("Listening complete");
+    await expect(page.locator(".build-zone .piece")).toHaveCount(0);
+  }
+  const bankAudio = await page.evaluate(() => window.played);
+  expect(bankAudio.slice(0, 4)).toEqual([
+    "/audio/001_001_001.mp3",
+    "/audio/001_001_002.mp3",
+    "/audio/001_001_003.mp3",
+    "/audio/001_001_004.mp3",
+  ]);
+  for (const url of bankAudio.slice(4))
+    expect(distractors.map((d) => d.audio)).toContain(url);
+  await page.locator('.word-bank [data-word="0"]').click();
+  await page.locator('.word-bank [data-word="4"]').click();
+  await expect(page.locator("#practice-audio")).toBeEnabled();
+  await page.locator("#repeat").selectOption("1");
+  await page.locator("#practice-audio").click();
+  await expect(page.locator(".feedback")).toContainText("Listening complete");
+  expect(await page.evaluate(() => window.played.slice(-2))).toEqual([
+    bankAudio[0],
+    bankAudio[4],
+  ]);
+  await page.locator('.build-zone [data-listen="4"]').click();
+  await expect(page.locator(".feedback")).toContainText("Listening complete");
+  await expect(page.locator(".build-zone .piece")).toHaveCount(2);
+  await page.locator('.build-zone [data-word="4"]').click();
+  await expect(page.locator(".build-zone .piece")).toHaveCount(1);
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.evaluate(() => scrollTo(0, 0));
+  await page.screenshot({
+    path: "/tmp/ayah-word-audio-mobile.png",
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 1440, height: 1100 });
+  await page.evaluate(() => scrollTo(0, 0));
+  await page.screenshot({
+    path: "/tmp/ayah-word-audio-desktop.png",
+    fullPage: true,
+  });
+});
+
+test("all six distractor MP3s decode and real wrong-word sequence completes", async ({
+  page,
+}) => {
+  const { distractors } = await import("../src/data.js");
+  await page.goto("/");
+  const results = await page.evaluate(
+    (urls) =>
+      Promise.all(
+        urls.map(
+          (url) =>
+            new Promise((resolve) => {
+              const a = new Audio();
+              a.onloadedmetadata = () => resolve(a.duration > 0);
+              a.onerror = () => resolve(false);
+              a.src = url;
+            }),
+        ),
+      ),
+    distractors.map((d) => d.audio),
+  );
+  expect(results).toEqual([true, true, true, true, true, true]);
+  await page.locator('[data-mode="quiz"]').click();
+  await page.locator('.word-bank [data-word="0"]').click();
+  await page.locator('.word-bank [data-word="4"]').click();
+  await page.locator("#repeat").selectOption("1");
+  await page.locator("#practice-audio").click();
+  await expect(page.locator(".feedback")).toContainText("Listening complete", {
+    timeout: 20000,
+  });
+});
+
+test("audio is available on hidden pieces without revealing text", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("ayah-mastery", '{"1:1":4}');
+    window.Audio = class {
+      play() {
+        setTimeout(() => this.onended?.(), 10);
+        return Promise.resolve();
+      }
+      pause() {}
+    };
+  });
+  await page.goto("/");
+  await page.locator('[data-mode="quiz"]').click();
+  const blank = page
+    .locator(".word-bank .piece-wrap")
+    .filter({ has: page.locator(".arabic").filter({ hasText: "؟" }) });
+  const count = await blank.count();
+  expect(count).toBeGreaterThan(0);
+  await blank.first().locator("[data-listen]").click();
+  await expect(page.locator(".feedback")).toContainText("Listening complete");
+  await expect(blank).toHaveCount(count);
 });
