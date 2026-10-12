@@ -1,0 +1,312 @@
+{
+  "source": "Quran.com API v4; English verse translation: Saheeh International (20); word translations and transliteration: Quran.com",
+  "verses": [
+    {
+      "verse_key": "114:1",
+      "words": [
+        {
+          "text": "قُلْ",
+          "audio_url": "wbw/114_001_001.mp3"
+        },
+        {
+          "text": "أَعُوذُ",
+          "audio_url": "wbw/114_001_002.mp3"
+        },
+        {
+          "text": "بِرَبِّ",
+          "audio_url": "wbw/114_001_003.mp3"
+        },
+        {
+          "text": "ٱلنَّاسِ",
+          "audio_url": "wbw/114_001_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "114:2",
+      "words": [
+        {
+          "text": "مَلِكِ",
+          "audio_url": "wbw/114_002_001.mp3"
+        },
+        {
+          "text": "ٱلنَّاسِ",
+          "audio_url": "wbw/114_002_002.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "114:3",
+      "words": [
+        {
+          "text": "إِلَـٰهِ",
+          "audio_url": "wbw/114_003_001.mp3"
+        },
+        {
+          "text": "ٱلنَّاسِ",
+          "audio_url": "wbw/114_003_002.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "114:4",
+      "words": [
+        {
+          "text": "مِن",
+          "audio_url": "wbw/114_004_001.mp3"
+        },
+        {
+          "text": "شَرِّ",
+          "audio_url": "wbw/114_004_002.mp3"
+        },
+        {
+          "text": "ٱلْوَسْوَاسِ",
+          "audio_url": "wbw/114_004_003.mp3"
+        },
+        {
+          "text": "ٱلْخَنَّاسِ",
+          "audio_url": "wbw/114_004_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "114:5",
+      "words": [
+        {
+          "text": "ٱلَّذِى",
+          "audio_url": "wbw/114_005_001.mp3"
+        },
+        {
+          "text": "يُوَسْوِسُ",
+          "audio_url": "wbw/114_005_002.mp3"
+        },
+        {
+          "text": "فِى",
+          "audio_url": "wbw/114_005_003.mp3"
+        },
+        {
+          "text": "صُدُورِ",
+          "audio_url": "wbw/114_005_004.mp3"
+        },
+        {
+          "text": "ٱلنَّاسِ",
+          "audio_url": "wbw/114_005_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "114:6",
+      "words": [
+        {
+          "text": "مِنَ",
+          "audio_url": "wbw/114_006_001.mp3"
+        },
+        {
+          "text": "ٱلْجِنَّةِ",
+          "audio_url": "wbw/114_006_002.mp3"
+        },
+        {
+          "text": "وَٱلنَّاسِ",
+          "audio_url": "wbw/114_006_003.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "113:1",
+      "words": [
+        {
+          "text": "قُلْ",
+          "audio_url": "wbw/113_001_001.mp3"
+        },
+        {
+          "text": "أَعُوذُ",
+          "audio_url": "wbw/113_001_002.mp3"
+        },
+        {
+          "text": "بِرَبِّ",
+          "audio_url": "wbw/113_001_003.mp3"
+        },
+        {
+          "text": "ٱلْفَلَقِ",
+          "audio_url": "wbw/113_001_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "113:2",
+      "words": [
+        {
+          "text": "مِن",
+          "audio_url": "wbw/113_002_001.mp3"
+        },
+        {
+          "text": "شَرِّ",
+          "audio_url": "wbw/113_002_002.mp3"
+        },
+        {
+          "text": "مَا",
+          "audio_url": "wbw/113_002_003.mp3"
+        },
+        {
+          "text": "خَلَقَ",
+          "audio_url": "wbw/113_002_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "113:3",
+      "words": [
+        {
+          "text": "وَمِن",
+          "audio_url": "wbw/113_003_001.mp3"
+        },
+        {
+          "text": "شَرِّ",
+          "audio_url": "wbw/113_003_002.mp3"
+        },
+        {
+          "text": "غَاسِقٍ",
+          "audio_url": "wbw/113_003_003.mp3"
+        },
+        {
+          "text": "إِذَا",
+          "audio_url": "wbw/113_003_004.mp3"
+        },
+        {
+          "text": "وَقَبَ",
+          "audio_url": "wbw/113_003_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "113:4",
+      "words": [
+        {
+          "text": "وَمِن",
+          "audio_url": "wbw/113_004_001.mp3"
+        },
+        {
+          "text": "شَرِّ",
+          "audio_url": "wbw/113_004_002.mp3"
+        },
+        {
+          "text": "ٱلنَّفَّـٰثَـٰتِ",
+          "audio_url": "wbw/113_004_003.mp3"
+        },
+        {
+          "text": "فِى",
+          "audio_url": "wbw/113_004_004.mp3"
+        },
+        {
+          "text": "ٱلْعُقَدِ",
+          "audio_url": "wbw/113_004_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "113:5",
+      "words": [
+        {
+          "text": "وَمِن",
+          "audio_url": "wbw/113_005_001.mp3"
+        },
+        {
+          "text": "شَرِّ",
+          "audio_url": "wbw/113_005_002.mp3"
+        },
+        {
+          "text": "حَاسِدٍ",
+          "audio_url": "wbw/113_005_003.mp3"
+        },
+        {
+          "text": "إِذَا",
+          "audio_url": "wbw/113_005_004.mp3"
+        },
+        {
+          "text": "حَسَدَ",
+          "audio_url": "wbw/113_005_005.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "112:1",
+      "words": [
+        {
+          "text": "قُلْ",
+          "audio_url": "wbw/112_001_001.mp3"
+        },
+        {
+          "text": "هُوَ",
+          "audio_url": "wbw/112_001_002.mp3"
+        },
+        {
+          "text": "ٱللَّهُ",
+          "audio_url": "wbw/112_001_003.mp3"
+        },
+        {
+          "text": "أَحَدٌ",
+          "audio_url": "wbw/112_001_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "112:2",
+      "words": [
+        {
+          "text": "ٱللَّهُ",
+          "audio_url": "wbw/112_002_001.mp3"
+        },
+        {
+          "text": "ٱلصَّمَدُ",
+          "audio_url": "wbw/112_002_002.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "112:3",
+      "words": [
+        {
+          "text": "لَمْ",
+          "audio_url": "wbw/112_003_001.mp3"
+        },
+        {
+          "text": "يَلِدْ",
+          "audio_url": "wbw/112_003_002.mp3"
+        },
+        {
+          "text": "وَلَمْ",
+          "audio_url": "wbw/112_003_003.mp3"
+        },
+        {
+          "text": "يُولَدْ",
+          "audio_url": "wbw/112_003_004.mp3"
+        }
+      ]
+    },
+    {
+      "verse_key": "112:4",
+      "words": [
+        {
+          "text": "وَلَمْ",
+          "audio_url": "wbw/112_004_001.mp3"
+        },
+        {
+          "text": "يَكُن",
+          "audio_url": "wbw/112_004_002.mp3"
+        },
+        {
+          "text": "لَّهُۥ",
+          "audio_url": "wbw/112_004_003.mp3"
+        },
+        {
+          "text": "كُفُوًا",
+          "audio_url": "wbw/112_004_004.mp3"
+        },
+        {
+          "text": "أَحَدٌۢ",
+          "audio_url": "wbw/112_004_005.mp3"
+        }
+      ]
+    }
+  ]
+}

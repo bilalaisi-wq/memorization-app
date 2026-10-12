@@ -1,0 +1,542 @@
+[
+  {
+    "id": 114,
+    "name": "An-Nas",
+    "arabic": "الناس",
+    "meaning": "Mankind",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ",
+        "words": [
+          "قُلْ",
+          "أَعُوذُ",
+          "بِرَبِّ",
+          "ٱلنَّاسِ"
+        ],
+        "roman": [
+          "qul",
+          "aʿūdhu",
+          "birabbi",
+          "l-nāsi"
+        ],
+        "translation": "Say, \"I seek refuge in the Lord of mankind,",
+        "meanings": [
+          [
+            "Say",
+            "name"
+          ],
+          [
+            "I seek refuge",
+            "help"
+          ],
+          [
+            "in (the) Lord",
+            "gold"
+          ],
+          [
+            "(of) mankind",
+            "people"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "مَلِكِ ٱلنَّاسِ",
+        "words": [
+          "مَلِكِ",
+          "ٱلنَّاسِ"
+        ],
+        "roman": [
+          "maliki",
+          "l-nāsi"
+        ],
+        "translation": "The Sovereign of mankind,",
+        "meanings": [
+          [
+            "(The) King",
+            "gold"
+          ],
+          [
+            "(of) mankind",
+            "people"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "إِلَـٰهِ ٱلنَّاسِ",
+        "words": [
+          "إِلَـٰهِ",
+          "ٱلنَّاسِ"
+        ],
+        "roman": [
+          "ilāhi",
+          "l-nāsi"
+        ],
+        "translation": "The God of mankind,",
+        "meanings": [
+          [
+            "(The) God",
+            "gold"
+          ],
+          [
+            "(of) mankind",
+            "people"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ",
+        "words": [
+          "مِن",
+          "شَرِّ",
+          "ٱلْوَسْوَاسِ",
+          "ٱلْخَنَّاسِ"
+        ],
+        "roman": [
+          "min",
+          "sharri",
+          "l-waswāsi",
+          "l-khanāsi"
+        ],
+        "translation": "From the evil of the retreating whisperer -",
+        "meanings": [
+          [
+            "From",
+            "not"
+          ],
+          [
+            "(the) evil",
+            "not"
+          ],
+          [
+            "(of) the whisperer",
+            "lost"
+          ],
+          [
+            "the one who withdraws",
+            "not"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ",
+        "words": [
+          "ٱلَّذِى",
+          "يُوَسْوِسُ",
+          "فِى",
+          "صُدُورِ",
+          "ٱلنَّاسِ"
+        ],
+        "roman": [
+          "alladhī",
+          "yuwaswisu",
+          "fī",
+          "ṣudūri",
+          "l-nāsi"
+        ],
+        "translation": "Who whispers [evil] into the breasts of mankind -",
+        "meanings": [
+          [
+            "The one who",
+            "people"
+          ],
+          [
+            "whispers",
+            "lost"
+          ],
+          [
+            "in",
+            "name"
+          ],
+          [
+            "(the) breasts",
+            "people"
+          ],
+          [
+            "(of) mankind",
+            "people"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ",
+        "words": [
+          "مِنَ",
+          "ٱلْجِنَّةِ",
+          "وَٱلنَّاسِ"
+        ],
+        "roman": [
+          "mina",
+          "l-jinati",
+          "wal-nāsi"
+        ],
+        "translation": "From among the jinn and mankind\".",
+        "meanings": [
+          [
+            "From",
+            "not"
+          ],
+          [
+            "the jinn",
+            "name"
+          ],
+          [
+            "and men",
+            "people"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 113,
+    "name": "Al-Falaq",
+    "arabic": "الفلق",
+    "meaning": "Daybreak",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ",
+        "words": [
+          "قُلْ",
+          "أَعُوذُ",
+          "بِرَبِّ",
+          "ٱلْفَلَقِ"
+        ],
+        "roman": [
+          "qul",
+          "aʿūdhu",
+          "birabbi",
+          "l-falaqi"
+        ],
+        "translation": "Say, \"I seek refuge in the Lord of daybreak",
+        "meanings": [
+          [
+            "Say",
+            "name"
+          ],
+          [
+            "I seek refuge",
+            "help"
+          ],
+          [
+            "in (the) Lord",
+            "gold"
+          ],
+          [
+            "(of) the dawn",
+            "day"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "مِن شَرِّ مَا خَلَقَ",
+        "words": [
+          "مِن",
+          "شَرِّ",
+          "مَا",
+          "خَلَقَ"
+        ],
+        "roman": [
+          "min",
+          "sharri",
+          "mā",
+          "khalaqa"
+        ],
+        "translation": "From the evil of that which He created",
+        "meanings": [
+          [
+            "From",
+            "not"
+          ],
+          [
+            "(the) evil",
+            "not"
+          ],
+          [
+            "(of) what",
+            "name"
+          ],
+          [
+            "He created",
+            "gift"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ",
+        "words": [
+          "وَمِن",
+          "شَرِّ",
+          "غَاسِقٍ",
+          "إِذَا",
+          "وَقَبَ"
+        ],
+        "roman": [
+          "wamin",
+          "sharri",
+          "ghāsiqin",
+          "idhā",
+          "waqaba"
+        ],
+        "translation": "And from the evil of darkness when it settles",
+        "meanings": [
+          [
+            "And from",
+            "not"
+          ],
+          [
+            "(the) evil",
+            "not"
+          ],
+          [
+            "(of) darkness",
+            "moon"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "it spreads",
+            "moon"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "وَمِن شَرِّ ٱلنَّفَّـٰثَـٰتِ فِى ٱلْعُقَدِ",
+        "words": [
+          "وَمِن",
+          "شَرِّ",
+          "ٱلنَّفَّـٰثَـٰتِ",
+          "فِى",
+          "ٱلْعُقَدِ"
+        ],
+        "roman": [
+          "wamin",
+          "sharri",
+          "l-nafāthāti",
+          "fī",
+          "l-ʿuqadi"
+        ],
+        "translation": "And from the evil of the blowers in knots",
+        "meanings": [
+          [
+            "And from",
+            "not"
+          ],
+          [
+            "(the) evil",
+            "not"
+          ],
+          [
+            "(of) the blowers",
+            "not"
+          ],
+          [
+            "in",
+            "name"
+          ],
+          [
+            "the knots",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+        "words": [
+          "وَمِن",
+          "شَرِّ",
+          "حَاسِدٍ",
+          "إِذَا",
+          "حَسَدَ"
+        ],
+        "roman": [
+          "wamin",
+          "sharri",
+          "ḥāsidin",
+          "idhā",
+          "ḥasada"
+        ],
+        "translation": "And from the evil of an envier when he envies.\"",
+        "meanings": [
+          [
+            "And from",
+            "not"
+          ],
+          [
+            "(the) evil",
+            "not"
+          ],
+          [
+            "(of) an envier",
+            "people"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "he envies",
+            "not"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 112,
+    "name": "Al-Ikhlas",
+    "arabic": "الإخلاص",
+    "meaning": "Sincerity",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "قُلْ هُوَ ٱللَّهُ أَحَدٌ",
+        "words": [
+          "قُلْ",
+          "هُوَ",
+          "ٱللَّهُ",
+          "أَحَدٌ"
+        ],
+        "roman": [
+          "qul",
+          "huwa",
+          "l-lahu",
+          "aḥadun"
+        ],
+        "translation": "Say, \"He is Allāh, [who is] One,",
+        "meanings": [
+          [
+            "Say",
+            "name"
+          ],
+          [
+            "He",
+            "gold"
+          ],
+          [
+            "(is) Allah",
+            "gold"
+          ],
+          [
+            "the One",
+            "gold"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "ٱللَّهُ ٱلصَّمَدُ",
+        "words": [
+          "ٱللَّهُ",
+          "ٱلصَّمَدُ"
+        ],
+        "roman": [
+          "al-lahu",
+          "l-ṣamadu"
+        ],
+        "translation": "Allāh, the Eternal Refuge.",
+        "meanings": [
+          [
+            "Allah",
+            "gold"
+          ],
+          [
+            "the Eternal, the Absolute",
+            "gold"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "لَمْ يَلِدْ وَلَمْ يُولَدْ",
+        "words": [
+          "لَمْ",
+          "يَلِدْ",
+          "وَلَمْ",
+          "يُولَدْ"
+        ],
+        "roman": [
+          "lam",
+          "yalid",
+          "walam",
+          "yūlad"
+        ],
+        "translation": "He neither begets nor is born,",
+        "meanings": [
+          [
+            "Not",
+            "not"
+          ],
+          [
+            "He begets",
+            "gold"
+          ],
+          [
+            "and not",
+            "not"
+          ],
+          [
+            "He is begotten",
+            "gold"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ",
+        "words": [
+          "وَلَمْ",
+          "يَكُن",
+          "لَّهُۥ",
+          "كُفُوًا",
+          "أَحَدٌۢ"
+        ],
+        "roman": [
+          "walam",
+          "yakun",
+          "lahu",
+          "kufuwan",
+          "aḥadun"
+        ],
+        "translation": "Nor is there to Him any equivalent.\"",
+        "meanings": [
+          [
+            "And not",
+            "not"
+          ],
+          [
+            "is",
+            "gold"
+          ],
+          [
+            "for Him",
+            "gold"
+          ],
+          [
+            "equivalent",
+            "gold"
+          ],
+          [
+            "any [one]",
+            "gold"
+          ]
+        ]
+      }
+    ]
+  }
+]
