@@ -27,3 +27,22 @@ test('real bundled recordings decode and selected-word playback completes',async
  expect(result).toHaveLength(36);expect(result.every(r=>r.ok)).toBe(true);
  await page.locator('#repeat').selectOption('1');for(const i of [0,1])await page.locator(`.word-bank [data-word="${i}"]`).click();await page.locator('#practice-audio').click();await expect(page.locator('.feedback')).toContainText('Listening complete',{timeout:20000});
 });
+test('quest uses shuffled decoys, rejects extra words, awards stars once and advances',async({page})=>{
+ await page.goto('/');const practice=await page.locator('.word-bank .piece').evaluateAll(bs=>bs.map(b=>+b.dataset.word));expect(practice).not.toEqual([0,1,2,3]);
+ await page.locator('[data-mode="quiz"]').click();await expect(page.locator('.word-bank .piece')).toHaveCount(8);await expect(page.locator('.quest-banner')).toContainText('4 extra words');
+ const ids=await page.locator('.word-bank .piece').evaluateAll(bs=>bs.map(b=>+b.dataset.word));expect(ids.filter(i=>i<4)).not.toEqual([0,1,2,3]);
+ for(let i=0;i<7;i++){await page.locator(`[data-ayah="${i}"]`).click();const expected=[4,4,2,3,4,3,9][i]+4;await expect(page.locator('.word-bank .piece')).toHaveCount(expected);}
+ await page.locator('[data-ayah="0"]').click();await page.locator('.word-bank [data-word="4"]').click();for(const i of [1,2,3])await page.locator(`.word-bank [data-word="${i}"]`).click();await page.locator('#next').click();await expect(page.locator('.feedback')).toContainText('another ayah');await expect(page.locator('.star-score')).toContainText('0 stars');
+ for(const i of [4,1,2,3])await page.locator(`.build-zone [data-word="${i}"]`).click();for(let i=0;i<4;i++)await page.locator(`.word-bank [data-word="${i}"]`).click();await page.locator('#next').click();await expect(page.locator('.star-score')).toContainText('2 stars');await expect(page.locator('#next')).toContainText('Next quest');await page.locator('#next').click();await expect(page.locator('.quest-banner')).toContainText('Ayah 2 quest');
+ await page.locator('[data-ayah="0"]').click();for(let i=0;i<4;i++)await page.locator(`.word-bank [data-word="${i}"]`).click();await page.locator('#next').click();await expect(page.locator('.star-score')).toContainText('2 stars');
+ await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:'/tmp/ayah-quest-mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:1100});await page.evaluate(()=>scrollTo(0,0));await page.screenshot({path:'/tmp/ayah-quest-desktop.png',fullPage:true});
+});
+test('identical words are interchangeable; connectors fit and shuffles vary',async()=>{
+ const {verses,quizCorrect,scrambledBank}=await import('../src/data.js');const {outline}=await import('../src/illustrations.js');expect(quizCorrect([0,1,2,6,4,5,3,7,8],verses[6].words,[])).toBe(true);expect(quizCorrect([0,1,2,3],verses[0].words,[])).toBe(true);expect(quizCorrect([0,1,3,2],verses[0].words,[])).toBe(false);
+ const orders=new Set();for(let i=0;i<50;i++){const a=scrambledBank(8,4);expect(a.filter(x=>x<4)).not.toEqual([0,1,2,3]);expect(new Set(a).size).toBe(8);orders.add(a.join(','));}expect(orders.size).toBeGreaterThan(1);
+ for(let i=0;i<8;i++){const y=38+(i%4)*18,r=7+(i%3)*2;expect(outline(i,9)).toContain(`C-4 ${y+r} -4 ${y-r} 12 ${y-r}`);expect(outline(i+1,9)).toContain(`C152 ${y-r} 152 ${y+r} 168 ${y+r}`);}
+});
+test('revealing then hiding reference still limits stars; practice rejects wrong order',async({page})=>{
+ await page.goto('/');for(const i of [1,0,2,3])await page.locator(`.word-bank [data-word="${i}"]`).click();await page.locator('#next').click();await expect(page.locator('.feedback')).toContainText('correct order');
+ await page.locator('[data-mode="quiz"]').click();await page.locator('#reference-toggle').click();await page.locator('#reference-toggle').click();for(let i=0;i<4;i++)await page.locator(`.word-bank [data-word="${i}"]`).click();await page.locator('#next').click();await expect(page.locator('.star-score')).toContainText('1 stars');
+});
