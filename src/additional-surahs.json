@@ -2254,5 +2254,7677 @@
         ]
       }
     ]
+  },
+  {
+    "id": 102,
+    "name": "At-Takathur",
+    "arabic": "التكاثر",
+    "meaning": "Rivalry in Worldly Increase",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "أَلْهَىٰكُمُ ٱلتَّكَاثُرُ",
+        "words": [
+          "أَلْهَىٰكُمُ",
+          "ٱلتَّكَاثُرُ"
+        ],
+        "roman": [
+          "alhākumu",
+          "l-takāthuru"
+        ],
+        "translation": "Competition in [worldly] increase diverts you",
+        "meanings": [
+          [
+            "Diverts you",
+            "name"
+          ],
+          [
+            "the competition to increase",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "حَتَّىٰ زُرْتُمُ ٱلْمَقَابِرَ",
+        "words": [
+          "حَتَّىٰ",
+          "زُرْتُمُ",
+          "ٱلْمَقَابِرَ"
+        ],
+        "roman": [
+          "ḥattā",
+          "zur'tumu",
+          "l-maqābira"
+        ],
+        "translation": "Until you visit the graveyards.",
+        "meanings": [
+          [
+            "Until",
+            "name"
+          ],
+          [
+            "you visit",
+            "name"
+          ],
+          [
+            "the graves",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "كَلَّا سَوْفَ تَعْلَمُونَ",
+        "words": [
+          "كَلَّا",
+          "سَوْفَ",
+          "تَعْلَمُونَ"
+        ],
+        "roman": [
+          "kallā",
+          "sawfa",
+          "taʿlamūna"
+        ],
+        "translation": "No! You are going to know.",
+        "meanings": [
+          [
+            "Nay",
+            "name"
+          ],
+          [
+            "Soon",
+            "name"
+          ],
+          [
+            "you will know",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "ثُمَّ كَلَّا سَوْفَ تَعْلَمُونَ",
+        "words": [
+          "ثُمَّ",
+          "كَلَّا",
+          "سَوْفَ",
+          "تَعْلَمُونَ"
+        ],
+        "roman": [
+          "thumma",
+          "kallā",
+          "sawfa",
+          "taʿlamūna"
+        ],
+        "translation": "Then, no! You are going to know.",
+        "meanings": [
+          [
+            "Then",
+            "name"
+          ],
+          [
+            "nay",
+            "name"
+          ],
+          [
+            "Soon",
+            "name"
+          ],
+          [
+            "you will know",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "كَلَّا لَوْ تَعْلَمُونَ عِلْمَ ٱلْيَقِينِ",
+        "words": [
+          "كَلَّا",
+          "لَوْ",
+          "تَعْلَمُونَ",
+          "عِلْمَ",
+          "ٱلْيَقِينِ"
+        ],
+        "roman": [
+          "kallā",
+          "law",
+          "taʿlamūna",
+          "ʿil'ma",
+          "l-yaqīni"
+        ],
+        "translation": "No! If you only knew with knowledge of certainty...",
+        "meanings": [
+          [
+            "Nay",
+            "name"
+          ],
+          [
+            "If",
+            "name"
+          ],
+          [
+            "you know",
+            "name"
+          ],
+          [
+            "(with) a knowledge",
+            "name"
+          ],
+          [
+            "(of) certainty",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "لَتَرَوُنَّ ٱلْجَحِيمَ",
+        "words": [
+          "لَتَرَوُنَّ",
+          "ٱلْجَحِيمَ"
+        ],
+        "roman": [
+          "latarawunna",
+          "l-jaḥīma"
+        ],
+        "translation": "You will surely see the Hellfire.",
+        "meanings": [
+          [
+            "Surely you will see",
+            "name"
+          ],
+          [
+            "the Hellfire",
+            "fire"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "ثُمَّ لَتَرَوُنَّهَا عَيْنَ ٱلْيَقِينِ",
+        "words": [
+          "ثُمَّ",
+          "لَتَرَوُنَّهَا",
+          "عَيْنَ",
+          "ٱلْيَقِينِ"
+        ],
+        "roman": [
+          "thumma",
+          "latarawunnahā",
+          "ʿayna",
+          "l-yaqīni"
+        ],
+        "translation": "Then you will surely see it with the eye of certainty.",
+        "meanings": [
+          [
+            "Then",
+            "name"
+          ],
+          [
+            "surely you will see it",
+            "name"
+          ],
+          [
+            "(with the) eye",
+            "name"
+          ],
+          [
+            "(of) certainty",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "ثُمَّ لَتُسْـَٔلُنَّ يَوْمَئِذٍ عَنِ ٱلنَّعِيمِ",
+        "words": [
+          "ثُمَّ",
+          "لَتُسْـَٔلُنَّ",
+          "يَوْمَئِذٍ",
+          "عَنِ",
+          "ٱلنَّعِيمِ"
+        ],
+        "roman": [
+          "thumma",
+          "latus'alunna",
+          "yawma-idhin",
+          "ʿani",
+          "l-naʿīmi"
+        ],
+        "translation": "Then you will surely be asked that Day about pleasure.",
+        "meanings": [
+          [
+            "Then",
+            "name"
+          ],
+          [
+            "surely you will be asked",
+            "name"
+          ],
+          [
+            "that Day",
+            "day"
+          ],
+          [
+            "about",
+            "name"
+          ],
+          [
+            "the pleasures",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 101,
+    "name": "Al-Qariah",
+    "arabic": "القارعة",
+    "meaning": "The Striking Calamity",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "ٱلْقَارِعَةُ",
+        "words": [
+          "ٱلْقَارِعَةُ"
+        ],
+        "roman": [
+          "al-qāriʿatu"
+        ],
+        "translation": "The Striking Calamity -",
+        "meanings": [
+          [
+            "The Striking Calamity",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "مَا ٱلْقَارِعَةُ",
+        "words": [
+          "مَا",
+          "ٱلْقَارِعَةُ"
+        ],
+        "roman": [
+          "mā",
+          "l-qāriʿatu"
+        ],
+        "translation": "What is the Striking Calamity?",
+        "meanings": [
+          [
+            "What",
+            "name"
+          ],
+          [
+            "(is) the Striking Calamity",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "وَمَآ أَدْرَىٰكَ مَا ٱلْقَارِعَةُ",
+        "words": [
+          "وَمَآ",
+          "أَدْرَىٰكَ",
+          "مَا",
+          "ٱلْقَارِعَةُ"
+        ],
+        "roman": [
+          "wamā",
+          "adrāka",
+          "mā",
+          "l-qāriʿatu"
+        ],
+        "translation": "And what can make you know what is the Striking Calamity?",
+        "meanings": [
+          [
+            "And what",
+            "name"
+          ],
+          [
+            "will make you know",
+            "name"
+          ],
+          [
+            "what",
+            "name"
+          ],
+          [
+            "(is) the Striking Calamity",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "يَوْمَ يَكُونُ ٱلنَّاسُ كَٱلْفَرَاشِ ٱلْمَبْثُوثِ",
+        "words": [
+          "يَوْمَ",
+          "يَكُونُ",
+          "ٱلنَّاسُ",
+          "كَٱلْفَرَاشِ",
+          "ٱلْمَبْثُوثِ"
+        ],
+        "roman": [
+          "yawma",
+          "yakūnu",
+          "l-nāsu",
+          "kal-farāshi",
+          "l-mabthūthi"
+        ],
+        "translation": "It is the Day when people will be like moths, dispersed,",
+        "meanings": [
+          [
+            "(The) Day",
+            "day"
+          ],
+          [
+            "will be",
+            "name"
+          ],
+          [
+            "the mankind",
+            "people"
+          ],
+          [
+            "like moths",
+            "name"
+          ],
+          [
+            "scattered",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "وَتَكُونُ ٱلْجِبَالُ كَٱلْعِهْنِ ٱلْمَنفُوشِ",
+        "words": [
+          "وَتَكُونُ",
+          "ٱلْجِبَالُ",
+          "كَٱلْعِهْنِ",
+          "ٱلْمَنفُوشِ"
+        ],
+        "roman": [
+          "watakūnu",
+          "l-jibālu",
+          "kal-ʿih'ni",
+          "l-manfūshi"
+        ],
+        "translation": "And the mountains will be like wool, fluffed up.",
+        "meanings": [
+          [
+            "And will be",
+            "name"
+          ],
+          [
+            "the mountains",
+            "name"
+          ],
+          [
+            "like wool",
+            "name"
+          ],
+          [
+            "fluffed up",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "فَأَمَّا مَن ثَقُلَتْ مَوَٰزِينُهُۥ",
+        "words": [
+          "فَأَمَّا",
+          "مَن",
+          "ثَقُلَتْ",
+          "مَوَٰزِينُهُۥ"
+        ],
+        "roman": [
+          "fa-ammā",
+          "man",
+          "thaqulat",
+          "mawāzīnuhu"
+        ],
+        "translation": "Then as for one whose scales are heavy [with good deeds],",
+        "meanings": [
+          [
+            "Then as for",
+            "name"
+          ],
+          [
+            "(him) whose",
+            "name"
+          ],
+          [
+            "(are) heavy",
+            "name"
+          ],
+          [
+            "his scales",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "فَهُوَ فِى عِيشَةٍۢ رَّاضِيَةٍۢ",
+        "words": [
+          "فَهُوَ",
+          "فِى",
+          "عِيشَةٍۢ",
+          "رَّاضِيَةٍۢ"
+        ],
+        "roman": [
+          "fahuwa",
+          "fī",
+          "ʿīshatin",
+          "rāḍiyatin"
+        ],
+        "translation": "He will be in a pleasant life.",
+        "meanings": [
+          [
+            "Then he",
+            "name"
+          ],
+          [
+            "(will be) in",
+            "name"
+          ],
+          [
+            "a life",
+            "name"
+          ],
+          [
+            "pleasant",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "وَأَمَّا مَنْ خَفَّتْ مَوَٰزِينُهُۥ",
+        "words": [
+          "وَأَمَّا",
+          "مَنْ",
+          "خَفَّتْ",
+          "مَوَٰزِينُهُۥ"
+        ],
+        "roman": [
+          "wa-ammā",
+          "man",
+          "khaffat",
+          "mawāzīnuhu"
+        ],
+        "translation": "But as for one whose scales are light,",
+        "meanings": [
+          [
+            "But as for",
+            "name"
+          ],
+          [
+            "(him) whose",
+            "name"
+          ],
+          [
+            "(are) light",
+            "name"
+          ],
+          [
+            "his scales",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 9,
+        "text": "فَأُمُّهُۥ هَاوِيَةٌۭ",
+        "words": [
+          "فَأُمُّهُۥ",
+          "هَاوِيَةٌۭ"
+        ],
+        "roman": [
+          "fa-ummuhu",
+          "hāwiyatun"
+        ],
+        "translation": "His refuge will be an abyss.",
+        "meanings": [
+          [
+            "His abode",
+            "name"
+          ],
+          [
+            "(will be the) Pit",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 10,
+        "text": "وَمَآ أَدْرَىٰكَ مَا هِيَهْ",
+        "words": [
+          "وَمَآ",
+          "أَدْرَىٰكَ",
+          "مَا",
+          "هِيَهْ"
+        ],
+        "roman": [
+          "wamā",
+          "adrāka",
+          "mā",
+          "hiyah"
+        ],
+        "translation": "And what can make you know what that is?",
+        "meanings": [
+          [
+            "And what",
+            "name"
+          ],
+          [
+            "will make you know",
+            "name"
+          ],
+          [
+            "what",
+            "name"
+          ],
+          [
+            "it is",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 11,
+        "text": "نَارٌ حَامِيَةٌۢ",
+        "words": [
+          "نَارٌ",
+          "حَامِيَةٌۢ"
+        ],
+        "roman": [
+          "nārun",
+          "ḥāmiyatun"
+        ],
+        "translation": "It is a Fire, intensely hot.",
+        "meanings": [
+          [
+            "A Fire",
+            "fire"
+          ],
+          [
+            "intensely hot",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 100,
+    "name": "Al-Adiyat",
+    "arabic": "العاديات",
+    "meaning": "The Courser",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلْعَـٰدِيَـٰتِ ضَبْحًۭا",
+        "words": [
+          "وَٱلْعَـٰدِيَـٰتِ",
+          "ضَبْحًۭا"
+        ],
+        "roman": [
+          "wal-ʿādiyāti",
+          "ḍabḥan"
+        ],
+        "translation": "By the racers, panting,",
+        "meanings": [
+          [
+            "By the racers",
+            "name"
+          ],
+          [
+            "panting",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "فَٱلْمُورِيَـٰتِ قَدْحًۭا",
+        "words": [
+          "فَٱلْمُورِيَـٰتِ",
+          "قَدْحًۭا"
+        ],
+        "roman": [
+          "fal-mūriyāti",
+          "qadḥan"
+        ],
+        "translation": "And the producers of sparks [when] striking",
+        "meanings": [
+          [
+            "And the producers of sparks",
+            "name"
+          ],
+          [
+            "striking",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "فَٱلْمُغِيرَٰتِ صُبْحًۭا",
+        "words": [
+          "فَٱلْمُغِيرَٰتِ",
+          "صُبْحًۭا"
+        ],
+        "roman": [
+          "fal-mughīrāti",
+          "ṣub'ḥan"
+        ],
+        "translation": "And the chargers at dawn,",
+        "meanings": [
+          [
+            "And the chargers",
+            "name"
+          ],
+          [
+            "(at) dawn",
+            "day"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "فَأَثَرْنَ بِهِۦ نَقْعًۭا",
+        "words": [
+          "فَأَثَرْنَ",
+          "بِهِۦ",
+          "نَقْعًۭا"
+        ],
+        "roman": [
+          "fa-atharna",
+          "bihi",
+          "naqʿan"
+        ],
+        "translation": "Stirring up thereby [clouds of] dust,",
+        "meanings": [
+          [
+            "Then raise",
+            "name"
+          ],
+          [
+            "thereby",
+            "name"
+          ],
+          [
+            "dust",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "فَوَسَطْنَ بِهِۦ جَمْعًا",
+        "words": [
+          "فَوَسَطْنَ",
+          "بِهِۦ",
+          "جَمْعًا"
+        ],
+        "roman": [
+          "fawasaṭna",
+          "bihi",
+          "jamʿan"
+        ],
+        "translation": "Arriving thereby in the center collectively,",
+        "meanings": [
+          [
+            "Then penetrate (in the) center",
+            "book"
+          ],
+          [
+            "thereby",
+            "name"
+          ],
+          [
+            "collectively",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "إِنَّ ٱلْإِنسَـٰنَ لِرَبِّهِۦ لَكَنُودٌۭ",
+        "words": [
+          "إِنَّ",
+          "ٱلْإِنسَـٰنَ",
+          "لِرَبِّهِۦ",
+          "لَكَنُودٌۭ"
+        ],
+        "roman": [
+          "inna",
+          "l-insāna",
+          "lirabbihi",
+          "lakanūdun"
+        ],
+        "translation": "Indeed mankind, to his Lord, is ungrateful.",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "mankind",
+            "people"
+          ],
+          [
+            "to his Lord",
+            "gold"
+          ],
+          [
+            "(is) surely ungrateful",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "وَإِنَّهُۥ عَلَىٰ ذَٰلِكَ لَشَهِيدٌۭ",
+        "words": [
+          "وَإِنَّهُۥ",
+          "عَلَىٰ",
+          "ذَٰلِكَ",
+          "لَشَهِيدٌۭ"
+        ],
+        "roman": [
+          "wa-innahu",
+          "ʿalā",
+          "dhālika",
+          "lashahīdun"
+        ],
+        "translation": "And indeed, he is to that a witness.",
+        "meanings": [
+          [
+            "And indeed, he",
+            "name"
+          ],
+          [
+            "on",
+            "name"
+          ],
+          [
+            "that",
+            "name"
+          ],
+          [
+            "surely (is) a witness",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "وَإِنَّهُۥ لِحُبِّ ٱلْخَيْرِ لَشَدِيدٌ",
+        "words": [
+          "وَإِنَّهُۥ",
+          "لِحُبِّ",
+          "ٱلْخَيْرِ",
+          "لَشَدِيدٌ"
+        ],
+        "roman": [
+          "wa-innahu",
+          "liḥubbi",
+          "l-khayri",
+          "lashadīdun"
+        ],
+        "translation": "And indeed he is, in love of wealth, intense.",
+        "meanings": [
+          [
+            "And indeed he",
+            "name"
+          ],
+          [
+            "in (the) love",
+            "name"
+          ],
+          [
+            "(of) wealth",
+            "name"
+          ],
+          [
+            "(is) surely intense",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 9,
+        "text": "۞ أَفَلَا يَعْلَمُ إِذَا بُعْثِرَ مَا فِى ٱلْقُبُورِ",
+        "words": [
+          "۞ أَفَلَا",
+          "يَعْلَمُ",
+          "إِذَا",
+          "بُعْثِرَ",
+          "مَا",
+          "فِى",
+          "ٱلْقُبُورِ"
+        ],
+        "roman": [
+          "afalā",
+          "yaʿlamu",
+          "idhā",
+          "buʿ'thira",
+          "mā",
+          "fī",
+          "l-qubūri"
+        ],
+        "translation": "But does he not know that when the contents of the graves are scattered",
+        "meanings": [
+          [
+            "But does not",
+            "not"
+          ],
+          [
+            "he know",
+            "name"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "will be scattered",
+            "name"
+          ],
+          [
+            "what",
+            "name"
+          ],
+          [
+            "(is) in",
+            "name"
+          ],
+          [
+            "the graves",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 10,
+        "text": "وَحُصِّلَ مَا فِى ٱلصُّدُورِ",
+        "words": [
+          "وَحُصِّلَ",
+          "مَا",
+          "فِى",
+          "ٱلصُّدُورِ"
+        ],
+        "roman": [
+          "waḥuṣṣila",
+          "mā",
+          "fī",
+          "l-ṣudūri"
+        ],
+        "translation": "And that within the breasts is obtained,",
+        "meanings": [
+          [
+            "And is made apparent",
+            "name"
+          ],
+          [
+            "what",
+            "name"
+          ],
+          [
+            "(is) in",
+            "name"
+          ],
+          [
+            "the breasts",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 11,
+        "text": "إِنَّ رَبَّهُم بِهِمْ يَوْمَئِذٍۢ لَّخَبِيرٌۢ",
+        "words": [
+          "إِنَّ",
+          "رَبَّهُم",
+          "بِهِمْ",
+          "يَوْمَئِذٍۢ",
+          "لَّخَبِيرٌۢ"
+        ],
+        "roman": [
+          "inna",
+          "rabbahum",
+          "bihim",
+          "yawma-idhin",
+          "lakhabīrun"
+        ],
+        "translation": "Indeed, their Lord with them, that Day, is [fully] Aware.",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "their Lord",
+            "gold"
+          ],
+          [
+            "about them",
+            "name"
+          ],
+          [
+            "that Day",
+            "day"
+          ],
+          [
+            "(is) surely All-Aware",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 99,
+    "name": "Az-Zalzalah",
+    "arabic": "الزلزلة",
+    "meaning": "The Earthquake",
+    "origin": "Medinan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "إِذَا زُلْزِلَتِ ٱلْأَرْضُ زِلْزَالَهَا",
+        "words": [
+          "إِذَا",
+          "زُلْزِلَتِ",
+          "ٱلْأَرْضُ",
+          "زِلْزَالَهَا"
+        ],
+        "roman": [
+          "idhā",
+          "zul'zilati",
+          "l-arḍu",
+          "zil'zālahā"
+        ],
+        "translation": "When the earth is shaken with its [final] earthquake",
+        "meanings": [
+          [
+            "When",
+            "name"
+          ],
+          [
+            "is shaken",
+            "name"
+          ],
+          [
+            "the earth",
+            "worlds"
+          ],
+          [
+            "(with) its earthquake",
+            "worlds"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "وَأَخْرَجَتِ ٱلْأَرْضُ أَثْقَالَهَا",
+        "words": [
+          "وَأَخْرَجَتِ",
+          "ٱلْأَرْضُ",
+          "أَثْقَالَهَا"
+        ],
+        "roman": [
+          "wa-akhrajati",
+          "l-arḍu",
+          "athqālahā"
+        ],
+        "translation": "And the earth discharges its burdens",
+        "meanings": [
+          [
+            "And brings forth",
+            "name"
+          ],
+          [
+            "the earth",
+            "worlds"
+          ],
+          [
+            "its burdens",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "وَقَالَ ٱلْإِنسَـٰنُ مَا لَهَا",
+        "words": [
+          "وَقَالَ",
+          "ٱلْإِنسَـٰنُ",
+          "مَا",
+          "لَهَا"
+        ],
+        "roman": [
+          "waqāla",
+          "l-insānu",
+          "mā",
+          "lahā"
+        ],
+        "translation": "And man says, \"What is [wrong] with it?\" -",
+        "meanings": [
+          [
+            "And says",
+            "name"
+          ],
+          [
+            "man",
+            "people"
+          ],
+          [
+            "What",
+            "name"
+          ],
+          [
+            "(is) with it",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "يَوْمَئِذٍۢ تُحَدِّثُ أَخْبَارَهَا",
+        "words": [
+          "يَوْمَئِذٍۢ",
+          "تُحَدِّثُ",
+          "أَخْبَارَهَا"
+        ],
+        "roman": [
+          "yawma-idhin",
+          "tuḥaddithu",
+          "akhbārahā"
+        ],
+        "translation": "That Day, it will report its news",
+        "meanings": [
+          [
+            "That Day",
+            "day"
+          ],
+          [
+            "it will report",
+            "name"
+          ],
+          [
+            "its news",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "بِأَنَّ رَبَّكَ أَوْحَىٰ لَهَا",
+        "words": [
+          "بِأَنَّ",
+          "رَبَّكَ",
+          "أَوْحَىٰ",
+          "لَهَا"
+        ],
+        "roman": [
+          "bi-anna",
+          "rabbaka",
+          "awḥā",
+          "lahā"
+        ],
+        "translation": "Because your Lord has inspired [i.e., commanded] it.",
+        "meanings": [
+          [
+            "Because",
+            "name"
+          ],
+          [
+            "your Lord",
+            "gold"
+          ],
+          [
+            "inspired",
+            "name"
+          ],
+          [
+            "[to] it",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "يَوْمَئِذٍۢ يَصْدُرُ ٱلنَّاسُ أَشْتَاتًۭا لِّيُرَوْا۟ أَعْمَـٰلَهُمْ",
+        "words": [
+          "يَوْمَئِذٍۢ",
+          "يَصْدُرُ",
+          "ٱلنَّاسُ",
+          "أَشْتَاتًۭا",
+          "لِّيُرَوْا۟",
+          "أَعْمَـٰلَهُمْ"
+        ],
+        "roman": [
+          "yawma-idhin",
+          "yaṣduru",
+          "l-nāsu",
+          "ashtātan",
+          "liyuraw",
+          "aʿmālahum"
+        ],
+        "translation": "That Day, the people will depart separated [into categories] to be shown [the result of] their deeds.",
+        "meanings": [
+          [
+            "That Day",
+            "day"
+          ],
+          [
+            "will proceed",
+            "name"
+          ],
+          [
+            "the mankind",
+            "people"
+          ],
+          [
+            "(in) scattered groups",
+            "name"
+          ],
+          [
+            "to be shown",
+            "name"
+          ],
+          [
+            "their deeds",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "فَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًۭا يَرَهُۥ",
+        "words": [
+          "فَمَن",
+          "يَعْمَلْ",
+          "مِثْقَالَ",
+          "ذَرَّةٍ",
+          "خَيْرًۭا",
+          "يَرَهُۥ"
+        ],
+        "roman": [
+          "faman",
+          "yaʿmal",
+          "mith'qāla",
+          "dharratin",
+          "khayran",
+          "yarahu"
+        ],
+        "translation": "So whoever does an atom's weight of good will see it,",
+        "meanings": [
+          [
+            "So whoever",
+            "name"
+          ],
+          [
+            "does",
+            "name"
+          ],
+          [
+            "(equal to the) weight",
+            "name"
+          ],
+          [
+            "(of) an atom",
+            "name"
+          ],
+          [
+            "good",
+            "gift"
+          ],
+          [
+            "will see it",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "وَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍۢ شَرًّۭا يَرَهُۥ",
+        "words": [
+          "وَمَن",
+          "يَعْمَلْ",
+          "مِثْقَالَ",
+          "ذَرَّةٍۢ",
+          "شَرًّۭا",
+          "يَرَهُۥ"
+        ],
+        "roman": [
+          "waman",
+          "yaʿmal",
+          "mith'qāla",
+          "dharratin",
+          "sharran",
+          "yarahu"
+        ],
+        "translation": "And whoever does an atom's weight of evil will see it.",
+        "meanings": [
+          [
+            "And whoever",
+            "name"
+          ],
+          [
+            "does",
+            "name"
+          ],
+          [
+            "(equal to the) weight",
+            "name"
+          ],
+          [
+            "(of) an atom",
+            "name"
+          ],
+          [
+            "evil",
+            "not"
+          ],
+          [
+            "will see it",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 98,
+    "name": "Al-Bayyinah",
+    "arabic": "البينة",
+    "meaning": "The Clear Proof",
+    "origin": "Medinan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "لَمْ يَكُنِ ٱلَّذِينَ كَفَرُوا۟ مِنْ أَهْلِ ٱلْكِتَـٰبِ وَٱلْمُشْرِكِينَ مُنفَكِّينَ حَتَّىٰ تَأْتِيَهُمُ ٱلْبَيِّنَةُ",
+        "words": [
+          "لَمْ",
+          "يَكُنِ",
+          "ٱلَّذِينَ",
+          "كَفَرُوا۟",
+          "مِنْ",
+          "أَهْلِ",
+          "ٱلْكِتَـٰبِ",
+          "وَٱلْمُشْرِكِينَ",
+          "مُنفَكِّينَ",
+          "حَتَّىٰ",
+          "تَأْتِيَهُمُ",
+          "ٱلْبَيِّنَةُ"
+        ],
+        "roman": [
+          "lam",
+          "yakuni",
+          "alladhīna",
+          "kafarū",
+          "min",
+          "ahli",
+          "l-kitābi",
+          "wal-mush'rikīna",
+          "munfakkīna",
+          "ḥattā",
+          "tatiyahumu",
+          "l-bayinatu"
+        ],
+        "translation": "Those who disbelieved among the People of the Scripture and the polytheists were not to be parted [from misbelief] until there came to them clear evidence",
+        "meanings": [
+          [
+            "Not",
+            "not"
+          ],
+          [
+            "were",
+            "name"
+          ],
+          [
+            "those who",
+            "name"
+          ],
+          [
+            "disbelieved",
+            "people"
+          ],
+          [
+            "from",
+            "name"
+          ],
+          [
+            "(the) People",
+            "people"
+          ],
+          [
+            "of the Book",
+            "book"
+          ],
+          [
+            "and the polytheists",
+            "name"
+          ],
+          [
+            "to be abandoned",
+            "name"
+          ],
+          [
+            "until",
+            "name"
+          ],
+          [
+            "(there) comes to them",
+            "name"
+          ],
+          [
+            "the clear evidence",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "رَسُولٌۭ مِّنَ ٱللَّهِ يَتْلُوا۟ صُحُفًۭا مُّطَهَّرَةًۭ",
+        "words": [
+          "رَسُولٌۭ",
+          "مِّنَ",
+          "ٱللَّهِ",
+          "يَتْلُوا۟",
+          "صُحُفًۭا",
+          "مُّطَهَّرَةًۭ"
+        ],
+        "roman": [
+          "rasūlun",
+          "mina",
+          "l-lahi",
+          "yatlū",
+          "ṣuḥufan",
+          "muṭahharatan"
+        ],
+        "translation": "A Messenger from Allāh, reciting purified scriptures",
+        "meanings": [
+          [
+            "A Messenger",
+            "name"
+          ],
+          [
+            "from",
+            "name"
+          ],
+          [
+            "Allah",
+            "gold"
+          ],
+          [
+            "reciting",
+            "name"
+          ],
+          [
+            "pages",
+            "name"
+          ],
+          [
+            "purified",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "فِيهَا كُتُبٌۭ قَيِّمَةٌۭ",
+        "words": [
+          "فِيهَا",
+          "كُتُبٌۭ",
+          "قَيِّمَةٌۭ"
+        ],
+        "roman": [
+          "fīhā",
+          "kutubun",
+          "qayyimatun"
+        ],
+        "translation": "Within which are correct writings [i.e., rulings and laws].",
+        "meanings": [
+          [
+            "Wherein",
+            "name"
+          ],
+          [
+            "(are) writings",
+            "name"
+          ],
+          [
+            "correct",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "وَمَا تَفَرَّقَ ٱلَّذِينَ أُوتُوا۟ ٱلْكِتَـٰبَ إِلَّا مِنۢ بَعْدِ مَا جَآءَتْهُمُ ٱلْبَيِّنَةُ",
+        "words": [
+          "وَمَا",
+          "تَفَرَّقَ",
+          "ٱلَّذِينَ",
+          "أُوتُوا۟",
+          "ٱلْكِتَـٰبَ",
+          "إِلَّا",
+          "مِنۢ",
+          "بَعْدِ",
+          "مَا",
+          "جَآءَتْهُمُ",
+          "ٱلْبَيِّنَةُ"
+        ],
+        "roman": [
+          "wamā",
+          "tafarraqa",
+          "alladhīna",
+          "ūtū",
+          "l-kitāba",
+          "illā",
+          "min",
+          "baʿdi",
+          "mā",
+          "jāathumu",
+          "l-bayinatu"
+        ],
+        "translation": "Nor did those who were given the Scripture become divided until after there had come to them clear evidence.",
+        "meanings": [
+          [
+            "And not",
+            "not"
+          ],
+          [
+            "became divided",
+            "name"
+          ],
+          [
+            "those who",
+            "name"
+          ],
+          [
+            "were given",
+            "gift"
+          ],
+          [
+            "the Book",
+            "book"
+          ],
+          [
+            "until",
+            "name"
+          ],
+          [
+            "from",
+            "name"
+          ],
+          [
+            "after",
+            "name"
+          ],
+          [
+            "what",
+            "name"
+          ],
+          [
+            "came (to) them",
+            "name"
+          ],
+          [
+            "(of) the clear evidence",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "وَمَآ أُمِرُوٓا۟ إِلَّا لِيَعْبُدُوا۟ ٱللَّهَ مُخْلِصِينَ لَهُ ٱلدِّينَ حُنَفَآءَ وَيُقِيمُوا۟ ٱلصَّلَوٰةَ وَيُؤْتُوا۟ ٱلزَّكَوٰةَ ۚ وَذَٰلِكَ دِينُ ٱلْقَيِّمَةِ",
+        "words": [
+          "وَمَآ",
+          "أُمِرُوٓا۟",
+          "إِلَّا",
+          "لِيَعْبُدُوا۟",
+          "ٱللَّهَ",
+          "مُخْلِصِينَ",
+          "لَهُ",
+          "ٱلدِّينَ",
+          "حُنَفَآءَ",
+          "وَيُقِيمُوا۟",
+          "ٱلصَّلَوٰةَ",
+          "وَيُؤْتُوا۟",
+          "ٱلزَّكَوٰةَ ۚ",
+          "وَذَٰلِكَ",
+          "دِينُ",
+          "ٱلْقَيِّمَةِ"
+        ],
+        "roman": [
+          "wamā",
+          "umirū",
+          "illā",
+          "liyaʿbudū",
+          "l-laha",
+          "mukh'liṣīna",
+          "lahu",
+          "l-dīna",
+          "ḥunafāa",
+          "wayuqīmū",
+          "l-ṣalata",
+          "wayu'tū",
+          "l-zakata",
+          "wadhālika",
+          "dīnu",
+          "l-qayimati"
+        ],
+        "translation": "And they were not commanded except to worship Allāh, [being] sincere to Him in religion, inclining to truth, and to establish prayer and to give zakāh. And that is the correct religion.",
+        "meanings": [
+          [
+            "And not",
+            "not"
+          ],
+          [
+            "they were commanded",
+            "people"
+          ],
+          [
+            "except",
+            "name"
+          ],
+          [
+            "to worship",
+            "worship"
+          ],
+          [
+            "Allah",
+            "gold"
+          ],
+          [
+            "(being) sincere",
+            "name"
+          ],
+          [
+            "to Him",
+            "name"
+          ],
+          [
+            "(in) the religion",
+            "name"
+          ],
+          [
+            "upright",
+            "name"
+          ],
+          [
+            "and to establish",
+            "name"
+          ],
+          [
+            "the prayer",
+            "worship"
+          ],
+          [
+            "and to give",
+            "gift"
+          ],
+          [
+            "the zakah",
+            "name"
+          ],
+          [
+            "And that",
+            "name"
+          ],
+          [
+            "(is the) religion",
+            "name"
+          ],
+          [
+            "the correct",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "إِنَّ ٱلَّذِينَ كَفَرُوا۟ مِنْ أَهْلِ ٱلْكِتَـٰبِ وَٱلْمُشْرِكِينَ فِى نَارِ جَهَنَّمَ خَـٰلِدِينَ فِيهَآ ۚ أُو۟لَـٰٓئِكَ هُمْ شَرُّ ٱلْبَرِيَّةِ",
+        "words": [
+          "إِنَّ",
+          "ٱلَّذِينَ",
+          "كَفَرُوا۟",
+          "مِنْ",
+          "أَهْلِ",
+          "ٱلْكِتَـٰبِ",
+          "وَٱلْمُشْرِكِينَ",
+          "فِى",
+          "نَارِ",
+          "جَهَنَّمَ",
+          "خَـٰلِدِينَ",
+          "فِيهَآ ۚ",
+          "أُو۟لَـٰٓئِكَ",
+          "هُمْ",
+          "شَرُّ",
+          "ٱلْبَرِيَّةِ"
+        ],
+        "roman": [
+          "inna",
+          "alladhīna",
+          "kafarū",
+          "min",
+          "ahli",
+          "l-kitābi",
+          "wal-mush'rikīna",
+          "fī",
+          "nāri",
+          "jahannama",
+          "khālidīna",
+          "fīhā",
+          "ulāika",
+          "hum",
+          "sharru",
+          "l-bariyati"
+        ],
+        "translation": "Indeed, they who disbelieved among the People of the Scripture and the polytheists will be in the fire of Hell, abiding eternally therein. Those are the worst of creatures.",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "those who",
+            "name"
+          ],
+          [
+            "disbelieve",
+            "people"
+          ],
+          [
+            "from",
+            "name"
+          ],
+          [
+            "(the) People",
+            "people"
+          ],
+          [
+            "(of) the Book",
+            "book"
+          ],
+          [
+            "and the polytheists",
+            "name"
+          ],
+          [
+            "(will be) in",
+            "name"
+          ],
+          [
+            "(the) Fire",
+            "fire"
+          ],
+          [
+            "(of) Hell",
+            "name"
+          ],
+          [
+            "abiding eternally",
+            "name"
+          ],
+          [
+            "therein",
+            "name"
+          ],
+          [
+            "Those ",
+            "name"
+          ],
+          [
+            "they",
+            "name"
+          ],
+          [
+            "(are the) worst",
+            "name"
+          ],
+          [
+            "(of) the creatures",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "إِنَّ ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّـٰلِحَـٰتِ أُو۟لَـٰٓئِكَ هُمْ خَيْرُ ٱلْبَرِيَّةِ",
+        "words": [
+          "إِنَّ",
+          "ٱلَّذِينَ",
+          "ءَامَنُوا۟",
+          "وَعَمِلُوا۟",
+          "ٱلصَّـٰلِحَـٰتِ",
+          "أُو۟لَـٰٓئِكَ",
+          "هُمْ",
+          "خَيْرُ",
+          "ٱلْبَرِيَّةِ"
+        ],
+        "roman": [
+          "inna",
+          "alladhīna",
+          "āmanū",
+          "waʿamilū",
+          "l-ṣāliḥāti",
+          "ulāika",
+          "hum",
+          "khayru",
+          "l-bariyati"
+        ],
+        "translation": "Indeed, they who have believed and done righteous deeds - those are the best of creatures.",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "those who",
+            "name"
+          ],
+          [
+            "believe",
+            "people"
+          ],
+          [
+            "and do",
+            "name"
+          ],
+          [
+            "righteous deeds",
+            "name"
+          ],
+          [
+            "those ",
+            "name"
+          ],
+          [
+            "they",
+            "name"
+          ],
+          [
+            "(are the) best",
+            "name"
+          ],
+          [
+            "(of) the creatures",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "جَزَآؤُهُمْ عِندَ رَبِّهِمْ جَنَّـٰتُ عَدْنٍۢ تَجْرِى مِن تَحْتِهَا ٱلْأَنْهَـٰرُ خَـٰلِدِينَ فِيهَآ أَبَدًۭا ۖ رَّضِىَ ٱللَّهُ عَنْهُمْ وَرَضُوا۟ عَنْهُ ۚ ذَٰلِكَ لِمَنْ خَشِىَ رَبَّهُۥ",
+        "words": [
+          "جَزَآؤُهُمْ",
+          "عِندَ",
+          "رَبِّهِمْ",
+          "جَنَّـٰتُ",
+          "عَدْنٍۢ",
+          "تَجْرِى",
+          "مِن",
+          "تَحْتِهَا",
+          "ٱلْأَنْهَـٰرُ",
+          "خَـٰلِدِينَ",
+          "فِيهَآ",
+          "أَبَدًۭا ۖ",
+          "رَّضِىَ",
+          "ٱللَّهُ",
+          "عَنْهُمْ",
+          "وَرَضُوا۟",
+          "عَنْهُ ۚ",
+          "ذَٰلِكَ",
+          "لِمَنْ",
+          "خَشِىَ",
+          "رَبَّهُۥ"
+        ],
+        "roman": [
+          "jazāuhum",
+          "ʿinda",
+          "rabbihim",
+          "jannātu",
+          "ʿadnin",
+          "tajrī",
+          "min",
+          "taḥtihā",
+          "l-anhāru",
+          "khālidīna",
+          "fīhā",
+          "abadan",
+          "raḍiya",
+          "l-lahu",
+          "ʿanhum",
+          "waraḍū",
+          "ʿanhu",
+          "dhālika",
+          "liman",
+          "khashiya",
+          "rabbahu"
+        ],
+        "translation": "Their reward with their Lord will be gardens of perpetual residence beneath which rivers flow, wherein they will abide forever, Allāh being pleased with them and they with Him. That is for whoever has feared his Lord.",
+        "meanings": [
+          [
+            "Their reward",
+            "gift"
+          ],
+          [
+            "(is) with",
+            "name"
+          ],
+          [
+            "their Lord ",
+            "gold"
+          ],
+          [
+            "Gardens",
+            "name"
+          ],
+          [
+            "(of) Eternity",
+            "name"
+          ],
+          [
+            "flow",
+            "name"
+          ],
+          [
+            "from",
+            "name"
+          ],
+          [
+            "underneath them",
+            "name"
+          ],
+          [
+            "the rivers",
+            "water"
+          ],
+          [
+            "will abide",
+            "name"
+          ],
+          [
+            "therein",
+            "name"
+          ],
+          [
+            "forever",
+            "name"
+          ],
+          [
+            "(will be) pleased",
+            "name"
+          ],
+          [
+            "Allah",
+            "gold"
+          ],
+          [
+            "with them",
+            "name"
+          ],
+          [
+            "and they (will be) pleased",
+            "name"
+          ],
+          [
+            "with Him",
+            "name"
+          ],
+          [
+            "That",
+            "name"
+          ],
+          [
+            "(is) for whoever",
+            "name"
+          ],
+          [
+            "feared",
+            "help"
+          ],
+          [
+            "his Lord",
+            "gold"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 97,
+    "name": "Al-Qadr",
+    "arabic": "القدر",
+    "meaning": "The Decree",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "إِنَّآ أَنزَلْنَـٰهُ فِى لَيْلَةِ ٱلْقَدْرِ",
+        "words": [
+          "إِنَّآ",
+          "أَنزَلْنَـٰهُ",
+          "فِى",
+          "لَيْلَةِ",
+          "ٱلْقَدْرِ"
+        ],
+        "roman": [
+          "innā",
+          "anzalnāhu",
+          "fī",
+          "laylati",
+          "l-qadri"
+        ],
+        "translation": "Indeed, We sent it [i.e., the Qur’ān] down during the Night of Decree.",
+        "meanings": [
+          [
+            "Indeed, We",
+            "name"
+          ],
+          [
+            "revealed it",
+            "name"
+          ],
+          [
+            "in",
+            "name"
+          ],
+          [
+            "(the) Night",
+            "moon"
+          ],
+          [
+            "(of) Power",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "وَمَآ أَدْرَىٰكَ مَا لَيْلَةُ ٱلْقَدْرِ",
+        "words": [
+          "وَمَآ",
+          "أَدْرَىٰكَ",
+          "مَا",
+          "لَيْلَةُ",
+          "ٱلْقَدْرِ"
+        ],
+        "roman": [
+          "wamā",
+          "adrāka",
+          "mā",
+          "laylatu",
+          "l-qadri"
+        ],
+        "translation": "And what can make you know what is the Night of Decree?",
+        "meanings": [
+          [
+            "And what",
+            "name"
+          ],
+          [
+            "can make you know",
+            "name"
+          ],
+          [
+            "what",
+            "name"
+          ],
+          [
+            "(the) Night",
+            "moon"
+          ],
+          [
+            "(of) Power (is)",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "لَيْلَةُ ٱلْقَدْرِ خَيْرٌۭ مِّنْ أَلْفِ شَهْرٍۢ",
+        "words": [
+          "لَيْلَةُ",
+          "ٱلْقَدْرِ",
+          "خَيْرٌۭ",
+          "مِّنْ",
+          "أَلْفِ",
+          "شَهْرٍۢ"
+        ],
+        "roman": [
+          "laylatu",
+          "l-qadri",
+          "khayrun",
+          "min",
+          "alfi",
+          "shahrin"
+        ],
+        "translation": "The Night of Decree is better than a thousand months.",
+        "meanings": [
+          [
+            "(The) Night",
+            "moon"
+          ],
+          [
+            "(of) Power",
+            "name"
+          ],
+          [
+            "(is) better",
+            "name"
+          ],
+          [
+            "than",
+            "name"
+          ],
+          [
+            "a thousand",
+            "name"
+          ],
+          [
+            "month(s)",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "تَنَزَّلُ ٱلْمَلَـٰٓئِكَةُ وَٱلرُّوحُ فِيهَا بِإِذْنِ رَبِّهِم مِّن كُلِّ أَمْرٍۢ",
+        "words": [
+          "تَنَزَّلُ",
+          "ٱلْمَلَـٰٓئِكَةُ",
+          "وَٱلرُّوحُ",
+          "فِيهَا",
+          "بِإِذْنِ",
+          "رَبِّهِم",
+          "مِّن",
+          "كُلِّ",
+          "أَمْرٍۢ"
+        ],
+        "roman": [
+          "tanazzalu",
+          "l-malāikatu",
+          "wal-rūḥu",
+          "fīhā",
+          "bi-idh'ni",
+          "rabbihim",
+          "min",
+          "kulli",
+          "amrin"
+        ],
+        "translation": "The angels and the Spirit [i.e., Gabriel] descend therein by permission of their Lord for every matter.",
+        "meanings": [
+          [
+            "Descend",
+            "name"
+          ],
+          [
+            "the Angels",
+            "name"
+          ],
+          [
+            "and the Spirit",
+            "name"
+          ],
+          [
+            "therein",
+            "name"
+          ],
+          [
+            "by (the) permission",
+            "name"
+          ],
+          [
+            "(of) their Lord",
+            "gold"
+          ],
+          [
+            "for",
+            "name"
+          ],
+          [
+            "every",
+            "name"
+          ],
+          [
+            "affair",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "سَلَـٰمٌ هِىَ حَتَّىٰ مَطْلَعِ ٱلْفَجْرِ",
+        "words": [
+          "سَلَـٰمٌ",
+          "هِىَ",
+          "حَتَّىٰ",
+          "مَطْلَعِ",
+          "ٱلْفَجْرِ"
+        ],
+        "roman": [
+          "salāmun",
+          "hiya",
+          "ḥattā",
+          "maṭlaʿi",
+          "l-fajri"
+        ],
+        "translation": "Peace it is until the emergence of dawn.",
+        "meanings": [
+          [
+            "Peace",
+            "name"
+          ],
+          [
+            "it (is)",
+            "name"
+          ],
+          [
+            "until",
+            "name"
+          ],
+          [
+            "(the) emergence",
+            "name"
+          ],
+          [
+            "(of) the dawn",
+            "day"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 96,
+    "name": "Al-Alaq",
+    "arabic": "العلق",
+    "meaning": "The Clinging Substance",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "ٱقْرَأْ بِٱسْمِ رَبِّكَ ٱلَّذِى خَلَقَ",
+        "words": [
+          "ٱقْرَأْ",
+          "بِٱسْمِ",
+          "رَبِّكَ",
+          "ٱلَّذِى",
+          "خَلَقَ"
+        ],
+        "roman": [
+          "iq'ra",
+          "bi-is'mi",
+          "rabbika",
+          "alladhī",
+          "khalaqa"
+        ],
+        "translation": "Recite in the name of your Lord who created",
+        "meanings": [
+          [
+            "Read",
+            "book"
+          ],
+          [
+            "in (the) name",
+            "name"
+          ],
+          [
+            "(of) your Lord",
+            "gold"
+          ],
+          [
+            "the One Who",
+            "name"
+          ],
+          [
+            "created ",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "خَلَقَ ٱلْإِنسَـٰنَ مِنْ عَلَقٍ",
+        "words": [
+          "خَلَقَ",
+          "ٱلْإِنسَـٰنَ",
+          "مِنْ",
+          "عَلَقٍ"
+        ],
+        "roman": [
+          "khalaqa",
+          "l-insāna",
+          "min",
+          "ʿalaqin"
+        ],
+        "translation": "Created man from a clinging substance.",
+        "meanings": [
+          [
+            "He created",
+            "name"
+          ],
+          [
+            "man",
+            "people"
+          ],
+          [
+            "from",
+            "name"
+          ],
+          [
+            "a clinging substance",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "ٱقْرَأْ وَرَبُّكَ ٱلْأَكْرَمُ",
+        "words": [
+          "ٱقْرَأْ",
+          "وَرَبُّكَ",
+          "ٱلْأَكْرَمُ"
+        ],
+        "roman": [
+          "iq'ra",
+          "warabbuka",
+          "l-akramu"
+        ],
+        "translation": "Recite, and your Lord is the most Generous -",
+        "meanings": [
+          [
+            "Read",
+            "book"
+          ],
+          [
+            "and your Lord",
+            "gold"
+          ],
+          [
+            "(is) the Most Generous",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "ٱلَّذِى عَلَّمَ بِٱلْقَلَمِ",
+        "words": [
+          "ٱلَّذِى",
+          "عَلَّمَ",
+          "بِٱلْقَلَمِ"
+        ],
+        "roman": [
+          "alladhī",
+          "ʿallama",
+          "bil-qalami"
+        ],
+        "translation": "Who taught by the pen",
+        "meanings": [
+          [
+            "The One Who",
+            "name"
+          ],
+          [
+            "taught",
+            "name"
+          ],
+          [
+            "by the pen",
+            "book"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "عَلَّمَ ٱلْإِنسَـٰنَ مَا لَمْ يَعْلَمْ",
+        "words": [
+          "عَلَّمَ",
+          "ٱلْإِنسَـٰنَ",
+          "مَا",
+          "لَمْ",
+          "يَعْلَمْ"
+        ],
+        "roman": [
+          "ʿallama",
+          "l-insāna",
+          "mā",
+          "lam",
+          "yaʿlam"
+        ],
+        "translation": "Taught man that which he knew not.",
+        "meanings": [
+          [
+            "Taught",
+            "name"
+          ],
+          [
+            "man",
+            "people"
+          ],
+          [
+            "what",
+            "name"
+          ],
+          [
+            "not",
+            "not"
+          ],
+          [
+            "he knew",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "كَلَّآ إِنَّ ٱلْإِنسَـٰنَ لَيَطْغَىٰٓ",
+        "words": [
+          "كَلَّآ",
+          "إِنَّ",
+          "ٱلْإِنسَـٰنَ",
+          "لَيَطْغَىٰٓ"
+        ],
+        "roman": [
+          "kallā",
+          "inna",
+          "l-insāna",
+          "layaṭghā"
+        ],
+        "translation": "No! [But] indeed, man transgresses",
+        "meanings": [
+          [
+            "Nay",
+            "name"
+          ],
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "man",
+            "people"
+          ],
+          [
+            "surely transgresses",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "أَن رَّءَاهُ ٱسْتَغْنَىٰٓ",
+        "words": [
+          "أَن",
+          "رَّءَاهُ",
+          "ٱسْتَغْنَىٰٓ"
+        ],
+        "roman": [
+          "an",
+          "raāhu",
+          "is'taghnā"
+        ],
+        "translation": "Because he sees himself self-sufficient.",
+        "meanings": [
+          [
+            "That",
+            "name"
+          ],
+          [
+            "he sees himself",
+            "name"
+          ],
+          [
+            "self-sufficient",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "إِنَّ إِلَىٰ رَبِّكَ ٱلرُّجْعَىٰٓ",
+        "words": [
+          "إِنَّ",
+          "إِلَىٰ",
+          "رَبِّكَ",
+          "ٱلرُّجْعَىٰٓ"
+        ],
+        "roman": [
+          "inna",
+          "ilā",
+          "rabbika",
+          "l-ruj'ʿā"
+        ],
+        "translation": "Indeed, to your Lord is the return.",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "to",
+            "name"
+          ],
+          [
+            "your Lord",
+            "gold"
+          ],
+          [
+            "(is) the return",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 9,
+        "text": "أَرَءَيْتَ ٱلَّذِى يَنْهَىٰ",
+        "words": [
+          "أَرَءَيْتَ",
+          "ٱلَّذِى",
+          "يَنْهَىٰ"
+        ],
+        "roman": [
+          "ara-ayta",
+          "alladhī",
+          "yanhā"
+        ],
+        "translation": "Have you seen the one who forbids",
+        "meanings": [
+          [
+            "Have you seen",
+            "name"
+          ],
+          [
+            "the one who",
+            "name"
+          ],
+          [
+            "forbids",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 10,
+        "text": "عَبْدًا إِذَا صَلَّىٰٓ",
+        "words": [
+          "عَبْدًا",
+          "إِذَا",
+          "صَلَّىٰٓ"
+        ],
+        "roman": [
+          "ʿabdan",
+          "idhā",
+          "ṣallā"
+        ],
+        "translation": "A servant when he prays?",
+        "meanings": [
+          [
+            "A slave",
+            "name"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "he prays",
+            "worship"
+          ]
+        ]
+      },
+      {
+        "id": 11,
+        "text": "أَرَءَيْتَ إِن كَانَ عَلَى ٱلْهُدَىٰٓ",
+        "words": [
+          "أَرَءَيْتَ",
+          "إِن",
+          "كَانَ",
+          "عَلَى",
+          "ٱلْهُدَىٰٓ"
+        ],
+        "roman": [
+          "ara-ayta",
+          "in",
+          "kāna",
+          "ʿalā",
+          "l-hudā"
+        ],
+        "translation": "Have you seen if he is upon guidance",
+        "meanings": [
+          [
+            "Have you seen",
+            "name"
+          ],
+          [
+            "if",
+            "name"
+          ],
+          [
+            "he is",
+            "name"
+          ],
+          [
+            "upon",
+            "name"
+          ],
+          [
+            "[the] guidance",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 12,
+        "text": "أَوْ أَمَرَ بِٱلتَّقْوَىٰٓ",
+        "words": [
+          "أَوْ",
+          "أَمَرَ",
+          "بِٱلتَّقْوَىٰٓ"
+        ],
+        "roman": [
+          "aw",
+          "amara",
+          "bil-taqwā"
+        ],
+        "translation": "Or enjoins righteousness?",
+        "meanings": [
+          [
+            "Or",
+            "name"
+          ],
+          [
+            "he enjoins",
+            "name"
+          ],
+          [
+            "[of the] righteousness",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 13,
+        "text": "أَرَءَيْتَ إِن كَذَّبَ وَتَوَلَّىٰٓ",
+        "words": [
+          "أَرَءَيْتَ",
+          "إِن",
+          "كَذَّبَ",
+          "وَتَوَلَّىٰٓ"
+        ],
+        "roman": [
+          "ara-ayta",
+          "in",
+          "kadhaba",
+          "watawallā"
+        ],
+        "translation": "Have you seen if he denies and turns away -",
+        "meanings": [
+          [
+            "Have you seen",
+            "name"
+          ],
+          [
+            "if",
+            "name"
+          ],
+          [
+            "he denies",
+            "name"
+          ],
+          [
+            "and turns away",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 14,
+        "text": "أَلَمْ يَعْلَم بِأَنَّ ٱللَّهَ يَرَىٰ",
+        "words": [
+          "أَلَمْ",
+          "يَعْلَم",
+          "بِأَنَّ",
+          "ٱللَّهَ",
+          "يَرَىٰ"
+        ],
+        "roman": [
+          "alam",
+          "yaʿlam",
+          "bi-anna",
+          "l-laha",
+          "yarā"
+        ],
+        "translation": "Does he not know that Allāh sees?",
+        "meanings": [
+          [
+            "Does not",
+            "not"
+          ],
+          [
+            "he know",
+            "name"
+          ],
+          [
+            "that",
+            "name"
+          ],
+          [
+            "Allah",
+            "gold"
+          ],
+          [
+            "sees",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 15,
+        "text": "كَلَّا لَئِن لَّمْ يَنتَهِ لَنَسْفَعًۢا بِٱلنَّاصِيَةِ",
+        "words": [
+          "كَلَّا",
+          "لَئِن",
+          "لَّمْ",
+          "يَنتَهِ",
+          "لَنَسْفَعًۢا",
+          "بِٱلنَّاصِيَةِ"
+        ],
+        "roman": [
+          "kallā",
+          "la-in",
+          "lam",
+          "yantahi",
+          "lanasfaʿan",
+          "bil-nāṣiyati"
+        ],
+        "translation": "No! If he does not desist, We will surely drag him by the forelock",
+        "meanings": [
+          [
+            "Nay",
+            "name"
+          ],
+          [
+            "If",
+            "name"
+          ],
+          [
+            "not",
+            "not"
+          ],
+          [
+            "he desists",
+            "name"
+          ],
+          [
+            "surely We will drag him",
+            "name"
+          ],
+          [
+            "by the forelock",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 16,
+        "text": "نَاصِيَةٍۢ كَـٰذِبَةٍ خَاطِئَةٍۢ",
+        "words": [
+          "نَاصِيَةٍۢ",
+          "كَـٰذِبَةٍ",
+          "خَاطِئَةٍۢ"
+        ],
+        "roman": [
+          "nāṣiyatin",
+          "kādhibatin",
+          "khāṭi-atin"
+        ],
+        "translation": "A lying, sinning forelock.",
+        "meanings": [
+          [
+            "A forelock",
+            "name"
+          ],
+          [
+            "lying",
+            "name"
+          ],
+          [
+            "sinful",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 17,
+        "text": "فَلْيَدْعُ نَادِيَهُۥ",
+        "words": [
+          "فَلْيَدْعُ",
+          "نَادِيَهُۥ"
+        ],
+        "roman": [
+          "falyadʿu",
+          "nādiyahu"
+        ],
+        "translation": "Then let him call his associates;",
+        "meanings": [
+          [
+            "Then let him call",
+            "name"
+          ],
+          [
+            "his associates",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 18,
+        "text": "سَنَدْعُ ٱلزَّبَانِيَةَ",
+        "words": [
+          "سَنَدْعُ",
+          "ٱلزَّبَانِيَةَ"
+        ],
+        "roman": [
+          "sanadʿu",
+          "l-zabāniyata"
+        ],
+        "translation": "We will call the angels of Hell.",
+        "meanings": [
+          [
+            "We will call",
+            "name"
+          ],
+          [
+            "the Angels of Hell",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 19,
+        "text": "كَلَّا لَا تُطِعْهُ وَٱسْجُدْ وَٱقْتَرِب ۩",
+        "words": [
+          "كَلَّا",
+          "لَا",
+          "تُطِعْهُ",
+          "وَٱسْجُدْ",
+          "وَٱقْتَرِب ۩"
+        ],
+        "roman": [
+          "kallā",
+          "lā",
+          "tuṭiʿ'hu",
+          "wa-us'jud",
+          "wa-iq'tarib"
+        ],
+        "translation": "No! Do not obey him. But prostrate and draw near [to Allāh].",
+        "meanings": [
+          [
+            "Nay",
+            "name"
+          ],
+          [
+            "(Do) not",
+            "not"
+          ],
+          [
+            "obey him",
+            "name"
+          ],
+          [
+            "But prostrate",
+            "name"
+          ],
+          [
+            "and draw near (to Allah)",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 95,
+    "name": "At-Tin",
+    "arabic": "التين",
+    "meaning": "The Fig",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلتِّينِ وَٱلزَّيْتُونِ",
+        "words": [
+          "وَٱلتِّينِ",
+          "وَٱلزَّيْتُونِ"
+        ],
+        "roman": [
+          "wal-tīni",
+          "wal-zaytūni"
+        ],
+        "translation": "By the fig and the olive",
+        "meanings": [
+          [
+            "By the fig",
+            "tree"
+          ],
+          [
+            "and the olive",
+            "tree"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "وَطُورِ سِينِينَ",
+        "words": [
+          "وَطُورِ",
+          "سِينِينَ"
+        ],
+        "roman": [
+          "waṭūri",
+          "sīnīna"
+        ],
+        "translation": "And [by] Mount Sinai",
+        "meanings": [
+          [
+            "And (the) Mount",
+            "name"
+          ],
+          [
+            "Sinai",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "وَهَـٰذَا ٱلْبَلَدِ ٱلْأَمِينِ",
+        "words": [
+          "وَهَـٰذَا",
+          "ٱلْبَلَدِ",
+          "ٱلْأَمِينِ"
+        ],
+        "roman": [
+          "wahādhā",
+          "l-baladi",
+          "l-amīni"
+        ],
+        "translation": "And [by] this secure city [i.e., Makkah],",
+        "meanings": [
+          [
+            "And this",
+            "name"
+          ],
+          [
+            "[the] city",
+            "name"
+          ],
+          [
+            "[the] secure",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "لَقَدْ خَلَقْنَا ٱلْإِنسَـٰنَ فِىٓ أَحْسَنِ تَقْوِيمٍۢ",
+        "words": [
+          "لَقَدْ",
+          "خَلَقْنَا",
+          "ٱلْإِنسَـٰنَ",
+          "فِىٓ",
+          "أَحْسَنِ",
+          "تَقْوِيمٍۢ"
+        ],
+        "roman": [
+          "laqad",
+          "khalaqnā",
+          "l-insāna",
+          "fī",
+          "aḥsani",
+          "taqwīmin"
+        ],
+        "translation": "We have certainly created man in the best of stature;",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "We created",
+            "name"
+          ],
+          [
+            "man",
+            "people"
+          ],
+          [
+            "in",
+            "name"
+          ],
+          [
+            "(the) best",
+            "name"
+          ],
+          [
+            "mould",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "ثُمَّ رَدَدْنَـٰهُ أَسْفَلَ سَـٰفِلِينَ",
+        "words": [
+          "ثُمَّ",
+          "رَدَدْنَـٰهُ",
+          "أَسْفَلَ",
+          "سَـٰفِلِينَ"
+        ],
+        "roman": [
+          "thumma",
+          "radadnāhu",
+          "asfala",
+          "sāfilīna"
+        ],
+        "translation": "Then We return him to the lowest of the low,",
+        "meanings": [
+          [
+            "Then",
+            "name"
+          ],
+          [
+            "We returned him",
+            "name"
+          ],
+          [
+            "(to the) lowest",
+            "name"
+          ],
+          [
+            "(of the) low",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "إِلَّا ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّـٰلِحَـٰتِ فَلَهُمْ أَجْرٌ غَيْرُ مَمْنُونٍۢ",
+        "words": [
+          "إِلَّا",
+          "ٱلَّذِينَ",
+          "ءَامَنُوا۟",
+          "وَعَمِلُوا۟",
+          "ٱلصَّـٰلِحَـٰتِ",
+          "فَلَهُمْ",
+          "أَجْرٌ",
+          "غَيْرُ",
+          "مَمْنُونٍۢ"
+        ],
+        "roman": [
+          "illā",
+          "alladhīna",
+          "āmanū",
+          "waʿamilū",
+          "l-ṣāliḥāti",
+          "falahum",
+          "ajrun",
+          "ghayru",
+          "mamnūnin"
+        ],
+        "translation": "Except for those who believe and do righteous deeds, for they will have a reward uninterrupted.",
+        "meanings": [
+          [
+            "Except",
+            "name"
+          ],
+          [
+            "those who",
+            "name"
+          ],
+          [
+            "believe",
+            "people"
+          ],
+          [
+            "and do",
+            "name"
+          ],
+          [
+            "righteous deeds",
+            "name"
+          ],
+          [
+            "then for them",
+            "name"
+          ],
+          [
+            "(is a) reward",
+            "gift"
+          ],
+          [
+            "never",
+            "not"
+          ],
+          [
+            "ending",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "فَمَا يُكَذِّبُكَ بَعْدُ بِٱلدِّينِ",
+        "words": [
+          "فَمَا",
+          "يُكَذِّبُكَ",
+          "بَعْدُ",
+          "بِٱلدِّينِ"
+        ],
+        "roman": [
+          "famā",
+          "yukadhibuka",
+          "baʿdu",
+          "bil-dīni"
+        ],
+        "translation": "So what yet causes you to deny the Recompense?",
+        "meanings": [
+          [
+            "Then what",
+            "name"
+          ],
+          [
+            "causes you to deny",
+            "name"
+          ],
+          [
+            "after (this)",
+            "name"
+          ],
+          [
+            "the judgment",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "أَلَيْسَ ٱللَّهُ بِأَحْكَمِ ٱلْحَـٰكِمِينَ",
+        "words": [
+          "أَلَيْسَ",
+          "ٱللَّهُ",
+          "بِأَحْكَمِ",
+          "ٱلْحَـٰكِمِينَ"
+        ],
+        "roman": [
+          "alaysa",
+          "l-lahu",
+          "bi-aḥkami",
+          "l-ḥākimīna"
+        ],
+        "translation": "Is not Allāh the most just of judges?",
+        "meanings": [
+          [
+            "Is not",
+            "not"
+          ],
+          [
+            "Allah",
+            "gold"
+          ],
+          [
+            "(the) Most Just",
+            "name"
+          ],
+          [
+            "(of) the Judges",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 94,
+    "name": "Ash-Sharh",
+    "arabic": "الشرح",
+    "meaning": "The Relief",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ",
+        "words": [
+          "أَلَمْ",
+          "نَشْرَحْ",
+          "لَكَ",
+          "صَدْرَكَ"
+        ],
+        "roman": [
+          "alam",
+          "nashraḥ",
+          "laka",
+          "ṣadraka"
+        ],
+        "translation": "Did We not expand for you, [O Muḥammad], your breast?",
+        "meanings": [
+          [
+            "Have not",
+            "not"
+          ],
+          [
+            "We expanded",
+            "name"
+          ],
+          [
+            "for you",
+            "name"
+          ],
+          [
+            "your breast",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "وَوَضَعْنَا عَنكَ وِزْرَكَ",
+        "words": [
+          "وَوَضَعْنَا",
+          "عَنكَ",
+          "وِزْرَكَ"
+        ],
+        "roman": [
+          "wawaḍaʿnā",
+          "ʿanka",
+          "wiz'raka"
+        ],
+        "translation": "And We removed from you your burden",
+        "meanings": [
+          [
+            "And We removed",
+            "name"
+          ],
+          [
+            "from you",
+            "name"
+          ],
+          [
+            "your burden",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "ٱلَّذِىٓ أَنقَضَ ظَهْرَكَ",
+        "words": [
+          "ٱلَّذِىٓ",
+          "أَنقَضَ",
+          "ظَهْرَكَ"
+        ],
+        "roman": [
+          "alladhī",
+          "anqaḍa",
+          "ẓahraka"
+        ],
+        "translation": "Which had weighed upon your back",
+        "meanings": [
+          [
+            "Which",
+            "name"
+          ],
+          [
+            "weighed upon",
+            "name"
+          ],
+          [
+            "your back",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "وَرَفَعْنَا لَكَ ذِكْرَكَ",
+        "words": [
+          "وَرَفَعْنَا",
+          "لَكَ",
+          "ذِكْرَكَ"
+        ],
+        "roman": [
+          "warafaʿnā",
+          "laka",
+          "dhik'raka"
+        ],
+        "translation": "And raised high for you your repute.",
+        "meanings": [
+          [
+            "And We raised high",
+            "name"
+          ],
+          [
+            "for you",
+            "name"
+          ],
+          [
+            "your reputation",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "فَإِنَّ مَعَ ٱلْعُسْرِ يُسْرًا",
+        "words": [
+          "فَإِنَّ",
+          "مَعَ",
+          "ٱلْعُسْرِ",
+          "يُسْرًا"
+        ],
+        "roman": [
+          "fa-inna",
+          "maʿa",
+          "l-ʿus'ri",
+          "yus'ran"
+        ],
+        "translation": "For indeed, with hardship [will be] ease [i.e., relief].",
+        "meanings": [
+          [
+            "So indeed",
+            "name"
+          ],
+          [
+            "with",
+            "name"
+          ],
+          [
+            "the hardship",
+            "name"
+          ],
+          [
+            "(is) ease",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "إِنَّ مَعَ ٱلْعُسْرِ يُسْرًۭا",
+        "words": [
+          "إِنَّ",
+          "مَعَ",
+          "ٱلْعُسْرِ",
+          "يُسْرًۭا"
+        ],
+        "roman": [
+          "inna",
+          "maʿa",
+          "l-ʿus'ri",
+          "yus'ran"
+        ],
+        "translation": "Indeed, with hardship [will be] ease.",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "with",
+            "name"
+          ],
+          [
+            "the hardship",
+            "name"
+          ],
+          [
+            "(is) ease",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "فَإِذَا فَرَغْتَ فَٱنصَبْ",
+        "words": [
+          "فَإِذَا",
+          "فَرَغْتَ",
+          "فَٱنصَبْ"
+        ],
+        "roman": [
+          "fa-idhā",
+          "faraghta",
+          "fa-inṣab"
+        ],
+        "translation": "So when you have finished [your duties], then stand up [for worship].",
+        "meanings": [
+          [
+            "So when",
+            "name"
+          ],
+          [
+            "you have finished",
+            "name"
+          ],
+          [
+            "then labor hard",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "وَإِلَىٰ رَبِّكَ فَٱرْغَب",
+        "words": [
+          "وَإِلَىٰ",
+          "رَبِّكَ",
+          "فَٱرْغَب"
+        ],
+        "roman": [
+          "wa-ilā",
+          "rabbika",
+          "fa-ir'ghab"
+        ],
+        "translation": "And to your Lord direct [your] longing.",
+        "meanings": [
+          [
+            "And to",
+            "name"
+          ],
+          [
+            "your Lord",
+            "gold"
+          ],
+          [
+            "turn your attention",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 93,
+    "name": "Ad-Duha",
+    "arabic": "الضحى",
+    "meaning": "The Morning Brightness",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلضُّحَىٰ",
+        "words": [
+          "وَٱلضُّحَىٰ"
+        ],
+        "roman": [
+          "wal-ḍuḥā"
+        ],
+        "translation": "By the morning brightness",
+        "meanings": [
+          [
+            "By the morning brightness",
+            "day"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "وَٱلَّيْلِ إِذَا سَجَىٰ",
+        "words": [
+          "وَٱلَّيْلِ",
+          "إِذَا",
+          "سَجَىٰ"
+        ],
+        "roman": [
+          "wa-al-layli",
+          "idhā",
+          "sajā"
+        ],
+        "translation": "And [by] the night when it covers with darkness,",
+        "meanings": [
+          [
+            "And the night",
+            "moon"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "it covers with darkness",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ",
+        "words": [
+          "مَا",
+          "وَدَّعَكَ",
+          "رَبُّكَ",
+          "وَمَا",
+          "قَلَىٰ"
+        ],
+        "roman": [
+          "mā",
+          "waddaʿaka",
+          "rabbuka",
+          "wamā",
+          "qalā"
+        ],
+        "translation": "Your Lord has not taken leave of you, [O Muḥammad], nor has He detested [you].",
+        "meanings": [
+          [
+            "Not",
+            "not"
+          ],
+          [
+            "has forsaken you",
+            "name"
+          ],
+          [
+            "your Lord",
+            "gold"
+          ],
+          [
+            "and not",
+            "not"
+          ],
+          [
+            "He is displeased",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "وَلَلْـَٔاخِرَةُ خَيْرٌۭ لَّكَ مِنَ ٱلْأُولَىٰ",
+        "words": [
+          "وَلَلْـَٔاخِرَةُ",
+          "خَيْرٌۭ",
+          "لَّكَ",
+          "مِنَ",
+          "ٱلْأُولَىٰ"
+        ],
+        "roman": [
+          "walalākhiratu",
+          "khayrun",
+          "laka",
+          "mina",
+          "l-ūlā"
+        ],
+        "translation": "And the Hereafter is better for you than the first [life].",
+        "meanings": [
+          [
+            "And surely the Hereafter",
+            "name"
+          ],
+          [
+            "(is) better",
+            "name"
+          ],
+          [
+            "for you",
+            "name"
+          ],
+          [
+            "than",
+            "name"
+          ],
+          [
+            "the first",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰٓ",
+        "words": [
+          "وَلَسَوْفَ",
+          "يُعْطِيكَ",
+          "رَبُّكَ",
+          "فَتَرْضَىٰٓ"
+        ],
+        "roman": [
+          "walasawfa",
+          "yuʿ'ṭīka",
+          "rabbuka",
+          "fatarḍā"
+        ],
+        "translation": "And your Lord is going to give you, and you will be satisfied.",
+        "meanings": [
+          [
+            "And soon",
+            "name"
+          ],
+          [
+            "will give you",
+            "gift"
+          ],
+          [
+            "your Lord",
+            "gold"
+          ],
+          [
+            "then you will be satisfied",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "أَلَمْ يَجِدْكَ يَتِيمًۭا فَـَٔاوَىٰ",
+        "words": [
+          "أَلَمْ",
+          "يَجِدْكَ",
+          "يَتِيمًۭا",
+          "فَـَٔاوَىٰ"
+        ],
+        "roman": [
+          "alam",
+          "yajid'ka",
+          "yatīman",
+          "faāwā"
+        ],
+        "translation": "Did He not find you an orphan and give [you] refuge?",
+        "meanings": [
+          [
+            "Did not",
+            "not"
+          ],
+          [
+            "He find you",
+            "name"
+          ],
+          [
+            "an orphan",
+            "people"
+          ],
+          [
+            "and give shelter",
+            "gift"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "وَوَجَدَكَ ضَآلًّۭا فَهَدَىٰ",
+        "words": [
+          "وَوَجَدَكَ",
+          "ضَآلًّۭا",
+          "فَهَدَىٰ"
+        ],
+        "roman": [
+          "wawajadaka",
+          "ḍāllan",
+          "fahadā"
+        ],
+        "translation": "And He found you lost and guided [you],",
+        "meanings": [
+          [
+            "And He found you",
+            "name"
+          ],
+          [
+            "lost",
+            "name"
+          ],
+          [
+            "so He guided",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "وَوَجَدَكَ عَآئِلًۭا فَأَغْنَىٰ",
+        "words": [
+          "وَوَجَدَكَ",
+          "عَآئِلًۭا",
+          "فَأَغْنَىٰ"
+        ],
+        "roman": [
+          "wawajadaka",
+          "ʿāilan",
+          "fa-aghnā"
+        ],
+        "translation": "And He found you poor and made [you] self-sufficient.",
+        "meanings": [
+          [
+            "And He found you",
+            "name"
+          ],
+          [
+            "in need",
+            "name"
+          ],
+          [
+            "so He made self-sufficient",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 9,
+        "text": "فَأَمَّا ٱلْيَتِيمَ فَلَا تَقْهَرْ",
+        "words": [
+          "فَأَمَّا",
+          "ٱلْيَتِيمَ",
+          "فَلَا",
+          "تَقْهَرْ"
+        ],
+        "roman": [
+          "fa-ammā",
+          "l-yatīma",
+          "falā",
+          "taqhar"
+        ],
+        "translation": "So as for the orphan, do not oppress [him].",
+        "meanings": [
+          [
+            "So as for",
+            "name"
+          ],
+          [
+            "the orphan",
+            "people"
+          ],
+          [
+            "then (do) not",
+            "not"
+          ],
+          [
+            "oppress",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 10,
+        "text": "وَأَمَّا ٱلسَّآئِلَ فَلَا تَنْهَرْ",
+        "words": [
+          "وَأَمَّا",
+          "ٱلسَّآئِلَ",
+          "فَلَا",
+          "تَنْهَرْ"
+        ],
+        "roman": [
+          "wa-ammā",
+          "l-sāila",
+          "falā",
+          "tanhar"
+        ],
+        "translation": "And as for the petitioner, do not repel [him].",
+        "meanings": [
+          [
+            "And as for",
+            "name"
+          ],
+          [
+            "one who asks",
+            "name"
+          ],
+          [
+            "then (do) not",
+            "not"
+          ],
+          [
+            "repel",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 11,
+        "text": "وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ",
+        "words": [
+          "وَأَمَّا",
+          "بِنِعْمَةِ",
+          "رَبِّكَ",
+          "فَحَدِّثْ"
+        ],
+        "roman": [
+          "wa-ammā",
+          "biniʿ'mati",
+          "rabbika",
+          "faḥaddith"
+        ],
+        "translation": "But as for the favor of your Lord, report [it].",
+        "meanings": [
+          [
+            "But as for",
+            "name"
+          ],
+          [
+            "(the) Favor",
+            "name"
+          ],
+          [
+            "(of) your Lord",
+            "gold"
+          ],
+          [
+            "narrate",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 92,
+    "name": "Al-Layl",
+    "arabic": "الليل",
+    "meaning": "The Night",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلَّيْلِ إِذَا يَغْشَىٰ",
+        "words": [
+          "وَٱلَّيْلِ",
+          "إِذَا",
+          "يَغْشَىٰ"
+        ],
+        "roman": [
+          "wa-al-layli",
+          "idhā",
+          "yaghshā"
+        ],
+        "translation": "By the night when it covers",
+        "meanings": [
+          [
+            "By the night",
+            "moon"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "it covers",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "وَٱلنَّهَارِ إِذَا تَجَلَّىٰ",
+        "words": [
+          "وَٱلنَّهَارِ",
+          "إِذَا",
+          "تَجَلَّىٰ"
+        ],
+        "roman": [
+          "wal-nahāri",
+          "idhā",
+          "tajallā"
+        ],
+        "translation": "And [by] the day when it appears",
+        "meanings": [
+          [
+            "And the day",
+            "day"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "it shines in brightness",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "وَمَا خَلَقَ ٱلذَّكَرَ وَٱلْأُنثَىٰٓ",
+        "words": [
+          "وَمَا",
+          "خَلَقَ",
+          "ٱلذَّكَرَ",
+          "وَٱلْأُنثَىٰٓ"
+        ],
+        "roman": [
+          "wamā",
+          "khalaqa",
+          "l-dhakara",
+          "wal-unthā"
+        ],
+        "translation": "And [by] He who created the male and female,",
+        "meanings": [
+          [
+            "And He Who",
+            "name"
+          ],
+          [
+            "created",
+            "name"
+          ],
+          [
+            "the male",
+            "name"
+          ],
+          [
+            "and the female",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "إِنَّ سَعْيَكُمْ لَشَتَّىٰ",
+        "words": [
+          "إِنَّ",
+          "سَعْيَكُمْ",
+          "لَشَتَّىٰ"
+        ],
+        "roman": [
+          "inna",
+          "saʿyakum",
+          "lashattā"
+        ],
+        "translation": "Indeed, your efforts are diverse.",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "your efforts",
+            "name"
+          ],
+          [
+            "(are) surely diverse",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "فَأَمَّا مَنْ أَعْطَىٰ وَٱتَّقَىٰ",
+        "words": [
+          "فَأَمَّا",
+          "مَنْ",
+          "أَعْطَىٰ",
+          "وَٱتَّقَىٰ"
+        ],
+        "roman": [
+          "fa-ammā",
+          "man",
+          "aʿṭā",
+          "wa-ittaqā"
+        ],
+        "translation": "As for he who gives and fears Allāh",
+        "meanings": [
+          [
+            "Then as for",
+            "name"
+          ],
+          [
+            "(him) who",
+            "name"
+          ],
+          [
+            "gives",
+            "gift"
+          ],
+          [
+            "and fears",
+            "help"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "وَصَدَّقَ بِٱلْحُسْنَىٰ",
+        "words": [
+          "وَصَدَّقَ",
+          "بِٱلْحُسْنَىٰ"
+        ],
+        "roman": [
+          "waṣaddaqa",
+          "bil-ḥus'nā"
+        ],
+        "translation": "And believes in the best [reward],",
+        "meanings": [
+          [
+            "And believes",
+            "people"
+          ],
+          [
+            "in the best",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "فَسَنُيَسِّرُهُۥ لِلْيُسْرَىٰ",
+        "words": [
+          "فَسَنُيَسِّرُهُۥ",
+          "لِلْيُسْرَىٰ"
+        ],
+        "roman": [
+          "fasanuyassiruhu",
+          "lil'yus'rā"
+        ],
+        "translation": "We will ease him toward ease.",
+        "meanings": [
+          [
+            "Then We will ease him",
+            "name"
+          ],
+          [
+            "towards [the] ease",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "وَأَمَّا مَنۢ بَخِلَ وَٱسْتَغْنَىٰ",
+        "words": [
+          "وَأَمَّا",
+          "مَنۢ",
+          "بَخِلَ",
+          "وَٱسْتَغْنَىٰ"
+        ],
+        "roman": [
+          "wa-ammā",
+          "man",
+          "bakhila",
+          "wa-is'taghnā"
+        ],
+        "translation": "But as for he who withholds and considers himself free of need",
+        "meanings": [
+          [
+            "But as for",
+            "name"
+          ],
+          [
+            "(him) who",
+            "name"
+          ],
+          [
+            "withholds",
+            "name"
+          ],
+          [
+            "and considers himself free from need",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 9,
+        "text": "وَكَذَّبَ بِٱلْحُسْنَىٰ",
+        "words": [
+          "وَكَذَّبَ",
+          "بِٱلْحُسْنَىٰ"
+        ],
+        "roman": [
+          "wakadhaba",
+          "bil-ḥus'nā"
+        ],
+        "translation": "And denies the best [reward],",
+        "meanings": [
+          [
+            "And denies",
+            "name"
+          ],
+          [
+            "the best",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 10,
+        "text": "فَسَنُيَسِّرُهُۥ لِلْعُسْرَىٰ",
+        "words": [
+          "فَسَنُيَسِّرُهُۥ",
+          "لِلْعُسْرَىٰ"
+        ],
+        "roman": [
+          "fasanuyassiruhu",
+          "lil'ʿus'rā"
+        ],
+        "translation": "We will ease him toward difficulty.",
+        "meanings": [
+          [
+            "Then We will ease him",
+            "name"
+          ],
+          [
+            "towards [the] difficulty",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 11,
+        "text": "وَمَا يُغْنِى عَنْهُ مَالُهُۥٓ إِذَا تَرَدَّىٰٓ",
+        "words": [
+          "وَمَا",
+          "يُغْنِى",
+          "عَنْهُ",
+          "مَالُهُۥٓ",
+          "إِذَا",
+          "تَرَدَّىٰٓ"
+        ],
+        "roman": [
+          "wamā",
+          "yugh'nī",
+          "ʿanhu",
+          "māluhu",
+          "idhā",
+          "taraddā"
+        ],
+        "translation": "And what will his wealth avail him when he falls?",
+        "meanings": [
+          [
+            "And not",
+            "not"
+          ],
+          [
+            "will avail",
+            "name"
+          ],
+          [
+            "him",
+            "name"
+          ],
+          [
+            "his wealth",
+            "name"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "he falls",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 12,
+        "text": "إِنَّ عَلَيْنَا لَلْهُدَىٰ",
+        "words": [
+          "إِنَّ",
+          "عَلَيْنَا",
+          "لَلْهُدَىٰ"
+        ],
+        "roman": [
+          "inna",
+          "ʿalaynā",
+          "lalhudā"
+        ],
+        "translation": "Indeed, [incumbent] upon Us is guidance.",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "upon Us",
+            "name"
+          ],
+          [
+            "(is) the guidance",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 13,
+        "text": "وَإِنَّ لَنَا لَلْـَٔاخِرَةَ وَٱلْأُولَىٰ",
+        "words": [
+          "وَإِنَّ",
+          "لَنَا",
+          "لَلْـَٔاخِرَةَ",
+          "وَٱلْأُولَىٰ"
+        ],
+        "roman": [
+          "wa-inna",
+          "lanā",
+          "lalākhirata",
+          "wal-ūlā"
+        ],
+        "translation": "And indeed, to us belongs the Hereafter and the first [life].",
+        "meanings": [
+          [
+            "And indeed",
+            "name"
+          ],
+          [
+            "for Us",
+            "name"
+          ],
+          [
+            "(is) the Hereafter",
+            "name"
+          ],
+          [
+            "and the first (life)",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 14,
+        "text": "فَأَنذَرْتُكُمْ نَارًۭا تَلَظَّىٰ",
+        "words": [
+          "فَأَنذَرْتُكُمْ",
+          "نَارًۭا",
+          "تَلَظَّىٰ"
+        ],
+        "roman": [
+          "fa-andhartukum",
+          "nāran",
+          "talaẓẓā"
+        ],
+        "translation": "So I have warned you of a Fire which is blazing.",
+        "meanings": [
+          [
+            "So I warn you",
+            "name"
+          ],
+          [
+            "(of) a Fire",
+            "fire"
+          ],
+          [
+            "blazing",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 15,
+        "text": "لَا يَصْلَىٰهَآ إِلَّا ٱلْأَشْقَى",
+        "words": [
+          "لَا",
+          "يَصْلَىٰهَآ",
+          "إِلَّا",
+          "ٱلْأَشْقَى"
+        ],
+        "roman": [
+          "lā",
+          "yaṣlāhā",
+          "illā",
+          "l-ashqā"
+        ],
+        "translation": "None will [enter to] burn therein except the most wretched one",
+        "meanings": [
+          [
+            "Not",
+            "not"
+          ],
+          [
+            "will burn (in) it",
+            "name"
+          ],
+          [
+            "except",
+            "name"
+          ],
+          [
+            "the most wretched",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 16,
+        "text": "ٱلَّذِى كَذَّبَ وَتَوَلَّىٰ",
+        "words": [
+          "ٱلَّذِى",
+          "كَذَّبَ",
+          "وَتَوَلَّىٰ"
+        ],
+        "roman": [
+          "alladhī",
+          "kadhaba",
+          "watawallā"
+        ],
+        "translation": "Who had denied and turned away.",
+        "meanings": [
+          [
+            "The one who",
+            "name"
+          ],
+          [
+            "denied",
+            "name"
+          ],
+          [
+            "and turned away",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 17,
+        "text": "وَسَيُجَنَّبُهَا ٱلْأَتْقَى",
+        "words": [
+          "وَسَيُجَنَّبُهَا",
+          "ٱلْأَتْقَى"
+        ],
+        "roman": [
+          "wasayujannabuhā",
+          "l-atqā"
+        ],
+        "translation": "But the righteous one will avoid it",
+        "meanings": [
+          [
+            "But will be removed from it",
+            "name"
+          ],
+          [
+            "the righteous",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 18,
+        "text": "ٱلَّذِى يُؤْتِى مَالَهُۥ يَتَزَكَّىٰ",
+        "words": [
+          "ٱلَّذِى",
+          "يُؤْتِى",
+          "مَالَهُۥ",
+          "يَتَزَكَّىٰ"
+        ],
+        "roman": [
+          "alladhī",
+          "yu'tī",
+          "mālahu",
+          "yatazakkā"
+        ],
+        "translation": "[He] who gives [from] his wealth to purify himself",
+        "meanings": [
+          [
+            "The one who",
+            "name"
+          ],
+          [
+            "gives",
+            "gift"
+          ],
+          [
+            "his wealth",
+            "name"
+          ],
+          [
+            "(to) purify himself",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 19,
+        "text": "وَمَا لِأَحَدٍ عِندَهُۥ مِن نِّعْمَةٍۢ تُجْزَىٰٓ",
+        "words": [
+          "وَمَا",
+          "لِأَحَدٍ",
+          "عِندَهُۥ",
+          "مِن",
+          "نِّعْمَةٍۢ",
+          "تُجْزَىٰٓ"
+        ],
+        "roman": [
+          "wamā",
+          "li-aḥadin",
+          "ʿindahu",
+          "min",
+          "niʿ'matin",
+          "tuj'zā"
+        ],
+        "translation": "And not [giving] for anyone who has [done him] a favor to be rewarded",
+        "meanings": [
+          [
+            "And not",
+            "not"
+          ],
+          [
+            "for anyone",
+            "name"
+          ],
+          [
+            "with him",
+            "name"
+          ],
+          [
+            "any",
+            "name"
+          ],
+          [
+            "favor",
+            "name"
+          ],
+          [
+            "to be recompensed",
+            "book"
+          ]
+        ]
+      },
+      {
+        "id": 20,
+        "text": "إِلَّا ٱبْتِغَآءَ وَجْهِ رَبِّهِ ٱلْأَعْلَىٰ",
+        "words": [
+          "إِلَّا",
+          "ٱبْتِغَآءَ",
+          "وَجْهِ",
+          "رَبِّهِ",
+          "ٱلْأَعْلَىٰ"
+        ],
+        "roman": [
+          "illā",
+          "ib'tighāa",
+          "wajhi",
+          "rabbihi",
+          "l-aʿlā"
+        ],
+        "translation": "But only seeking the face [i.e., acceptance] of his Lord, Most High.",
+        "meanings": [
+          [
+            "Except",
+            "name"
+          ],
+          [
+            "seeking",
+            "name"
+          ],
+          [
+            "(the) Countenance",
+            "name"
+          ],
+          [
+            "(of) his Lord",
+            "gold"
+          ],
+          [
+            "the Most High",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 21,
+        "text": "وَلَسَوْفَ يَرْضَىٰ",
+        "words": [
+          "وَلَسَوْفَ",
+          "يَرْضَىٰ"
+        ],
+        "roman": [
+          "walasawfa",
+          "yarḍā"
+        ],
+        "translation": "And he is going to be satisfied.",
+        "meanings": [
+          [
+            "And soon, surely",
+            "name"
+          ],
+          [
+            "he will be pleased",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 91,
+    "name": "Ash-Shams",
+    "arabic": "الشمس",
+    "meaning": "The Sun",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلشَّمْسِ وَضُحَىٰهَا",
+        "words": [
+          "وَٱلشَّمْسِ",
+          "وَضُحَىٰهَا"
+        ],
+        "roman": [
+          "wal-shamsi",
+          "waḍuḥāhā"
+        ],
+        "translation": "By the sun and its brightness",
+        "meanings": [
+          [
+            "By the sun",
+            "day"
+          ],
+          [
+            "and its brightness",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "وَٱلْقَمَرِ إِذَا تَلَىٰهَا",
+        "words": [
+          "وَٱلْقَمَرِ",
+          "إِذَا",
+          "تَلَىٰهَا"
+        ],
+        "roman": [
+          "wal-qamari",
+          "idhā",
+          "talāhā"
+        ],
+        "translation": "And [by] the moon when it follows it",
+        "meanings": [
+          [
+            "And the moon",
+            "moon"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "it follows it",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "وَٱلنَّهَارِ إِذَا جَلَّىٰهَا",
+        "words": [
+          "وَٱلنَّهَارِ",
+          "إِذَا",
+          "جَلَّىٰهَا"
+        ],
+        "roman": [
+          "wal-nahāri",
+          "idhā",
+          "jallāhā"
+        ],
+        "translation": "And [by] the day when it displays it",
+        "meanings": [
+          [
+            "And the day",
+            "day"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "it displays it",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "وَٱلَّيْلِ إِذَا يَغْشَىٰهَا",
+        "words": [
+          "وَٱلَّيْلِ",
+          "إِذَا",
+          "يَغْشَىٰهَا"
+        ],
+        "roman": [
+          "wa-al-layli",
+          "idhā",
+          "yaghshāhā"
+        ],
+        "translation": "And [by] the night when it covers [i.e., conceals] it",
+        "meanings": [
+          [
+            "And the night",
+            "moon"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "it covers it",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "وَٱلسَّمَآءِ وَمَا بَنَىٰهَا",
+        "words": [
+          "وَٱلسَّمَآءِ",
+          "وَمَا",
+          "بَنَىٰهَا"
+        ],
+        "roman": [
+          "wal-samāi",
+          "wamā",
+          "banāhā"
+        ],
+        "translation": "And [by] the sky and He who constructed it",
+        "meanings": [
+          [
+            "And the heaven",
+            "name"
+          ],
+          [
+            "and (He) Who",
+            "name"
+          ],
+          [
+            "constructed it",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "وَٱلْأَرْضِ وَمَا طَحَىٰهَا",
+        "words": [
+          "وَٱلْأَرْضِ",
+          "وَمَا",
+          "طَحَىٰهَا"
+        ],
+        "roman": [
+          "wal-arḍi",
+          "wamā",
+          "ṭaḥāhā"
+        ],
+        "translation": "And [by] the earth and He who spread it",
+        "meanings": [
+          [
+            "And the earth",
+            "worlds"
+          ],
+          [
+            "and by (He) Who",
+            "name"
+          ],
+          [
+            "spread it",
+            "book"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "وَنَفْسٍۢ وَمَا سَوَّىٰهَا",
+        "words": [
+          "وَنَفْسٍۢ",
+          "وَمَا",
+          "سَوَّىٰهَا"
+        ],
+        "roman": [
+          "wanafsin",
+          "wamā",
+          "sawwāhā"
+        ],
+        "translation": "And [by] the soul and He who proportioned it",
+        "meanings": [
+          [
+            "And (the) soul",
+            "name"
+          ],
+          [
+            "and (He) Who",
+            "name"
+          ],
+          [
+            "proportioned it",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "فَأَلْهَمَهَا فُجُورَهَا وَتَقْوَىٰهَا",
+        "words": [
+          "فَأَلْهَمَهَا",
+          "فُجُورَهَا",
+          "وَتَقْوَىٰهَا"
+        ],
+        "roman": [
+          "fa-alhamahā",
+          "fujūrahā",
+          "wataqwāhā"
+        ],
+        "translation": "And inspired it [with discernment of] its wickedness and its righteousness,",
+        "meanings": [
+          [
+            "And He inspired it",
+            "name"
+          ],
+          [
+            "(to distinguish) its wickedness",
+            "name"
+          ],
+          [
+            "and its righteousness",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 9,
+        "text": "قَدْ أَفْلَحَ مَن زَكَّىٰهَا",
+        "words": [
+          "قَدْ",
+          "أَفْلَحَ",
+          "مَن",
+          "زَكَّىٰهَا"
+        ],
+        "roman": [
+          "qad",
+          "aflaḥa",
+          "man",
+          "zakkāhā"
+        ],
+        "translation": "He has succeeded who purifies it,",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "he succeeds",
+            "name"
+          ],
+          [
+            "who",
+            "name"
+          ],
+          [
+            "purifies it",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 10,
+        "text": "وَقَدْ خَابَ مَن دَسَّىٰهَا",
+        "words": [
+          "وَقَدْ",
+          "خَابَ",
+          "مَن",
+          "دَسَّىٰهَا"
+        ],
+        "roman": [
+          "waqad",
+          "khāba",
+          "man",
+          "dassāhā"
+        ],
+        "translation": "And he has failed who instills it [with corruption].",
+        "meanings": [
+          [
+            "And indeed",
+            "name"
+          ],
+          [
+            "he fails",
+            "name"
+          ],
+          [
+            "who",
+            "name"
+          ],
+          [
+            "buries it",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 11,
+        "text": "كَذَّبَتْ ثَمُودُ بِطَغْوَىٰهَآ",
+        "words": [
+          "كَذَّبَتْ",
+          "ثَمُودُ",
+          "بِطَغْوَىٰهَآ"
+        ],
+        "roman": [
+          "kadhabat",
+          "thamūdu",
+          "biṭaghwāhā"
+        ],
+        "translation": "Thamūd denied [their prophet] by reason of their transgression,",
+        "meanings": [
+          [
+            "Denied",
+            "name"
+          ],
+          [
+            "Thamud",
+            "name"
+          ],
+          [
+            "by their transgression",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 12,
+        "text": "إِذِ ٱنۢبَعَثَ أَشْقَىٰهَا",
+        "words": [
+          "إِذِ",
+          "ٱنۢبَعَثَ",
+          "أَشْقَىٰهَا"
+        ],
+        "roman": [
+          "idhi",
+          "inbaʿatha",
+          "ashqāhā"
+        ],
+        "translation": "When the most wretched of them was sent forth.",
+        "meanings": [
+          [
+            "When",
+            "name"
+          ],
+          [
+            "(was) sent forth",
+            "name"
+          ],
+          [
+            "(the) most wicked of them",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 13,
+        "text": "فَقَالَ لَهُمْ رَسُولُ ٱللَّهِ نَاقَةَ ٱللَّهِ وَسُقْيَـٰهَا",
+        "words": [
+          "فَقَالَ",
+          "لَهُمْ",
+          "رَسُولُ",
+          "ٱللَّهِ",
+          "نَاقَةَ",
+          "ٱللَّهِ",
+          "وَسُقْيَـٰهَا"
+        ],
+        "roman": [
+          "faqāla",
+          "lahum",
+          "rasūlu",
+          "l-lahi",
+          "nāqata",
+          "l-lahi",
+          "wasuq'yāhā"
+        ],
+        "translation": "And the messenger of Allāh [i.e., Ṣāliḥ] said to them, \"[Do not harm] the she-camel of Allāh or [prevent her from] her drink.\"",
+        "meanings": [
+          [
+            "But said",
+            "name"
+          ],
+          [
+            "to them",
+            "name"
+          ],
+          [
+            "(the) Messenger",
+            "name"
+          ],
+          [
+            "(of) Allah",
+            "gold"
+          ],
+          [
+            "(It is the) she-camel",
+            "name"
+          ],
+          [
+            "(of) Allah",
+            "gold"
+          ],
+          [
+            "and her drink",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 14,
+        "text": "فَكَذَّبُوهُ فَعَقَرُوهَا فَدَمْدَمَ عَلَيْهِمْ رَبُّهُم بِذَنۢبِهِمْ فَسَوَّىٰهَا",
+        "words": [
+          "فَكَذَّبُوهُ",
+          "فَعَقَرُوهَا",
+          "فَدَمْدَمَ",
+          "عَلَيْهِمْ",
+          "رَبُّهُم",
+          "بِذَنۢبِهِمْ",
+          "فَسَوَّىٰهَا"
+        ],
+        "roman": [
+          "fakadhabūhu",
+          "faʿaqarūhā",
+          "fadamdama",
+          "ʿalayhim",
+          "rabbuhum",
+          "bidhanbihim",
+          "fasawwāhā"
+        ],
+        "translation": "But they denied him and hamstrung her. So their Lord brought down upon them destruction for their sin and made it equal [upon all of them].",
+        "meanings": [
+          [
+            "But they denied him",
+            "name"
+          ],
+          [
+            "and they hamstrung her",
+            "name"
+          ],
+          [
+            "So destroyed",
+            "name"
+          ],
+          [
+            "them",
+            "name"
+          ],
+          [
+            "their Lord",
+            "gold"
+          ],
+          [
+            "for their sin",
+            "name"
+          ],
+          [
+            "and leveled them",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 15,
+        "text": "وَلَا يَخَافُ عُقْبَـٰهَا",
+        "words": [
+          "وَلَا",
+          "يَخَافُ",
+          "عُقْبَـٰهَا"
+        ],
+        "roman": [
+          "walā",
+          "yakhāfu",
+          "ʿuq'bāhā"
+        ],
+        "translation": "And He does not fear the consequence thereof.",
+        "meanings": [
+          [
+            "And not",
+            "not"
+          ],
+          [
+            "He fears",
+            "help"
+          ],
+          [
+            "its consequences",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 90,
+    "name": "Al-Balad",
+    "arabic": "البلد",
+    "meaning": "The City",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "لَآ أُقْسِمُ بِهَـٰذَا ٱلْبَلَدِ",
+        "words": [
+          "لَآ",
+          "أُقْسِمُ",
+          "بِهَـٰذَا",
+          "ٱلْبَلَدِ"
+        ],
+        "roman": [
+          "lā",
+          "uq'simu",
+          "bihādhā",
+          "l-baladi"
+        ],
+        "translation": "I swear by this city [i.e., Makkah]",
+        "meanings": [
+          [
+            "Nay",
+            "name"
+          ],
+          [
+            "I swear",
+            "name"
+          ],
+          [
+            "by this",
+            "name"
+          ],
+          [
+            "city",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "وَأَنتَ حِلٌّۢ بِهَـٰذَا ٱلْبَلَدِ",
+        "words": [
+          "وَأَنتَ",
+          "حِلٌّۢ",
+          "بِهَـٰذَا",
+          "ٱلْبَلَدِ"
+        ],
+        "roman": [
+          "wa-anta",
+          "ḥillun",
+          "bihādhā",
+          "l-baladi"
+        ],
+        "translation": "And you, [O Muḥammad], are free of restriction in this city",
+        "meanings": [
+          [
+            "And you",
+            "name"
+          ],
+          [
+            "(are) free (to dwell)",
+            "name"
+          ],
+          [
+            "in this",
+            "name"
+          ],
+          [
+            "city",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "وَوَالِدٍۢ وَمَا وَلَدَ",
+        "words": [
+          "وَوَالِدٍۢ",
+          "وَمَا",
+          "وَلَدَ"
+        ],
+        "roman": [
+          "wawālidin",
+          "wamā",
+          "walada"
+        ],
+        "translation": "And [by] the father and that which was born [of him],",
+        "meanings": [
+          [
+            "And the begetter",
+            "name"
+          ],
+          [
+            "and what",
+            "name"
+          ],
+          [
+            "he begot",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "لَقَدْ خَلَقْنَا ٱلْإِنسَـٰنَ فِى كَبَدٍ",
+        "words": [
+          "لَقَدْ",
+          "خَلَقْنَا",
+          "ٱلْإِنسَـٰنَ",
+          "فِى",
+          "كَبَدٍ"
+        ],
+        "roman": [
+          "laqad",
+          "khalaqnā",
+          "l-insāna",
+          "fī",
+          "kabadin"
+        ],
+        "translation": "We have certainly created man into hardship.",
+        "meanings": [
+          [
+            "Certainly",
+            "name"
+          ],
+          [
+            "We have created",
+            "name"
+          ],
+          [
+            "man",
+            "people"
+          ],
+          [
+            "(to be) in",
+            "name"
+          ],
+          [
+            "hardship",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "أَيَحْسَبُ أَن لَّن يَقْدِرَ عَلَيْهِ أَحَدٌۭ",
+        "words": [
+          "أَيَحْسَبُ",
+          "أَن",
+          "لَّن",
+          "يَقْدِرَ",
+          "عَلَيْهِ",
+          "أَحَدٌۭ"
+        ],
+        "roman": [
+          "ayaḥsabu",
+          "an",
+          "lan",
+          "yaqdira",
+          "ʿalayhi",
+          "aḥadun"
+        ],
+        "translation": "Does he think that never will anyone overcome him?",
+        "meanings": [
+          [
+            "Does he think",
+            "name"
+          ],
+          [
+            "that",
+            "name"
+          ],
+          [
+            "not",
+            "not"
+          ],
+          [
+            "has power",
+            "name"
+          ],
+          [
+            "over him",
+            "name"
+          ],
+          [
+            "anyone",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "يَقُولُ أَهْلَكْتُ مَالًۭا لُّبَدًا",
+        "words": [
+          "يَقُولُ",
+          "أَهْلَكْتُ",
+          "مَالًۭا",
+          "لُّبَدًا"
+        ],
+        "roman": [
+          "yaqūlu",
+          "ahlaktu",
+          "mālan",
+          "lubadan"
+        ],
+        "translation": "He says, \"I have spent wealth in abundance.\"",
+        "meanings": [
+          [
+            "He will say",
+            "name"
+          ],
+          [
+            "I have squandered",
+            "name"
+          ],
+          [
+            "wealth",
+            "name"
+          ],
+          [
+            "abundant",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "أَيَحْسَبُ أَن لَّمْ يَرَهُۥٓ أَحَدٌ",
+        "words": [
+          "أَيَحْسَبُ",
+          "أَن",
+          "لَّمْ",
+          "يَرَهُۥٓ",
+          "أَحَدٌ"
+        ],
+        "roman": [
+          "ayaḥsabu",
+          "an",
+          "lam",
+          "yarahu",
+          "aḥadun"
+        ],
+        "translation": "Does he think that no one has seen him?",
+        "meanings": [
+          [
+            "Does he think",
+            "name"
+          ],
+          [
+            "that",
+            "name"
+          ],
+          [
+            "not",
+            "not"
+          ],
+          [
+            "sees him",
+            "name"
+          ],
+          [
+            "anyone",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "أَلَمْ نَجْعَل لَّهُۥ عَيْنَيْنِ",
+        "words": [
+          "أَلَمْ",
+          "نَجْعَل",
+          "لَّهُۥ",
+          "عَيْنَيْنِ"
+        ],
+        "roman": [
+          "alam",
+          "najʿal",
+          "lahu",
+          "ʿaynayni"
+        ],
+        "translation": "Have We not made for him two eyes?",
+        "meanings": [
+          [
+            "Have not",
+            "not"
+          ],
+          [
+            "We made",
+            "name"
+          ],
+          [
+            "for him",
+            "name"
+          ],
+          [
+            "two eyes",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 9,
+        "text": "وَلِسَانًۭا وَشَفَتَيْنِ",
+        "words": [
+          "وَلِسَانًۭا",
+          "وَشَفَتَيْنِ"
+        ],
+        "roman": [
+          "walisānan",
+          "washafatayni"
+        ],
+        "translation": "And a tongue and two lips?",
+        "meanings": [
+          [
+            "And a tongue",
+            "name"
+          ],
+          [
+            "and two lips",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 10,
+        "text": "وَهَدَيْنَـٰهُ ٱلنَّجْدَيْنِ",
+        "words": [
+          "وَهَدَيْنَـٰهُ",
+          "ٱلنَّجْدَيْنِ"
+        ],
+        "roman": [
+          "wahadaynāhu",
+          "l-najdayni"
+        ],
+        "translation": "And have shown him the two ways?",
+        "meanings": [
+          [
+            "And shown him",
+            "name"
+          ],
+          [
+            "the two ways",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 11,
+        "text": "فَلَا ٱقْتَحَمَ ٱلْعَقَبَةَ",
+        "words": [
+          "فَلَا",
+          "ٱقْتَحَمَ",
+          "ٱلْعَقَبَةَ"
+        ],
+        "roman": [
+          "falā",
+          "iq'taḥama",
+          "l-ʿaqabata"
+        ],
+        "translation": "But he has not broken through the difficult pass.",
+        "meanings": [
+          [
+            "But not",
+            "not"
+          ],
+          [
+            "he has attempted",
+            "name"
+          ],
+          [
+            "the steep path",
+            "path"
+          ]
+        ]
+      },
+      {
+        "id": 12,
+        "text": "وَمَآ أَدْرَىٰكَ مَا ٱلْعَقَبَةُ",
+        "words": [
+          "وَمَآ",
+          "أَدْرَىٰكَ",
+          "مَا",
+          "ٱلْعَقَبَةُ"
+        ],
+        "roman": [
+          "wamā",
+          "adrāka",
+          "mā",
+          "l-ʿaqabatu"
+        ],
+        "translation": "And what can make you know what is [breaking through] the difficult pass?",
+        "meanings": [
+          [
+            "And what",
+            "name"
+          ],
+          [
+            "can make you know",
+            "name"
+          ],
+          [
+            "what",
+            "name"
+          ],
+          [
+            "the steep path (is)",
+            "path"
+          ]
+        ]
+      },
+      {
+        "id": 13,
+        "text": "فَكُّ رَقَبَةٍ",
+        "words": [
+          "فَكُّ",
+          "رَقَبَةٍ"
+        ],
+        "roman": [
+          "fakku",
+          "raqabatin"
+        ],
+        "translation": "It is the freeing of a slave",
+        "meanings": [
+          [
+            "(It is) freeing",
+            "name"
+          ],
+          [
+            "a neck",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 14,
+        "text": "أَوْ إِطْعَـٰمٌۭ فِى يَوْمٍۢ ذِى مَسْغَبَةٍۢ",
+        "words": [
+          "أَوْ",
+          "إِطْعَـٰمٌۭ",
+          "فِى",
+          "يَوْمٍۢ",
+          "ذِى",
+          "مَسْغَبَةٍۢ"
+        ],
+        "roman": [
+          "aw",
+          "iṭ'ʿāmun",
+          "fī",
+          "yawmin",
+          "dhī",
+          "masghabatin"
+        ],
+        "translation": "Or feeding on a day of severe hunger",
+        "meanings": [
+          [
+            "Or",
+            "name"
+          ],
+          [
+            "feeding",
+            "food"
+          ],
+          [
+            "in",
+            "name"
+          ],
+          [
+            "a day",
+            "day"
+          ],
+          [
+            "of",
+            "name"
+          ],
+          [
+            "severe hunger",
+            "food"
+          ]
+        ]
+      },
+      {
+        "id": 15,
+        "text": "يَتِيمًۭا ذَا مَقْرَبَةٍ",
+        "words": [
+          "يَتِيمًۭا",
+          "ذَا",
+          "مَقْرَبَةٍ"
+        ],
+        "roman": [
+          "yatīman",
+          "dhā",
+          "maqrabatin"
+        ],
+        "translation": "An orphan of near relationship",
+        "meanings": [
+          [
+            "An orphan",
+            "people"
+          ],
+          [
+            "of",
+            "name"
+          ],
+          [
+            "near relationship",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 16,
+        "text": "أَوْ مِسْكِينًۭا ذَا مَتْرَبَةٍۢ",
+        "words": [
+          "أَوْ",
+          "مِسْكِينًۭا",
+          "ذَا",
+          "مَتْرَبَةٍۢ"
+        ],
+        "roman": [
+          "aw",
+          "mis'kīnan",
+          "dhā",
+          "matrabatin"
+        ],
+        "translation": "Or a needy person in misery",
+        "meanings": [
+          [
+            "Or",
+            "name"
+          ],
+          [
+            "a needy person",
+            "name"
+          ],
+          [
+            "in",
+            "name"
+          ],
+          [
+            "misery",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 17,
+        "text": "ثُمَّ كَانَ مِنَ ٱلَّذِينَ ءَامَنُوا۟ وَتَوَاصَوْا۟ بِٱلصَّبْرِ وَتَوَاصَوْا۟ بِٱلْمَرْحَمَةِ",
+        "words": [
+          "ثُمَّ",
+          "كَانَ",
+          "مِنَ",
+          "ٱلَّذِينَ",
+          "ءَامَنُوا۟",
+          "وَتَوَاصَوْا۟",
+          "بِٱلصَّبْرِ",
+          "وَتَوَاصَوْا۟",
+          "بِٱلْمَرْحَمَةِ"
+        ],
+        "roman": [
+          "thumma",
+          "kāna",
+          "mina",
+          "alladhīna",
+          "āmanū",
+          "watawāṣaw",
+          "bil-ṣabri",
+          "watawāṣaw",
+          "bil-marḥamati"
+        ],
+        "translation": "And then being among those who believed and advised one another to patience and advised one another to compassion.",
+        "meanings": [
+          [
+            "Then",
+            "name"
+          ],
+          [
+            "he is",
+            "name"
+          ],
+          [
+            "of",
+            "name"
+          ],
+          [
+            "those who",
+            "name"
+          ],
+          [
+            "believe",
+            "people"
+          ],
+          [
+            "and enjoin (each other)",
+            "name"
+          ],
+          [
+            "to patience",
+            "path"
+          ],
+          [
+            "and enjoin (each other)",
+            "name"
+          ],
+          [
+            "to compassion",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 18,
+        "text": "أُو۟لَـٰٓئِكَ أَصْحَـٰبُ ٱلْمَيْمَنَةِ",
+        "words": [
+          "أُو۟لَـٰٓئِكَ",
+          "أَصْحَـٰبُ",
+          "ٱلْمَيْمَنَةِ"
+        ],
+        "roman": [
+          "ulāika",
+          "aṣḥābu",
+          "l-maymanati"
+        ],
+        "translation": "Those are the companions of the right.",
+        "meanings": [
+          [
+            "Those",
+            "name"
+          ],
+          [
+            "(are the) companions",
+            "name"
+          ],
+          [
+            "(of) the right (hand)",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 19,
+        "text": "وَٱلَّذِينَ كَفَرُوا۟ بِـَٔايَـٰتِنَا هُمْ أَصْحَـٰبُ ٱلْمَشْـَٔمَةِ",
+        "words": [
+          "وَٱلَّذِينَ",
+          "كَفَرُوا۟",
+          "بِـَٔايَـٰتِنَا",
+          "هُمْ",
+          "أَصْحَـٰبُ",
+          "ٱلْمَشْـَٔمَةِ"
+        ],
+        "roman": [
+          "wa-alladhīna",
+          "kafarū",
+          "biāyātinā",
+          "hum",
+          "aṣḥābu",
+          "l-mashamati"
+        ],
+        "translation": "But they who disbelieved in Our signs - those are the companions of the left.",
+        "meanings": [
+          [
+            "But those who",
+            "name"
+          ],
+          [
+            "disbelieve",
+            "people"
+          ],
+          [
+            "in Our Verses",
+            "name"
+          ],
+          [
+            "they",
+            "name"
+          ],
+          [
+            "(are the) companions",
+            "name"
+          ],
+          [
+            "(of) the left (hand)",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 20,
+        "text": "عَلَيْهِمْ نَارٌۭ مُّؤْصَدَةٌۢ",
+        "words": [
+          "عَلَيْهِمْ",
+          "نَارٌۭ",
+          "مُّؤْصَدَةٌۢ"
+        ],
+        "roman": [
+          "ʿalayhim",
+          "nārun",
+          "mu'ṣadatun"
+        ],
+        "translation": "Over them will be fire closed in.",
+        "meanings": [
+          [
+            "Over them",
+            "name"
+          ],
+          [
+            "(will be the) Fire",
+            "fire"
+          ],
+          [
+            "closed in",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 89,
+    "name": "Al-Fajr",
+    "arabic": "الفجر",
+    "meaning": "The Dawn",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "وَٱلْفَجْرِ",
+        "words": [
+          "وَٱلْفَجْرِ"
+        ],
+        "roman": [
+          "wal-fajri"
+        ],
+        "translation": "By the dawn",
+        "meanings": [
+          [
+            "By the dawn",
+            "day"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "وَلَيَالٍ عَشْرٍۢ",
+        "words": [
+          "وَلَيَالٍ",
+          "عَشْرٍۢ"
+        ],
+        "roman": [
+          "walayālin",
+          "ʿashrin"
+        ],
+        "translation": "And [by] ten nights",
+        "meanings": [
+          [
+            "And the nights",
+            "moon"
+          ],
+          [
+            "ten",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "وَٱلشَّفْعِ وَٱلْوَتْرِ",
+        "words": [
+          "وَٱلشَّفْعِ",
+          "وَٱلْوَتْرِ"
+        ],
+        "roman": [
+          "wal-shafʿi",
+          "wal-watri"
+        ],
+        "translation": "And [by] the even [number] and the odd",
+        "meanings": [
+          [
+            "And the even",
+            "name"
+          ],
+          [
+            "and the odd",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "وَٱلَّيْلِ إِذَا يَسْرِ",
+        "words": [
+          "وَٱلَّيْلِ",
+          "إِذَا",
+          "يَسْرِ"
+        ],
+        "roman": [
+          "wa-al-layli",
+          "idhā",
+          "yasri"
+        ],
+        "translation": "And [by] the night when it passes,",
+        "meanings": [
+          [
+            "And the night",
+            "moon"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "it passes",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "هَلْ فِى ذَٰلِكَ قَسَمٌۭ لِّذِى حِجْرٍ",
+        "words": [
+          "هَلْ",
+          "فِى",
+          "ذَٰلِكَ",
+          "قَسَمٌۭ",
+          "لِّذِى",
+          "حِجْرٍ"
+        ],
+        "roman": [
+          "hal",
+          "fī",
+          "dhālika",
+          "qasamun",
+          "lidhī",
+          "ḥij'rin"
+        ],
+        "translation": "Is there [not] in [all] that an oath [sufficient] for one of perception?",
+        "meanings": [
+          [
+            "Is",
+            "name"
+          ],
+          [
+            "in",
+            "name"
+          ],
+          [
+            "that",
+            "name"
+          ],
+          [
+            "(not) an oath",
+            "not"
+          ],
+          [
+            "for those",
+            "name"
+          ],
+          [
+            "who understand",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِعَادٍ",
+        "words": [
+          "أَلَمْ",
+          "تَرَ",
+          "كَيْفَ",
+          "فَعَلَ",
+          "رَبُّكَ",
+          "بِعَادٍ"
+        ],
+        "roman": [
+          "alam",
+          "tara",
+          "kayfa",
+          "faʿala",
+          "rabbuka",
+          "biʿādin"
+        ],
+        "translation": "Have you not considered how your Lord dealt with ʿAad -",
+        "meanings": [
+          [
+            "Did not",
+            "not"
+          ],
+          [
+            "you see",
+            "name"
+          ],
+          [
+            "how",
+            "name"
+          ],
+          [
+            "dealt",
+            "name"
+          ],
+          [
+            "your Lord",
+            "gold"
+          ],
+          [
+            "with Aad",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "إِرَمَ ذَاتِ ٱلْعِمَادِ",
+        "words": [
+          "إِرَمَ",
+          "ذَاتِ",
+          "ٱلْعِمَادِ"
+        ],
+        "roman": [
+          "irama",
+          "dhāti",
+          "l-ʿimādi"
+        ],
+        "translation": "[With] Iram - who had lofty pillars,",
+        "meanings": [
+          [
+            "Iram",
+            "name"
+          ],
+          [
+            "possessors (of)",
+            "name"
+          ],
+          [
+            "lofty pillars",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "ٱلَّتِى لَمْ يُخْلَقْ مِثْلُهَا فِى ٱلْبِلَـٰدِ",
+        "words": [
+          "ٱلَّتِى",
+          "لَمْ",
+          "يُخْلَقْ",
+          "مِثْلُهَا",
+          "فِى",
+          "ٱلْبِلَـٰدِ"
+        ],
+        "roman": [
+          "allatī",
+          "lam",
+          "yukh'laq",
+          "mith'luhā",
+          "fī",
+          "l-bilādi"
+        ],
+        "translation": "The likes of whom had never been created in the land?",
+        "meanings": [
+          [
+            "Which",
+            "name"
+          ],
+          [
+            "not",
+            "not"
+          ],
+          [
+            "had been created",
+            "name"
+          ],
+          [
+            "like them",
+            "name"
+          ],
+          [
+            "in",
+            "name"
+          ],
+          [
+            "the cities",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 9,
+        "text": "وَثَمُودَ ٱلَّذِينَ جَابُوا۟ ٱلصَّخْرَ بِٱلْوَادِ",
+        "words": [
+          "وَثَمُودَ",
+          "ٱلَّذِينَ",
+          "جَابُوا۟",
+          "ٱلصَّخْرَ",
+          "بِٱلْوَادِ"
+        ],
+        "roman": [
+          "wathamūda",
+          "alladhīna",
+          "jābū",
+          "l-ṣakhra",
+          "bil-wādi"
+        ],
+        "translation": "And [with] Thamūd, who carved out the rocks in the valley?",
+        "meanings": [
+          [
+            "And Thamud",
+            "name"
+          ],
+          [
+            "who",
+            "name"
+          ],
+          [
+            "carved out",
+            "name"
+          ],
+          [
+            "the rocks",
+            "name"
+          ],
+          [
+            "in the valley",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 10,
+        "text": "وَفِرْعَوْنَ ذِى ٱلْأَوْتَادِ",
+        "words": [
+          "وَفِرْعَوْنَ",
+          "ذِى",
+          "ٱلْأَوْتَادِ"
+        ],
+        "roman": [
+          "wafir'ʿawna",
+          "dhī",
+          "l-awtādi"
+        ],
+        "translation": "And [with] Pharaoh, owner of the stakes?",
+        "meanings": [
+          [
+            "And Firaun",
+            "name"
+          ],
+          [
+            "owner of",
+            "name"
+          ],
+          [
+            "stakes",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 11,
+        "text": "ٱلَّذِينَ طَغَوْا۟ فِى ٱلْبِلَـٰدِ",
+        "words": [
+          "ٱلَّذِينَ",
+          "طَغَوْا۟",
+          "فِى",
+          "ٱلْبِلَـٰدِ"
+        ],
+        "roman": [
+          "alladhīna",
+          "ṭaghaw",
+          "fī",
+          "l-bilādi"
+        ],
+        "translation": "[All of] whom oppressed within the lands",
+        "meanings": [
+          [
+            "Who",
+            "name"
+          ],
+          [
+            "transgressed",
+            "name"
+          ],
+          [
+            "in",
+            "name"
+          ],
+          [
+            "the lands",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 12,
+        "text": "فَأَكْثَرُوا۟ فِيهَا ٱلْفَسَادَ",
+        "words": [
+          "فَأَكْثَرُوا۟",
+          "فِيهَا",
+          "ٱلْفَسَادَ"
+        ],
+        "roman": [
+          "fa-aktharū",
+          "fīhā",
+          "l-fasāda"
+        ],
+        "translation": "And increased therein the corruption.",
+        "meanings": [
+          [
+            "And (made) much",
+            "name"
+          ],
+          [
+            "therein",
+            "name"
+          ],
+          [
+            "corruption",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 13,
+        "text": "فَصَبَّ عَلَيْهِمْ رَبُّكَ سَوْطَ عَذَابٍ",
+        "words": [
+          "فَصَبَّ",
+          "عَلَيْهِمْ",
+          "رَبُّكَ",
+          "سَوْطَ",
+          "عَذَابٍ"
+        ],
+        "roman": [
+          "faṣabba",
+          "ʿalayhim",
+          "rabbuka",
+          "sawṭa",
+          "ʿadhābin"
+        ],
+        "translation": "So your Lord poured upon them a scourge of punishment.",
+        "meanings": [
+          [
+            "So poured",
+            "name"
+          ],
+          [
+            "on them",
+            "name"
+          ],
+          [
+            "your Lord",
+            "gold"
+          ],
+          [
+            "scourge",
+            "name"
+          ],
+          [
+            "(of) punishment",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 14,
+        "text": "إِنَّ رَبَّكَ لَبِٱلْمِرْصَادِ",
+        "words": [
+          "إِنَّ",
+          "رَبَّكَ",
+          "لَبِٱلْمِرْصَادِ"
+        ],
+        "roman": [
+          "inna",
+          "rabbaka",
+          "labil-mir'ṣādi"
+        ],
+        "translation": "Indeed, your Lord is in observation.",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "your Lord",
+            "gold"
+          ],
+          [
+            "(is) surely Ever Watchful",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 15,
+        "text": "فَأَمَّا ٱلْإِنسَـٰنُ إِذَا مَا ٱبْتَلَىٰهُ رَبُّهُۥ فَأَكْرَمَهُۥ وَنَعَّمَهُۥ فَيَقُولُ رَبِّىٓ أَكْرَمَنِ",
+        "words": [
+          "فَأَمَّا",
+          "ٱلْإِنسَـٰنُ",
+          "إِذَا",
+          "مَا",
+          "ٱبْتَلَىٰهُ",
+          "رَبُّهُۥ",
+          "فَأَكْرَمَهُۥ",
+          "وَنَعَّمَهُۥ",
+          "فَيَقُولُ",
+          "رَبِّىٓ",
+          "أَكْرَمَنِ"
+        ],
+        "roman": [
+          "fa-ammā",
+          "l-insānu",
+          "idhā",
+          "mā",
+          "ib'talāhu",
+          "rabbuhu",
+          "fa-akramahu",
+          "wanaʿʿamahu",
+          "fayaqūlu",
+          "rabbī",
+          "akramani"
+        ],
+        "translation": "And as for man, when his Lord tries him and [thus] is generous to him and favors him, he says, \"My Lord has honored me.\"",
+        "meanings": [
+          [
+            "And as for",
+            "name"
+          ],
+          [
+            "man",
+            "people"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "does",
+            "name"
+          ],
+          [
+            "try him",
+            "name"
+          ],
+          [
+            "his Lord",
+            "gold"
+          ],
+          [
+            "and is generous to him",
+            "name"
+          ],
+          [
+            "and favors him",
+            "name"
+          ],
+          [
+            "he says",
+            "name"
+          ],
+          [
+            "My Lord",
+            "gold"
+          ],
+          [
+            "has honored me",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 16,
+        "text": "وَأَمَّآ إِذَا مَا ٱبْتَلَىٰهُ فَقَدَرَ عَلَيْهِ رِزْقَهُۥ فَيَقُولُ رَبِّىٓ أَهَـٰنَنِ",
+        "words": [
+          "وَأَمَّآ",
+          "إِذَا",
+          "مَا",
+          "ٱبْتَلَىٰهُ",
+          "فَقَدَرَ",
+          "عَلَيْهِ",
+          "رِزْقَهُۥ",
+          "فَيَقُولُ",
+          "رَبِّىٓ",
+          "أَهَـٰنَنِ"
+        ],
+        "roman": [
+          "wa-ammā",
+          "idhā",
+          "mā",
+          "ib'talāhu",
+          "faqadara",
+          "ʿalayhi",
+          "riz'qahu",
+          "fayaqūlu",
+          "rabbī",
+          "ahānani"
+        ],
+        "translation": "But when He tries him and restricts his provision, he says, \"My Lord has humiliated me.\"",
+        "meanings": [
+          [
+            "But",
+            "name"
+          ],
+          [
+            "when",
+            "name"
+          ],
+          [
+            "does",
+            "name"
+          ],
+          [
+            "He try him",
+            "name"
+          ],
+          [
+            "and restricts",
+            "name"
+          ],
+          [
+            "for him",
+            "name"
+          ],
+          [
+            "his provision",
+            "name"
+          ],
+          [
+            "then he says",
+            "name"
+          ],
+          [
+            "My Lord",
+            "gold"
+          ],
+          [
+            "(has) humiliated me",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 17,
+        "text": "كَلَّا ۖ بَل لَّا تُكْرِمُونَ ٱلْيَتِيمَ",
+        "words": [
+          "كَلَّا ۖ",
+          "بَل",
+          "لَّا",
+          "تُكْرِمُونَ",
+          "ٱلْيَتِيمَ"
+        ],
+        "roman": [
+          "kallā",
+          "bal",
+          "lā",
+          "tuk'rimūna",
+          "l-yatīma"
+        ],
+        "translation": "No! But you do not honor the orphan",
+        "meanings": [
+          [
+            "Nay",
+            "name"
+          ],
+          [
+            "But",
+            "name"
+          ],
+          [
+            "not",
+            "not"
+          ],
+          [
+            "you honor",
+            "name"
+          ],
+          [
+            "the orphan",
+            "people"
+          ]
+        ]
+      },
+      {
+        "id": 18,
+        "text": "وَلَا تَحَـٰٓضُّونَ عَلَىٰ طَعَامِ ٱلْمِسْكِينِ",
+        "words": [
+          "وَلَا",
+          "تَحَـٰٓضُّونَ",
+          "عَلَىٰ",
+          "طَعَامِ",
+          "ٱلْمِسْكِينِ"
+        ],
+        "roman": [
+          "walā",
+          "taḥāḍḍūna",
+          "ʿalā",
+          "ṭaʿāmi",
+          "l-mis'kīni"
+        ],
+        "translation": "And you do not encourage one another to feed the poor.",
+        "meanings": [
+          [
+            "And not",
+            "not"
+          ],
+          [
+            "you feel the urge",
+            "name"
+          ],
+          [
+            "to",
+            "name"
+          ],
+          [
+            "feed",
+            "food"
+          ],
+          [
+            "the poor",
+            "people"
+          ]
+        ]
+      },
+      {
+        "id": 19,
+        "text": "وَتَأْكُلُونَ ٱلتُّرَاثَ أَكْلًۭا لَّمًّۭا",
+        "words": [
+          "وَتَأْكُلُونَ",
+          "ٱلتُّرَاثَ",
+          "أَكْلًۭا",
+          "لَّمًّۭا"
+        ],
+        "roman": [
+          "watakulūna",
+          "l-turātha",
+          "aklan",
+          "lamman"
+        ],
+        "translation": "And you consume inheritance, devouring [it] altogether,",
+        "meanings": [
+          [
+            "And you consume",
+            "name"
+          ],
+          [
+            "the inheritance",
+            "name"
+          ],
+          [
+            "devouring",
+            "name"
+          ],
+          [
+            "altogether",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 20,
+        "text": "وَتُحِبُّونَ ٱلْمَالَ حُبًّۭا جَمًّۭا",
+        "words": [
+          "وَتُحِبُّونَ",
+          "ٱلْمَالَ",
+          "حُبًّۭا",
+          "جَمًّۭا"
+        ],
+        "roman": [
+          "watuḥibbūna",
+          "l-māla",
+          "ḥubban",
+          "jamman"
+        ],
+        "translation": "And you love wealth with immense love.",
+        "meanings": [
+          [
+            "And you love",
+            "name"
+          ],
+          [
+            "wealth",
+            "name"
+          ],
+          [
+            "(with) love",
+            "name"
+          ],
+          [
+            "immense",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 21,
+        "text": "كَلَّآ إِذَا دُكَّتِ ٱلْأَرْضُ دَكًّۭا دَكًّۭا",
+        "words": [
+          "كَلَّآ",
+          "إِذَا",
+          "دُكَّتِ",
+          "ٱلْأَرْضُ",
+          "دَكًّۭا",
+          "دَكًّۭا"
+        ],
+        "roman": [
+          "kallā",
+          "idhā",
+          "dukkati",
+          "l-arḍu",
+          "dakkan",
+          "dakkan"
+        ],
+        "translation": "No! When the earth has been leveled - pounded and crushed",
+        "meanings": [
+          [
+            "Nay",
+            "name"
+          ],
+          [
+            "When",
+            "name"
+          ],
+          [
+            "is leveled",
+            "name"
+          ],
+          [
+            "the earth",
+            "worlds"
+          ],
+          [
+            "pounded",
+            "name"
+          ],
+          [
+            "(and) crushed",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 22,
+        "text": "وَجَآءَ رَبُّكَ وَٱلْمَلَكُ صَفًّۭا صَفًّۭا",
+        "words": [
+          "وَجَآءَ",
+          "رَبُّكَ",
+          "وَٱلْمَلَكُ",
+          "صَفًّۭا",
+          "صَفًّۭا"
+        ],
+        "roman": [
+          "wajāa",
+          "rabbuka",
+          "wal-malaku",
+          "ṣaffan",
+          "ṣaffan"
+        ],
+        "translation": "And your Lord has come and the angels, rank upon rank,",
+        "meanings": [
+          [
+            "And comes",
+            "name"
+          ],
+          [
+            "your Lord",
+            "gold"
+          ],
+          [
+            "and the Angels",
+            "name"
+          ],
+          [
+            "rank",
+            "name"
+          ],
+          [
+            "(upon) rank",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 23,
+        "text": "وَجِا۟ىٓءَ يَوْمَئِذٍۭ بِجَهَنَّمَ ۚ يَوْمَئِذٍۢ يَتَذَكَّرُ ٱلْإِنسَـٰنُ وَأَنَّىٰ لَهُ ٱلذِّكْرَىٰ",
+        "words": [
+          "وَجِا۟ىٓءَ",
+          "يَوْمَئِذٍۭ",
+          "بِجَهَنَّمَ ۚ",
+          "يَوْمَئِذٍۢ",
+          "يَتَذَكَّرُ",
+          "ٱلْإِنسَـٰنُ",
+          "وَأَنَّىٰ",
+          "لَهُ",
+          "ٱلذِّكْرَىٰ"
+        ],
+        "roman": [
+          "wajīa",
+          "yawma-idhin",
+          "bijahannama",
+          "yawma-idhin",
+          "yatadhakkaru",
+          "l-insānu",
+          "wa-annā",
+          "lahu",
+          "l-dhik'rā"
+        ],
+        "translation": "And brought [within view], that Day, is Hell - that Day, man will remember, but how [i.e., what good] to him will be the remembrance?",
+        "meanings": [
+          [
+            "And is brought",
+            "name"
+          ],
+          [
+            "that Day",
+            "day"
+          ],
+          [
+            "Hell",
+            "name"
+          ],
+          [
+            "That Day",
+            "day"
+          ],
+          [
+            "will remember",
+            "name"
+          ],
+          [
+            "man",
+            "people"
+          ],
+          [
+            "but how",
+            "name"
+          ],
+          [
+            "(will be) for him",
+            "name"
+          ],
+          [
+            "the remembrance",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 24,
+        "text": "يَقُولُ يَـٰلَيْتَنِى قَدَّمْتُ لِحَيَاتِى",
+        "words": [
+          "يَقُولُ",
+          "يَـٰلَيْتَنِى",
+          "قَدَّمْتُ",
+          "لِحَيَاتِى"
+        ],
+        "roman": [
+          "yaqūlu",
+          "yālaytanī",
+          "qaddamtu",
+          "liḥayātī"
+        ],
+        "translation": "He will say, \"Oh, I wish I had sent ahead [some good] for my life.\"",
+        "meanings": [
+          [
+            "He will say",
+            "name"
+          ],
+          [
+            "O I wish",
+            "name"
+          ],
+          [
+            "I had sent forth",
+            "name"
+          ],
+          [
+            "for my life",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 25,
+        "text": "فَيَوْمَئِذٍۢ لَّا يُعَذِّبُ عَذَابَهُۥٓ أَحَدٌۭ",
+        "words": [
+          "فَيَوْمَئِذٍۢ",
+          "لَّا",
+          "يُعَذِّبُ",
+          "عَذَابَهُۥٓ",
+          "أَحَدٌۭ"
+        ],
+        "roman": [
+          "fayawma-idhin",
+          "lā",
+          "yuʿadhibu",
+          "ʿadhābahu",
+          "aḥadun"
+        ],
+        "translation": "So on that Day, none will punish [as severely] as His punishment,",
+        "meanings": [
+          [
+            "So that Day",
+            "day"
+          ],
+          [
+            "not",
+            "not"
+          ],
+          [
+            "will punish",
+            "name"
+          ],
+          [
+            "(as) His punishment",
+            "name"
+          ],
+          [
+            "anyone",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 26,
+        "text": "وَلَا يُوثِقُ وَثَاقَهُۥٓ أَحَدٌۭ",
+        "words": [
+          "وَلَا",
+          "يُوثِقُ",
+          "وَثَاقَهُۥٓ",
+          "أَحَدٌۭ"
+        ],
+        "roman": [
+          "walā",
+          "yūthiqu",
+          "wathāqahu",
+          "aḥadun"
+        ],
+        "translation": "And none will bind [as severely] as His binding [of the evildoers].",
+        "meanings": [
+          [
+            "And not",
+            "not"
+          ],
+          [
+            "will bind",
+            "name"
+          ],
+          [
+            "(as) His binding",
+            "name"
+          ],
+          [
+            "anyone",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 27,
+        "text": "يَـٰٓأَيَّتُهَا ٱلنَّفْسُ ٱلْمُطْمَئِنَّةُ",
+        "words": [
+          "يَـٰٓأَيَّتُهَا",
+          "ٱلنَّفْسُ",
+          "ٱلْمُطْمَئِنَّةُ"
+        ],
+        "roman": [
+          "yāayyatuhā",
+          "l-nafsu",
+          "l-muṭ'ma-inatu"
+        ],
+        "translation": "[To the righteous it will be said], \"O reassured soul,",
+        "meanings": [
+          [
+            "O",
+            "name"
+          ],
+          [
+            "soul",
+            "name"
+          ],
+          [
+            "who is satisfied",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 28,
+        "text": "ٱرْجِعِىٓ إِلَىٰ رَبِّكِ رَاضِيَةًۭ مَّرْضِيَّةًۭ",
+        "words": [
+          "ٱرْجِعِىٓ",
+          "إِلَىٰ",
+          "رَبِّكِ",
+          "رَاضِيَةًۭ",
+          "مَّرْضِيَّةًۭ"
+        ],
+        "roman": [
+          "ir'jiʿī",
+          "ilā",
+          "rabbiki",
+          "rāḍiyatan",
+          "marḍiyyatan"
+        ],
+        "translation": "Return to your Lord, well-pleased and pleasing [to Him],",
+        "meanings": [
+          [
+            "Return",
+            "name"
+          ],
+          [
+            "to",
+            "name"
+          ],
+          [
+            "your Lord",
+            "gold"
+          ],
+          [
+            "well pleased",
+            "name"
+          ],
+          [
+            "and pleasing",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 29,
+        "text": "فَٱدْخُلِى فِى عِبَـٰدِى",
+        "words": [
+          "فَٱدْخُلِى",
+          "فِى",
+          "عِبَـٰدِى"
+        ],
+        "roman": [
+          "fa-ud'khulī",
+          "fī",
+          "ʿibādī"
+        ],
+        "translation": "And enter among My [righteous] servants",
+        "meanings": [
+          [
+            "So enter",
+            "name"
+          ],
+          [
+            "among",
+            "name"
+          ],
+          [
+            "My slaves",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 30,
+        "text": "وَٱدْخُلِى جَنَّتِى",
+        "words": [
+          "وَٱدْخُلِى",
+          "جَنَّتِى"
+        ],
+        "roman": [
+          "wa-ud'khulī",
+          "jannatī"
+        ],
+        "translation": "And enter My Paradise.\"",
+        "meanings": [
+          [
+            "And enter",
+            "name"
+          ],
+          [
+            "My Paradise",
+            "name"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": 88,
+    "name": "Al-Ghashiyah",
+    "arabic": "الغاشية",
+    "meaning": "The Overwhelming",
+    "origin": "Meccan",
+    "verses": [
+      {
+        "id": 1,
+        "text": "هَلْ أَتَىٰكَ حَدِيثُ ٱلْغَـٰشِيَةِ",
+        "words": [
+          "هَلْ",
+          "أَتَىٰكَ",
+          "حَدِيثُ",
+          "ٱلْغَـٰشِيَةِ"
+        ],
+        "roman": [
+          "hal",
+          "atāka",
+          "ḥadīthu",
+          "l-ghāshiyati"
+        ],
+        "translation": "Has there reached you the report of the Overwhelming [event]?",
+        "meanings": [
+          [
+            "Has",
+            "name"
+          ],
+          [
+            "(there) come to you",
+            "name"
+          ],
+          [
+            "(the) news",
+            "name"
+          ],
+          [
+            "(of) the Overwhelming",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 2,
+        "text": "وُجُوهٌۭ يَوْمَئِذٍ خَـٰشِعَةٌ",
+        "words": [
+          "وُجُوهٌۭ",
+          "يَوْمَئِذٍ",
+          "خَـٰشِعَةٌ"
+        ],
+        "roman": [
+          "wujūhun",
+          "yawma-idhin",
+          "khāshiʿatun"
+        ],
+        "translation": "[Some] faces, that Day, will be humbled,",
+        "meanings": [
+          [
+            "Faces",
+            "name"
+          ],
+          [
+            "that Day",
+            "day"
+          ],
+          [
+            "(will be) humbled",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 3,
+        "text": "عَامِلَةٌۭ نَّاصِبَةٌۭ",
+        "words": [
+          "عَامِلَةٌۭ",
+          "نَّاصِبَةٌۭ"
+        ],
+        "roman": [
+          "ʿāmilatun",
+          "nāṣibatun"
+        ],
+        "translation": "Working [hard] and exhausted.",
+        "meanings": [
+          [
+            "Laboring",
+            "name"
+          ],
+          [
+            "exhausted",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 4,
+        "text": "تَصْلَىٰ نَارًا حَامِيَةًۭ",
+        "words": [
+          "تَصْلَىٰ",
+          "نَارًا",
+          "حَامِيَةًۭ"
+        ],
+        "roman": [
+          "taṣlā",
+          "nāran",
+          "ḥāmiyatan"
+        ],
+        "translation": "They will [enter to] burn in an intensely hot Fire.",
+        "meanings": [
+          [
+            "They will burn",
+            "name"
+          ],
+          [
+            "(in) a Fire",
+            "fire"
+          ],
+          [
+            "intensely hot",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 5,
+        "text": "تُسْقَىٰ مِنْ عَيْنٍ ءَانِيَةٍۢ",
+        "words": [
+          "تُسْقَىٰ",
+          "مِنْ",
+          "عَيْنٍ",
+          "ءَانِيَةٍۢ"
+        ],
+        "roman": [
+          "tus'qā",
+          "min",
+          "ʿaynin",
+          "āniyatin"
+        ],
+        "translation": "They will be given drink from a boiling spring.",
+        "meanings": [
+          [
+            "They will be given to drink",
+            "gift"
+          ],
+          [
+            "from",
+            "name"
+          ],
+          [
+            "a spring",
+            "name"
+          ],
+          [
+            "boiling",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 6,
+        "text": "لَّيْسَ لَهُمْ طَعَامٌ إِلَّا مِن ضَرِيعٍۢ",
+        "words": [
+          "لَّيْسَ",
+          "لَهُمْ",
+          "طَعَامٌ",
+          "إِلَّا",
+          "مِن",
+          "ضَرِيعٍۢ"
+        ],
+        "roman": [
+          "laysa",
+          "lahum",
+          "ṭaʿāmun",
+          "illā",
+          "min",
+          "ḍarīʿin"
+        ],
+        "translation": "For them there will be no food except from a poisonous, thorny plant",
+        "meanings": [
+          [
+            "Not is",
+            "not"
+          ],
+          [
+            "for them",
+            "name"
+          ],
+          [
+            "food",
+            "food"
+          ],
+          [
+            "except",
+            "name"
+          ],
+          [
+            "from",
+            "name"
+          ],
+          [
+            "a bitter thorny plant",
+            "tree"
+          ]
+        ]
+      },
+      {
+        "id": 7,
+        "text": "لَّا يُسْمِنُ وَلَا يُغْنِى مِن جُوعٍۢ",
+        "words": [
+          "لَّا",
+          "يُسْمِنُ",
+          "وَلَا",
+          "يُغْنِى",
+          "مِن",
+          "جُوعٍۢ"
+        ],
+        "roman": [
+          "lā",
+          "yus'minu",
+          "walā",
+          "yugh'nī",
+          "min",
+          "jūʿin"
+        ],
+        "translation": "Which neither nourishes nor avails against hunger.",
+        "meanings": [
+          [
+            "Not",
+            "not"
+          ],
+          [
+            "it nourishes",
+            "name"
+          ],
+          [
+            "and not",
+            "not"
+          ],
+          [
+            "it avails",
+            "name"
+          ],
+          [
+            "from",
+            "name"
+          ],
+          [
+            "hunger",
+            "food"
+          ]
+        ]
+      },
+      {
+        "id": 8,
+        "text": "وُجُوهٌۭ يَوْمَئِذٍۢ نَّاعِمَةٌۭ",
+        "words": [
+          "وُجُوهٌۭ",
+          "يَوْمَئِذٍۢ",
+          "نَّاعِمَةٌۭ"
+        ],
+        "roman": [
+          "wujūhun",
+          "yawma-idhin",
+          "nāʿimatun"
+        ],
+        "translation": "[Other] faces, that Day, will show pleasure.",
+        "meanings": [
+          [
+            "Faces",
+            "name"
+          ],
+          [
+            "that Day",
+            "day"
+          ],
+          [
+            "(will be) joyful",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 9,
+        "text": "لِّسَعْيِهَا رَاضِيَةٌۭ",
+        "words": [
+          "لِّسَعْيِهَا",
+          "رَاضِيَةٌۭ"
+        ],
+        "roman": [
+          "lisaʿyihā",
+          "rāḍiyatun"
+        ],
+        "translation": "With their effort [they are] satisfied",
+        "meanings": [
+          [
+            "With their effort",
+            "name"
+          ],
+          [
+            "satisfied",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 10,
+        "text": "فِى جَنَّةٍ عَالِيَةٍۢ",
+        "words": [
+          "فِى",
+          "جَنَّةٍ",
+          "عَالِيَةٍۢ"
+        ],
+        "roman": [
+          "fī",
+          "jannatin",
+          "ʿāliyatin"
+        ],
+        "translation": "In an elevated garden,",
+        "meanings": [
+          [
+            "In",
+            "name"
+          ],
+          [
+            "a garden",
+            "name"
+          ],
+          [
+            "elevated",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 11,
+        "text": "لَّا تَسْمَعُ فِيهَا لَـٰغِيَةًۭ",
+        "words": [
+          "لَّا",
+          "تَسْمَعُ",
+          "فِيهَا",
+          "لَـٰغِيَةًۭ"
+        ],
+        "roman": [
+          "lā",
+          "tasmaʿu",
+          "fīhā",
+          "lāghiyatan"
+        ],
+        "translation": "Wherein they will hear no unsuitable speech.",
+        "meanings": [
+          [
+            "Not",
+            "not"
+          ],
+          [
+            "they will hear",
+            "name"
+          ],
+          [
+            "therein",
+            "name"
+          ],
+          [
+            "vain talk",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 12,
+        "text": "فِيهَا عَيْنٌۭ جَارِيَةٌۭ",
+        "words": [
+          "فِيهَا",
+          "عَيْنٌۭ",
+          "جَارِيَةٌۭ"
+        ],
+        "roman": [
+          "fīhā",
+          "ʿaynun",
+          "jāriyatun"
+        ],
+        "translation": "Within it is a flowing spring.",
+        "meanings": [
+          [
+            "Therein",
+            "name"
+          ],
+          [
+            "(will be) a spring",
+            "name"
+          ],
+          [
+            "flowing",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 13,
+        "text": "فِيهَا سُرُرٌۭ مَّرْفُوعَةٌۭ",
+        "words": [
+          "فِيهَا",
+          "سُرُرٌۭ",
+          "مَّرْفُوعَةٌۭ"
+        ],
+        "roman": [
+          "fīhā",
+          "sururun",
+          "marfūʿatun"
+        ],
+        "translation": "Within it are couches raised high",
+        "meanings": [
+          [
+            "Therein",
+            "name"
+          ],
+          [
+            "(will be) thrones",
+            "name"
+          ],
+          [
+            "raised high",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 14,
+        "text": "وَأَكْوَابٌۭ مَّوْضُوعَةٌۭ",
+        "words": [
+          "وَأَكْوَابٌۭ",
+          "مَّوْضُوعَةٌۭ"
+        ],
+        "roman": [
+          "wa-akwābun",
+          "mawḍūʿatun"
+        ],
+        "translation": "And cups put in place",
+        "meanings": [
+          [
+            "And cups",
+            "name"
+          ],
+          [
+            "put in place",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 15,
+        "text": "وَنَمَارِقُ مَصْفُوفَةٌۭ",
+        "words": [
+          "وَنَمَارِقُ",
+          "مَصْفُوفَةٌۭ"
+        ],
+        "roman": [
+          "wanamāriqu",
+          "maṣfūfatun"
+        ],
+        "translation": "And cushions lined up",
+        "meanings": [
+          [
+            "And cushions",
+            "name"
+          ],
+          [
+            "lined up",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 16,
+        "text": "وَزَرَابِىُّ مَبْثُوثَةٌ",
+        "words": [
+          "وَزَرَابِىُّ",
+          "مَبْثُوثَةٌ"
+        ],
+        "roman": [
+          "wazarābiyyu",
+          "mabthūthatun"
+        ],
+        "translation": "And carpets spread around.",
+        "meanings": [
+          [
+            "And carpets",
+            "name"
+          ],
+          [
+            "spread out",
+            "book"
+          ]
+        ]
+      },
+      {
+        "id": 17,
+        "text": "أَفَلَا يَنظُرُونَ إِلَى ٱلْإِبِلِ كَيْفَ خُلِقَتْ",
+        "words": [
+          "أَفَلَا",
+          "يَنظُرُونَ",
+          "إِلَى",
+          "ٱلْإِبِلِ",
+          "كَيْفَ",
+          "خُلِقَتْ"
+        ],
+        "roman": [
+          "afalā",
+          "yanẓurūna",
+          "ilā",
+          "l-ibili",
+          "kayfa",
+          "khuliqat"
+        ],
+        "translation": "Then do they not look at the camels - how they are created?",
+        "meanings": [
+          [
+            "Then do not",
+            "not"
+          ],
+          [
+            "they look",
+            "name"
+          ],
+          [
+            "towards",
+            "name"
+          ],
+          [
+            "the camels",
+            "name"
+          ],
+          [
+            "how",
+            "name"
+          ],
+          [
+            "they are created",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 18,
+        "text": "وَإِلَى ٱلسَّمَآءِ كَيْفَ رُفِعَتْ",
+        "words": [
+          "وَإِلَى",
+          "ٱلسَّمَآءِ",
+          "كَيْفَ",
+          "رُفِعَتْ"
+        ],
+        "roman": [
+          "wa-ilā",
+          "l-samāi",
+          "kayfa",
+          "rufiʿat"
+        ],
+        "translation": "And at the sky - how it is raised?",
+        "meanings": [
+          [
+            "And towards",
+            "name"
+          ],
+          [
+            "the sky",
+            "name"
+          ],
+          [
+            "how",
+            "name"
+          ],
+          [
+            "it is raised",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 19,
+        "text": "وَإِلَى ٱلْجِبَالِ كَيْفَ نُصِبَتْ",
+        "words": [
+          "وَإِلَى",
+          "ٱلْجِبَالِ",
+          "كَيْفَ",
+          "نُصِبَتْ"
+        ],
+        "roman": [
+          "wa-ilā",
+          "l-jibāli",
+          "kayfa",
+          "nuṣibat"
+        ],
+        "translation": "And at the mountains - how they are erected?",
+        "meanings": [
+          [
+            "And towards",
+            "name"
+          ],
+          [
+            "the mountains",
+            "name"
+          ],
+          [
+            "how",
+            "name"
+          ],
+          [
+            "they are fixed",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 20,
+        "text": "وَإِلَى ٱلْأَرْضِ كَيْفَ سُطِحَتْ",
+        "words": [
+          "وَإِلَى",
+          "ٱلْأَرْضِ",
+          "كَيْفَ",
+          "سُطِحَتْ"
+        ],
+        "roman": [
+          "wa-ilā",
+          "l-arḍi",
+          "kayfa",
+          "suṭiḥat"
+        ],
+        "translation": "And at the earth - how it is spread out?",
+        "meanings": [
+          [
+            "And towards",
+            "name"
+          ],
+          [
+            "the earth",
+            "worlds"
+          ],
+          [
+            "how",
+            "name"
+          ],
+          [
+            "it is spread out",
+            "book"
+          ]
+        ]
+      },
+      {
+        "id": 21,
+        "text": "فَذَكِّرْ إِنَّمَآ أَنتَ مُذَكِّرٌۭ",
+        "words": [
+          "فَذَكِّرْ",
+          "إِنَّمَآ",
+          "أَنتَ",
+          "مُذَكِّرٌۭ"
+        ],
+        "roman": [
+          "fadhakkir",
+          "innamā",
+          "anta",
+          "mudhakkirun"
+        ],
+        "translation": "So remind, [O Muḥammad]; you are only a reminder.",
+        "meanings": [
+          [
+            "So remind",
+            "name"
+          ],
+          [
+            "only",
+            "name"
+          ],
+          [
+            "you",
+            "name"
+          ],
+          [
+            "(are) a reminder",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 22,
+        "text": "لَّسْتَ عَلَيْهِم بِمُصَيْطِرٍ",
+        "words": [
+          "لَّسْتَ",
+          "عَلَيْهِم",
+          "بِمُصَيْطِرٍ"
+        ],
+        "roman": [
+          "lasta",
+          "ʿalayhim",
+          "bimuṣayṭirin"
+        ],
+        "translation": "You are not over them a controller.",
+        "meanings": [
+          [
+            "You are not",
+            "not"
+          ],
+          [
+            "over them",
+            "name"
+          ],
+          [
+            "a controller",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 23,
+        "text": "إِلَّا مَن تَوَلَّىٰ وَكَفَرَ",
+        "words": [
+          "إِلَّا",
+          "مَن",
+          "تَوَلَّىٰ",
+          "وَكَفَرَ"
+        ],
+        "roman": [
+          "illā",
+          "man",
+          "tawallā",
+          "wakafara"
+        ],
+        "translation": "However, he who turns away and disbelieves",
+        "meanings": [
+          [
+            "But",
+            "name"
+          ],
+          [
+            "whoever",
+            "name"
+          ],
+          [
+            "turns away",
+            "name"
+          ],
+          [
+            "and disbelieves",
+            "people"
+          ]
+        ]
+      },
+      {
+        "id": 24,
+        "text": "فَيُعَذِّبُهُ ٱللَّهُ ٱلْعَذَابَ ٱلْأَكْبَرَ",
+        "words": [
+          "فَيُعَذِّبُهُ",
+          "ٱللَّهُ",
+          "ٱلْعَذَابَ",
+          "ٱلْأَكْبَرَ"
+        ],
+        "roman": [
+          "fayuʿadhibuhu",
+          "l-lahu",
+          "l-ʿadhāba",
+          "l-akbara"
+        ],
+        "translation": "Then Allāh will punish him with the greatest punishment.",
+        "meanings": [
+          [
+            "Then will punish him",
+            "name"
+          ],
+          [
+            "Allah",
+            "gold"
+          ],
+          [
+            "(with) the punishment",
+            "name"
+          ],
+          [
+            "greatest",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 25,
+        "text": "إِنَّ إِلَيْنَآ إِيَابَهُمْ",
+        "words": [
+          "إِنَّ",
+          "إِلَيْنَآ",
+          "إِيَابَهُمْ"
+        ],
+        "roman": [
+          "inna",
+          "ilaynā",
+          "iyābahum"
+        ],
+        "translation": "Indeed, to Us is their return.",
+        "meanings": [
+          [
+            "Indeed",
+            "name"
+          ],
+          [
+            "to Us",
+            "name"
+          ],
+          [
+            "(will be) their return",
+            "name"
+          ]
+        ]
+      },
+      {
+        "id": 26,
+        "text": "ثُمَّ إِنَّ عَلَيْنَا حِسَابَهُم",
+        "words": [
+          "ثُمَّ",
+          "إِنَّ",
+          "عَلَيْنَا",
+          "حِسَابَهُم"
+        ],
+        "roman": [
+          "thumma",
+          "inna",
+          "ʿalaynā",
+          "ḥisābahum"
+        ],
+        "translation": "Then indeed, upon Us is their account.",
+        "meanings": [
+          [
+            "Then",
+            "name"
+          ],
+          [
+            "indeed",
+            "name"
+          ],
+          [
+            "upon Us",
+            "name"
+          ],
+          [
+            "(is) their account",
+            "name"
+          ]
+        ]
+      }
+    ]
   }
 ]

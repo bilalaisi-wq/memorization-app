@@ -233,15 +233,17 @@ test("revealing then hiding reference still limits stars; practice rejects wrong
   await expect(page.locator(".star-score")).toContainText("1 stars");
 });
 
-test("all thirteen surahs have aligned verified words and readable learning modes", async ({
+test("all twenty-eight surahs have aligned verified words and readable learning modes", async ({
   page,
 }) => {
+  test.setTimeout(120000);
   const { surahs } = await import("../src/data.js");
   expect(surahs.map((s) => s.verses.length)).toEqual([
-    7, 6, 5, 4, 5, 3, 6, 3, 7, 4, 5, 9, 3,
+    7, 6, 5, 4, 5, 3, 6, 3, 7, 4, 5, 9, 3, 8, 11, 11, 8, 8, 5, 19, 8, 8, 11, 21,
+    15, 20, 30, 26,
   ]);
   await page.goto("/");
-  await expect(page.locator("#surah-picker option")).toHaveCount(13);
+  await expect(page.locator("#surah-picker option")).toHaveCount(28);
   for (let c = 0; c < surahs.length; c++) {
     await page.locator("#surah-picker").selectOption(String(c));
     await expect(page.locator(".surah-heading h2")).toContainText(
@@ -346,31 +348,48 @@ test("repeat wins unlock harder levels and persist; solved round cannot be farme
 test("new audio files decode and playback chooses the selected surah", async ({
   page,
 }) => {
+  test.setTimeout(120000);
   await page.goto("/");
   const results = await page.evaluate(async () => {
     const source = await (await fetch("/additional-quran-source.json")).json();
-    return Promise.all(
-      source.verses
-        .flatMap((v) => {
-          const [s, a] = v.verse_key.split(":");
-          return [
-            "/audio/" + s.padStart(3, "0") + a.padStart(3, "0") + ".mp3",
-            ...v.words.map((w) => "/audio/" + w.audio_url.split("/").at(-1)),
-          ];
-        })
-        .map(
-          (url) =>
-            new Promise((resolve) => {
-              const audio = new Audio();
-              audio.onloadedmetadata = () => resolve(audio.duration > 0);
-              audio.onerror = () => resolve(false);
-              audio.src = url;
-            }),
-        ),
+    const urls = source.verses.flatMap((v) => {
+      const [chapter, ayah] = v.verse_key.split(":");
+      return [
+        "/audio/" + chapter.padStart(3, "0") + ayah.padStart(3, "0") + ".mp3",
+        ...v.words.map((w) => "/audio/" + w.audio_url.split("/").at(-1)),
+      ];
+    });
+    let next = 0;
+    const results = [];
+    // Bound decoder use and release each media element. Thousands of simultaneous
+    // players exhaust Chromium's media resources even when the files are valid.
+    await Promise.all(
+      Array.from({ length: 8 }, async () => {
+        while (next < urls.length) {
+          const url = urls[next++];
+          const ok = await new Promise((resolve) => {
+            const audio = new Audio();
+            audio.preload = "metadata";
+            const finish = (ok) => {
+              audio.onloadedmetadata = null;
+              audio.onerror = null;
+              audio.src = "";
+              audio.load();
+              resolve(ok);
+            };
+            audio.onloadedmetadata = () =>
+              finish(Number.isFinite(audio.duration) && audio.duration > 0);
+            audio.onerror = () => finish(false);
+            audio.src = url;
+          });
+          results.push({ url, ok });
+        }
+      }),
     );
+    return results;
   });
-  expect(results).toHaveLength(308);
-  expect(results.every(Boolean)).toBe(true);
+  expect(results).toHaveLength(1390);
+  expect(results.filter((r) => !r.ok)).toEqual([]);
   await page.evaluate(() => {
     window.played = [];
     window.Audio = class {
@@ -689,6 +708,7 @@ test("chain audio follows learner order and reference order with repeats", async
 test("chain configuration works across all surahs and clears incompatible selections", async ({
   page,
 }) => {
+  test.setTimeout(120000);
   const { surahs } = await import("../src/data.js");
   await page.goto("/");
   await page.locator('[data-mode="sequence"]').click();
@@ -708,5 +728,7 @@ test("chain configuration works across all surahs and clears incompatible select
   }
   await page.locator('[data-mode="practice"]').click();
   await expect(page.locator(".sequence-panel")).toHaveCount(0);
-  await expect(page.locator(".word-bank .piece")).toHaveCount(1);
+  await expect(page.locator(".word-bank .piece")).toHaveCount(
+    surahs.at(-1).verses[0].words.length,
+  );
 });
