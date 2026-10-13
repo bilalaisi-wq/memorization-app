@@ -4,7 +4,7 @@ import { surahs } from "../src/data.js";
 import { createDistractorPicker, distractorWords, wordIdentity } from "../src/distractors.js";
 
 test("every ayah and level gets distinct, recorded words from other surahs", () => {
-  test.setTimeout(60_000);
+  test.setTimeout(120_000);
   const pick = createDistractorPicker();
   for (const surah of surahs) for (const verse of surah.verses) {
     for (const count of [4, 5, 6]) {

@@ -1,6 +1,6 @@
 # Ayah — Quran memorization, piece by piece
 
-A Quran memorization app covering 28 surahs and 276 ayahs, right-to-left word puzzle pieces, partial-word practice, full-ayah recitation, repetition and speed controls, scrambled-order quizzes, and hidden-word recall. Progress is saved in the current browser. No account or backend is required.
+A Quran memorization app covering 38 surahs and 571 ayahs (all of Juz Amma plus Al-Fatihah), right-to-left word puzzle pieces, partial-word practice, full-ayah recitation, repetition and speed controls, scrambled-order quizzes, and hidden-word recall. Progress is saved in the current browser. No account or backend is required.
 
 ## Run
 
@@ -17,19 +17,19 @@ npm run dev -- --port 5173
 
 Arabic text and word boundaries were verified against Quran.com's v4 API. `public/quran-source.json` records the Arabic words and source URLs. The locally bundled Uthmanic Hafs font is the font distributed in [Quran.com's frontend](https://github.com/quran/quran.com-frontend-next/blob/master/src/styles/fonts.scss), downloaded from `public/fonts/quran/hafs/uthmanic_hafs/UthmanicHafs1Ver18.woff2` in that repository. Quran.com supports multiple fonts; this app uses its Unicode Uthmanic Hafs option.
 
-Full-ayah recitation: Mishary Rashid Alafasy, from `https://verses.quran.com/Alafasy/mp3/`. Individual word recordings: Quran.com's word-by-word recordings from `https://audio.qurancdn.com/wbw/`. Partial practice sequences individual recordings in the selected order; these are separate word recordings rather than a continuous cut from full recitation. Both font and all 1,432 audio files are bundled, so learning does not require external API calls.
+Full-ayah recitation: Mishary Rashid Alafasy, from `https://verses.quran.com/Alafasy/mp3/`. Individual word recordings: Quran.com's word-by-word recordings from `https://audio.qurancdn.com/wbw/`. Partial practice sequences individual recordings in the selected order; these are separate word recordings rather than a continuous cut from full recitation. Both font and all 2,914 audio files are bundled, so learning does not require external API calls.
 
 Active recall hides alternating words and the full reference. Reveal controls let learners self-check their spoken recall. The app checks word order; it does not recognize or grade spoken Arabic. English meanings and transliteration are learning aids.
 
 ## Puzzle pieces
 
-Practice starts with scrambled pieces. Puzzle Quest mixes four to six words from Al-Baqarah and Ar-Rahman into every ayah's shuffled bank. Arabic distractor spellings include their Quranic prefixes and were checked against Quran.com's API for 2:2, 2:164, 55:5, and 55:6. Their references are recorded in `src/data.js`. Choose only the ayah's words, in order. Duplicate identical words are interchangeable when checking the result.
+Practice starts with scrambled pieces. Puzzle Quest draws four to six distractor words from other supported surahs into every shuffled bank, excludes target spellings, and avoids recently used distractors. Each piece keeps its verified word recording. Choose only the ayah's words, in order. Duplicate identical words are interchangeable when checking the result.
 
 Piece profiles use matched tabs and sockets along the right-to-left sequence. The final ayah's repeated words have separate pieces. Simple locally drawn SVG graphics offer memory associations for concrete and abstract meanings; they do not depict Allah. Divine names, attributes, and references use decorative gold accents instead. Active recall also hides the meaning and illustration to avoid giving away the missing word. The quiz checks word selection and order, not spoken recitation.
 
 ## Surah library and repeatable levels
 
-Choose any surah from the sidebar selector (also available on mobile). All 276 ayahs include verified Uthmanic text, English meanings and transliteration, word-by-word and full-ayah audio, puzzle practice, active recall, and Puzzle Quest. The additional 269 ayahs use Quran.com's v4 API, Saheeh International verse translations (resource 20), and Quran.com's word translations/transliteration. Their word/audio provenance is saved in `public/additional-quran-source.json`.
+Choose any surah from the sidebar selector (also available on mobile). All 571 ayahs include verified Uthmanic text, English meanings and transliteration, word-by-word and full-ayah audio, puzzle practice, active recall, and Puzzle Quest. The additional 564 ayahs use Quran.com's v4 API, Saheeh International verse translations (resource 20), and Quran.com's word translations/transliteration. Their word/audio provenance is saved in `public/additional-quran-source.json`.
 
 Difficulty grows through three levels:
 
@@ -43,7 +43,7 @@ An optional eight-second peek exposes all pieces temporarily, without flashing o
 
 ## Surahs and audio on every piece
 
-The library covers Al-Fatihah and surahs 114 through 88. The selector shows each surah’s title and ayah count.
+The library covers Al-Fatihah and surahs 114 through 78. The selector shows each surah’s title and ayah count.
 
 Use the headphones button on a piece to hear that word once without adding or removing it. This works in the word bank, building zone, and hidden-word challenges. **Listen to my pieces** reads the learner's selected sequence exactly as arranged, including incorrect extra words, with the chosen repetition count and speed. It is a learning sequence, not a verified ayah. Remove a wrong piece by clicking its main body.
 
@@ -65,3 +65,11 @@ Open **Daily quests** for due reviews, weak ayahs, suggested new memorization, a
 A maintained `ts-fsrs` 5.4.2 scheduler manages independent review dates. Historical puzzle achievements, XP, and stars are safely migrated and kept separate from memory stages. Points are bounded, with higher awards for eligible independent/due retrieval than puzzle repetition. All state is local to the browser; unfinished recall sessions and completed reviews survive reloads, and Daily Quest includes an export action.
 
 The newest additions are At-Takathur, Al-Qariah, Al-Adiyat, Az-Zalzalah, Al-Bayyinah, Al-Qadr, Al-Alaq, At-Tin, Ash-Sharh, Ad-Duha, Al-Layl, Ash-Shams, Al-Balad, Al-Fajr, and Al-Ghashiyah. See [Memory foundation and Phase 2 plan](docs/memory-foundation.md) for the data schema, migration, scheduling/eligibility rules, reward limits, evidence, limitations, and recommended next steps.
+
+## Record and compare self-recall
+
+In **Assess this ayah**, choose **Record my recitation**, allow microphone access, and stop when finished. Choose **I’ve recited — compare** to reveal the verified text. Listen to your recording or the Alafasy recitation separately, or **Play both together** to start both tracks from the beginning. Individual audio controls support seeking; separate volume sliders make each voice easier to hear. This is manual comparison, without automatic timing alignment or speech grading. Listening to the reciter before declaring recall still marks the attempt as assisted.
+
+Recording requires microphone access in a supported browser and HTTPS (localhost works for development). Recordings stay in memory in the current tab; they are never uploaded or stored in learning history. Leaving the session, starting another attempt, or reloading clears the recording and releases the microphone. Assessment results and review schedules continue to persist as before. Microphone denial or unsupported recording does not block normal self-assessment. Each recording is limited to five minutes.
+
+The remaining ten Juz Amma surahs (Al-A‘la through An-Naba) were imported with `scripts/complete-juz-amma.py`. The importer preserves existing records, downloads local recordings, and records source word spellings and any API audio-number corrections in `public/additional-quran-source.json`.

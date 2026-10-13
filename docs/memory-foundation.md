@@ -1,6 +1,6 @@
 # Phase 1: memory foundation
 
-Ayah remains a Vite application written in vanilla JavaScript. It now contains Al-Fatihah and surahs 114 through 88: 28 surahs, 276 ayahs, and 1,432 locally bundled recordings. The 15 additions are At-Takathur, Al-Qariah, Al-Adiyat, Az-Zalzalah, Al-Bayyinah, Al-Qadr, Al-Alaq, At-Tin, Ash-Sharh, Ad-Duha, Al-Layl, Ash-Shams, Al-Balad, Al-Fajr, and Al-Ghashiyah.
+Ayah remains a Vite application written in vanilla JavaScript. It now contains Al-Fatihah and surahs 114 through 78: 38 surahs, 571 ayahs, and 2,914 locally bundled recordings. The 15 additions are At-Takathur, Al-Qariah, Al-Adiyat, Az-Zalzalah, Al-Bayyinah, Al-Qadr, Al-Alaq, At-Tin, Ash-Sharh, Ad-Duha, Al-Layl, Ash-Shams, Al-Balad, Al-Fajr, and Al-Ghashiyah.
 
 ## Modules and responsibilities
 
@@ -27,7 +27,7 @@ After migration the canonical store is authoritative. Legacy keys are maintained
 
 ## Recall eligibility and scheduling
 
-The interface explicitly labels this as **self-assessed recitation**. No microphone capture, speech recognition, pronunciation grading, or teacher verification exists.
+The interface explicitly labels this as **self-assessed recitation**. Optional microphone capture now supports manual playback comparison with the reciter. There is no speech recognition, automatic pronunciation grading, or teacher verification. Recordings live only in the current tab; audio capture does not submit a grade or certify recall.
 
 The learner first sees a prompt with the text, translation, and word pieces hidden. After reciting, **I've recited — compare** reveals the verified text. This comparison is not a pre-recall hint. The learner then chooses:
 
@@ -85,3 +85,5 @@ State is local to one browser origin. There is no account, synchronization, impo
 The Playwright suite covers the retained puzzle and chain workflows plus migration, FSRS grade outcomes, date hydration, distinct-day success, assistance eligibility, early practice and lapses, duplicate reward prevention, daily caps, timezone boundaries, surah changes, reloads, export, and storage failures. The enlarged audio corpus is probed with bounded media-player concurrency so every recording is checked without exhausting Chromium's resources. The production build remains `npm run build`.
 
 Phase 1 verification: all 39 Playwright checks passed (18 retained-workflow checks, 11 learning-store checks, and 10 memory-UI checks), along with the production build. All 1,432 recordings were checked for loadable media metadata; representative real audio playback and sequence ordering were also exercised. Existing additional-surah records were compared with the previous Git version and remained identical.
+
+Juz Amma and recording extension: all 46 Playwright checks pass, including real Chromium MediaRecorder capture with a simulated microphone, playable recorded blobs, separate/simultaneous comparison, assistance tracking through native players, permission denial, retries/reloads, and microphone cleanup after navigation or a late permission grant. The library now includes 2,914 recordings. All original surah records were preserved exactly. Desktop and mobile recording previews were checked, with no mobile horizontal overflow. The production build passes.

@@ -2360,3 +2360,14 @@ footer {
 .upcoming-reviews {
   margin-top: 20px;
 }
+
+.recall-recording { background: #f5f8ef; border: 2px solid #dbe6d2; border-radius: 22px; padding: 24px; margin: 24px 0; }
+.recall-recording h3 { margin-top: 0; }
+.record-actions, .recording-volumes { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 14px 0; }
+.recording-tracks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.recording-tracks label, .recording-volumes label { display: flex; flex-direction: column; gap: 8px; font-weight: 600; min-width: 0; }
+.recording-tracks audio { width: 100%; min-width: 0; }
+.recording-volumes input { width: 180px; max-width: 100%; accent-color: var(--green, #477d69); }
+.recording-help, #recording-status { font-size: 14px; line-height: 1.6; }
+#recording-time { font-variant-numeric: tabular-nums; }
+@media (max-width: 600px) { .recording-tracks { grid-template-columns: 1fr; } .recall-recording { padding: 16px; } }

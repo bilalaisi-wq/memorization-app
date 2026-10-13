@@ -1,3 +1,4 @@
+import { disposeRecallRecording } from "./recall-recording.js";
 import { createDistractorPicker } from "./distractors.js";
 import { createLearningStore } from "./learning-store.js";
 import {
@@ -205,6 +206,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
   if (mode === "sequence") mountSequence(document.querySelector("main"), surah);
 }
 function stop() {
+  disposeRecallRecording();
   stopLearningAudio();
   stopSequence();
   run++;

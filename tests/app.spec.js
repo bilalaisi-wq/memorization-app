@@ -233,17 +233,17 @@ test("revealing then hiding reference still limits stars; practice rejects wrong
   await expect(page.locator(".star-score")).toContainText("1 stars");
 });
 
-test("all twenty-eight surahs have aligned verified words and readable learning modes", async ({
+test("all thirty-eight surahs have aligned verified words and readable learning modes", async ({
   page,
 }) => {
-  test.setTimeout(120000);
+  test.setTimeout(180000);
   const { surahs } = await import("../src/data.js");
   expect(surahs.map((s) => s.verses.length)).toEqual([
     7, 6, 5, 4, 5, 3, 6, 3, 7, 4, 5, 9, 3, 8, 11, 11, 8, 8, 5, 19, 8, 8, 11, 21,
-    15, 20, 30, 26,
+    15, 20, 30, 26, 19, 17, 22, 25, 36, 19, 29, 42, 46, 40,
   ]);
   await page.goto("/");
-  await expect(page.locator("#surah-picker option")).toHaveCount(28);
+  await expect(page.locator("#surah-picker option")).toHaveCount(38);
   for (let c = 0; c < surahs.length; c++) {
     await page.locator("#surah-picker").selectOption(String(c));
     await expect(page.locator(".surah-heading h2")).toContainText(
@@ -348,7 +348,7 @@ test("repeat wins unlock harder levels and persist; solved round cannot be farme
 test("new audio files decode and playback chooses the selected surah", async ({
   page,
 }) => {
-  test.setTimeout(120000);
+  test.setTimeout(180000);
   await page.goto("/");
   const results = await page.evaluate(async () => {
     const source = await (await fetch("/additional-quran-source.json")).json();
@@ -388,7 +388,7 @@ test("new audio files decode and playback chooses the selected surah", async ({
     );
     return results;
   });
-  expect(results).toHaveLength(1390);
+  expect(results).toHaveLength(2872);
   expect(results.filter((r) => !r.ok)).toEqual([]);
   await page.evaluate(() => {
     window.played = [];
@@ -708,7 +708,7 @@ test("chain audio follows learner order and reference order with repeats", async
 test("chain configuration works across all surahs and clears incompatible selections", async ({
   page,
 }) => {
-  test.setTimeout(120000);
+  test.setTimeout(180000);
   const { surahs } = await import("../src/data.js");
   await page.goto("/");
   await page.locator('[data-mode="sequence"]').click();

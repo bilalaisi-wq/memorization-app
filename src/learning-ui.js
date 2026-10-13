@@ -1,13 +1,7 @@
+import { createRecallRecording, stopRecallPlayback } from "./recall-recording.js";
 import { verseAudio } from "./data.js";
-let audio = null,
-  audioRun = 0;
 export function stopLearningAudio() {
-  audioRun++;
-  if (audio) {
-    audio.pause();
-    audio.src = "";
-    audio = null;
-  }
+  stopRecallPlayback();
 }
 const esc = (value) =>
   String(value).replace(
@@ -120,7 +114,7 @@ export function mountRecall(main, store, surahs, callbacks) {
   const root = document.createElement("section");
   root.className = "self-assessment";
   main.append(root);
-  let error = "";
+  let error = "", recording;
   const draw = () => {
     if (!root.isConnected) return;
     const state = store.snapshot(),
@@ -138,9 +132,9 @@ export function mountRecall(main, store, surahs, callbacks) {
     }
     const r = store.getRecord(a.key),
       assisted = a.usedHint || a.audioBeforeRecall;
-    root.innerHTML = `<section class="recall-intro"><span class="eyebrow">SELF-ASSESSED RECITATION</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>Recite this ayah from memory, out loud or quietly. This app does not listen to or verify your speech.</p>${r.memory.card && new Date(r.memory.card.due) > new Date() && !a.graded ? '<p class="early-practice-note">This is early practice. Correct recall keeps your future review date unchanged; an Again result schedules relearning.</p>' : ""}<div class="recall-prompt"><span aria-hidden="true">✧</span><strong>${a.comparisonRevealed ? "Compare your recitation" : "Take a breath. Recall the ayah without looking."}</strong>${!a.comparisonRevealed ? "<p>The Arabic text, translation, and word pieces are hidden.</p>" : ""}</div>${a.comparisonRevealed ? `<div class="verified-text"><p class="arabic" lang="ar" dir="rtl">${verse.text}</p><p>${verse.translation}</p></div>` : ""}
+    root.innerHTML = `<section class="recall-intro"><span class="eyebrow">SELF-ASSESSED RECITATION</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>Recite this ayah from memory, out loud or quietly. Recording is optional and stays in this tab. This app does not automatically verify your speech.</p>${r.memory.card && new Date(r.memory.card.due) > new Date() && !a.graded ? '<p class="early-practice-note">This is early practice. Correct recall keeps your future review date unchanged; an Again result schedules relearning.</p>' : ""}<div class="recall-prompt"><span aria-hidden="true">✧</span><strong>${a.comparisonRevealed ? "Compare your recitation" : "Take a breath. Recall the ayah without looking."}</strong>${!a.comparisonRevealed ? "<p>The Arabic text, translation, and word pieces are hidden.</p>" : ""}</div>${a.comparisonRevealed ? `<div class="verified-text"><p class="arabic" lang="ar" dir="rtl">${verse.text}</p><p>${verse.translation}</p></div>` : ""}
  ${!a.comparisonRevealed && !a.graded ? '<div class="recall-start-actions"><button class="primary" id="recited-compare">I’ve recited — compare</button><button class="text-button" id="recall-hint">I need the text first</button></div>' : ""}
- ${!a.graded ? `<button class="text-button" id="recall-audio">♫ ${a.declaredRecited ? "Listen to compare" : "Listen first (study assistance)"}</button>${assisted ? '<p class="assistance-note">Assisted study: you can still self-assess. This attempt will not count as successful independent recall or increase your FSRS memory state.</p>' : ""}` : ""}
+ ${!a.graded ? `${assisted ? '<p class="assistance-note">Assisted study: you can still self-assess. This attempt will not count as successful independent recall or increase your FSRS memory state.</p>' : ""}` : ""}
  ${
    a.comparisonRevealed && !a.graded
      ? `<label class="honesty-check"><input id="recall-assisted" type="checkbox" ${assisted ? "checked disabled" : ""}> I used help before reciting</label><fieldset class="recall-grades"><legend>Compare every word. Missing or incorrect words mean Again; the other grades mean full, correct recall.</legend>${[
@@ -215,27 +209,30 @@ export function mountRecall(main, store, surahs, callbacks) {
         draw();
       }
     });
-    root.querySelector("#recall-audio")?.addEventListener("click", async () => {
-      try {
-        store.updateRecall(a.id, "audio");
-        stopLearningAudio();
-        const run = audioRun;
-        audio = new Audio(verseAudio(verse.id, surah.id));
-        audio.onerror = () => {
-          if (run === audioRun) {
-            error =
-              "Audio could not load. You can still compare against the verified text.";
-            draw();
-          }
-        };
-        await audio.play();
-        draw();
-      } catch (e) {
-        error = e.message;
-        draw();
+    recording?.setContext({ ...a, audio: verseAudio(verse.id, surah.id) });
+    if (recording) {
+      root.querySelector(".recall-intro").insertBefore(recording.element, root.querySelector(".honesty-check, .recall-grades, .recall-result, .recall-history"));
+      for (const button of root.querySelectorAll("#recited-compare, #recall-hint, [data-recall-grade], #recall-retry")) {
+        button.disabled = recording.busy();
       }
-    });
+    }
   };
+  recording = createRecallRecording({
+    onReference() {
+      const attempt = store.snapshot().activeReview;
+      if (attempt && !attempt.graded && !attempt.declaredRecited && !attempt.audioBeforeRecall) {
+        store.updateRecall(attempt.id, "audio");
+        // Keep native audio elements connected while playback starts.
+        const note = document.createElement("p");
+        note.className = "assistance-note";
+        note.textContent = "Assisted study: you can still self-assess. This attempt will not count as successful independent recall or increase your FSRS memory state.";
+        recording.element.before(note);
+        const checkbox = root.querySelector("#recall-assisted");
+        if (checkbox) checkbox.checked = checkbox.disabled = true;
+      }
+    },
+    onChange: () => draw(),
+  });
   draw();
   (
     root.querySelector("#recited-compare") ||

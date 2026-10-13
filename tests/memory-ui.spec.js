@@ -39,7 +39,7 @@ test("Daily Quest preserves imported puzzle achievements and exposes separate me
   await page.locator("#nav-daily").click();
   await expect(page.locator(".daily-intro")).toContainText("123 XP");
   await expect(page.locator(".daily-intro")).toContainText("18 stars");
-  await expect(page.locator(".memory-metrics")).toContainText("2 / 276");
+  await expect(page.locator(".memory-metrics")).toContainText("2 / 571");
   await expect(page.locator(".memory-metrics")).toContainText("0 retained");
   expect((await memory(page)).card).toBeNull();
   await page.reload();
@@ -56,7 +56,7 @@ test("self-assessed recitation hides text, saves a future review and persists on
     .getByRole("button", { name: "Assess this ayah", exact: true })
     .click();
   await expect(page.locator(".self-assessment")).toContainText(
-    "does not listen to or verify your speech",
+    "does not automatically verify your speech",
   );
   await expect(page.locator(".verified-text")).toHaveCount(0);
   await expect(page.locator("[data-recall-grade]")).toHaveCount(0);
