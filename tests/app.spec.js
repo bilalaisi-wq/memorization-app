@@ -445,7 +445,7 @@ test("legacy progress migrates and stays independent across surahs", async ({
 test("every distractor has verified playable audio, individually and in a wrong sequence", async ({
   page,
 }) => {
-  const { distractors } = await import("../src/data.js");
+  const { distractorWords: distractors } = await import("../src/distractors.js");
   await page.addInitScript(() => {
     window.played = [];
     window.Audio = class {

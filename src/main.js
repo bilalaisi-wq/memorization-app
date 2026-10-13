@@ -1,3 +1,4 @@
+import { createDistractorPicker } from "./distractors.js";
 import { createLearningStore } from "./learning-store.js";
 import {
   mountDailySummary,
@@ -13,7 +14,6 @@ import {
   shuffled,
   wordAudio,
   verseAudio,
-  distractors,
   quizCorrect,
   scrambledBank,
   challengeLevel,
@@ -65,6 +65,7 @@ let ayah = 0,
   speed = 1,
   feedback = "",
   reference = true;
+const pickDistractors = createDistractorPicker();
 let extras = [],
   attempts = 0,
   quizSolved = false,
@@ -88,13 +89,9 @@ function reset() {
   puzzleSessionId =
     globalThis.crypto?.randomUUID?.() || Date.now() + "-" + Math.random();
   roundLevel = challengeLevel(mastery[key()] || 0);
-  const pool = distractors.filter((d) => !verses[ayah].words.includes(d.text));
-  extras =
-    mode === "quiz"
-      ? shuffled(pool.length)
-          .slice(0, roundLevel + 3)
-          .map((i) => pool[i])
-      : [];
+  extras = mode === "quiz"
+    ? pickDistractors(surahs[chapter].id, verses[ayah].words, roundLevel + 3)
+    : [];
   bank = scrambledBank(
     verses[ayah].words.length + extras.length,
     verses[ayah].words.length,
