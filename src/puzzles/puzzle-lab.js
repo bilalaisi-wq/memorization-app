@@ -1,3 +1,4 @@
+import { wordChoices, passageChoices, textIdentity } from "./lab-choices.js";
 import { shuffled, verseAudio, wordAudio } from "../data.js";
 import { outline } from "../illustrations.js";
 import { esc, clearLearningView, uid } from "../ui/dom.js";
@@ -48,6 +49,7 @@ export function mountPuzzleLab(
   const area = root.querySelector(".lab-game"),
     status = root.querySelector("[data-status]");
   let resultKey = key,
+    referenceAudio = verseAudio(verse.id, surah.id),
     game = "falling",
     level = 1,
     session = uid(),
@@ -74,16 +76,22 @@ export function mountPuzzleLab(
     stopAudio();
     if (assistance) hinted = true;
     const run = audioRun;
-    audio = new Audio(url);
-    audio.onerror = () => {
-      if (run === audioRun)
-        say("Audio could not load. You can continue the puzzle.");
+    const urls = Array.isArray(url) ? url : [url];
+    const playNext = async (i) => {
+      if (run !== audioRun || i >= urls.length) return;
+      audio = new Audio(urls[i]);
+      audio.onended = () => playNext(i + 1);
+      audio.onerror = () => {
+        if (run === audioRun)
+          say("Audio could not load. You can continue the puzzle.");
+      };
+      try {
+        await audio.play();
+      } catch {
+        if (run === audioRun) say("Audio could not start. Try again.");
+      }
     };
-    try {
-      await audio.play();
-    } catch {
-      if (run === audioRun) say("Audio could not start. Try again.");
-    }
+    await playNext(0);
   };
   const fail = (message) => {
     if (done) return;
@@ -94,6 +102,9 @@ export function mountPuzzleLab(
     if (done) return;
     pauseGame();
     stopAudio();
+    area
+      .querySelectorAll("button:not([data-lab-audio])")
+      .forEach((b) => (b.disabled = true));
     try {
       const reward = learning.recordLabPuzzle({
         key: resultKey,
@@ -116,7 +127,9 @@ export function mountPuzzleLab(
       say(
         `Challenge complete! +${reward.duplicate ? 0 : reward.xp} game XP. ${reward.xp && !reward.duplicate ? "" : "Today’s reward ceiling for this game is reached. "}This does not certify independent memorization.`,
       );
-      area.querySelectorAll("button").forEach((b) => (b.disabled = true));
+      area
+        .querySelectorAll("button:not([data-lab-audio])")
+        .forEach((b) => (b.disabled = true));
       root.querySelector("#lab-next-level").hidden =
         level >= 4 || ["match", "detective"].includes(game);
     } catch (e) {
@@ -127,12 +140,19 @@ export function mountPuzzleLab(
   const wordsHTML = (words) => words.map((w) => esc(w)).join(" ");
   const button = (index, text, attrs = "") =>
     `<button class="lab-word" data-choice="${index}" ${attrs}><span class="arabic" lang="ar" dir="rtl">${esc(text)}</span></button>`;
+  const listenButton = (id) =>
+    `<button class="lab-choice-audio" data-lab-audio="${id}" aria-label="Hear this choice">♫</button>`;
+  const bindChoiceAudio = (entries) =>
+    area.querySelectorAll("[data-lab-audio]").forEach((b) => {
+      b.onclick = () => playAudio(entries[Number(b.dataset.labAudio)].audio);
+    });
   function start(next = game) {
     gameCleanup?.();
     stopAudio();
     pauseGame = () => {};
     game = next;
     resultKey = key;
+    referenceAudio = verseAudio(verse.id, surah.id);
     level = Number(root.querySelector("#lab-level").value);
     session = uid();
     mistakes = 0;
@@ -190,7 +210,8 @@ export function mountPuzzleLab(
     else detective();
   }
   function falling() {
-    let queue = shuffled(verse.words.length),
+    const entries = wordChoices(surah, verse, level + 2);
+    let queue = shuffled(entries.length),
       cursor = 0,
       lane = 0,
       y = 0,
@@ -198,14 +219,14 @@ export function mountPuzzleLab(
       placed = Array(verse.words.length).fill(null),
       disposedGame = false;
     const timed = root.querySelector("#lab-timed").checked;
-    area.innerHTML = `<h3>Falling Words</h3><p>Position 1 is on the right. Move the block, then place it. ${timed ? "Blocks descend gently and wait at the bottom; there is no penalty for slow placement." : "Untimed: use ↓ to lower the block whenever you are ready."}</p><div class="falling-scroll"><div class="falling-stage" tabindex="0" role="region" aria-label="Falling word board" aria-keyshortcuts="ArrowLeft ArrowRight ArrowDown Space" style="--slots:${verse.words.length};min-width:${verse.words.length * 72}px"><div class="falling-block arabic" lang="ar" dir="rtl" role="status" aria-live="polite"></div><div class="falling-slots" dir="rtl">${verse.words.map((_, i) => `<button data-slot="${i}" aria-label="Place in position ${i + 1} from the right"><span>${i + 1}</span></button>`).join("")}</div></div></div><div class="falling-controls"><button class="text-button" id="fall-left" aria-label="Move block left">← Left</button><button class="text-button" id="fall-down">↓ Lower</button><button class="primary small" id="fall-place">Place · Space</button><button class="text-button" id="fall-right" aria-label="Move block right">Right →</button><button class="text-button" id="fall-pause">Pause</button><button class="text-button" id="fall-listen">♫ Hear this word</button></div><p class="falling-counter"></p>`;
+    area.innerHTML = `<h3>Falling Words</h3><p>Position 1 is on the right. Move a correct word to its slot. Discard words that do not belong to this ayah. ${timed ? "Blocks descend gently and wait at the bottom; there is no penalty for slow placement." : "Untimed: use ↓ to lower the block whenever you are ready."}</p><div class="falling-scroll"><div class="falling-stage" tabindex="0" role="region" aria-label="Falling word board" aria-keyshortcuts="ArrowLeft ArrowRight ArrowDown Space Delete D" style="--slots:${verse.words.length};min-width:${verse.words.length * 72}px"><div class="falling-block arabic" lang="ar" dir="rtl" role="status" aria-live="polite"></div><div class="falling-slots" dir="rtl">${verse.words.map((_, i) => `<button data-slot="${i}" aria-label="Place in position ${i + 1} from the right"><span>${i + 1}</span></button>`).join("")}</div></div></div><div class="falling-controls"><button class="text-button" id="fall-left" aria-label="Move block left">← Left</button><button class="text-button" id="fall-down">↓ Lower</button><button class="primary small" id="fall-place">Place · Space</button><button class="text-button" id="fall-right" aria-label="Move block right">Right →</button><button class="text-button" id="fall-discard">Discard word · D</button><button class="text-button" id="fall-pause">Pause</button><button class="text-button" id="fall-listen">♫ Hear this word</button></div><p class="falling-counter"></p>`;
     const stage = area.querySelector(".falling-stage"),
       block = area.querySelector(".falling-block");
     const paint = () => {
-      if (disposedGame || done) return;
+      if (disposedGame || done || cursor >= queue.length) return;
       const index = queue[cursor],
         hidden = level >= 3 || (level === 2 && cursor % 2 === 0);
-      const text = hidden ? "؟" : verse.words[index];
+      const text = hidden ? "؟" : entries[index].text;
       if (block.textContent !== text) block.textContent = text;
       block.dataset.index = index;
       block.dataset.lane = lane;
@@ -213,7 +234,7 @@ export function mountPuzzleLab(
       block.style.width = `${100 / verse.words.length}%`;
       block.style.top = `${12 + y * 1.9}px`;
       area.querySelector(".falling-counter").textContent =
-        `${placed.filter((x) => x !== null).length} / ${verse.words.length} words placed · ${paused ? "Paused" : "Ready"}`;
+        `${placed.filter((x) => x !== null).length} / ${verse.words.length} words placed · ${queue.length - cursor} blocks left · ${paused ? "Paused" : "Ready"}`;
       area.querySelector("#fall-pause").textContent = paused
         ? "Resume"
         : "Pause";
@@ -232,12 +253,20 @@ export function mountPuzzleLab(
     const place = (target = lane) => {
       if (paused || done) return;
       lane = target;
+      const source = queue[cursor];
+      if (source >= verse.words.length) {
+        fail(
+          "This word is from another ayah. Discard it instead of placing it.",
+        );
+        y = 0;
+        paint();
+        return;
+      }
       if (placed[lane] !== null) {
         fail("That position is already filled. Choose an empty slot.");
         paint();
         return;
       }
-      const source = queue[cursor];
       if (verse.words[source] !== verse.words[lane]) {
         fail("That word belongs in another position. Try again.");
         y = 0;
@@ -261,6 +290,23 @@ export function mountPuzzleLab(
     area
       .querySelectorAll("[data-slot]")
       .forEach((b) => (b.onclick = () => place(Number(b.dataset.slot))));
+    const discard = () => {
+      if (paused || done) return;
+      if (queue[cursor] < verse.words.length) {
+        fail("This word belongs to the ayah. Keep it and choose its position.");
+        return;
+      }
+      cursor++;
+      y = 0;
+      say("Extra word set aside. Keep looking for the ayah’s words.");
+      if (cursor === queue.length) {
+        block.hidden = true;
+        finish();
+        return;
+      }
+      paint();
+    };
+    area.querySelector("#fall-discard").onclick = discard;
     area.querySelector("#fall-left").onclick = () => move(1);
     area.querySelector("#fall-right").onclick = () => move(-1);
     area.querySelector("#fall-down").onclick = () => {
@@ -276,9 +322,19 @@ export function mountPuzzleLab(
       paint();
     };
     area.querySelector("#fall-listen").onclick = () =>
-      playAudio(wordAudio(verse.id, queue[cursor], surah.id), true);
+      playAudio(entries[queue[cursor]].audio, true);
     stage.onkeydown = (event) => {
-      if (!["ArrowLeft", "ArrowRight", "ArrowDown", " "].includes(event.key))
+      if (
+        ![
+          "ArrowLeft",
+          "ArrowRight",
+          "ArrowDown",
+          " ",
+          "d",
+          "D",
+          "Delete",
+        ].includes(event.key)
+      )
         return;
       if (event.target.tagName === "BUTTON" && event.key === " ") return;
       event.preventDefault();
@@ -289,6 +345,7 @@ export function mountPuzzleLab(
         paint();
       }
       if (event.key === " ") place();
+      if (["d", "D", "Delete"].includes(event.key)) discard();
     };
     let dragging = false;
     block.onpointerdown = (e) => {
@@ -335,16 +392,22 @@ export function mountPuzzleLab(
           Math.ceil(verse.words.length * fraction),
         ),
       );
+    const entries = wordChoices(surah, verse, level + 2);
     const missing = [...hide].sort((a, b) => a - b),
       picked = [],
-      remaining = new Set(missing);
+      remaining = new Set([
+        ...missing,
+        ...entries.map((_, i) => i).filter((i) => i >= verse.words.length),
+      ]);
     const draw = () => {
-      area.innerHTML = `<h3>Vanishing Ayah · ${Math.round(fraction * 100)}% hidden</h3><p>Choose the missing words in order from right to left, before revealing the answer. Increase Difficulty for the next concealment step.</p><div class="vanishing-line" dir="rtl">${verse.words.map((w, i) => `<span class="arabic" lang="ar">${!hide.has(i) || picked.includes(i) ? esc(w) : "▢"}</span>`).join(" ")}</div><div class="lab-bank" dir="rtl">${shuffled(
-        missing.length,
+      area.innerHTML = `<h3>Vanishing Ayah · ${Math.round(fraction * 100)}% hidden</h3><p>Choose the missing words in order from right to left. Ignore extra words from other ayahs. Increase Difficulty for the next concealment step.</p><div class="vanishing-line" dir="rtl">${verse.words.map((w, i) => `<span class="arabic" lang="ar">${!hide.has(i) || picked.includes(i) ? esc(w) : "▢"}</span>`).join(" ")}</div><div class="lab-bank" dir="rtl">${shuffled(
+        remaining.size,
       )
-        .map((p) => missing[p])
-        .filter((i) => remaining.has(i))
-        .map((i) => button(i, verse.words[i]))
+        .map((p) => [...remaining][p])
+        .map(
+          (i) =>
+            `<div class="lab-choice-wrap">${button(i, entries[i].text)}${listenButton(i)}</div>`,
+        )
         .join(
           "",
         )}</div><button class="text-button" id="vanish-reveal">Reveal answer (study help)</button>`;
@@ -353,7 +416,10 @@ export function mountPuzzleLab(
           (b.onclick = () => {
             const index = Number(b.dataset.choice),
               target = missing[picked.length];
-            if (verse.words[index] !== verse.words[target]) {
+            if (
+              index >= verse.words.length ||
+              verse.words[index] !== verse.words[target]
+            ) {
               fail("Try a different missing word.");
               return;
             }
@@ -363,6 +429,7 @@ export function mountPuzzleLab(
             if (picked.length === missing.length) finish();
           }),
       );
+      bindChoiceAudio(entries);
       area.querySelector("#vanish-reveal").onclick = () => {
         hinted = true;
         area.querySelector(".vanishing-line").innerHTML =
@@ -377,25 +444,44 @@ export function mountPuzzleLab(
     const size = verse.words.length > 4 ? 3 : 2,
       groups = [];
     for (let i = 0; i < verse.words.length; i += size)
-      groups.push({ words: verse.words.slice(i, i + size), start: i });
+      groups.push({
+        words: verse.words.slice(i, i + size),
+        start: i,
+        roman: verse.roman.slice(i, i + size),
+        meanings: verse.meanings.slice(i, i + size),
+        audio: Array.from(
+          { length: Math.min(size, verse.words.length - i) },
+          (_, k) => wordAudio(verse.id, i + k, surah.id),
+        ),
+      });
+    const targetCount = groups.length;
+    groups.push(
+      ...passageChoices(
+        surahs,
+        surah.id,
+        [verse.words, ...groups.map((g) => g.words)],
+        groups.map((g) => g.words.length),
+        level + 2,
+      ),
+    );
+    const concealedIds = new Set(
+      shuffled(groups.length).slice(0, Math.ceil(groups.length / 2)),
+    );
     const bank = shuffled(groups.length),
       selected = [];
     const draw = () => {
       const piece = (i) => {
         const group = groups[i],
-          concealed = level >= 3 && i % 2 === 0;
-        return `<button class="lab-group" data-group="${i}" style="--group-color:${["#f0d6a1", "#d4e8cd", "#d9dff1", "#f4d5d5"][i % 4]}">${level < 4 ? `<svg viewBox="0 0 180 140" aria-hidden="true"><path d="${outline(i, groups.length)}"/></svg>` : ""}<span class="arabic" lang="ar" dir="rtl">${concealed ? "؟" : wordsHTML(group.words)}</span>${level < 3 ? `<small>${esc(verse.roman.slice(group.start, group.start + size).join(" "))}</small>` : ""}${
+          concealed = level >= 3 && concealedIds.has(i);
+        return `<div class="lab-choice-wrap"><button class="lab-group" data-group="${i}" style="--group-color:${["#f0d6a1", "#d4e8cd", "#d9dff1", "#f4d5d5"][i % 4]}">${level < 4 ? `<svg viewBox="0 0 180 140" aria-hidden="true"><path d="${outline(i % targetCount, targetCount)}"/></svg>` : ""}<span class="arabic" lang="ar" dir="rtl">${concealed ? "؟" : wordsHTML(group.words)}</span>${level < 3 ? `<small>${esc(group.roman.join(" "))}</small>` : ""}${
           level === 1
             ? `<small>${esc(
-                verse.meanings
-                  .slice(group.start, group.start + size)
-                  .map((m) => m[0])
-                  .join(" · "),
+                group.meanings.map((m) => m[0]).join(" · "),
               )}</small>`
             : ""
-        }</button>`;
+        }</button>${listenButton(i)}</div>`;
       };
-      area.innerHTML = `<h3>Ayah Jigsaw</h3><p>Build larger word groups from right to left. Tap a built group to remove it.</p><div class="lab-build" dir="rtl">${selected.map(piece).join("") || "Your connected groups go here"}</div><div class="lab-bank" dir="rtl">${bank
+      area.innerHTML = `<h3>Ayah Jigsaw</h3><p>Choose the ayah’s word groups and build from right to left. Ignore foreign groups; tap a built group to remove it.</p><div class="lab-build" dir="rtl">${selected.map(piece).join("") || "Your connected groups go here"}</div><div class="lab-bank" dir="rtl">${bank
         .filter((i) => !selected.includes(i))
         .map(piece)
         .join(
@@ -411,6 +497,7 @@ export function mountPuzzleLab(
             draw();
           }),
       );
+      bindChoiceAudio(groups);
       area.querySelector("#jigsaw-check").onclick = () => {
         if (
           selected.map((i) => groups[i].words.join(" ")).join(" ") ===
@@ -439,7 +526,8 @@ export function mountPuzzleLab(
     let subtype = "meaning",
       cards = [],
       flipped = [],
-      matched = new Set();
+      matched = new Set(),
+      expectedPairs = 0;
     function setup() {
       const seen = new Set(),
         pairs = [];
@@ -453,8 +541,20 @@ export function mountPuzzleLab(
           seen.add(opening);
           seen.add(tail);
           pairs.push([
-            { text: opening, arabic: true },
-            { text: tail, arabic: true },
+            {
+              text: opening,
+              arabic: true,
+              audio: Array.from({ length: n }, (_, i) =>
+                wordAudio(v.id, i, surah.id),
+              ),
+            },
+            {
+              text: tail,
+              arabic: true,
+              audio: Array.from({ length: v.words.length - n }, (_, i) =>
+                wordAudio(v.id, n + i, surah.id),
+              ),
+            },
           ]);
           if (pairs.length === 4) break;
         }
@@ -465,17 +565,81 @@ export function mountPuzzleLab(
           seen.add(verse.words[i]);
           seen.add(verse.meanings[i][0]);
           pairs.push([
-            { text: verse.words[i], arabic: true },
+            {
+              text: verse.words[i],
+              arabic: true,
+              audio: wordAudio(verse.id, i, surah.id),
+            },
             {
               text:
                 subtype === "audio" ? "♫ Hear the word" : verse.meanings[i][0],
               arabic: false,
-              audio:
-                subtype === "audio" ? wordAudio(verse.id, i, surah.id) : null,
+              audio: wordAudio(verse.id, i, surah.id),
             },
           ]);
           if (pairs.length === 4) break;
         }
+      expectedPairs = pairs.length;
+      if (subtype === "continuation") {
+        const used = new Set(
+          pairs.flat().map((c) => textIdentity(c.text.split(" "))),
+        );
+        for (const passage of passageChoices(
+          surahs,
+          surah.id,
+          pairs.flat().map((c) => c.text.split(" ")),
+          [null],
+          30,
+        )) {
+          const n = Math.ceil(passage.words.length / 2);
+          if (n === passage.words.length) continue;
+          const opening = passage.words.slice(0, n).join(" "),
+            tail = passage.words.slice(n).join(" ");
+          if (
+            used.has(textIdentity(opening.split(" "))) ||
+            used.has(textIdentity(tail.split(" ")))
+          )
+            continue;
+          used.add(textIdentity(opening.split(" ")));
+          used.add(textIdentity(tail.split(" ")));
+          pairs.push([
+            {
+              text: opening,
+              arabic: true,
+              audio: Array.from({ length: n }, (_, i) =>
+                wordAudio(passage.ayah, i, passage.surah),
+              ),
+            },
+            {
+              text: tail,
+              arabic: true,
+              audio: Array.from({ length: passage.words.length - n }, (_, i) =>
+                wordAudio(passage.ayah, n + i, passage.surah),
+              ),
+            },
+          ]);
+          if (pairs.length === expectedPairs + 2) break;
+        }
+      } else {
+        const usedMeanings = new Set(
+          verse.meanings.map((m) => m[0].toLowerCase().trim()),
+        );
+        for (const word of wordChoices(surah, verse, 16).slice(
+          verse.words.length,
+        )) {
+          if (usedMeanings.has(word.meaning.toLowerCase().trim())) continue;
+          usedMeanings.add(word.meaning.toLowerCase().trim());
+          pairs.push([
+            { text: word.text, arabic: true, audio: word.audio },
+            {
+              text: subtype === "audio" ? "♫ Hear the word" : word.meaning,
+              arabic: false,
+              audio: word.audio,
+            },
+          ]);
+          if (pairs.length === expectedPairs + 2) break;
+        }
+      }
       const all = pairs.flatMap((pair, id) =>
         pair.map((card) => ({ ...card, pair: id })),
       );
@@ -485,7 +649,7 @@ export function mountPuzzleLab(
       draw();
     }
     const draw = () => {
-      area.innerHTML = `<h3>Memory Match</h3><p>A recognition game, including authentic audio or ayah continuations.</p><label>Pair type<select id="match-type"><option value="meaning">Word and meaning</option><option value="audio">Word and audio</option><option value="continuation">Opening and continuation</option></select></label><div class="match-grid">${cards.map((c, i) => `<button data-card="${i}" data-pair="${c.pair}" class="match-card ${matched.has(c.pair) ? "matched" : ""}" ${matched.has(c.pair) ? "disabled" : ""} aria-label="${matched.has(c.pair) ? "Matched: " + esc(c.text) : flipped.includes(i) ? esc(c.text) : `Turn card ${i + 1}`}">${matched.has(c.pair) || flipped.includes(i) ? `<span ${c.arabic ? 'class="arabic" lang="ar" dir="rtl"' : ""}>${esc(c.text)}</span>` : "✦"}</button>`).join("")}</div><button class="text-button" id="match-reset-pair" ${flipped.length === 2 ? "" : "hidden"}>Try another pair</button>`;
+      area.innerHTML = `<h3>Memory Match</h3><p>Match only the selected ayah’s words (or this surah’s openings and continuations). Leave foreign pairs unmatched.</p><label>Pair type<select id="match-type"><option value="meaning">Word and meaning</option><option value="audio">Word and audio</option><option value="continuation">Opening and continuation</option></select></label><div class="match-grid">${cards.map((c, i) => `<div class="lab-choice-wrap"><button data-card="${i}" data-pair="${c.pair}" class="match-card ${matched.has(c.pair) ? "matched" : ""}" ${matched.has(c.pair) ? "disabled" : ""} aria-label="${matched.has(c.pair) ? "Matched: " + esc(c.text) : flipped.includes(i) ? esc(c.text) : `Turn card ${i + 1}`}">${matched.has(c.pair) || flipped.includes(i) ? `<span ${c.arabic ? 'class="arabic" lang="ar" dir="rtl"' : ""}>${esc(c.text)}</span>` : "✦"}</button>${listenButton(i)}</div>`).join("")}</div><button class="text-button" id="match-reset-pair" ${flipped.length === 2 ? "" : "hidden"}>Try another pair</button>`;
       area.querySelector("#match-type").value = subtype;
       area.querySelector("#match-type").onchange = (e) => {
         subtype = e.target.value;
@@ -502,20 +666,27 @@ export function mountPuzzleLab(
             const i = Number(b.dataset.card);
             if (flipped.includes(i) || flipped.length === 2) return;
             flipped.push(i);
-            if (cards[i].audio) playAudio(cards[i].audio);
+            if (subtype === "audio" && !cards[i].arabic)
+              playAudio(cards[i].audio);
             if (flipped.length === 2) {
-              if (cards[flipped[0]].pair === cards[flipped[1]].pair) {
+              if (
+                cards[flipped[0]].pair === cards[flipped[1]].pair &&
+                cards[i].pair < expectedPairs
+              ) {
                 matched.add(cards[i].pair);
                 flipped = [];
               } else
                 fail(
-                  "Those cards do not form a pair. Listen or look, then try another pair.",
+                  cards[flipped[0]].pair === cards[flipped[1]].pair
+                    ? "That pair is from another ayah or surah. Leave it unmatched."
+                    : "Those cards do not form a pair. Listen or look, then try another pair.",
                 );
             }
             draw();
-            if (matched.size === cards.length / 2 && cards.length) finish();
+            if (matched.size === expectedPairs && expectedPairs) finish();
           }),
       );
+      bindChoiceAudio(cards);
       area.querySelector("#match-reset-pair").onclick = () => {
         flipped = [];
         draw();
@@ -530,12 +701,26 @@ export function mountPuzzleLab(
         Math.max(0, surah.verses.length - 3),
       ),
       passage = surah.verses.slice(startIndex, startIndex + 5),
-      bank = shuffled(passage.length),
       selected = [];
+    const targetCount = passage.length;
+    const cards = passage.map((v) => ({
+      words: v.words,
+      audio: [verseAudio(v.id, surah.id)],
+    }));
+    cards.push(
+      ...passageChoices(
+        surahs,
+        surah.id,
+        passage.map((v) => v.words),
+        [null],
+        level + 2,
+      ),
+    );
+    const bank = shuffled(cards.length);
     const draw = () => {
       const card = (i) =>
-        `<button class="chain-lab-card" data-chain="${i}"><span class="arabic" lang="ar" dir="rtl">${wordsHTML(level >= 3 ? passage[i].words.slice(0, level === 4 ? 1 : 2) : passage[i].words)}</span>${level >= 3 ? "<small>Opening cue only</small>" : ""}</button>`;
-      area.innerHTML = `<h3>Broken Chain</h3><p>Restore ayahs ${passage[0].id}–${passage.at(-1).id} in their surah order. Tap a chosen ayah to undo it.</p><div class="lab-chain-build">${selected.map(card).join("") || "Choose the first ayah below"}</div><div class="lab-chain-bank">${bank
+        `<div class="lab-choice-wrap"><button class="chain-lab-card" data-chain="${i}"><span class="arabic" lang="ar" dir="rtl">${wordsHTML(level >= 3 ? cards[i].words.slice(0, level === 4 ? 1 : 2) : cards[i].words)}</span>${level >= 3 ? "<small>Opening cue only</small>" : ""}</button>${listenButton(i)}</div>`;
+      area.innerHTML = `<h3>Broken Chain</h3><p>Restore ayahs ${passage[0].id}–${passage.at(-1).id} in their surah order. Ignore ayahs outside this passage. Tap a chosen ayah to undo it.</p><div class="lab-chain-build">${selected.map(card).join("") || "Choose the first ayah below"}</div><div class="lab-chain-bank">${bank
         .filter((i) => !selected.includes(i))
         .map(card)
         .join(
@@ -551,10 +736,14 @@ export function mountPuzzleLab(
             draw();
           }),
       );
+      bindChoiceAudio(cards);
       area.querySelector("#chain-check").onclick = () => {
         if (
-          selected.length === passage.length &&
-          selected.every((v, i) => v === i)
+          selected.length === targetCount &&
+          selected.every(
+            (v, i) =>
+              textIdentity(cards[v].words) === textIdentity(passage[i].words),
+          )
         )
           finish();
         else fail("Try another ayah sequence.");
@@ -576,32 +765,102 @@ export function mountPuzzleLab(
       gameCleanup = () => {};
       return;
     }
-    area.innerHTML = `<h3>Continue the Ayah</h3><p>Use this opening, then say the rest aloud or quietly before looking. This cued practice is self-assessed, not an independent mastery checkpoint.</p><p class="arabic lab-opening" lang="ar" dir="rtl">${wordsHTML(opening)}</p><button class="primary small" id="continue-compare">I tried the remainder — compare</button><div class="continue-answer" hidden><p class="arabic" lang="ar" dir="rtl">${wordsHTML(tail)}</p><button class="text-button" id="continue-again">I needed another cue</button><button class="primary small" id="continue-good">I recalled the remainder correctly</button></div>`;
-    area.querySelector("#continue-compare").onclick = () => {
-      area.querySelector(".continue-answer").hidden = false;
-      area.querySelector("#continue-compare").disabled = true;
-    };
-    area.querySelector("#continue-again").onclick = () => {
-      fail(
-        "Opening difficulty recorded. Try a little study, then a fresh round.",
+    const choices = wordChoices(surah, verse, level + 2);
+    const entries = [
+      ...choices.slice(cue, verse.words.length),
+      ...choices.slice(verse.words.length),
+    ];
+    const bank = shuffled(entries.length),
+      selected = [];
+    let compared = false,
+      checked = false,
+      revealed = false;
+    const draw = () => {
+      const choice = (i) =>
+        `<div class="lab-choice-wrap">${button(i, entries[i].text)}${listenButton(i)}</div>`;
+      area.innerHTML = `<h3>Continue the Ayah</h3><p>Use the opening and try the rest from memory. Then build the remainder in order, ignoring extra words. This cued practice is not an independent mastery checkpoint.</p><p class="arabic lab-opening" lang="ar" dir="rtl">${wordsHTML(opening)}</p><button class="primary small" id="continue-compare" ${compared ? "disabled" : ""}>I tried the remainder — build and compare</button><div class="continue-answer" ${compared ? "" : "hidden"}><div class="lab-build" dir="rtl">${selected.map(choice).join("") || "Build the remainder here"}</div><div class="lab-bank" dir="rtl">${bank
+        .filter((i) => !selected.includes(i))
+        .map(choice)
+        .join(
+          "",
+        )}</div><button class="primary small" id="continue-check">Check my remainder</button><button class="text-button" id="continue-again">I need the answer first</button>${revealed ? `<p class="arabic" lang="ar" dir="rtl">${wordsHTML(tail)}</p>` : ""}<button class="primary small" id="continue-good" ${checked ? "" : "disabled"}>I recalled and built the remainder correctly</button></div>`;
+      area.querySelector("#continue-compare").onclick = () => {
+        compared = true;
+        draw();
+      };
+      area.querySelectorAll("[data-choice]").forEach(
+        (b) =>
+          (b.onclick = () => {
+            const i = Number(b.dataset.choice),
+              p = selected.indexOf(i);
+            if (p >= 0) selected.splice(p, 1);
+            else selected.push(i);
+            checked = false;
+            draw();
+          }),
       );
-      hinted = true;
-      finish();
+      bindChoiceAudio(entries);
+      area.querySelector("#continue-check").onclick = () => {
+        if (selected.map((i) => entries[i].text).join(" ") === tail.join(" ")) {
+          checked = true;
+          say(
+            "The remainder fits. Compare your spoken attempt before completing.",
+          );
+          draw();
+        } else
+          fail(
+            "Some words do not belong, or the remainder is out of order. Remove and replace them.",
+          );
+      };
+      area.querySelector("#continue-again").onclick = () => {
+        hinted = true;
+        revealed = true;
+        fail(
+          "Answer revealed for study. Still build the correct remainder to complete.",
+        );
+        draw();
+      };
+      area.querySelector("#continue-good").onclick = () => {
+        if (checked) finish();
+      };
     };
-    area.querySelector("#continue-good").onclick = finish;
+    draw();
     gameCleanup = () => {};
   }
+
   function detective() {
     const pairs = checkedDetectivePairs(surahs),
       local = pairs.find((p) => p.surah.id === surah.id),
       pair = local || pairs[Math.floor(Math.random() * pairs.length)];
     resultKey = `${pair.surah.id}:${pair.first.id}`;
-    const options = shuffled(2),
-      tails = [
-        pair.first.words.slice(pair.cue),
-        pair.second.words.slice(pair.cue),
-      ];
-    area.innerHTML = `<h3>Similar Ayah Detective</h3><p>Which continuation belongs to ${esc(pair.surah.name)}, ayah ${pair.first.id}? Both choices are actual passages from that surah, not invented Quran text.</p><p class="arabic lab-opening" lang="ar" dir="rtl">${wordsHTML(pair.first.words.slice(0, pair.cue))}</p><div class="detective-options">${options.map((i) => button(i, tails[i].join(" "))).join("")}</div><p class="detective-source" hidden>Verified library comparison: ${pair.surah.id}:${pair.first.id} and ${pair.surah.id}:${pair.second.id}</p>`;
+    referenceAudio = verseAudio(pair.first.id, pair.surah.id);
+    const entries = [
+      {
+        words: pair.first.words.slice(pair.cue),
+        audio: pair.first.words
+          .slice(pair.cue)
+          .map((_, i) => wordAudio(pair.first.id, pair.cue + i, pair.surah.id)),
+      },
+      {
+        words: pair.second.words.slice(pair.cue),
+        audio: pair.second.words
+          .slice(pair.cue)
+          .map((_, i) =>
+            wordAudio(pair.second.id, pair.cue + i, pair.surah.id),
+          ),
+      },
+    ];
+    entries.push(
+      ...passageChoices(
+        surahs,
+        pair.surah.id,
+        entries.map((e) => e.words),
+        [entries[0].words.length, entries[1].words.length],
+        level + 1,
+      ),
+    );
+    const options = shuffled(entries.length);
+    area.innerHTML = `<h3>Similar Ayah Detective</h3><p>Which continuation belongs to ${esc(pair.surah.name)}, ayah ${pair.first.id}? All choices are authentic Quran passages. Choose the right continuation and ignore the others.</p><p class="arabic lab-opening" lang="ar" dir="rtl">${wordsHTML(pair.first.words.slice(0, pair.cue))}</p><div class="detective-options">${options.map((i) => `<div class="lab-choice-wrap">${button(i, entries[i].words.join(" "))}${listenButton(i)}</div>`).join("")}</div><p class="detective-source" hidden>Verified library comparison: ${pair.surah.id}:${pair.first.id} and ${pair.surah.id}:${pair.second.id}</p>`;
     area.querySelectorAll("[data-choice]").forEach(
       (b) =>
         (b.onclick = () => {
@@ -614,6 +873,7 @@ export function mountPuzzleLab(
             );
         }),
     );
+    bindChoiceAudio(entries);
     gameCleanup = () => {};
   }
   root.querySelectorAll("[data-game]").forEach(
@@ -630,7 +890,7 @@ export function mountPuzzleLab(
   root.querySelector("#lab-timed").onchange = () => start();
   root.querySelector("#lab-restart").onclick = () => start();
   root.querySelector("#lab-replay").onclick = () =>
-    playAudio(verseAudio(verse.id, surah.id), true);
+    playAudio(referenceAudio, true);
   root.querySelector("#lab-stop-audio").onclick = stopAudio;
   root.querySelector("#lab-retry-save").onclick = finish;
   root.querySelector("#lab-next-level").onclick = () => {
@@ -638,7 +898,8 @@ export function mountPuzzleLab(
     start();
     area.scrollIntoView({ block: "start" });
   };
-  root.querySelector("#lab-recall").onclick = () => callbacks.onRecall(key);
+  root.querySelector("#lab-recall").onclick = () =>
+    callbacks.onRecall(resultKey);
   root.querySelector("#lab-recommended").onclick = () =>
     recommendation.game === "recall"
       ? callbacks.onRecall(key)

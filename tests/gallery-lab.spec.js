@@ -52,10 +52,18 @@ const openLab = async (page) => {
 };
 const finishFalling = async (page, keyboard = false) => {
   const n = await page.locator("[data-slot]").count();
-  for (let i = 0; i < n; i++) {
+  for (let step = 0; step < n + 10; step++) {
+    if (await page.locator(".falling-block").isHidden()) break;
     const index = Number(
       await page.locator(".falling-block").getAttribute("data-index"),
     );
+    if (index >= n) {
+      if (keyboard) {
+        await page.locator(".falling-stage").focus();
+        await page.keyboard.press("d");
+      } else await page.locator("#fall-discard").click();
+      continue;
+    }
     if (keyboard) {
       const lane = Number(
         await page.locator(".falling-block").getAttribute("data-lane"),
@@ -274,6 +282,10 @@ test("Falling Words supports RTL keyboard placement, retry feedback and daily XP
     "data-lane",
     "0",
   );
+  while (
+    Number(await page.locator(".falling-block").getAttribute("data-index")) >= 4
+  )
+    await page.locator("#fall-discard").click();
   const index = Number(
     await page.locator(".falling-block").getAttribute("data-index"),
   );
@@ -372,6 +384,9 @@ test("all other puzzle types are playable with verified text", async ({
   await page.locator('[data-game="continue"]').click();
   await expect(page.locator(".continue-answer")).toBeHidden();
   await page.locator("#continue-compare").click();
+  for (let i = 0; i < 3; i++)
+    await page.locator(`[data-choice="${i}"]`).click();
+  await page.locator("#continue-check").click();
   await page.locator("#continue-good").click();
   await expect(page.locator("[data-status]")).toContainText(
     "Challenge complete",
@@ -392,11 +407,12 @@ test.describe("touch layout", () => {
   }) => {
     await openLab(page);
     const n = 4;
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < n + 3; i++) {
       const index = await page
         .locator(".falling-block")
         .getAttribute("data-index");
-      await page.locator(`[data-slot="${index}"]`).tap();
+      if (Number(index) >= n) await page.locator("#fall-discard").tap();
+      else await page.locator(`[data-slot="${index}"]`).tap();
     }
     await expect(page.locator("[data-status]")).toContainText(
       "Challenge complete",
@@ -449,15 +465,21 @@ test("Vanishing Ayah advances from a quarter hidden to half without farming XP",
   await openLab(page);
   await page.locator('[data-game="vanishing"]').click();
   await expect(page.locator(".lab-game h3")).toContainText("25% hidden");
-  await page.locator("[data-choice]").click();
+  const target = await page
+    .locator("[data-choice]")
+    .evaluateAll(
+      (bs) => bs.find((b) => Number(b.dataset.choice) < 4).dataset.choice,
+    );
+  await page.locator(`[data-choice="${target}"]`).click();
   await expect(page.locator("[data-status]")).toContainText("+8 game XP");
   await page.locator("#lab-next-level").click();
   await expect(page.locator(".lab-game h3")).toContainText("50% hidden");
-  const choices = await page
-    .locator("[data-choice]")
-    .evaluateAll((buttons) =>
-      buttons.map((b) => Number(b.dataset.choice)).sort((a, b) => a - b),
-    );
+  const choices = await page.locator("[data-choice]").evaluateAll((buttons) =>
+    buttons
+      .map((b) => Number(b.dataset.choice))
+      .filter((i) => i < 4)
+      .sort((a, b) => a - b),
+  );
   for (const i of choices) await page.locator(`[data-choice="${i}"]`).click();
   await expect(page.locator("[data-status]")).toContainText("+0 game XP");
 });
@@ -475,11 +497,12 @@ test("a failed Lab history write can be retried without awarding XP twice", asyn
     };
   }, LAB_KEY);
   await openLab(page);
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 7; i++) {
     const index = await page
       .locator(".falling-block")
       .getAttribute("data-index");
-    await page.locator(`[data-slot="${index}"]`).click();
+    if (Number(index) >= 4) await page.locator("#fall-discard").click();
+    else await page.locator(`[data-slot="${index}"]`).click();
   }
   await expect(page.locator("#lab-retry-save")).toBeVisible();
   expect(
@@ -518,6 +541,10 @@ test("leaving a timed Quest peek does not reset an in-progress Lab round", async
   await page.locator('[data-mode="quiz"]').click();
   await page.locator("#peek-words").click();
   await page.locator("#nav-lab").click();
+  while (
+    Number(await page.locator(".falling-block").getAttribute("data-index")) >= 4
+  )
+    await page.locator("#fall-discard").click();
   const index = await page.locator(".falling-block").getAttribute("data-index");
   await page.locator(`[data-slot="${index}"]`).click();
   await expect(page.locator(".slot-filled")).toHaveCount(1);
