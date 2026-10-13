@@ -73,3 +73,15 @@ In **Assess this ayah**, choose **Record my recitation**, allow microphone acces
 Recording requires microphone access in a supported browser and HTTPS (localhost works for development). Recordings stay in memory in the current tab; they are never uploaded or stored in learning history. Leaving the session, starting another attempt, or reloading clears the recording and releases the microphone. Assessment results and review schedules continue to persist as before. Microphone denial or unsupported recording does not block normal self-assessment. Each recording is limited to five minutes.
 
 The remaining ten Juz Amma surahs (Al-A‘la through An-Naba) were imported with `scripts/complete-juz-amma.py`. The importer preserves existing records, downloads local recordings, and records source word spellings and any API audio-number corrections in `public/additional-quran-source.json`.
+
+## Surah Journey, Mastery Gallery, and Puzzle Lab
+
+Use the **Surah Journey**, **Mastery Gallery**, and **Puzzle Lab** buttons above the learning area. The Gallery initially covers Al-Fatihah and surahs 103–114, matching the brief's original thirteen-surah scope; all 38 surahs remain available in the learning modes and Lab.
+
+Artwork sections unlock after correct independent self-assessed recall on **two distinct scheduled review days**. Text/audio assistance, early successful practice, visible puzzles, and old game achievements do not unlock them. Unlocks survive lapses. A separate **Maintained** award requires the existing retained stage for every ayah. The Gallery shows review dates without changing FSRS scheduling. Reveal animations last 1.2 seconds, support reduced motion, and can be skipped.
+
+The Lab contains Falling Words, Vanishing Ayah, Ayah Jigsaw, Memory Match (meaning/audio/continuations), Broken Chain, Continue the Ayah, and Similar Ayah Detective. Falling Words supports right-to-left slots, keyboard arrows/Space, touch buttons or dragging, pause, untimed play, optional gentle timed descent, and audio. Recitation pauses timed play; resuming stops that audio. Other games use graduated cues and verified word/ayah data. Detective currently uses three manually checked comparisons from Al-Fatihah, Al-Kafirun, and Al-Falaq, and attributes practice to the actual target ayah.
+
+Lab completion awards at most 8 XP per ayah/game/day (2 XP for study-assisted completion, with only the difference available after an unassisted completion). Games remain replayable and do not certify spoken recall or advance Puzzle Quest levels. Recommendations use practice mistakes, with independent recall recommended first when an ayah is overdue.
+
+**Editorial work remains:** the referenced artwork table was missing, and both supplied tafsir sources returned HTTP 403. Thirteen story/asset contracts and source links exist, but final images and tafsir narratives are not published or labeled verified. Missing images show a clearly labeled local geometric placeholder. See [implementation details and remaining work](docs/gallery-puzzle-lab.md) and [artwork publishing contract](public/mastery-art/README.md).

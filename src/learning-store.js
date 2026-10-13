@@ -423,6 +423,54 @@ export function createLearningStore(
         return result;
       });
     },
+    recordLabPuzzle({
+      key,
+      sessionId,
+      game,
+      mistakes = 0,
+      hinted = false,
+      now,
+    }) {
+      return transact((state) => {
+        if (
+          ![
+            "falling",
+            "vanishing",
+            "jigsaw",
+            "match",
+            "chain",
+            "continue",
+            "detective",
+          ].includes(game) ||
+          typeof sessionId !== "string" ||
+          !sessionId ||
+          !Number.isInteger(mistakes) ||
+          mistakes < 0
+        )
+          throw new Error("Invalid Puzzle Lab result");
+        if (Object.hasOwn(state.receipts, sessionId))
+          return { ...state.receipts[sessionId], duplicate: true };
+        const date = nowDate(now),
+          r = record(state, key);
+        const awarded = reward(
+          state,
+          `lab:${key}:${game}:${dayKey(date, state.timeZone)}`,
+          { xp: hinted ? 2 : 8, stars: 0 },
+        );
+        r.game.puzzleXP += awarded.xp;
+        r.game.history.push({
+          sessionId,
+          at: date.toISOString(),
+          game,
+          lab: true,
+          mistakes,
+          hinted,
+          ...awarded,
+        });
+        state.receipts[sessionId] = awarded;
+        return clone(awarded);
+      });
+    },
     beginRecall(key, now) {
       return transact((state) => {
         const date = nowDate(now),

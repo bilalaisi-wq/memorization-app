@@ -1,3 +1,8 @@
+import { createMasteryStore } from "./mastery/mastery-store.js";
+import { gallerySurahIds } from "./mastery/masteryStories.js";
+import { mountGallery, stopMasteryUI } from "./mastery/gallery-ui.js";
+import { createPuzzleStore } from "./puzzles/puzzle-store.js";
+import { mountPuzzleLab, stopPuzzleLab } from "./puzzles/puzzle-lab.js";
 import { disposeRecallRecording } from "./recall-recording.js";
 import { createDistractorPicker } from "./distractors.js";
 import { createLearningStore } from "./learning-store.js";
@@ -36,6 +41,8 @@ const icons = {
 const icon = (name) =>
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.grid}</svg>`;
 const learning = createLearningStore(localStorage, surahs);
+const gallery = createMasteryStore(localStorage, surahs);
+const lab = createPuzzleStore(localStorage, surahs);
 let puzzleSessionId = "";
 let chapter = 0,
   verses = surahs[0].verses,
@@ -90,9 +97,10 @@ function reset() {
   puzzleSessionId =
     globalThis.crypto?.randomUUID?.() || Date.now() + "-" + Math.random();
   roundLevel = challengeLevel(mastery[key()] || 0);
-  extras = mode === "quiz"
-    ? pickDistractors(surahs[chapter].id, verses[ayah].words, roundLevel + 3)
-    : [];
+  extras =
+    mode === "quiz"
+      ? pickDistractors(surahs[chapter].id, verses[ayah].words, roundLevel + 3)
+      : [];
   bank = scrambledBank(
     verses[ayah].words.length + extras.length,
     verses[ayah].words.length,
@@ -152,7 +160,7 @@ function render() {
     count = chapterCompleted();
   app.innerHTML = `
 <aside class="sidebar"><a class="brand" href="#" aria-label="Ayah home"><span class="brand-mark">۞</span><span>ayah<span class="brand-period">.</span></span></a><div class="sidebar-sub">A LITTLE EACH DAY. A LIFETIME WITH YOU.</div><div class="nav-label">YOUR SPACE</div><button class="nav-item active" id="nav-learn">${icon("grid")} Memorization <span class="nav-pill">${totalAyahs}</span></button><button class="nav-item" id="nav-daily">${icon("repeat")} Daily quests</button><button class="nav-item" id="nav-progress">${icon("book")} My progress</button><div class="surah-label">CHOOSE A SURAH</div><label class="surah-picker-label">Your surah<select id="surah-picker">${surahs.map((s, i) => `<option value="${i}" ${chapter === i ? "selected" : ""}>${s.name} · ${s.verses.length} ayahs</option>`).join("")}</select></label><div class="surah-side"><span class="surah-symbol">${String(surah.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d])}</span><div><strong>${surah.name}</strong><small>${surah.meaning} · ${verses.length} ayahs</small></div></div><div class="ayah-nav">${verses.map((x, i) => `<button data-ayah="${i}" class="ayah-item ${i === ayah ? "current" : ""}"><span class="ayah-number">${completed.has(surah.id + ":" + (i + 1)) ? "✓" : i + 1}</span><span>Ayah ${i + 1}</span>${i === ayah ? '<span class="current-dot"></span>' : ""}</button>`).join("")}</div><div class="sidebar-bottom"><span class="small-flower">✧</span><p>“And We have certainly made<br>the Quran easy to remember.”</p><small>AL-QAMAR · 54:17</small></div></aside>
-<div class="main-shell"><header><div class="breadcrumb">My learning <span>/</span> <strong>${surah.name}</strong></div><div class="header-right"><span class="daily">✧ <b>${completed.size}</b> ayahs practiced</span><span class="avatar">Y</span></div></header><main><div class="page-heading"><div class="eyebrow">MEMORIZE, PIECE BY PIECE</div><h1>Small pieces. Big discoveries.</h1><p>A colorful little adventure, one ayah at a time.</p></div><div class="surah-heading"><div><span class="surah-tag">SURAH ${String(surah.id).padStart(3, "0")}</span><h2>${surah.name} <span lang="ar" class="surah-arabic">${surah.arabic}</span></h2><p>${surah.meaning} <span>•</span> ${surah.origin} <span>•</span> ${verses.length} ayahs</p></div><div class="progress-summary"><span>Your journey <b>${count} / ${verses.length} ayahs</b></span><div class="progress-track"><i style="width:${(count / verses.length) * 100}%"></i></div></div></div>
+<div class="main-shell"><header><div class="breadcrumb">My learning <span>/</span> <strong>${surah.name}</strong></div><div class="header-right"><span class="daily">✧ <b>${completed.size}</b> ayahs practiced</span><span class="avatar">Y</span></div></header><main><div class="page-heading"><div class="eyebrow">MEMORIZE, PIECE BY PIECE</div><h1>Small pieces. Big discoveries.</h1><p>A colorful little adventure, one ayah at a time.</p></div><nav class="explore-nav" aria-label="Explore learning tools"><button class="text-button" id="nav-journey">Surah Journey</button><button class="text-button" id="nav-gallery">Mastery Gallery</button><button class="text-button" id="nav-lab">Puzzle Lab</button></nav><div class="surah-heading"><div><span class="surah-tag">SURAH ${String(surah.id).padStart(3, "0")}</span><h2>${surah.name} <span lang="ar" class="surah-arabic">${surah.arabic}</span></h2><p>${surah.meaning} <span>•</span> ${surah.origin} <span>•</span> ${verses.length} ayahs</p></div><div class="progress-summary"><span>Your journey <b>${count} / ${verses.length} ayahs</b></span><div class="progress-track"><i style="width:${(count / verses.length) * 100}%"></i></div></div></div>
 <section class="reference-card"><div class="reference-top"><span class="section-label"><span class="tiny-dot"></span> AYAH ${v.id} <span class="muted">OF ${verses.length}</span></span><button class="text-button" id="full-audio">${icon(playing ? "pause" : "headphones")} ${playing ? "Stop audio" : "Listen to full ayah"}</button></div><div class="full-verse ${reference ? "" : "reference-hidden"}" lang="ar" dir="rtl">${reference ? v.text + ' <span class="verse-end">' + String(v.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]) + "</span>" : '<span class="hidden-reference">The ayah is hidden for your challenge</span>'}</div><p class="translation">${reference ? v.translation : "Build from memory. Reveal the ayah whenever you need a little help."}</p>${mode !== "practice" ? `<button class="reference-toggle" id="reference-toggle">${icon("eye")} ${reference ? "Hide" : "Reveal"} ayah</button>` : ""}</section>
 <div class="mode-row"><div class="tabs" role="tablist" aria-label="Learning mode">${[
     ["practice", "grid", "Practice"],
@@ -182,7 +190,26 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
   document
     .querySelector("#nav-daily")
     .classList.toggle("active", mode === "daily" || mode === "review");
-  if (mode === "daily")
+  if (mode === "gallery" || mode === "journey")
+    mountGallery(
+      document.querySelector("main"),
+      gallery,
+      learning,
+      surahs,
+      memoryCallbacks,
+      mode === "journey" ? surah.id : null,
+    );
+  else if (mode === "lab")
+    mountPuzzleLab(
+      document.querySelector("main"),
+      surah,
+      v,
+      learning,
+      lab,
+      memoryCallbacks,
+      surahs,
+    );
+  else if (mode === "daily")
     mountDailyDashboard(
       document.querySelector("main"),
       learning,
@@ -206,6 +233,8 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
   if (mode === "sequence") mountSequence(document.querySelector("main"), surah);
 }
 function stop() {
+  stopPuzzleLab();
+  stopMasteryUI();
   disposeRecallRecording();
   stopLearningAudio();
   stopSequence();
@@ -298,6 +327,37 @@ function markStudyBeforeRecall(target) {
 }
 const memoryCallbacks = {
   currentKey: key,
+  onGallery() {
+    mode = "gallery";
+    reset();
+  },
+  onJourney(id = surahs[chapter].id) {
+    stop();
+    const c = surahs.findIndex((s) => s.id === id);
+    if (c >= 0) {
+      chapter = c;
+      verses = surahs[c].verses;
+      ayah = 0;
+    }
+    mode = gallerySurahIds.includes(id) ? "journey" : "gallery";
+    reset();
+  },
+  onLab() {
+    if (!markStudyBeforeRecall(key())) return;
+    mode = "lab";
+    reset();
+  },
+  onReviewSurah(id) {
+    const chapter = surahs.find((s) => s.id === id);
+    const ordered = [...chapter.verses].sort((a, b) => {
+      const date = (v) => {
+        const next = learning.getRecord(`${id}:${v.id}`).memory.nextReview;
+        return next ? Date.parse(next) : Infinity;
+      };
+      return date(a) - date(b);
+    });
+    memoryCallbacks.onRecall(`${id}:${ordered[0].id}`);
+  },
   onDaily() {
     clearTimeout(peekTimer);
     peeking = false;
@@ -321,7 +381,7 @@ const memoryCallbacks = {
       if (!active || active.graded || active.key !== target)
         learning.beginRecall(target);
       mode = "review";
-      render();
+      reset();
     } catch (e) {
       feedback = e.message;
       render();
@@ -339,6 +399,25 @@ const memoryCallbacks = {
   },
   onWalletChange() {
     ({ stars, xp, streak } = learning.snapshot().wallet);
+    try {
+      const result = gallery.sync(learning);
+      if (result.unlocks.length) {
+        const notice = document.createElement("p");
+        notice.className = "mastery-notice";
+        notice.textContent = `${result.unlocks.length} artwork section${result.unlocks.length > 1 ? "s" : ""} unlocked through independent recall. `;
+        const button = document.createElement("button");
+        button.className = "text-button";
+        button.textContent = "See my Surah Journey";
+        button.onclick = () =>
+          memoryCallbacks.onJourney(Number(result.unlocks[0].split(":")[0]));
+        notice.append(button);
+        document.querySelector(".recall-result")?.append(notice);
+      }
+    } catch (e) {
+      const notice = document.createElement("p");
+      notice.textContent = e.message;
+      document.querySelector(".recall-result")?.append(notice);
+    }
   },
 };
 function bind() {
@@ -352,6 +431,7 @@ function bind() {
           return;
         }
         ayah = +b.dataset.ayah;
+        if (mode === "lab" && !markStudyBeforeRecall(key())) return;
         reset();
       }),
   );
@@ -507,6 +587,7 @@ function bind() {
     chapter = +e.target.value;
     verses = surahs[chapter].verses;
     ayah = 0;
+    if (mode === "lab" && !markStudyBeforeRecall(key())) return;
     if (mode === "review") {
       learning.beginRecall(key());
     }
@@ -517,6 +598,10 @@ function bind() {
     ayah = (ayah + 1) % verses.length;
     reset();
   });
+  document.querySelector("#nav-journey").onclick = () =>
+    memoryCallbacks.onJourney();
+  document.querySelector("#nav-gallery").onclick = memoryCallbacks.onGallery;
+  document.querySelector("#nav-lab").onclick = memoryCallbacks.onLab;
   document.querySelector("#nav-daily").onclick = memoryCallbacks.onDaily;
   document.querySelector("#nav-progress").onclick = memoryCallbacks.onDaily;
   document.querySelector("#nav-learn").onclick = () => {

@@ -2371,3 +2371,510 @@ footer {
 .recording-help, #recording-status { font-size: 14px; line-height: 1.6; }
 #recording-time { font-variant-numeric: tabular-nums; }
 @media (max-width: 600px) { .recording-tracks { grid-template-columns: 1fr; } .recall-recording { padding: 16px; } }
+
+/* Journey and Puzzle Lab extend the existing cream, sage and gold identity. */
+.explore-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 12px 0 26px;
+}
+.explore-nav .text-button {
+  border: 1px solid #d8dfd0;
+  border-radius: 22px;
+  padding: 10px 16px;
+  min-height: 44px;
+  background: #fffdf6;
+}
+.gallery-intro,
+.lab-intro {
+  background: #eff4e8;
+  border: 1px solid #d5e2cf;
+  border-radius: 22px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.gallery-intro p,
+.lab-intro p {
+  line-height: 1.65;
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.gallery-grid.journey-grid {
+  grid-template-columns: 1fr;
+  max-width: 860px;
+  margin: auto;
+}
+.gallery-card {
+  border: 1px solid #dedbc9;
+  border-radius: 24px;
+  background: #fffdf5;
+  padding: 20px;
+  min-width: 0;
+}
+.gallery-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.gallery-card-title h3 {
+  margin: 8px 0 16px;
+}
+.gallery-card-title .arabic {
+  font-size: 30px;
+}
+.mastery-mosaic {
+  --art-url: url("/mastery-art/placeholder.svg");
+  position: relative;
+  aspect-ratio: 4/3;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #173d4a;
+  isolation: isolate;
+}
+.art-probe {
+  display: none;
+}
+.art-region {
+  position: absolute;
+  background-image: var(--art-url);
+  background-repeat: no-repeat;
+  box-shadow: inset 0 0 0 2px #d6bb70;
+  overflow: hidden;
+}
+.art-locked {
+  filter: blur(9px) saturate(0.65);
+  image-rendering: pixelated;
+  transform: scale(1.04);
+  opacity: 0.65;
+}
+.art-lock-number {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #153f4add;
+  color: #fff6d2;
+  border: 1px solid #dcc473;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 13px;
+}
+.art-open .art-lock-number {
+  display: none;
+}
+.art-complete .art-region {
+  box-shadow: none;
+}
+.art-new {
+  z-index: 2;
+  animation: art-reveal 1.2s ease-out both;
+}
+@keyframes art-reveal {
+  0% {
+    filter: blur(10px);
+    transform: scale(1.04);
+    box-shadow: inset 0 0 22px #e8cd78;
+  }
+  70% {
+    filter: blur(0);
+    transform: scale(1);
+    box-shadow: inset 0 0 18px #e8cd78;
+  }
+  100% {
+    filter: blur(0);
+    transform: scale(1);
+    box-shadow: inset 0 0 0 2px #d6bb70;
+  }
+}
+.art-caption {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #728573;
+}
+.gallery-actions,
+.journey-ayahs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+.gallery-card small {
+  display: block;
+  line-height: 1.7;
+}
+.mastery-dialog {
+  width: min(650px, calc(100% - 32px));
+  max-height: 85vh;
+  overflow: auto;
+  border: 2px solid #c9ad63;
+  border-radius: 24px;
+  background: #fffcf0;
+  padding: 28px;
+  color: #315c53;
+}
+.mastery-dialog::backdrop {
+  background: #173b4990;
+}
+.dialog-close {
+  float: right;
+}
+.mastery-dialog .arabic {
+  font-size: 40px;
+}
+.mastery-dialog p {
+  line-height: 1.8;
+}
+.mastery-dialog small {
+  display: block;
+  margin: 6px 0 16px;
+}
+.editorial-note,
+.mastery-notice {
+  background: #f3ead2;
+  border-radius: 16px;
+  padding: 14px;
+}
+.lab-menu {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.lab-game-card {
+  background: #fffcf2;
+  border: 2px solid #dedfcf;
+  border-radius: 18px;
+  text-align: left;
+  padding: 18px;
+  color: #466357;
+  cursor: pointer;
+}
+.lab-game-card.active {
+  border-color: #42917c;
+  background: #e9f3e9;
+}
+.lab-game-card strong,
+.lab-game-card span {
+  display: block;
+}
+.lab-game-card span {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+.lab-settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.lab-settings label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lab-settings select,
+.lab-game select {
+  padding: 10px;
+  border: 1px solid #d2dece;
+  border-radius: 12px;
+  background: #fffdf5;
+  color: #426457;
+  max-width: 100%;
+}
+.lab-recommendation {
+  border-top: 1px solid #ceddc8;
+  padding-top: 14px;
+}
+.lab-game {
+  padding: 22px;
+  border: 1px solid #dcdcc8;
+  border-radius: 24px;
+  background: #fffdf6;
+  min-width: 0;
+}
+.lab-game h3 {
+  font-size: 24px;
+  margin-top: 0;
+}
+.lab-game p {
+  line-height: 1.6;
+}
+.lab-game .arabic {
+  font-family: Uthmanic, serif;
+}
+.lab-bank,
+.lab-build {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  min-height: 75px;
+}
+.lab-build {
+  padding: 16px;
+  border: 2px dashed #c8d9c1;
+  border-radius: 18px;
+}
+.lab-word {
+  border: 2px solid #d4e0c9;
+  border-radius: 18px;
+  background: #e8f1df;
+  min-height: 65px;
+  padding: 12px 20px;
+  color: #345d53;
+  cursor: pointer;
+}
+.lab-word .arabic {
+  font-size: 32px;
+  line-height: 1.7;
+}
+.vanishing-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  background: #f0f4e8;
+  border-radius: 18px;
+  padding: 22px;
+}
+.vanishing-line .arabic {
+  font-size: 34px;
+  line-height: 1.8;
+}
+.lab-group {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 160px;
+  max-width: 100%;
+  width: 220px;
+  padding: 24px 25px;
+  border: none;
+  border-radius: 20px;
+  background: var(--group-color);
+  color: #355c54;
+  cursor: pointer;
+}
+.lab-group svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  fill: var(--group-color);
+  stroke: #b6beaa;
+  stroke-width: 2;
+}
+.lab-group .arabic {
+  font-size: 28px;
+  line-height: 1.7;
+}
+.lab-group small {
+  font-size: 12px;
+}
+.match-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+.match-card {
+  min-height: 115px;
+  min-width: 0;
+  border: 2px solid #d5ddcc;
+  border-radius: 18px;
+  background: #e5ead7;
+  color: #345f57;
+  font-size: 28px;
+  padding: 12px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.match-card span:not(.arabic) {
+  font-size: 15px;
+}
+.match-card .arabic {
+  font-size: 26px;
+  line-height: 1.8;
+}
+.match-card.matched {
+  background: #e5f1e2;
+  border-color: #80b68b;
+  opacity: 0.8;
+}
+.lab-chain-bank,
+.lab-chain-build {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0;
+}
+.lab-chain-build {
+  padding: 12px;
+  min-height: 70px;
+  border: 2px dashed #c8d9c1;
+  border-radius: 18px;
+}
+.chain-lab-card {
+  padding: 14px;
+  border: 1px solid #d8dfcd;
+  border-radius: 16px;
+  background: #f0f3e6;
+  color: #365f54;
+  cursor: pointer;
+}
+.chain-lab-card .arabic {
+  font-size: 30px;
+  line-height: 1.9;
+}
+.chain-lab-card small {
+  display: block;
+  margin-top: 8px;
+}
+.lab-opening,
+.continue-answer .arabic {
+  font-size: 36px;
+  line-height: 2;
+  background: #f2f4e9;
+  padding: 20px;
+  border-radius: 18px;
+}
+.detective-options {
+  display: grid;
+  gap: 14px;
+}
+.falling-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+  border: 2px solid #cfdece;
+  border-radius: 18px;
+  background: #edf2e7;
+}
+.falling-stage {
+  height: 320px;
+  position: relative;
+  background: repeating-linear-gradient(
+    to left,
+    transparent,
+    transparent calc(100% / var(--slots) - 1px),
+    #ccdccc calc(100% / var(--slots) - 1px),
+    #ccdccc calc(100% / var(--slots))
+  );
+}
+.falling-block {
+  position: absolute;
+  min-height: 70px;
+  padding: 8px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 26px;
+  line-height: 1.6;
+  border: 2px solid #ccae67;
+  border-radius: 16px;
+  background: #f4dfa8;
+  color: #355b50;
+  touch-action: none;
+  cursor: grab;
+  z-index: 2;
+  overflow-wrap: anywhere;
+}
+.falling-slots {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--slots), minmax(0, 1fr));
+}
+.falling-slots button {
+  min-height: 85px;
+  min-width: 0;
+  border: 1px solid #b7ccb7;
+  background: #fffdf0;
+  color: #698266;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+.falling-slots button.slot-filled {
+  background: #dcefd5;
+  border-color: #76ae87;
+}
+.falling-slots .arabic {
+  font-size: 24px;
+  line-height: 1.6;
+}
+.falling-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+}
+.lab-after {
+  margin: 20px 0;
+}
+.puzzle-lab button,
+.mastery-view button {
+  min-height: 44px;
+}
+[hidden] {
+  display: none !important;
+}
+@media (max-width: 800px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+  .lab-menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .match-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .lab-game {
+    padding: 14px;
+  }
+  .gallery-card {
+    padding: 14px;
+  }
+  .lab-game-card {
+    padding: 12px;
+  }
+  .gallery-card-title .arabic {
+    font-size: 26px;
+  }
+  .explore-nav {
+    gap: 8px;
+  }
+  .explore-nav .text-button {
+    font-size: 12px;
+    padding: 9px 12px;
+  }
+  .gallery-intro,
+  .lab-intro {
+    padding: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .art-new {
+    animation: none;
+  }
+  .art-locked {
+    transform: none;
+  }
+}
