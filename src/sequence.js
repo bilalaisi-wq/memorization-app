@@ -1,3 +1,8 @@
+import {
+  successCue,
+  studyAudioStart,
+  studyAudioStop,
+} from "./ui/encouragement.js";
 import { scrambledBank, quizCorrect, wordAudio, verseAudio } from "./data.js";
 import { illustration, outline } from "./illustrations.js";
 let state = null,
@@ -5,6 +10,7 @@ let state = null,
   currentAudio = null,
   token = 0;
 export function stopSequence() {
+  studyAudioStop("sequence");
   token++;
   if (currentAudio) {
     currentAudio.pause();
@@ -105,6 +111,7 @@ async function play(items) {
   stopSequence();
   const run = token;
   state.playing = true;
+  studyAudioStart("sequence");
   state.feedback = "";
   draw();
   try {
@@ -126,6 +133,7 @@ async function play(items) {
         });
       }
     if (run !== token) return;
+    studyAudioStop("sequence");
     state.playing = false;
     state.active = "";
     state.feedback =
@@ -311,6 +319,16 @@ function bind() {
         : state.chain.every((id, i) => id === state.chosen[i])
           ? "Beautiful work! Your ayahs are in surah order. Replay the chain and practice the transitions."
           : "The ayahs are out of order. Move them earlier or later, then check again.";
+    if (
+      state.chain.length === state.chosen.length &&
+      state.chain.every((id, i) => id === state.chosen[i])
+    ) {
+      stopSequence();
+      successCue(
+        `chain:${state.surah.id}:${state.chosen.join(",")}`,
+        "Your ayahs connect beautifully!",
+      );
+    }
     draw();
   });
 }

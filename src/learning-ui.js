@@ -1,4 +1,8 @@
-import { createRecallRecording, stopRecallPlayback } from "./recall-recording.js";
+import { successCue } from "./ui/encouragement.js";
+import {
+  createRecallRecording,
+  stopRecallPlayback,
+} from "./recall-recording.js";
 import { verseAudio } from "./data.js";
 export function stopLearningAudio() {
   stopRecallPlayback();
@@ -114,7 +118,8 @@ export function mountRecall(main, store, surahs, callbacks) {
   const root = document.createElement("section");
   root.className = "self-assessment";
   main.append(root);
-  let error = "", recording;
+  let error = "",
+    recording;
   const draw = () => {
     if (!root.isConnected) return;
     const state = store.snapshot(),
@@ -192,6 +197,11 @@ export function mountRecall(main, store, surahs, callbacks) {
             draw();
             root.querySelector(".recall-result")?.focus();
             callbacks.onWalletChange();
+            if (b.dataset.recallGrade !== "Again")
+              successCue(
+                `recall:${a.id}`,
+                "Recall assessed — keep strengthening your memory.",
+              );
           } catch (e) {
             error = e.message;
             draw();
@@ -211,8 +221,17 @@ export function mountRecall(main, store, surahs, callbacks) {
     });
     recording?.setContext({ ...a, audio: verseAudio(verse.id, surah.id) });
     if (recording) {
-      root.querySelector(".recall-intro").insertBefore(recording.element, root.querySelector(".honesty-check, .recall-grades, .recall-result, .recall-history"));
-      for (const button of root.querySelectorAll("#recited-compare, #recall-hint, [data-recall-grade], #recall-retry")) {
+      root
+        .querySelector(".recall-intro")
+        .insertBefore(
+          recording.element,
+          root.querySelector(
+            ".honesty-check, .recall-grades, .recall-result, .recall-history",
+          ),
+        );
+      for (const button of root.querySelectorAll(
+        "#recited-compare, #recall-hint, [data-recall-grade], #recall-retry",
+      )) {
         button.disabled = recording.busy();
       }
     }
@@ -220,12 +239,18 @@ export function mountRecall(main, store, surahs, callbacks) {
   recording = createRecallRecording({
     onReference() {
       const attempt = store.snapshot().activeReview;
-      if (attempt && !attempt.graded && !attempt.declaredRecited && !attempt.audioBeforeRecall) {
+      if (
+        attempt &&
+        !attempt.graded &&
+        !attempt.declaredRecited &&
+        !attempt.audioBeforeRecall
+      ) {
         store.updateRecall(attempt.id, "audio");
         // Keep native audio elements connected while playback starts.
         const note = document.createElement("p");
         note.className = "assistance-note";
-        note.textContent = "Assisted study: you can still self-assess. This attempt will not count as successful independent recall or increase your FSRS memory state.";
+        note.textContent =
+          "Assisted study: you can still self-assess. This attempt will not count as successful independent recall or increase your FSRS memory state.";
         recording.element.before(note);
         const checkbox = root.querySelector("#recall-assisted");
         if (checkbox) checkbox.checked = checkbox.disabled = true;

@@ -1,3 +1,14 @@
+import { bindPieceDrag, stopPieceDrag } from "./ui/piece-drag.js";
+import { mountExperienceControls } from "./ui/tutorial.js";
+import {
+  configureExperience,
+  successCue,
+  transitionCue,
+  stopEncouragement,
+  studyAudioStart,
+  studyAudioStop,
+} from "./ui/encouragement.js";
+import { isRecallRecordingBusy } from "./recall-recording.js";
 import { createMasteryStore } from "./mastery/mastery-store.js";
 import { gallerySurahIds } from "./mastery/masteryStories.js";
 import { mountGallery, stopMasteryUI } from "./mastery/gallery-ui.js";
@@ -126,6 +137,7 @@ function reset() {
   quizSolved = false;
   hinted = false;
   render();
+  transitionCue();
 }
 function peekWords() {
   clearTimeout(peekTimer);
@@ -181,7 +193,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
       .map((i) => piece(i, "bank"))
       .join("") ||
     '<span class="bank-empty">Every piece has found a place ✧</span>'
-  }</div><div class="builder-footer">${icon("grid")}<span>Match a left tab with the next right socket. Pictures are memory cues, not literal translations.</span></div></section>
+  }</div><div class="builder-footer">${icon("grid")}<span>Match a left tab with the next right socket. Pictures are memory cues, not literal translations. Drag a piece or its ⠿ handle to reorder; use →/← for earlier/later.</span></div></section>
 <section class="practice-controls"><div class="repeat-label"><span class="control-icon">${icon("repeat")}</span><div><strong>Little repetitions, lasting memory</strong><p>Give your selected words a few more moments.</p></div></div><div class="control-fields"><label>Repeat <select id="repeat"><option value="1" ${repeats === 1 ? "selected" : ""}>1 time</option><option value="3" ${repeats === 3 ? "selected" : ""}>3 times</option><option value="5" ${repeats === 5 ? "selected" : ""}>5 times</option><option value="10" ${repeats === 10 ? "selected" : ""}>10 times</option></select></label><label>Speed <select id="speed">${[0.75, 1, 1.25].map((s) => `<option value="${s}" ${speed === s ? "selected" : ""}>${s}×</option>`).join("")}</select></label></div></section><div class="feedback ${feedback.startsWith("Beautiful") ? "success" : ""}" role="status" aria-live="polite">${feedback}</div><div class="bottom-row">${mode === "quiz" ? '<button class="text-button" id="next-ayah">Next ayah →</button>' : ""}<span>✧ Progress is a practice, not a race.</span><button class="primary" id="next">${mode === "practice" ? "Complete & next ayah" : quizSolved ? "Play again →" : "Check my order"} ${icon(mode === "practice" ? "arrow" : "check")}</button></div><footer>Made for a mindful moment with the Quran.<span>Recitation: Mishary Rashid Alafasy · Uthmanic Hafs script</span></footer></main></div>`;
   bind();
   document
@@ -231,8 +243,43 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
       memoryCallbacks,
     );
   if (mode === "sequence") mountSequence(document.querySelector("main"), surah);
+  mountExperienceControls(document.querySelector("main"), {
+    beforeTour: stop,
+    afterTour: render,
+    assessmentKey: learning.snapshot().activeReview?.graded
+      ? null
+      : learning.snapshot().activeReview?.key,
+    practice: () => {
+      if (!markStudyBeforeRecall(key())) return;
+      mode = "practice";
+      reset();
+    },
+    quest: () => {
+      if (!markStudyBeforeRecall(key())) return;
+      mode = "quiz";
+      reset();
+    },
+    recall: () => {
+      if (!markStudyBeforeRecall(key())) return;
+      mode = "recall";
+      reset();
+    },
+    chain: () => {
+      if (!markStudyBeforeRecall(key())) return;
+      mode = "sequence";
+      reset();
+    },
+    daily: memoryCallbacks.onDaily,
+    assessment: () => memoryCallbacks.onRecall(key()),
+    lab: memoryCallbacks.onLab,
+    journey: () => memoryCallbacks.onJourney(),
+    gallery: memoryCallbacks.onGallery,
+  });
 }
 function stop() {
+  stopPieceDrag();
+  stopEncouragement();
+  studyAudioStop("practice");
   stopPuzzleLab();
   stopMasteryUI();
   disposeRecallRecording();
@@ -256,6 +303,7 @@ async function play(full, single = null) {
   const list = full ? [-1] : single !== null ? [single] : [...selected];
   if (!list.length) return;
   stop();
+  studyAudioStart("practice");
   const token = run;
   playing = true;
   feedback = "";
@@ -282,6 +330,7 @@ async function play(full, single = null) {
       }
       if (token !== run) return;
     }
+    studyAudioStop("practice");
     playing = false;
     activeWord = -1;
     feedback = "Listening complete. Take a breath and try saying it yourself.";
@@ -364,6 +413,7 @@ const memoryCallbacks = {
     stop();
     mode = "daily";
     render();
+    transitionCue();
   },
   onRecall(target) {
     clearTimeout(peekTimer);
@@ -457,32 +507,20 @@ function bind() {
         render();
       }
     };
-    b.ondragstart = (e) => {
-      e.dataTransfer.setData("text/plain", b.dataset.word);
-    };
   });
-  document.querySelectorAll("[data-drop]").forEach((z) => {
-    z.ondragover = (e) => e.preventDefault();
-    z.ondrop = (e) => {
-      e.preventDefault();
-      if (quizSolved) return;
-      const raw = e.dataTransfer.getData("text/plain");
-      if (!raw) return;
-      const i = Number(raw);
-      if (
-        !Number.isInteger(i) ||
-        i < 0 ||
-        i >= verses[ayah].words.length + extras.length
-      )
-        return;
-      if (z.dataset.drop === "build") add(i);
-      else {
-        stop();
-        selected = selected.filter((x) => x !== i);
-        quizSolved = false;
-        render();
-      }
-    };
+  bindPieceDrag(app, {
+    selection: () => selected,
+    count: verses[ayah].words.length + extras.length,
+    locked: () => quizSolved,
+    change(next, id) {
+      stop();
+      selected = next;
+      feedback = "";
+      render();
+      document
+        .querySelector(`.build-zone [data-word="${id}"]`)
+        ?.focus({ preventScroll: true });
+    },
   });
   document.querySelector("#clear").onclick = reset;
   document.querySelector("#full-audio").onclick = () => play(true);
@@ -526,6 +564,7 @@ function bind() {
         return;
       }
       if (!complete()) return;
+      const successId = `${puzzleSessionId}:practice:${key()}`;
       if (ayah < verses.length - 1) {
         ayah++;
         reset();
@@ -533,6 +572,8 @@ function bind() {
         feedback = `Beautiful work. You have practiced the final ayah of ${surahs[chapter].name}.`;
         render();
       }
+      stop();
+      successCue(successId);
     } else {
       if (quizCorrect(selected, verses[ayah].words, extras)) {
         if (!complete()) return;
@@ -572,6 +613,8 @@ function bind() {
             ? " Today’s puzzle reward limit for this level is reached; you can keep practicing without losing any points."
             : "");
         hidden.forEach((x) => reveal.add(x));
+        stop();
+        successCue(`${puzzleSessionId}:${mode}:${key()}`);
       } else {
         attempts++;
         feedback = selected.some((i) => i >= verses[ayah].words.length)
@@ -610,6 +653,7 @@ function bind() {
     reset();
   };
 }
+configureExperience(isRecallRecordingBusy);
 const unfinished = learning.snapshot().activeReview;
 if (unfinished && !unfinished.graded) {
   const [s, a] = unfinished.key.split(":").map(Number);

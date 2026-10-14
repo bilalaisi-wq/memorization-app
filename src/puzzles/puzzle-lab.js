@@ -1,3 +1,10 @@
+import {
+  successCue,
+  transitionCue,
+  stopEncouragement,
+  studyAudioStart,
+  studyAudioStop,
+} from "../ui/encouragement.js";
 import { wordChoices, passageChoices, textIdentity } from "./lab-choices.js";
 import { shuffled, verseAudio, wordAudio } from "../data.js";
 import { outline } from "../illustrations.js";
@@ -64,6 +71,7 @@ export function mountPuzzleLab(
     status.textContent = text;
   };
   const stopAudio = () => {
+    studyAudioStop("lab");
     audioRun++;
     if (audio) {
       audio.pause();
@@ -74,21 +82,31 @@ export function mountPuzzleLab(
   const playAudio = async (url, assistance = false) => {
     pauseGame();
     stopAudio();
+    studyAudioStart("lab");
     if (assistance) hinted = true;
     const run = audioRun;
     const urls = Array.isArray(url) ? url : [url];
     const playNext = async (i) => {
-      if (run !== audioRun || i >= urls.length) return;
+      if (run !== audioRun) return;
+      if (i >= urls.length) {
+        studyAudioStop("lab");
+        return;
+      }
       audio = new Audio(urls[i]);
       audio.onended = () => playNext(i + 1);
       audio.onerror = () => {
-        if (run === audioRun)
+        if (run === audioRun) {
+          studyAudioStop("lab");
           say("Audio could not load. You can continue the puzzle.");
+        }
       };
       try {
         await audio.play();
       } catch {
-        if (run === audioRun) say("Audio could not start. Try again.");
+        if (run === audioRun) {
+          studyAudioStop("lab");
+          say("Audio could not start. Try again.");
+        }
       }
     };
     await playNext(0);
@@ -124,6 +142,10 @@ export function mountPuzzleLab(
       done = true;
       root.querySelector("#lab-retry-save").hidden = true;
       callbacks.onWalletChange();
+      successCue(
+        `${session}:complete`,
+        "Challenge complete — beautifully done!",
+      );
       say(
         `Challenge complete! +${reward.duplicate ? 0 : reward.xp} game XP. ${reward.xp && !reward.duplicate ? "" : "Today’s reward ceiling for this game is reached. "}This does not certify independent memorization.`,
       );
@@ -147,6 +169,8 @@ export function mountPuzzleLab(
       b.onclick = () => playAudio(entries[Number(b.dataset.labAudio)].audio);
     });
   function start(next = game) {
+    const changedMode = next !== game;
+    stopEncouragement();
     gameCleanup?.();
     stopAudio();
     pauseGame = () => {};
@@ -208,6 +232,7 @@ export function mountPuzzleLab(
     else if (game === "chain") chain();
     else if (game === "continue") continuation();
     else detective();
+    if (changedMode) transitionCue();
   }
   function falling() {
     const entries = wordChoices(surah, verse, level + 2);
@@ -280,6 +305,7 @@ export function mountPuzzleLab(
       cursor++;
       y = 0;
       say(`Position ${lane + 1} fits!`);
+      successCue(`${session}:position:${lane}`, "That word fits!");
       if (cursor === queue.length) {
         block.hidden = true;
         finish();
@@ -425,6 +451,7 @@ export function mountPuzzleLab(
             }
             remaining.delete(index);
             picked.push(target);
+            successCue(`${session}:missing:${target}`, "You found the word!");
             draw();
             if (picked.length === missing.length) finish();
           }),
@@ -674,6 +701,10 @@ export function mountPuzzleLab(
                 cards[i].pair < expectedPairs
               ) {
                 matched.add(cards[i].pair);
+                successCue(
+                  `${session}:pair:${cards[i].pair}`,
+                  "A perfect match!",
+                );
                 flipped = [];
               } else
                 fail(
