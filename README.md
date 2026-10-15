@@ -97,3 +97,11 @@ In Practice and Puzzle Quest, drag a word from the bank into a specific position
 New learners receive an optional welcome invitation. **Tutorial** opens ten skippable steps with interactive examples covering the learning modes, Daily Quests, self-assessed recording, Puzzle Lab, Memory Gate, Gallery, and encouragement. Examples do not award XP or change memorization records. Skip or Escape exits immediately; the tutorial can always be reopened.
 
 **Encouragement settings** controls the success sound, volume, and gentle star transitions. Upload an audio clip up to 5 MB and 10 seconds to replace the built-in chime in that browser; it stays in local IndexedDB and is never uploaded. For an app-wide default, see [feedback audio configuration](public/feedback-audio/README.md). Feedback stops when recitation or microphone recording starts. Motion respects the browser's reduced-motion preference, and sounds can be muted independently.
+
+## Animated achievements and spoken-practice tips
+
+Correct answers cycle through three animated achievement styles alongside the configured success sound. Add or replace artwork through [the celebration image manifest](public/celebrations/README.md); three emoji placeholders are used until image files are supplied. Motion preferences apply to these animations too. Study audio takes priority over the success sound, while a correct-answer visual can still appear during piece playback.
+
+Puzzle Lab automatically pronounces selected word, group, card, and ayah pieces (including distractors). Falling Words pronounces each arriving block. Rapid selections queue their recordings. **Mute audio** silences current and future Lab playback and persists in that browser; **Unmute audio** restores it. Explicit replay remains available. Changing games or leaving the Lab clears queued playback. The Falling Words **Pause** button pauses the game board, not an audio track.
+
+All learning areas offer spoken-practice guidance, and study text and controls use larger fonts. Listen, repeat after the reciter, and say each word as you place it; quiz success remains separate from independent memorization assessment.

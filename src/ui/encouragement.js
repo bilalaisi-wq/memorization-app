@@ -9,6 +9,12 @@ let prefs = { sound: true, motion: true, volume: 0.25 },
   busy = new Set(),
   isRecording = () => false;
 const receipts = new Set();
+let celebrationIndex = 0;
+let celebrationArt = [];
+fetch("/celebrations.json").then(r => r.ok ? r.json() : null).then(config => {
+  if (config?.schemaVersion === 1 && Array.isArray(config.images))
+    celebrationArt = config.images.filter(path => typeof path === "string" && /^\/celebrations\/[a-zA-Z0-9_.-]+$/.test(path));
+}).catch(() => {});
 try {
   const saved = JSON.parse(localStorage.getItem(EXPERIENCE_KEY));
   if (
@@ -117,18 +123,30 @@ export function successCue(id, message = "Beautiful work — keep growing!") {
   if (receipts.has(id)) return;
   receipts.add(id);
   if (receipts.size > 500) receipts.delete(receipts.values().next().value);
-  if (busy.size || isRecording()) return;
+  if (isRecording()) return;
   stopEncouragement();
   const run = generation;
   const toast = document.createElement("div");
   toast.className = "success-celebration";
   toast.setAttribute("role", "status");
-  toast.textContent = `✦ ${message}`;
+  const variant = celebrationIndex++ % Math.max(3, celebrationArt.length);
+  toast.dataset.variant = String(variant % 3);
+  const picture = document.createElement(celebrationArt.length ? "img" : "span");
+  picture.className = "achievement-art";
+  picture.setAttribute("aria-hidden", "true");
+  if (celebrationArt.length) {
+    picture.src = celebrationArt[variant % celebrationArt.length];
+    picture.alt = "";
+    picture.onerror = () => { picture.replaceWith(Object.assign(document.createElement("span"), {className:"achievement-art",textContent:"🌟"})); };
+  } else picture.textContent = ["🌟", "🏆", "🎉"][variant];
+  const caption = document.createElement("strong");
+  caption.textContent = message;
+  toast.append(picture, caption);
   if (!prefs.motion || matchMedia("(prefers-reduced-motion: reduce)").matches)
     toast.classList.add("still");
   (document.querySelector("dialog[open]") || document.body).append(toast);
-  setTimeout(() => toast.remove(), 2200);
-  if (!prefs.sound || prefs.volume === 0) return;
+  setTimeout(() => toast.remove(), 2800);
+  if (busy.size || !prefs.sound || prefs.volume === 0) return;
   try {
     context ??= new (window.AudioContext || window.webkitAudioContext)();
     const play = async () => {

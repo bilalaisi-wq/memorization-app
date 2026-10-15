@@ -109,6 +109,8 @@ test("Falling Words rejects wrong blocks, refuses to discard targets, and plays 
   await page.locator('[data-slot="0"]').click();
   await expect(page.locator("[data-status]")).toContainText("another ayah");
   await expect(page.locator(".slot-filled")).toHaveCount(filled);
+  await page.waitForTimeout(30);
+  await page.evaluate(() => { window.played = []; });
   await page.locator("#fall-listen").click();
   await expect.poll(() => page.evaluate(() => window.played.length)).toBe(1);
   expect(await page.evaluate(() => window.played[0])).not.toContain("/001_");
@@ -150,6 +152,9 @@ test("Vanishing Ayah keeps decoys in the mixed bank and rotates them on fresh ro
     .evaluateAll((bs) =>
       bs.filter((b) => Number(b.dataset.choice) >= 4).map((b) => b.textContent),
     );
+  // Isolate explicit replay from the new automatic selection pronunciation.
+  await page.waitForTimeout(30);
+  await page.evaluate(() => { window.played = []; });
   await page.locator('[data-lab-audio="4"]').click();
   await expect.poll(() => page.evaluate(() => window.played.length)).toBe(1);
   await page.locator("#lab-restart").click();
@@ -173,6 +178,9 @@ test("Jigsaw requires removing a foreign group; foreign group audio reads all it
     "another arrangement",
   );
   await noReward(page);
+  // Isolate explicit replay from the new automatic selection pronunciation.
+  await page.waitForTimeout(30);
+  await page.evaluate(() => { window.played = []; });
   await page.locator('.lab-build [data-lab-audio="2"]').click();
   await expect.poll(() => page.evaluate(() => window.played.length)).toBe(2);
   expect(
@@ -251,6 +259,9 @@ test("Broken Chain ignores foreign ayahs and reads their authentic full recitati
     "another ayah sequence",
   );
   await noReward(page);
+  // Isolate explicit replay from the new automatic selection pronunciation.
+  await page.waitForTimeout(30);
+  await page.evaluate(() => { window.played = []; });
   await page.locator('.lab-chain-build [data-lab-audio="5"]').click();
   await expect.poll(() => page.evaluate(() => window.played.length)).toBe(1);
   expect(await page.evaluate(() => window.played[0])).toMatch(
@@ -277,6 +288,9 @@ test("Continue the Ayah cannot complete until learners replace wrong words and b
   await page.locator("#continue-check").click();
   await expect(page.locator("#continue-good")).toBeDisabled();
   await noReward(page);
+  // Isolate explicit replay from the new automatic selection pronunciation.
+  await page.waitForTimeout(30);
+  await page.evaluate(() => { window.played = []; });
   await page.locator('.lab-build [data-lab-audio="3"]').click();
   await expect.poll(() => page.evaluate(() => window.played.length)).toBe(1);
   await page.locator('.lab-build [data-choice="3"]').click();

@@ -1,3 +1,4 @@
+import { mountMemoryTip } from "./ui/memory-tips.js";
 import { bindPieceDrag, stopPieceDrag } from "./ui/piece-drag.js";
 import { mountExperienceControls } from "./ui/tutorial.js";
 import {
@@ -243,6 +244,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
       memoryCallbacks,
     );
   if (mode === "sequence") mountSequence(document.querySelector("main"), surah);
+  mountMemoryTip(document.querySelector("main"), mode);
   mountExperienceControls(document.querySelector("main"), {
     beforeTour: stop,
     afterTour: render,

@@ -1,3 +1,4 @@
+import { labMemoryTips } from "../ui/memory-tips.js";
 import {
   successCue,
   transitionCue,
@@ -52,7 +53,7 @@ export function mountPuzzleLab(
   main.append(root);
   const key = `${surah.id}:${verse.id}`,
     recommendation = lab.recommend(key, learning);
-  root.innerHTML = `<div class="lab-intro"><span class="eyebrow">TRY ANOTHER WAY</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>These games practice recognition, word order, and recall cues. Game XP is separate from independent spoken memorization and artwork checkpoints.</p><div class="lab-recommendation"><strong>Suggested next step</strong><p>${esc(recommendation.reason)}</p><button class="primary small" id="lab-recommended">${recommendation.game === "recall" ? "Independent recall assessment" : gameTypes.find((g) => g[0] === recommendation.game)[1]}</button></div></div><div class="lab-menu">${gameTypes.map(([id, title, description]) => `<button data-game="${id}" class="lab-game-card"><strong>${title}</strong><span>${description}</span></button>`).join("")}</div><div class="lab-settings"><label>Difficulty<select id="lab-level"><option value="1">1 · Visible words</option><option value="2">2 · Fewer cues</option><option value="3">3 · Concealed words</option><option value="4">4 · Minimal hints</option></select></label><label class="lab-timed-label"><input type="checkbox" id="lab-timed"> Timed descent (optional)</label><button class="text-button" id="lab-restart">Fresh round</button><button class="text-button" id="lab-replay">♫ Replay ayah</button><button class="text-button" id="lab-stop-audio">Stop audio</button></div><section class="lab-game" aria-label="Puzzle play area"></section><p data-status role="status" aria-live="polite"></p><div class="lab-after"><button class="text-button" id="lab-retry-save" hidden>Retry saving this result</button><button class="primary small" id="lab-next-level" hidden>Try fewer hints →</button><button class="text-button" id="lab-recall">Try independent self-assessment →</button></div>${lab.warning ? `<p role="alert">${esc(lab.warning)}</p>` : ""}`;
+  root.innerHTML = `<div class="lab-intro"><span class="eyebrow">TRY ANOTHER WAY</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>These games practice recognition, word order, and recall cues. Game XP is separate from independent spoken memorization and artwork checkpoints.</p><div class="lab-recommendation"><strong>Suggested next step</strong><p>${esc(recommendation.reason)}</p><button class="primary small" id="lab-recommended">${recommendation.game === "recall" ? "Independent recall assessment" : gameTypes.find((g) => g[0] === recommendation.game)[1]}</button></div></div><div class="lab-menu">${gameTypes.map(([id, title, description]) => `<button data-game="${id}" class="lab-game-card"><strong>${title}</strong><span>${description}</span></button>`).join("")}</div><div class="lab-settings"><label>Difficulty<select id="lab-level"><option value="1">1 · Visible words</option><option value="2">2 · Fewer cues</option><option value="3">3 · Concealed words</option><option value="4">4 · Minimal hints</option></select></label><label class="lab-timed-label"><input type="checkbox" id="lab-timed"> Timed descent (optional)</label><button class="text-button" id="lab-restart">Fresh round</button><button class="text-button" id="lab-replay">♫ Replay ayah</button><button class="text-button" id="lab-mute" aria-pressed="false">Mute audio</button></div><section class="lab-game" aria-label="Puzzle play area"></section><p data-status role="status" aria-live="polite"></p><div class="lab-after"><button class="text-button" id="lab-retry-save" hidden>Retry saving this result</button><button class="primary small" id="lab-next-level" hidden>Try fewer hints →</button><button class="text-button" id="lab-recall">Try independent self-assessment →</button></div>${lab.warning ? `<p role="alert">${esc(lab.warning)}</p>` : ""}`;
   const area = root.querySelector(".lab-game"),
     status = root.querySelector("[data-status]");
   let resultKey = key,
@@ -66,6 +67,9 @@ export function mountPuzzleLab(
     gameCleanup = null,
     audio = null,
     audioRun = 0,
+    muted = localStorage.getItem("ayah-lab-muted") === "true",
+    choiceEntries = [],
+    pendingAudio = [],
     pauseGame = () => {};
   const say = (text) => {
     status.textContent = text;
@@ -73,14 +77,16 @@ export function mountPuzzleLab(
   const stopAudio = () => {
     studyAudioStop("lab");
     audioRun++;
+    pendingAudio = [];
     if (audio) {
       audio.pause();
       audio.src = "";
       audio = null;
     }
   };
-  const playAudio = async (url, assistance = false) => {
-    pauseGame();
+  const playAudio = async (url, assistance = false, automatic = false) => {
+    if (automatic && audio) { pendingAudio.push(url); return; }
+    if (!automatic) pauseGame();
     stopAudio();
     studyAudioStart("lab");
     if (assistance) hinted = true;
@@ -89,13 +95,23 @@ export function mountPuzzleLab(
     const playNext = async (i) => {
       if (run !== audioRun) return;
       if (i >= urls.length) {
+        audio = null;
         studyAudioStop("lab");
+        const next = pendingAudio.shift();
+        if (next) {
+          const remaining = pendingAudio;
+          playAudio(next, false, true);
+          pendingAudio = remaining;
+        }
         return;
       }
       audio = new Audio(urls[i]);
+      audio.muted = muted;
       audio.onended = () => playNext(i + 1);
       audio.onerror = () => {
         if (run === audioRun) {
+          audio = null;
+          pendingAudio = [];
           studyAudioStop("lab");
           say("Audio could not load. You can continue the puzzle.");
         }
@@ -104,6 +120,8 @@ export function mountPuzzleLab(
         await audio.play();
       } catch {
         if (run === audioRun) {
+          audio = null;
+          pendingAudio = [];
           studyAudioStop("lab");
           say("Audio could not start. Try again.");
         }
@@ -119,7 +137,6 @@ export function mountPuzzleLab(
   const finish = () => {
     if (done) return;
     pauseGame();
-    stopAudio();
     area
       .querySelectorAll("button:not([data-lab-audio])")
       .forEach((b) => (b.disabled = true));
@@ -164,10 +181,12 @@ export function mountPuzzleLab(
     `<button class="lab-word" data-choice="${index}" ${attrs}><span class="arabic" lang="ar" dir="rtl">${esc(text)}</span></button>`;
   const listenButton = (id) =>
     `<button class="lab-choice-audio" data-lab-audio="${id}" aria-label="Hear this choice">♫</button>`;
-  const bindChoiceAudio = (entries) =>
+  const bindChoiceAudio = (entries) => {
+    choiceEntries = entries;
     area.querySelectorAll("[data-lab-audio]").forEach((b) => {
       b.onclick = () => playAudio(entries[Number(b.dataset.labAudio)].audio);
     });
+  };
   function start(next = game) {
     const changedMode = next !== game;
     stopEncouragement();
@@ -175,6 +194,8 @@ export function mountPuzzleLab(
     stopAudio();
     pauseGame = () => {};
     game = next;
+    const tipText = root.querySelector(".memory-pro-tip p");
+    if (tipText) tipText.textContent = labMemoryTips[game];
     resultKey = key;
     referenceAudio = verseAudio(verse.id, surah.id);
     level = Number(root.querySelector("#lab-level").value);
@@ -247,10 +268,15 @@ export function mountPuzzleLab(
     area.innerHTML = `<h3>Falling Words</h3><p>Position 1 is on the right. Move a correct word to its slot. Discard words that do not belong to this ayah. ${timed ? "Blocks descend gently and wait at the bottom; there is no penalty for slow placement." : "Untimed: use ↓ to lower the block whenever you are ready."}</p><div class="falling-scroll"><div class="falling-stage" tabindex="0" role="region" aria-label="Falling word board" aria-keyshortcuts="ArrowLeft ArrowRight ArrowDown Space Delete D" style="--slots:${verse.words.length};min-width:${verse.words.length * 72}px"><div class="falling-block arabic" lang="ar" dir="rtl" role="status" aria-live="polite"></div><div class="falling-slots" dir="rtl">${verse.words.map((_, i) => `<button data-slot="${i}" aria-label="Place in position ${i + 1} from the right"><span>${i + 1}</span></button>`).join("")}</div></div></div><div class="falling-controls"><button class="text-button" id="fall-left" aria-label="Move block left">← Left</button><button class="text-button" id="fall-down">↓ Lower</button><button class="primary small" id="fall-place">Place · Space</button><button class="text-button" id="fall-right" aria-label="Move block right">Right →</button><button class="text-button" id="fall-discard">Discard word · D</button><button class="text-button" id="fall-pause">Pause</button><button class="text-button" id="fall-listen">♫ Hear this word</button></div><p class="falling-counter"></p>`;
     const stage = area.querySelector(".falling-stage"),
       block = area.querySelector(".falling-block");
+    let announcedCursor = -1;
     const paint = () => {
       if (disposedGame || done || cursor >= queue.length) return;
       const index = queue[cursor],
         hidden = level >= 3 || (level === 2 && cursor % 2 === 0);
+      if (announcedCursor !== cursor) {
+        announcedCursor = cursor;
+        playAudio(entries[index].audio, false, true);
+      }
       const text = hidden ? "؟" : entries[index].text;
       if (block.textContent !== text) block.textContent = text;
       block.dataset.index = index;
@@ -305,13 +331,13 @@ export function mountPuzzleLab(
       cursor++;
       y = 0;
       say(`Position ${lane + 1} fits!`);
-      successCue(`${session}:position:${lane}`, "That word fits!");
       if (cursor === queue.length) {
         block.hidden = true;
         finish();
         return;
       }
       paint();
+      successCue(`${session}:position:${lane}`, "That word fits!");
     };
     area
       .querySelectorAll("[data-slot]")
@@ -693,8 +719,6 @@ export function mountPuzzleLab(
             const i = Number(b.dataset.card);
             if (flipped.includes(i) || flipped.length === 2) return;
             flipped.push(i);
-            if (subtype === "audio" && !cards[i].arabic)
-              playAudio(cards[i].audio);
             if (flipped.length === 2) {
               if (
                 cards[flipped[0]].pair === cards[flipped[1]].pair &&
@@ -922,7 +946,25 @@ export function mountPuzzleLab(
   root.querySelector("#lab-restart").onclick = () => start();
   root.querySelector("#lab-replay").onclick = () =>
     playAudio(referenceAudio, true);
-  root.querySelector("#lab-stop-audio").onclick = stopAudio;
+  const muteButton = root.querySelector("#lab-mute");
+  const updateMute = () => {
+    muteButton.textContent = muted ? "Unmute audio" : "Mute audio";
+    muteButton.setAttribute("aria-pressed", String(muted));
+    if (audio) audio.muted = muted;
+  };
+  muteButton.onclick = () => {
+    muted = !muted;
+    try { localStorage.setItem("ayah-lab-muted", String(muted)); } catch {}
+    updateMute();
+  };
+  updateMute();
+  area.addEventListener("click", (event) => {
+    const piece = event.target.closest("[data-choice], [data-group], [data-card], [data-chain]");
+    if (!piece || piece.disabled) return;
+    const listen = piece.closest(".lab-choice-wrap")?.querySelector("[data-lab-audio]");
+    const entry = listen && choiceEntries[Number(listen.dataset.labAudio)];
+    if (entry) playAudio(entry.audio, false, true);
+  }, true);
   root.querySelector("#lab-retry-save").onclick = finish;
   root.querySelector("#lab-next-level").onclick = () => {
     root.querySelector("#lab-level").value = String(Math.min(4, level + 1));
