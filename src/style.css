@@ -2944,3 +2944,7 @@ main .text-button, main .primary, .lab-game button, .lab-settings label { font-s
 @media (max-width:760px) {.piece .arabic {font-size:32px;} .achievement-art {width:110px;height:110px;font-size:82px;line-height:110px;} .success-celebration {padding:16px 24px;} }
 .piece .roman {font-size:13px;line-height:1.35;}
 .piece .word-meaning {font-size:12px;line-height:1.35;}
+.gallery-tabs {display:flex;gap:10px;flex-wrap:wrap;margin:22px 0;}
+.gallery-tabs button {border:1px solid #c9d9bf;border-radius:16px;background:#fffdf1;padding:12px 20px;color:#365e54;cursor:pointer;font-size:16px;}
+.gallery-tabs button[aria-selected="true"] {background:#e2efda;border-color:#477b69;font-weight:700;}
+.poetic-tafsir-content {min-height:100px;border:1px dashed #d3ddc8;border-radius:16px;}

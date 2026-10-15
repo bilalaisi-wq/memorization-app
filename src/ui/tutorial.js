@@ -42,7 +42,7 @@ const steps = [
     "Seven games offer different ways to practice. Each includes authentic distractors with audio. Falling Words uses arrows and Space to place words, and D/Delete to discard extras. Games practice recognition and order; they do not certify memorization.",
   ],
   [
-    "Surah Journey · Memory Gate",
+    "Mastery Gallery · Memory Gate",
     "An artwork section unlocks after correct independent scheduled recall on two distinct days. Puzzle wins and listening alone do not unlock sections. Unlocks stay earned after lapses; the separate Maintained award requires spaced reviews.",
   ],
   [
@@ -194,7 +194,7 @@ export function showTutorial(callbacks) {
         callbacks.daily,
         callbacks.assessment,
         callbacks.lab,
-        callbacks.journey,
+        callbacks.gallery,
         callbacks.gallery,
         showFeedbackSettings,
       ];

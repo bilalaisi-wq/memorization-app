@@ -72,6 +72,7 @@ export const masteryStories = concepts.map(
     surahId,
     title,
     illustration: `/mastery-art/${String(surahId).padStart(3, "0")}.webp`,
+    artworkTitle: ({1: "Illuminated Path Through World", 114: "Golden Sanctuary Against the Shadows", 113: "Dawn Over the Shadow Valley"})[surahId] || title,
     illustrationDescription,
     artworkStatus: "placeholder",
     contextType: "unverified",

@@ -74,9 +74,9 @@ Recording requires microphone access in a supported browser and HTTPS (localhost
 
 The remaining ten Juz Amma surahs (Al-A‘la through An-Naba) were imported with `scripts/complete-juz-amma.py`. The importer preserves existing records, downloads local recordings, and records source word spellings and any API audio-number corrections in `public/additional-quran-source.json`.
 
-## Surah Journey, Mastery Gallery, and Puzzle Lab
+## Mastery Gallery and Puzzle Lab
 
-Use the **Surah Journey**, **Mastery Gallery**, and **Puzzle Lab** buttons above the learning area. The Gallery initially covers Al-Fatihah and surahs 103–114, matching the brief's original thirteen-surah scope; all 38 surahs remain available in the learning modes and Lab.
+Use the **Mastery Gallery** and **Puzzle Lab** buttons above the learning area. The Gallery initially covers Al-Fatihah and surahs 103–114, matching the brief's original thirteen-surah scope; all 38 surahs remain available in the learning modes and Lab.
 
 Artwork sections unlock after correct independent self-assessed recall on **two distinct scheduled review days**. Text/audio assistance, early successful practice, visible puzzles, and old game achievements do not unlock them. Unlocks survive lapses. A separate **Maintained** award requires the existing retained stage for every ayah. The Gallery shows review dates without changing FSRS scheduling. Reveal animations last 1.2 seconds, support reduced motion, and can be skipped.
 
@@ -105,3 +105,9 @@ Correct answers cycle through three animated achievement styles alongside the co
 Puzzle Lab automatically pronounces selected word, group, card, and ayah pieces (including distractors). Falling Words pronounces each arriving block. Rapid selections queue their recordings. **Mute audio** silences current and future Lab playback and persists in that browser; **Unmute audio** restores it. Explicit replay remains available. Changing games or leaving the Lab clears queued playback. The Falling Words **Pause** button pauses the game board, not an audio track.
 
 All learning areas offer spoken-practice guidance, and study text and controls use larger fonts. Listen, repeat after the reciter, and say each word as you place it; quiz success remains separate from independent memorization assessment.
+
+## Mastery Gallery rewards
+
+Mastery Gallery is the single destination for collectible artwork, per-ayah recall checkpoints, and review dates. Surah Journey has been removed as a separate feature; existing earned sections and memory schedules are preserved. Use **View artwork** to inspect one surah and return with **View My Gallery**.
+
+The Gallery has **Artwork** and **Poetic Tafsir** tabs. Poetic Tafsir content is intentionally blank, with the surah's mastery eligibility shown, ready for future uploads. No poems or tafsir have been fabricated. Requested artwork titles map to Al-Fatihah (**Illuminated Path Through World**), An-Nas (**Golden Sanctuary Against the Shadows**), and Al-Falaq (**Dawn Over the Shadow Valley**). Their exact attached illustrations are still pending receipt; their local asset paths are `public/mastery-art/001.webp`, `114.webp`, and `113.webp` respectively.

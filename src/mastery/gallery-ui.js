@@ -35,8 +35,8 @@ const labelDate = (date, timezone) =>
       }).format(new Date(date))
     : "Start recall to schedule reviews";
 function artwork(surah, story, state, animate = false) {
-  return `<div class="mastery-mosaic ${surah.verses.every((v) => state.unlocks[`${surah.id}:${v.id}`]) ? "art-complete" : ""}" role="img" aria-label="${esc(surah.name)} reward: ${surah.verses.filter((v) => state.unlocks[`${surah.id}:${v.id}`]).length} of ${surah.verses.length} sections revealed">
-    <img class="art-probe" src="${story.illustration}" alt="" aria-hidden="true">
+  return `<h4 class="mastery-art-title">${esc(story.artworkTitle)}</h4><div class="mastery-mosaic ${surah.verses.every((v) => state.unlocks[`${surah.id}:${v.id}`]) ? "art-complete" : ""}" role="img" aria-label="${esc(story.artworkTitle)} · ${esc(surah.name)} reward: ${surah.verses.filter((v) => state.unlocks[`${surah.id}:${v.id}`]).length} of ${surah.verses.length} sections revealed">
+    <img class="art-probe" src="${story.illustration}" alt="" aria-hidden="true" data-title="${esc(story.artworkTitle)}">
     ${mosaic(surah.verses.map((v) => v.id))
       .map(({ ayahId, x, y, w, h }) => {
         const key = `${surah.id}:${ayahId}`,
@@ -61,7 +61,7 @@ function bindArtwork(root) {
         caption.textContent =
           "Local artwork placeholder · final illustration pending";
       } else {
-        caption.textContent = "Reward illustration";
+        caption.textContent = img.dataset.title || "Reward illustration";
       }
     };
     img.onerror = () => {
@@ -80,7 +80,7 @@ const publishable = (story) =>
 function showStory(root, surah, story, full, callbacks) {
   const dialog = document.createElement("dialog");
   dialog.className = "mastery-dialog";
-  dialog.innerHTML = `<button class="text-button dialog-close" aria-label="Close story">Close ×</button><span class="eyebrow">${full ? "SURAH COLLECTIBLE" : "TAFSIR SOURCES"}</span><h2>${esc(surah.name)} · ${esc(story.title)}</h2><p class="arabic" lang="ar" dir="rtl">${surah.arabic}</p>${full && publishable(story) ? `<p>${esc(story.historicalContext)}</p><p>${esc(story.narrative)}</p><ul>${story.takeaways.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : `<p class="editorial-note">${full ? "Your checkpoint collectible is earned. " : "Complete the recall checkpoints to earn this collectible. "}The tafsir story is awaiting source verification. Final artwork is awaiting the supplied concept table and approval.</p>`}<h3>Explore the Tafsir</h3><ul>${story.sources.map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.author)}</a><small>${esc(s.reference)}</small></li>`).join("")}</ul><div class="gallery-actions"><button class="primary" data-review-surah>Review the Surah</button><button class="text-button" data-open-gallery>View My Gallery</button><button class="text-button" data-continue>Continue Journey</button></div>`;
+  dialog.innerHTML = `<button class="text-button dialog-close" aria-label="Close story">Close ×</button><span class="eyebrow">${full ? "SURAH COLLECTIBLE" : "TAFSIR SOURCES"}</span><h2>${esc(surah.name)} · ${esc(story.title)}</h2><p class="arabic" lang="ar" dir="rtl">${surah.arabic}</p>${full && publishable(story) ? `<p>${esc(story.historicalContext)}</p><p>${esc(story.narrative)}</p><ul>${story.takeaways.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : `<p class="editorial-note">${full ? "Your checkpoint collectible is earned. " : "Complete the recall checkpoints to earn this collectible. "}The tafsir story is awaiting source verification. Artwork is shown when its image file is available.</p>`}<h3>Explore the Tafsir</h3><ul>${story.sources.map((s) => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.author)}</a><small>${esc(s.reference)}</small></li>`).join("")}</ul><div class="gallery-actions"><button class="primary" data-review-surah>Review the Surah</button><button class="text-button" data-open-gallery>View My Gallery</button><button class="text-button" data-continue>Back to Gallery</button></div>`;
   root.append(dialog);
   const close = () => {
     dialog.close();
@@ -105,7 +105,7 @@ export function mountGallery(
   learning,
   surahs,
   callbacks,
-  journeyId = null,
+  focusId = null,
 ) {
   stopMasteryUI();
   clearLearningView(main);
@@ -121,11 +121,11 @@ export function mountGallery(
   const state = gallery.snapshot(),
     timezone = learning.snapshot().timeZone;
   const ids =
-    journeyId && gallerySurahIds.includes(journeyId)
-      ? [journeyId]
+    focusId && gallerySurahIds.includes(focusId)
+      ? [focusId]
       : gallerySurahIds;
   const hasPending =
-    !!journeyId &&
+    !!focusId &&
     ids.some((id) =>
       surahs
         .find((s) => s.id === id)
@@ -135,28 +135,46 @@ export function mountGallery(
             !state.seen.includes(`${id}:${v.id}`),
         ),
     );
-  main.querySelector(".page-heading h1").textContent = journeyId
-    ? "Your Surah Journey"
+  main.querySelector(".page-heading h1").textContent = focusId
+    ? "My Mastery Gallery"
     : "My Mastery Gallery";
-  root.innerHTML = `<div class="gallery-intro"><span class="eyebrow">A MEMORY JOURNEY</span><h2>${journeyId ? "A section for each ayah" : "Collect meaningful milestones"}</h2><p>Each section unlocks after correct independent, self-assessed recall on ${CHECKPOINT_DAYS} distinct days. Your artwork stays revealed after a break or a lapse. Spaced reviews continue separately.</p><p>This Gallery covers Al-Fatihah and surahs 103–114. Final illustrations and tafsir stories are pending editorial review. These geometric previews are placeholders.</p>${journeyId ? '<button class="text-button" data-gallery>View My Gallery →</button>' : ""}<div class="gallery-animation-controls" ${hasPending ? "" : "hidden"}><button class="text-button" id="skip-reveal">Skip animations</button></div></div>
-  <div class="gallery-grid ${journeyId ? "journey-grid" : ""}">${ids
+  root.innerHTML = `<div class="gallery-intro"><span class="eyebrow">MEMORIZATION MILESTONES</span><h2>${focusId ? "A section for each ayah" : "Collect meaningful milestones"}</h2><p>Each section unlocks after correct independent, self-assessed recall on ${CHECKPOINT_DAYS} distinct days. Your artwork stays revealed after a break or a lapse. Spaced reviews continue separately.</p><p>This Gallery covers Al-Fatihah and surahs 103–114. Artwork files are added as they become available; missing illustrations use a labeled geometric placeholder. Poetic Tafsir is reserved for future uploads.</p>${focusId ? '<button class="text-button" data-gallery>View My Gallery →</button>' : ""}<div class="gallery-animation-controls" ${hasPending ? "" : "hidden"}><button class="text-button" id="skip-reveal">Skip animations</button></div></div>
+  <div class="gallery-tabs" role="tablist" aria-label="Mastery rewards"><button role="tab" id="gallery-art-tab" aria-selected="true" aria-controls="gallery-art-panel" tabindex="0">Artwork</button><button role="tab" id="gallery-poetry-tab" aria-selected="false" aria-controls="gallery-poetry-panel" tabindex="-1">Poetic Tafsir</button></div>
+  <section id="gallery-art-panel" role="tabpanel" aria-labelledby="gallery-art-tab"><div class="gallery-grid ${focusId ? "journey-grid" : ""}">${ids
     .map((id) => {
       const surah = surahs.find((s) => s.id === id),
         story = masteryStories.find((s) => s.surahId === id),
         progress = gallery.progress(surah, learning);
-      return `<article class="gallery-card" data-gallery-surah="${id}"><div class="gallery-card-title"><h3>${esc(surah.name)}</h3><span class="arabic" lang="ar" dir="rtl">${surah.arabic}</span></div>${artwork(surah, story, state, !!journeyId)}<p><strong>${progress.revealed} / ${surah.verses.length} sections revealed</strong> · ${progress.full ? "Checkpoint collectible earned" : "Journey in progress"}</p><p>${progress.maintained ? `Maintained award earned${progress.currentMaintained ? "" : " · Memory needs revision"}` : "Maintained: requires successful spaced reviews for every ayah"}</p><small>Next review: ${labelDate(progress.nextReview, timezone)}</small><p>Story: ${publishable(story) ? (progress.full ? "Available" : "Unlock the collectible first") : "Awaiting source verification"}</p><div class="gallery-actions"><button class="primary small" data-journey="${id}">Continue Journey</button><button class="text-button" data-story="${id}">Read the Story</button><button class="text-button" data-tafsir="${id}">Explore the Tafsir</button><button class="text-button" data-review="${id}">Review the Surah</button></div>${journeyId ? `<div class="journey-ayahs">${surah.verses.map((v) => `<button class="text-button" data-assess="${id}:${v.id}">${state.unlocks[`${id}:${v.id}`] ? "✓" : "○"} Ayah ${v.id} · Recall</button>`).join("")}</div>` : ""}</article>`;
+      return `<article class="gallery-card" data-gallery-surah="${id}"><div class="gallery-card-title"><h3>${esc(surah.name)}</h3><span class="arabic" lang="ar" dir="rtl">${surah.arabic}</span></div>${artwork(surah, story, state, !!focusId)}<p><strong>${progress.revealed} / ${surah.verses.length} sections revealed</strong> · ${progress.full ? "Checkpoint collectible earned" : "Mastery in progress"}</p><p>${progress.maintained ? `Maintained award earned${progress.currentMaintained ? "" : " · Memory needs revision"}` : "Maintained: requires successful spaced reviews for every ayah"}</p><small>Next review: ${labelDate(progress.nextReview, timezone)}</small><p>Story: ${publishable(story) ? (progress.full ? "Available" : "Unlock the collectible first") : "Awaiting source verification"}</p><div class="gallery-actions"><button class="primary small" data-artwork="${id}">View artwork</button><button class="text-button" data-story="${id}">Read the Story</button><button class="text-button" data-tafsir="${id}">Explore the Tafsir</button><button class="text-button" data-review="${id}">Review the Surah</button></div>${focusId ? `<div class="journey-ayahs">${surah.verses.map((v) => `<button class="text-button" data-assess="${id}:${v.id}">${state.unlocks[`${id}:${v.id}`] ? "✓" : "○"} Ayah ${v.id} · Recall</button>`).join("")}</div>` : ""}</article>`;
     })
     .join(
       "",
-    )}</div><p data-status role="status" aria-live="polite"></p>${error || gallery.warning ? `<p role="alert">${esc(error || gallery.warning)}</p>` : ""}`;
+    )}</div></section><section id="gallery-poetry-panel" role="tabpanel" aria-labelledby="gallery-poetry-tab" hidden><h2>Poetic Tafsir</h2><p>A mastery reward. Poetic tafsirs will be added here later.</p><div class="gallery-grid">${ids.map(id => { const chapter = surahs.find(s => s.id === id); const unlocked = gallery.progress(chapter, learning).full; return `<article class="gallery-card" data-poetry-surah="${id}"><h3>${esc(chapter.name)}</h3><p>${unlocked ? "Mastery reward earned" : "Unlock by completing this surah’s recall checkpoints"}</p><div class="poetic-tafsir-content" aria-label="Poetic tafsir content for ${esc(chapter.name)}"></div></article>`; }).join("")}</div></section><p data-status role="status" aria-live="polite"></p>${error || gallery.warning ? `<p role="alert">${esc(error || gallery.warning)}</p>` : ""}`;
   bindArtwork(root);
+  const tabs = [...root.querySelectorAll('.gallery-tabs [role="tab"]')];
+  const selectTab = index => {
+    tabs.forEach((tab, i) => {
+      tab.setAttribute('aria-selected', String(i === index));
+      tab.tabIndex = i === index ? 0 : -1;
+      root.querySelector(`#${tab.getAttribute('aria-controls')}`).hidden = i !== index;
+    });
+  };
+  tabs.forEach((tab, i) => {
+    tab.onclick = () => selectTab(i);
+    tab.onkeydown = event => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? 1 : 1 - i;
+      selectTab(next); tabs[next].focus();
+    };
+  });
   root
     .querySelector("[data-gallery]")
     ?.addEventListener("click", callbacks.onGallery);
   root
-    .querySelectorAll("[data-journey]")
+    .querySelectorAll("[data-artwork]")
     .forEach(
-      (b) => (b.onclick = () => callbacks.onJourney(Number(b.dataset.journey))),
+      (b) => (b.onclick = () => callbacks.onGallery(Number(b.dataset.artwork))),
     );
   root
     .querySelectorAll("[data-assess]")
@@ -184,10 +202,10 @@ export function mountGallery(
           );
         }),
     );
-  const pending = journeyId
+  const pending = focusId
     ? surahs
-        .find((s) => s.id === journeyId)
-        .verses.map((v) => `${journeyId}:${v.id}`)
+        .find((s) => s.id === focusId)
+        .verses.map((v) => `${focusId}:${v.id}`)
         .filter((k) => state.unlocks[k] && !state.seen.includes(k))
     : [];
   let timer = null;
@@ -209,14 +227,14 @@ export function mountGallery(
       .join(" ");
     if (
       gallery.progress(
-        surahs.find((s) => s.id === journeyId),
+        surahs.find((s) => s.id === focusId),
         learning,
       ).full
     )
       showStory(
         root,
-        surahs.find((s) => s.id === journeyId),
-        masteryStories.find((s) => s.surahId === journeyId),
+        surahs.find((s) => s.id === focusId),
+        masteryStories.find((s) => s.surahId === focusId),
         true,
         callbacks,
       );

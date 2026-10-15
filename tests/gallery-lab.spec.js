@@ -221,7 +221,7 @@ test("Gallery shows stable ayah unlocks, missing-image fallback and persisted fu
     "data-fallback",
     "true",
   );
-  await card.locator("[data-journey]").click();
+  await card.locator("[data-artwork]").click();
   await page.locator("#skip-reveal").click();
   await expect(page.locator("dialog")).toBeVisible();
   await expect(page.locator("dialog")).toContainText(
@@ -251,7 +251,8 @@ test("reduced motion disables reveal animations and reviews preserve FSRS dates"
   const before = fixture.learning.getRecord("1:2").memory.nextReview;
   await seed(page, fixture.storage);
   await page.goto("/");
-  await page.locator("#nav-journey").click();
+  await page.locator("#nav-gallery").click();
+  await page.locator('[data-artwork="1"]').click();
   await expect(page.locator('[data-art-ayah="2"]')).toHaveClass(/art-open/);
   await expect(page.locator("[data-status]")).toContainText("Ayah 2");
   expect(
@@ -454,7 +455,7 @@ test("a saved qualifying recall unlocks the correct artwork section through the 
   await expect(page.locator(".mastery-notice")).toContainText(
     "1 artwork section",
   );
-  await page.getByRole("button", { name: "See my Surah Journey" }).click();
+  await page.getByRole("button", { name: "See my Mastery Gallery" }).click();
   await expect(page.locator('[data-art-ayah="2"]')).toHaveClass(/art-open/);
   await expect(page.locator('[data-art-ayah="1"]')).toHaveClass(/art-locked/);
 });
