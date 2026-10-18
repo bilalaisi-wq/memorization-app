@@ -1,12 +1,27 @@
 // Guest records retain their existing keys. Authenticated users never read another profile.
 let owner = null;
+const listeners = new Set();
+export const onProfileChange = (listener) => {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+};
+export const scopedStorage = (id) => ({
+  getItem: (key) => localStorage.getItem(`ayah-user:${id}:${key}`),
+  setItem: (key, value) =>
+    localStorage.setItem(`ayah-user:${id}:${key}`, value),
+  removeItem: (key) => localStorage.removeItem(`ayah-user:${id}:${key}`),
+});
 export const selectProfile = (id) => {
   owner = id || null;
 };
 export const profileKey = (key) => (owner ? `ayah-user:${owner}:${key}` : key);
 export const profileStorage = {
   getItem: (key) => localStorage.getItem(profileKey(key)),
-  setItem: (key, value) => localStorage.setItem(profileKey(key), value),
+  setItem: (key, value) => {
+    localStorage.setItem(profileKey(key), value);
+    if (progressKeys.includes(key))
+      for (const listener of listeners) listener(owner, key);
+  },
   removeItem: (key) => localStorage.removeItem(profileKey(key)),
 };
 export const progressKeys = [

@@ -8,9 +8,12 @@ test("database policies isolate accounts and enforce opt-in, redaction, score ca
     await db.exec(
       `create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to anon,authenticated;`,
     );
-    await db.exec(
-      readFileSync(new URL("../supabase/schema.sql", import.meta.url), "utf8"),
+    const setup = readFileSync(
+      new URL("../supabase/SETUP_ACCOUNTS.sql", import.meta.url),
+      "utf8",
     );
+    await db.exec(setup);
+    await db.exec(setup); // An existing project can safely rerun the supplied dashboard script.
     const a = "00000000-0000-0000-0000-000000000001",
       b = "00000000-0000-0000-0000-000000000002";
     await db.query("insert into auth.users values ($1),($2)", [a, b]);
@@ -18,6 +21,32 @@ test("database policies isolate accounts and enforce opt-in, redaction, score ca
     await db.query(
       "insert into public.learner_progress(user_id,payload) values ($1,$2)",
       [a, JSON.stringify({ "ayah-goals-v1": "{}" })],
+    );
+    const progressDoc = JSON.stringify({ "ayah-goals-v1": '{"version":1}' });
+    assert.equal(
+      (
+        await db.query("select public.save_my_progress($1,$2,$3) as revision", [
+          a,
+          1,
+          progressDoc,
+        ])
+      ).rows[0].revision,
+      2,
+    );
+    await assert.rejects(
+      db.query("select public.save_my_progress($1,$2,$3)", [a, 1, progressDoc]),
+      (error) => error.code === "40001",
+    );
+    await assert.rejects(
+      db.query("select public.save_my_progress($1,$2,$3)", [b, 0, progressDoc]),
+      (error) => error.code === "42501",
+    );
+    await assert.rejects(
+      db.query("select public.save_my_progress($1,$2,$3)", [
+        a,
+        2,
+        JSON.stringify({ recording: "never upload" }),
+      ]),
     );
     await assert.rejects(
       db.query(

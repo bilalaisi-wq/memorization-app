@@ -1,26 +1,68 @@
-import { createClient } from "@supabase/supabase-js";
+import { accountDefaults } from "./account-config.js";
+import { CloudProgress } from "./cloud-progress.js";
 import {
   profileStorage,
   selectProfile,
   profileBackup,
   progressKeys,
+  scopedStorage,
+  onProfileChange,
 } from "./profile-storage.js";
 import { esc } from "../ui/dom.js";
 let client = null,
   user = null,
-  accountError = "";
-export async function initializeAccounts() {
-  const url = import.meta.env.VITE_SUPABASE_URL,
-    key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  accountError = "",
+  cloud = null,
+  projectUrl = "",
+  projectKey = "";
+export async function initializeAccounts(config = {}) {
+  const url =
+      config.url ?? (import.meta.env.VITE_SUPABASE_URL || accountDefaults.url),
+    key =
+      config.key ??
+      (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || accountDefaults.key);
   if (!url || !key) return;
   try {
     if (!url.startsWith("https://"))
       throw new Error("HTTPS account service required.");
+    projectUrl = url;
+    projectKey = key;
+    const authStorageKey = `sb-${new URL(url).hostname.split(".")[0]}-auth-token`;
+    for (const storageKey of [
+      authStorageKey,
+      `${authStorageKey}-code-verifier`,
+    ]) {
+      try {
+        if (
+          !localStorage.getItem(storageKey) &&
+          sessionStorage.getItem(storageKey)
+        ) {
+          localStorage.setItem(storageKey, sessionStorage.getItem(storageKey));
+          sessionStorage.removeItem(storageKey);
+        }
+      } catch {}
+    }
+    const { createClient } = await import("@supabase/supabase-js");
     client = createClient(url, key, {
+      global: {
+        fetch: async (input, init = {}) => {
+          const controller = new AbortController(),
+            timer = setTimeout(() => controller.abort(), 10000);
+          const relay = () => controller.abort();
+          if (init.signal?.aborted) controller.abort();
+          else init.signal?.addEventListener("abort", relay, { once: true });
+          try {
+            return await fetch(input, { ...init, signal: controller.signal });
+          } finally {
+            clearTimeout(timer);
+            init.signal?.removeEventListener("abort", relay);
+          }
+        },
+      },
       auth: {
         flowType: "pkce",
         persistSession: true,
-        storage: sessionStorage,
+        storage: localStorage,
         detectSessionInUrl: true,
         autoRefreshToken: true,
       },
@@ -34,9 +76,26 @@ export async function initializeAccounts() {
       user = result.data.user;
     }
     selectProfile(user?.id);
+    if (user) {
+      cloud = new CloudProgress(client, user.id, scopedStorage(user.id), () => {
+        document
+          .querySelectorAll("[data-sync-status]")
+          .forEach((el) => (el.textContent = cloud.status));
+      });
+      await cloud.initialize();
+      onProfileChange((id) => {
+        if (id === user?.id) cloud?.changed();
+      });
+      window.addEventListener("online", () => {
+        if (cloud?.enabled && !cloud.conflict) cloud.changed();
+      });
+    }
     client.auth.onAuthStateChange((event, session) => {
       if (event === "INITIAL_SESSION") return;
-      if ((session?.user?.id || null) !== (user?.id || null)) location.reload();
+      if ((session?.user?.id || null) !== (user?.id || null)) {
+        cloud?.dispose();
+        location.reload();
+      }
     });
   } catch {
     accountError =
@@ -56,6 +115,7 @@ export function mountAccountControls(main, learning) {
     button.className = "text-button";
     button.textContent = label;
     button.onclick = action;
+    button.dataset.accountControl = "true";
     nav.append(button);
   }
 }
@@ -97,8 +157,26 @@ function showAccount(learning) {
     return;
   }
   if (!user) {
-    area.innerHTML = `<p>Sign in without a password. Guest learning is always available. Accounts are for adults and parents managing their own learning; children should use guest mode with a parent.</p><form><label><input type="checkbox" name="adult" required> I am 18 or older and understand the privacy information.</label><label>Email <input name="email" type="email" autocomplete="email" required maxlength="254"></label><button class="primary" type="submit">Email me a sign-in code</button></form><form data-verify hidden><label>Sign-in code <input name="token" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,10}" required></label><button class="primary" type="submit">Verify code</button></form><button class="text-button" data-google>Continue with Google</button><button class="text-button" data-privacy>Privacy information</button>`;
-    let email = "";
+    area.innerHTML = `<div class="account-auth-tabs" role="group" aria-label="Account access"><button class="text-button" data-auth-mode="signin" aria-pressed="true">Sign in</button><button class="text-button" data-auth-mode="signup" aria-pressed="false">Create account</button></div><p data-auth-intro>Sign in without a password. Guest learning is always available. Accounts are for adults and parents managing their own learning; children should use guest mode with a parent. You stay signed in on this device until you sign out; use a private device.</p><form><label><input type="checkbox" name="adult" required> I am 18 or older and understand the privacy information.</label><label>Email <input name="email" type="email" autocomplete="email" required maxlength="254"></label><button class="primary" type="submit">Email me a sign-in code</button></form><form data-verify hidden><label>Sign-in code <input name="token" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,10}" required></label><button class="primary" type="submit">Verify code</button></form><button class="text-button" data-google>Continue with Google</button><button class="text-button" data-privacy>Privacy information</button>`;
+    let email = "",
+      authMode = "signin";
+    area.querySelectorAll("[data-auth-mode]").forEach(
+      (button) =>
+        (button.onclick = () => {
+          authMode = button.dataset.authMode;
+          area
+            .querySelectorAll("[data-auth-mode]")
+            .forEach((tab) =>
+              tab.setAttribute("aria-pressed", String(tab === button)),
+            );
+          dialog.querySelector("h2").textContent =
+            authMode === "signup"
+              ? "Create your Ayah account"
+              : "Welcome back to Ayah";
+          area.querySelector("[data-verify]").hidden = true;
+          status.textContent = "";
+        }),
+    );
     const form = area.querySelector("form");
     form.onsubmit = (e) => {
       e.preventDefault();
@@ -106,12 +184,16 @@ function showAccount(learning) {
         email = form.elements.email.value.trim();
         const { error } = await client.auth.signInWithOtp({
           email,
-          options: { shouldCreateUser: true },
+          options: {
+            shouldCreateUser: authMode === "signup",
+            emailRedirectTo:
+              import.meta.env.VITE_AUTH_REDIRECT_URL || accountDefaults.siteUrl,
+          },
         });
         if (error) throw error;
         area.querySelector("[data-verify]").hidden = false;
         status.textContent =
-          "Check your email for the code. Never share it with anyone.";
+          "If an eligible account exists, check your email for the code. New here? Choose Create account. Never share the code.";
       });
     };
     area.querySelector("[data-verify]").onsubmit = (e) => {
@@ -129,11 +211,24 @@ function showAccount(learning) {
       run(async () => {
         if (!form.elements.adult.checked)
           throw new Error("Adult or parent account confirmation is required.");
+        let settings = null;
+        try {
+          const response = await fetch(`${projectUrl}/auth/v1/settings`, {
+            headers: { apikey: projectKey },
+            signal: AbortSignal.timeout(8000),
+          });
+          if (response.ok) settings = await response.json();
+        } catch {}
+        if (settings?.external?.google === false)
+          throw new Error(
+            "Google sign-in is not enabled yet. Use email, or ask the site owner to enable Google in Supabase.",
+          );
         const { error } = await client.auth.signInWithOAuth({
           provider: "google",
           options: {
             scopes: "openid email",
-            redirectTo: location.origin + location.pathname,
+            redirectTo:
+              import.meta.env.VITE_AUTH_REDIRECT_URL || accountDefaults.siteUrl,
           },
         });
         if (error) throw error;
@@ -141,44 +236,37 @@ function showAccount(learning) {
     area.querySelector("[data-privacy]").onclick = showPrivacy;
     return;
   }
-  area.innerHTML = `<p>You’re signed in. Your progress is separate from guest and other accounts on this browser. Cloud backups are explicit: save before switching devices, then restore on the other device.</p><div class="account-actions"><button class="primary" data-save>Save private cloud backup</button><button class="text-button" data-restore>Restore cloud backup</button><button class="text-button" data-copy>Copy guest progress into empty account</button><button class="text-button" data-export>Download my account data</button><button class="text-button" data-signout>Sign out</button></div><h3>Optional weekly leaderboard</h3><p>Share only a made-up alias and weekly game/recall totals. No email, ayah details, goals, or recordings are public. Rankings are self-reported practice, not verified recitation.</p><label>Public alias <input data-alias maxlength="24" placeholder="e.g. Cedar42" pattern="[A-Za-z0-9 _-]{3,24}"></label><label><input data-opt-in type="checkbox"> Share my alias and this week’s totals publicly</label><button class="primary small" data-publish>Update leaderboard preference</button><button class="text-button" data-privacy>Privacy information</button><hr><p>Deleting your account removes server backups, public rankings, and this account’s progress on this browser. Download a copy first if wanted.</p><button class="text-button" data-delete>Delete my account and data</button>`;
+  area.innerHTML = `<p>You’re signed in. Your progress is separate from guest and other accounts on this browser. You stay signed in on each device until you sign out. Saved private progress loads on a new device; enable automatic sync below to keep future changes backed up.</p><label><input type="checkbox" data-sync-enabled> Automatically sync my learning progress across devices</label><p data-sync-status role="status"></p><div class="account-actions"><button class="primary" data-save>Save private cloud backup</button><button class="text-button" data-restore>Restore cloud backup</button><button class="text-button" data-copy>Copy guest progress into empty account</button><button class="text-button" data-export>Download my account data</button><button class="text-button" data-signout>Sign out on this device</button><button class="text-button" data-signout-all>Sign out on all devices</button></div><h3>Optional weekly leaderboard</h3><p>Share only a made-up alias and weekly game/recall totals. No email, ayah details, goals, or recordings are public. Rankings are self-reported practice, not verified recitation.</p><label>Public alias <input data-alias maxlength="24" placeholder="e.g. Cedar42" pattern="[A-Za-z0-9 _-]{3,24}"></label><label><input data-opt-in type="checkbox"> Share my alias and this week’s totals publicly</label><button class="primary small" data-publish>Update leaderboard preference</button><button class="text-button" data-privacy>Privacy information</button><hr><p>Deleting your account removes server backups, public rankings, and this account’s progress on this browser. Download a copy first if wanted.</p><button class="text-button" data-delete>Delete my account and data</button>`;
+  const syncToggle = area.querySelector("[data-sync-enabled]");
+  syncToggle.checked = cloud?.enabled || false;
+  area.querySelector("[data-sync-status]").textContent =
+    cloud?.status || "Cloud sync is unavailable.";
+  syncToggle.onchange = () =>
+    run(async () => {
+      await cloud.setEnabled(syncToggle.checked);
+    });
   area.querySelector("[data-save]").onclick = () =>
     run(async () => {
-      const { error } = await client
-        .from("learner_progress")
-        .upsert({
-          user_id: user.id,
-          payload: profileBackup(),
-          updated_at: new Date().toISOString(),
-        });
-      if (error) throw error;
+      if (
+        cloud.conflict &&
+        !confirm(
+          "Replace the cloud copy with this device’s progress? Download your account data first if you want to keep both copies.",
+        )
+      )
+        return;
+      await cloud.save({ replace: cloud.conflict });
       status.textContent =
         "Private cloud backup saved. No recordings were included.";
     });
   area.querySelector("[data-restore]").onclick = () =>
     run(async () => {
-      const { data, error } = await client
-        .from("learner_progress")
-        .select("payload")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      if (error) throw error;
-      if (!data) throw new Error("No cloud backup found.");
-      const entries = Object.entries(data.payload || {});
-      if (
-        entries.some(
-          ([k, v]) => !progressKeys.includes(k) || typeof v !== "string",
-        )
-      )
-        throw new Error("Backup format is not supported.");
       if (
         !confirm(
-          "Replace this account’s local progress with its cloud backup? Export your local data first if needed.",
+          "Replace this device’s account progress with the cloud copy? Download local data first if needed.",
         )
       )
         return;
-      for (const key of progressKeys) profileStorage.removeItem(key);
-      for (const [key, value] of entries) profileStorage.setItem(key, value);
+      await cloud.restore();
       location.reload();
     });
   area.querySelector("[data-copy]").onclick = () =>
@@ -216,7 +304,20 @@ function showAccount(learning) {
   };
   area.querySelector("[data-signout]").onclick = () =>
     run(async () => {
+      cloud?.dispose();
       const { error } = await client.auth.signOut({ scope: "local" });
+      if (error) throw error;
+    });
+  area.querySelector("[data-signout-all]").onclick = () =>
+    run(async () => {
+      if (
+        !confirm(
+          "Sign out on all devices? Other sessions will end when their access tokens expire.",
+        )
+      )
+        return;
+      cloud?.dispose();
+      const { error } = await client.auth.signOut({ scope: "global" });
       if (error) throw error;
     });
   area.querySelector("[data-publish]").onclick = () =>
@@ -272,7 +373,7 @@ function showAccount(learning) {
 function showPrivacy() {
   const dialog = dialogShell("Privacy and your choices");
   dialog.querySelector("[data-content]").innerHTML =
-    `<p>Guest progress stays in this browser. Adult accounts use Supabase authentication and optional Google sign-in. The authentication provider receives your email and sign-in information. Do not enter a child’s information or use a real name as a public alias.</p><p>Goals, learning history, and progress are saved locally per account. Only an explicit cloud-backup action sends them to your private account storage. Recordings stay in memory in the tab; they are never backed up or published.</p><p>Public leaderboard participation is off by default. Opting in publishes a chosen alias and weekly totals only. You can opt out, export your progress, or delete your account in account settings.</p><p>On shared devices, browser storage can be accessed by someone with access to the browser. Sign out and clear site data after exporting or backing up if needed. No advertising trackers are included.</p><p>The site operator must publish their identity, privacy contact, retention policy, provider terms, and applicable regional notices before enabling public registration. Legal compliance depends on the deployment and jurisdiction; this interface is not a legal certification.</p>`;
+    `<p>Guest progress stays in this browser. Adult accounts use Supabase authentication and optional Google sign-in. The authentication provider receives your email and sign-in information. Do not enter a child’s information or use a real name as a public alias.</p><p>Goals, learning history, and progress are saved locally per account. Saved private progress is loaded when signing in on a new device. You can save manually or opt in to automatic sync; only then are subsequent changes uploaded to private account storage. Recordings stay in memory in the tab; they are never backed up or published.</p><p>Public leaderboard participation is off by default. Opting in publishes a chosen alias and weekly totals only. You can opt out, export your progress, or delete your account in account settings.</p><p>Sign-in sessions persist on this device until sign-out. On shared devices, browser storage can be accessed by someone with access to the browser. Sign out and clear site data after exporting or backing up if needed. No advertising trackers are included.</p><p>The site operator must publish their identity, privacy contact, retention policy, provider terms, and applicable regional notices before enabling public registration. Legal compliance depends on the deployment and jurisdiction; this interface is not a legal certification.</p>`;
 }
 async function showLeaderboard() {
   const dialog = dialogShell("Weekly practice leaderboard"),

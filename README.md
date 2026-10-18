@@ -118,6 +118,11 @@ Open **My plan & achievements** (also inside **Daily quests**) to choose target 
 
 Daily Quests now includes timezone-aware active-day streaks, best streak, a weekly activity summary, illustrated achievement badges, and monthly activity/detail tables. Only explicit study interactions or dated completed puzzle/recall histories count. Earned badges stay earned through later lapses; current retained memory is still tracked separately.
 
-Passwordless email/optional Google accounts, isolated local profiles, explicit private cloud backups, account export/deletion, and opt-in weekly alias rankings are implemented for Supabase. **They are not live until a Supabase project is created and configured.** Guest features work immediately, and unavailable online features are labeled honestly. No demo competitors are invented. Scores are self-reported activity, not automatic speech verification. Recordings remain in the tab and are never uploaded.
+Passwordless email/optional Google accounts, isolated local profiles, explicit private cloud backups, account export/deletion, and opt-in weekly alias rankings are implemented for Supabase. **The provided Supabase project is now wired into the app; enable its hosted settings using [the activation checklist](docs/activate-accounts.md).** Guest features work immediately, and unavailable online features are labeled honestly. No demo competitors are invented. Scores are self-reported activity, not automatic speech verification. Recordings remain in the tab and are never uploaded.
 
 See [account setup, privacy boundaries, and launch requirements](docs/accounts-and-privacy.md) and [database schema](supabase/schema.sql). The deployment owner must supply provider configuration and a legally reviewed, operator-specific privacy notice. This code does not certify compliance with every privacy law.
+
+
+## Persistent login and device sync
+
+The website now offers **Create account**, returning-user **Sign in**, and **Continue with Google**. Sessions persist on each device until sign-out; optional automatic private sync and revision conflicts protect progress across devices. Guest progress stays separate. See [the exact Supabase/Railway activation steps](docs/activate-accounts.md) and run [the complete account setup SQL](supabase/SETUP_ACCOUNTS.sql) in the project's SQL Editor. Hosted provider/admin settings and real email delivery still require activation and live verification.

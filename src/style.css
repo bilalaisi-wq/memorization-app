@@ -2977,3 +2977,9 @@ main .text-button, main .primary, .lab-game button, .lab-settings label { font-s
 .account-actions {display:flex;flex-wrap:wrap;gap:12px;}
 .leaderboard-list li {padding:14px;border-bottom:1px solid #d4ddca;}
 .leaderboard-list span {display:block;margin-top:8px;}
+.account-auth-tabs {display:flex;gap:12px;flex-wrap:wrap;margin:18px 0;}
+.account-auth-tabs button[aria-pressed="true"] {background:#e2efda;border:1px solid #477b69;border-radius:14px;font-weight:bold;}
+[data-sync-status] {padding:12px;background:#edf3e4;border-radius:14px;line-height:1.6;}
+.account-dialog .text-button {font-size:14px;min-height:44px;padding:8px 12px;}
+.account-dialog p,.account-dialog label {font-size:16px;line-height:1.6;}
+.account-dialog [data-google] {display:block;width:100%;min-height:46px;margin-top:18px;padding:12px 16px;font-size:16px;background:#fff;border:1px solid #c6d3c0;border-radius:12px;color:#365e54;}

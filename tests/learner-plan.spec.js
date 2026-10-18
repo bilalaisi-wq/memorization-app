@@ -192,18 +192,22 @@ test("study history, graphics, and monthly activity survive reload without farmi
   );
   expect(state.wallet.xp).toBe(0);
 });
-test("unconfigured accounts and leaderboard show honest empty states without collecting email", async ({
+test("configured account entry offers signup and Google without sending email automatically", async ({
   page,
 }) => {
+  let requests = 0;
+  await page.route("**/auth/v1/otp", (route) => {
+    requests++;
+    return route.fulfill({ json: {} });
+  });
   await page.goto("/");
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
-  await expect(page.locator(".account-dialog")).toContainText("not activated");
-  await expect(page.locator('input[type="email"]')).toHaveCount(0);
-  await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Leaderboard", exact: true }).click();
-  await expect(page.locator(".account-dialog")).toContainText(
-    "No sample users",
-  );
+  await expect(page.locator('[data-auth-mode="signup"]')).toBeVisible();
+  await expect(page.locator('input[type="email"]')).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Continue with Google" }),
+  ).toBeVisible();
+  expect(requests).toBe(0);
 });
 
 test("earned badges survive later lapses while current memory remains separate", () => {

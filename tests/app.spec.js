@@ -97,7 +97,8 @@ test("audio plays selected words in order for each repetition and handles errors
 test("desktop font and layout", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1100 });
   await page.goto("/");
-  await page.evaluate(() => document.fonts.ready);
+  await expect(page.locator(".reference-card")).toBeVisible();
+  await page.evaluate(async () => { await document.fonts.load("30px Uthmanic"); await document.fonts.ready; });
   expect(await page.evaluate(() => document.fonts.check("30px Uthmanic"))).toBe(
     true,
   );
