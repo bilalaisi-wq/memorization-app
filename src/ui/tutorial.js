@@ -31,7 +31,7 @@ const steps = [
   ],
   [
     "Daily Quest",
-    "Your dashboard separates puzzle progress from memorization mastery. Review due ayahs first, revisit weak ayahs, or choose suggested new memorization. Taking a break never costs points.",
+    "Set goals, choose surahs, and say how confident you feel. Daily Quests suggests a next step, separates puzzle progress from memorization mastery, and shows your activity streak and visual achievements. Review due ayahs first and try spoken recall when ready. Taking a break never costs points.",
   ],
   [
     "Self-assessed Recitation",

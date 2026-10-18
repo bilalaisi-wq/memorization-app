@@ -111,3 +111,13 @@ All learning areas offer spoken-practice guidance, and study text and controls u
 Mastery Gallery is the single destination for collectible artwork, per-ayah recall checkpoints, and review dates. Surah Journey has been removed as a separate feature; existing earned sections and memory schedules are preserved. Use **View artwork** to inspect one surah and return with **View My Gallery**.
 
 The Gallery has **Artwork** and **Poetic Tafsir** tabs. Poetic Tafsir content is intentionally blank, with the surah's mastery eligibility shown, ready for future uploads. No poems or tafsir have been fabricated. Requested artwork titles map to Al-Fatihah (**Illuminated Path Through World**), An-Nas (**Golden Sanctuary Against the Shadows**), and Al-Falaq (**Dawn Over the Shadow Valley**). Their exact attached illustrations are still pending receipt; their local asset paths are `public/mastery-art/001.webp`, `114.webp`, and `113.webp` respectively.
+
+## Personal goals, consistency, and accounts
+
+Open **My plan & achievements** (also inside **Daily quests**) to choose target surahs, report what you already know, and set a realistic minutes/days intention. Confidence controls suggest Practice, Puzzle Quest, or text-hidden self-assessed recitation; due reviews take priority. Listening and saying each word aloud remain part of study guidance. An “already know” selection does not grant mastery.
+
+Daily Quests now includes timezone-aware active-day streaks, best streak, a weekly activity summary, illustrated achievement badges, and monthly activity/detail tables. Only explicit study interactions or dated completed puzzle/recall histories count. Earned badges stay earned through later lapses; current retained memory is still tracked separately.
+
+Passwordless email/optional Google accounts, isolated local profiles, explicit private cloud backups, account export/deletion, and opt-in weekly alias rankings are implemented for Supabase. **They are not live until a Supabase project is created and configured.** Guest features work immediately, and unavailable online features are labeled honestly. No demo competitors are invented. Scores are self-reported activity, not automatic speech verification. Recordings remain in the tab and are never uploaded.
+
+See [account setup, privacy boundaries, and launch requirements](docs/accounts-and-privacy.md) and [database schema](supabase/schema.sql). The deployment owner must supply provider configuration and a legally reviewed, operator-specific privacy notice. This code does not certify compliance with every privacy law.

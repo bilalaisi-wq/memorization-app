@@ -1,3 +1,5 @@
+import { profileBackup } from "./learner/profile-storage.js";
+import { mountLearnerDashboard } from "./learner/dashboard.js";
 import { successCue } from "./ui/encouragement.js";
 import {
   createRecallRecording,
@@ -102,9 +104,10 @@ export function mountDailyDashboard(main, store, surahs, callbacks) {
  <section class="daily-columns upcoming-reviews"><section><h3>Next scheduled reviews</h3><ul>${renderList(daily.upcoming, "due") || "<li>No future reviews yet. Your first self-assessment sets the schedule.</li>"}</ul></section></section>
  <section class="memory-notes"><h3>Puzzles and memory are different journeys</h3><p>Puzzle wins unlock the existing three challenge levels. Memorization stages come from self-assessed recitation and reviews on different days, not puzzle points. “Retained” is a learning marker, not automatic verification of recitation.</p><p>FSRS schedules your next independent review. Listening or revealing text before reciting counts as assisted study. Comparing after you have recited is part of self-assessment.</p><button class="text-button" id="export-learning">Export learning data</button>${state.activeReview && !state.activeReview.graded ? `<button class="text-button" data-start-recall="${state.activeReview.key}">Resume unfinished recall</button>` : ""}</section>${store.warning ? `<p class="storage-warning" role="alert">${esc(store.warning)}</p>` : ""}`;
   bindOpen(root, callbacks);
+  mountLearnerDashboard(root, store, surahs, callbacks);
   root.querySelector("#export-learning").onclick = () => {
     const url = URL.createObjectURL(
-      new Blob([store.exportData()], { type: "application/json" }),
+      new Blob([JSON.stringify({ ...JSON.parse(store.exportData()), profile: profileBackup() }, null, 2)], { type: "application/json" }),
     );
     const link = document.createElement("a");
     link.href = url;

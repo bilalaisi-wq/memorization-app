@@ -1,3 +1,6 @@
+import { initializeAccounts, mountAccountControls } from "./learner/accounts.js";
+import { profileStorage } from "./learner/profile-storage.js";
+import { trackStudy, summarizeActivity, achievements, preserveAchievements } from "./learner/insights.js";
 import { mountMemoryTip } from "./ui/memory-tips.js";
 import { bindPieceDrag, stopPieceDrag } from "./ui/piece-drag.js";
 import { mountExperienceControls } from "./ui/tutorial.js";
@@ -52,9 +55,10 @@ const icons = {
 };
 const icon = (name) =>
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.grid}</svg>`;
-const learning = createLearningStore(localStorage, surahs);
-const gallery = createMasteryStore(localStorage, surahs);
-const lab = createPuzzleStore(localStorage, surahs);
+await initializeAccounts();
+const learning = createLearningStore(profileStorage, surahs);
+const gallery = createMasteryStore(profileStorage, surahs);
+const lab = createPuzzleStore(profileStorage, surahs);
 let puzzleSessionId = "";
 let chapter = 0,
   verses = surahs[0].verses,
@@ -245,6 +249,12 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
     );
   if (mode === "sequence") mountSequence(document.querySelector("main"), surah);
   mountMemoryTip(document.querySelector("main"), mode);
+  mountAccountControls(document.querySelector("main"), learning);
+  const planButton = document.createElement("button");
+  planButton.className = "text-button";
+  planButton.textContent = "My plan & achievements";
+  planButton.onclick = memoryCallbacks.onDaily;
+  document.querySelector(".explore-nav").append(planButton);
   mountExperienceControls(document.querySelector("main"), {
     beforeTour: stop,
     afterTour: render,
@@ -440,7 +450,13 @@ const memoryCallbacks = {
     mode = "practice";
     reset();
   },
+  onRecommended(target, nextMode) {
+    memoryCallbacks.onStudy(target);
+    if (nextMode === "quiz") { mode = "quiz"; reset(); }
+  },
   onWalletChange() {
+    const current = learning.snapshot();
+    preserveAchievements(profileStorage, achievements(current, surahs, summarizeActivity(current, profileStorage)));
     ({ stars, xp, streak } = learning.snapshot().wallet);
     try {
       const result = gallery.sync(learning);
@@ -657,3 +673,11 @@ if (unfinished && !unfinished.graded) {
   }
 }
 reset();
+
+// Study activity is separate from game XP and independent recall eligibility.
+const noteActivity = event => {
+  if (!event.target.closest('.piece, .piece-listen, .lab-game button, .falling-stage, [data-grab], [data-sequence-word], #build-all, #practice-audio, #full-audio')) return;
+  try { trackStudy(profileStorage, key(), mode, new Date(), learning.snapshot().timeZone); } catch { /* Existing learning remains available if activity storage fails. */ }
+};
+document.addEventListener('click', noteActivity, true);
+document.addEventListener('dragstart', noteActivity, true);
