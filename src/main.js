@@ -1,4 +1,6 @@
-import { initializeAccounts, mountAccountControls } from "./learner/accounts.js";
+import { initializeAppearance } from "./themes/appearance.js";
+import { mountSkyProgress, resetSkyObserver } from "./themes/constellations.js";
+import { initializeAccounts, mountAccountControls, appearanceAccount } from "./learner/accounts.js";
 import { profileStorage } from "./learner/profile-storage.js";
 import { trackStudy, summarizeActivity, achievements, preserveAchievements } from "./learner/insights.js";
 import { mountMemoryTip } from "./ui/memory-tips.js";
@@ -29,6 +31,7 @@ import {
 } from "./learning-ui.js";
 import { mountSequence, stopSequence } from "./sequence.js";
 import "./style.css";
+import "./themes/night-sky.css";
 import {
   surahs,
   totalAyahs,
@@ -56,6 +59,7 @@ const icons = {
 const icon = (name) =>
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.grid}</svg>`;
 await initializeAccounts();
+initializeAppearance(appearanceAccount());
 const learning = createLearningStore(profileStorage, surahs);
 const gallery = createMasteryStore(profileStorage, surahs);
 const lab = createPuzzleStore(profileStorage, surahs);
@@ -248,6 +252,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
       memoryCallbacks,
     );
   if (mode === "sequence") mountSequence(document.querySelector("main"), surah);
+  mountSkyProgress(document.querySelector("main"), learning, surahs, surah, key(), mode, memoryCallbacks);
   mountMemoryTip(document.querySelector("main"), mode);
   mountAccountControls(document.querySelector("main"), learning);
   const planButton = document.createElement("button");
@@ -455,6 +460,7 @@ const memoryCallbacks = {
     if (nextMode === "quiz") { mode = "quiz"; reset(); }
   },
   onWalletChange() {
+    mountSkyProgress(document.querySelector("main"), learning, surahs, surahs[chapter], key(), mode, memoryCallbacks);
     const current = learning.snapshot();
     preserveAchievements(profileStorage, achievements(current, surahs, summarizeActivity(current, profileStorage)));
     ({ stars, xp, streak } = learning.snapshot().wallet);
@@ -681,3 +687,11 @@ const noteActivity = event => {
 };
 document.addEventListener('click', noteActivity, true);
 document.addEventListener('dragstart', noteActivity, true);
+
+document.addEventListener('ayahappearancechange',()=>{
+  if(!document.querySelector('main'))return;
+  mountSkyProgress(document.querySelector('main'),learning,surahs,surahs[chapter],key(),mode,memoryCallbacks);
+  document.querySelector('.celestial-complete')?.remove();
+});
+window.addEventListener('ayahprofilechange',resetSkyObserver);
+const backdrop=document.createElement('div');backdrop.id='sky-backdrop';backdrop.setAttribute('aria-hidden','true');backdrop.innerHTML='<i></i><i></i><i></i>';document.body.prepend(backdrop);

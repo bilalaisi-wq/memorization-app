@@ -1,0 +1,990 @@
+/* Presentation tokens. Simple's existing stylesheet stays authoritative. */
+:root {
+  --app-bg: #fafbf8;
+  --surface: #fffdf1;
+  --surface-raised: #f1f4ee;
+  --text: #293b35;
+  --muted: #657963;
+  --accent: #477d69;
+  --border: #c9d9bf;
+  --focus: #b8894d;
+  --success: #477d69;
+}
+:root[data-theme="night-sky"] {
+  color-scheme: dark;
+  --app-bg: #070a20;
+  --surface: #101630;
+  --surface-raised: #182044;
+  --text: #f7f8ff;
+  --muted: #bcc6e4;
+  --accent: #aaa2ff;
+  --border: #4d5084;
+  --focus: #7de2ff;
+  --success: #8ee5df;
+  --error: #ffb2af;
+  --green: #aaa2ff;
+  --ink: #f7f8ff;
+}
+:root[data-theme="night-sky"] body {
+  background:
+    radial-gradient(ellipse at 80% 3%, #30216b80, transparent 43%),
+    radial-gradient(ellipse at 20% 45%, #18295c60, transparent 48%),
+    var(--app-bg);
+  color: var(--text);
+  isolation: isolate;
+}
+#sky-backdrop {
+  display: none;
+}
+:root[data-theme="night-sky"] #sky-backdrop {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("/night-sky/stars.svg") repeat;
+  opacity: 0.65;
+}
+#sky-backdrop i {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #dbe5ff;
+  border-radius: 50%;
+  box-shadow: 0 0 9px #bbaaff;
+  animation: sky-twinkle 8s ease-in-out infinite;
+}
+#sky-backdrop i:nth-child(1) {
+  top: 6%;
+  left: 34%;
+}
+#sky-backdrop i:nth-child(2) {
+  top: 23%;
+  left: 93%;
+  animation-delay: 3s;
+}
+#sky-backdrop i:nth-child(3) {
+  top: 72%;
+  left: 18%;
+  animation-delay: 5s;
+}
+:root[data-theme="night-sky"]
+  :is(h1, h2, h3, h4, strong, legend, label, button) {
+  color: var(--text);
+}
+:root[data-theme="night-sky"]
+  :is(
+    p,
+    small,
+    footer,
+    .eyebrow,
+    .section-label,
+    .breadcrumb,
+    .surah-tag,
+    .selected-count,
+    .sequence-hint,
+    .builder-footer,
+    .word-bank-heading,
+    .daily,
+    .surah-heading,
+    .nav-label,
+    .surah-label,
+    .sidebar-sub,
+    .sidebar-quote,
+    .progress-summary,
+    .repeat-label,
+    .control-fields,
+    .bottom-row,
+    .bank-empty,
+    .tutorial-sandbox-label,
+    .art-caption,
+    .mastery-art-title,
+    .recording-help
+  ) {
+  color: var(--muted);
+}
+:root[data-theme="night-sky"]
+  :is(
+    a,
+    .brand,
+    .brand-mark,
+    .brand-period,
+    .surah-arabic,
+    .sidebar-surah,
+    .ayah-number,
+    .avatar,
+    .empty-zone strong,
+    .empty-zone,
+    .word-meaning,
+    .roman
+  ) {
+  color: var(--text);
+}
+:root[data-theme="night-sky"]
+  :is(
+    .main-shell,
+    main,
+    .word-bank,
+    .word-bank-heading,
+    .builder-footer,
+    .bottom-row,
+    footer
+  ) {
+  background: transparent;
+  border-color: var(--border);
+}
+:root[data-theme="night-sky"] .sidebar {
+  background: #0b1028ed;
+  border-color: var(--border);
+  backdrop-filter: blur(12px);
+}
+:root[data-theme="night-sky"] header {
+  background: #0b1028c9;
+  border-color: #4d508466;
+  backdrop-filter: blur(12px);
+}
+:root[data-theme="night-sky"]
+  :is(
+    .nav-item,
+    .text-button,
+    .tab,
+    .gallery-tabs button,
+    .piece-arrange-controls button,
+    .lab-choice-audio,
+    .chain-slot button,
+    .falling-slots button
+  ) {
+  color: var(--muted);
+  background: transparent;
+  border-color: var(--border);
+}
+:root[data-theme="night-sky"]
+  :is(
+    .nav-item.active,
+    .tab.selected,
+    .gallery-tabs button[aria-selected="true"],
+    .confidence-check button[aria-pressed="true"],
+    .account-auth-tabs button[aria-pressed="true"]
+  ) {
+  background: #33326b;
+  color: #f7f8ff;
+  border-color: #8982d3;
+  box-shadow: inset 0 0 20px #6f5ae81a;
+}
+:root[data-theme="night-sky"]
+  :is(
+    .reference-card,
+    .builder,
+    .practice-controls,
+    .memory-summary,
+    .quest-banner,
+    .daily-intro,
+    .memory-metrics article,
+    .daily-columns > section,
+    .memory-notes,
+    .recall-intro,
+    .recall-prompt,
+    .verified-text,
+    .recall-result,
+    .recall-history,
+    .recall-recording,
+    .recording-track,
+    .chain-config,
+    .chain-reference,
+    .chain-target,
+    .chain-puzzle,
+    .chain-slot,
+    .gallery-intro,
+    .lab-intro,
+    .gallery-card,
+    .lab-game-card,
+    .lab-settings,
+    .lab-game,
+    .lab-after,
+    .goal-card,
+    .recommendation-card,
+    .streak-grid article,
+    .activity-section,
+    .achievement-card,
+    .memory-pro-tip,
+    .tutorial-welcome,
+    .tutorial-art,
+    .tutorial-word,
+    .tutorial-chain,
+    .account-dialog,
+    .experience-dialog,
+    .tutorial-dialog,
+    .goals-dialog,
+    .mastery-dialog,
+    .appearance-dialog
+  ) {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+  box-shadow: 0 8px 28px #02041326;
+}
+:root[data-theme="night-sky"]
+  :is(.reference-card:after, .reference-card:before, .quest-banner:before) {
+  opacity: 0.08;
+  color: #c8baff;
+}
+:root[data-theme="night-sky"] .page-heading {
+  position: relative;
+  min-height: 220px;
+  padding: 26px 28px 85px;
+  border: 1px solid #7062af66;
+  border-radius: 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 75% 20%, #7760ce50, transparent 65%),
+    linear-gradient(140deg, #101637, #201b4f);
+  isolation: isolate;
+}
+:root[data-theme="night-sky"] .page-heading:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url("/night-sky/horizon.svg") bottom right/cover no-repeat;
+  pointer-events: none;
+}
+:root[data-theme="night-sky"] .page-heading:after {
+  content: "☾";
+  position: absolute;
+  inset: 10px 28px auto auto;
+  font-size: 90px;
+  color: #e6e0ff;
+  text-shadow: 0 0 35px #b4a0ff88;
+  opacity: 0.85;
+  transform: rotate(-18deg);
+  pointer-events: none;
+}
+:root[data-theme="night-sky"] .page-heading h1 {
+  max-width: 75%;
+  color: var(--text);
+}
+:root[data-theme="night-sky"] :is(.primary, .primary.small) {
+  background: linear-gradient(145deg, #a69df9, #7975da);
+  color: #090e2d;
+  border-color: #c0b7ff;
+  box-shadow: 0 3px 18px #7e6eff26;
+  font-weight: 700;
+}
+:root[data-theme="night-sky"]
+  :is(
+    .explore-nav .text-button,
+    .lab-game-card,
+    .chain-step,
+    .avatar,
+    .control-icon,
+    .empty-puzzle,
+    .quest-mascot,
+    .star-score,
+    .memory-metrics article,
+    .build-actions .text-button,
+    .piece-listen
+  ) {
+  background: var(--surface-raised);
+  border-color: var(--border);
+  color: var(--text);
+}
+:root[data-theme="night-sky"]
+  :is(input:not([type="checkbox"]):not([type="range"]), select, textarea) {
+  background: #0c122d;
+  color: var(--text);
+  border-color: #767aa7;
+  accent-color: var(--accent);
+}
+:root[data-theme="night-sky"] input[type="checkbox"],
+:root[data-theme="night-sky"] input[type="range"] {
+  accent-color: var(--accent);
+}
+:root[data-theme="night-sky"]
+  :is(
+    .build-zone,
+    .lab-build,
+    .lab-bank,
+    .lab-chain-build,
+    .chain-slots,
+    .falling-stage,
+    .tutorial-build,
+    .tutorial-bank,
+    .confidence-check,
+    .goals-surahs fieldset,
+    .poetic-tafsir-content
+  ) {
+  background: #0b1128;
+  border-color: #6d71a7;
+  color: var(--muted);
+}
+:root[data-theme="night-sky"] .build-zone {
+  background-image: radial-gradient(#777cab44 0.7px, transparent 0.7px);
+}
+:root[data-theme="night-sky"]
+  :is(
+    .lab-word,
+    .lab-group,
+    .match-card,
+    .chain-lab-card,
+    .falling-block,
+    .falling-slots button,
+    .tutorial-word
+  ) {
+  background: #23264d;
+  color: var(--text);
+  border-color: #7b7cac;
+}
+:root[data-theme="night-sky"] :is(.lab-group svg path) {
+  fill: #23264d;
+  stroke: #8587c2;
+}
+:root[data-theme="night-sky"]
+  :is(
+    .lab-game-card.active,
+    .match-card.matched,
+    .falling-slots button.slot-filled
+  ) {
+  background: #29454f;
+  border-color: var(--success);
+  color: var(--text);
+}
+:root[data-theme="night-sky"]
+  :is(
+    .vanishing-line .arabic,
+    .chain-lab-card .arabic,
+    .lab-word .arabic,
+    .lab-group .arabic,
+    .match-card .arabic,
+    .reference-card [lang="ar"],
+    .verified-text [lang="ar"],
+    .chain-reference-ayah [lang="ar"],
+    .piece .arabic,
+    .gallery-card-title .arabic
+  ) {
+  color: var(--text);
+  text-shadow: none;
+}
+:root[data-theme="night-sky"] .color-0 {
+  --piece-fill: #233d3c;
+  --piece-stroke: #8ac3ac;
+  color: #d7f4e6;
+}
+:root[data-theme="night-sky"] .color-1 {
+  --piece-fill: #363053;
+  --piece-stroke: #b4a2df;
+  color: #e8dfff;
+}
+:root[data-theme="night-sky"] .color-2 {
+  --piece-fill: #213b50;
+  --piece-stroke: #8fbdd7;
+  color: #def3ff;
+}
+:root[data-theme="night-sky"] .color-3 {
+  --piece-fill: #4b3e22;
+  --piece-stroke: #d7bf7a;
+  color: #fff0c8;
+}
+:root[data-theme="night-sky"] .color-4 {
+  --piece-fill: #4b2f37;
+  --piece-stroke: #db9baf;
+  color: #ffe3e9;
+}
+:root[data-theme="night-sky"] .color-5 {
+  --piece-fill: #243858;
+  --piece-stroke: #91b1e9;
+  color: #e2edff;
+}
+:root[data-theme="night-sky"] .color-6 {
+  --piece-fill: #334226;
+  --piece-stroke: #a8c580;
+  color: #e5f4cf;
+}
+:root[data-theme="night-sky"] .color-7 {
+  --piece-fill: #492d4d;
+  --piece-stroke: #d0a0d5;
+  color: #fae1ff;
+}
+:root[data-theme="night-sky"] .color-8 {
+  --piece-fill: #204044;
+  --piece-stroke: #86cbd0;
+  color: #dbfbff;
+}
+:root[data-theme="night-sky"] .divine-gold {
+  --piece-fill: #4c3a23;
+  --piece-stroke: #e8c87d;
+  color: #ffe4aa;
+  filter: drop-shadow(0 0 8px #d6b66c35);
+}
+:root[data-theme="night-sky"] .divine-gold .arabic,
+:root[data-theme="night-sky"] .gold-sparkles {
+  color: #ffe4aa;
+}
+:root[data-theme="night-sky"] .piece :is(.roman, .word-meaning) {
+  color: inherit;
+}
+:root[data-theme="night-sky"]
+  :is(
+    .feedback,
+    .storage-warning,
+    [role="alert"],
+    .editorial-note,
+    .assistance-note,
+    .early-practice-note
+  ) {
+  color: var(--error);
+  background: #3a233544;
+  border-color: #ca8c99;
+}
+:root[data-theme="night-sky"]
+  :is(.feedback.success, .mastery-notice, .recall-result, [data-sync-status]) {
+  color: var(--success);
+  background: #152e3b;
+  border-color: #81bbc0;
+}
+:root[data-theme="night-sky"]
+  :is(.progress-track, .quest-progress, .achievement-card progress) {
+  background: #292c50;
+  accent-color: var(--accent);
+}
+:root[data-theme="night-sky"] :is(.progress-track i, .quest-progress i) {
+  background: linear-gradient(90deg, #7de2ff, #a499ff);
+}
+:root[data-theme="night-sky"] .achievement-badge {
+  background: #35305c;
+  color: #dbc7ff;
+}
+:root[data-theme="night-sky"] .locked .achievement-badge {
+  background: #212840;
+  color: #b3bdd6;
+}
+:root[data-theme="night-sky"] .activity-day {
+  background: #252b49;
+  color: var(--muted);
+}
+:root[data-theme="night-sky"] .activity-day.active {
+  background: #5d5895;
+  color: #fff;
+}
+:root[data-theme="night-sky"]
+  :is(
+    .activity-section th,
+    .activity-section td,
+    .leaderboard-list li,
+    .recall-history li
+  ) {
+  border-color: var(--border);
+}
+:root[data-theme="night-sky"] :is(dialog)::backdrop {
+  background: #030611b8;
+  backdrop-filter: blur(3px);
+}
+:root[data-theme="night-sky"] .account-dialog [data-google] {
+  background: var(--surface-raised);
+  color: var(--text);
+  border-color: var(--border);
+}
+:root[data-theme="night-sky"] .success-celebration {
+  background: #171e3ff2;
+  color: var(--text);
+  border-color: #b7b0ff;
+  padding: 12px 22px;
+  gap: 6px;
+  animation: celestial-answer 0.45s ease-out;
+}
+:root[data-theme="night-sky"] .achievement-art {
+  width: 48px;
+  height: 48px;
+  font-size: 38px;
+  line-height: 48px;
+  animation: celestial-answer 0.45s ease-out !important;
+  filter: drop-shadow(0 0 9px #acbcff66);
+}
+:root[data-theme="night-sky"] .mode-transition {
+  color: #b6acff;
+  font-size: 65px;
+}
+:root[data-theme="night-sky"] :focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+}
+:root[data-theme="night-sky"] * {
+  scrollbar-color: #5d609d #101630;
+}
+.appearance-dialog {
+  width: min(680px, calc(100% - 24px));
+  max-height: 90vh;
+  overflow: auto;
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  background: var(--surface);
+  color: var(--text);
+}
+.appearance-dialog p,
+.appearance-dialog label {
+  font-size: 16px;
+  line-height: 1.6;
+}
+.appearance-dialog label {
+  display: block;
+  margin: 22px 0;
+}
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.theme-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.5;
+  min-width: 0;
+}
+.theme-preview[aria-pressed="true"] {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.theme-preview-simple,
+.theme-preview-simple strong {
+  background: #f3f7e9 !important;
+  color: #293b35 !important;
+}
+.theme-preview-night-sky,
+.theme-preview-night-sky strong {
+  background: radial-gradient(at 75% 15%, #53408c, #101630) !important;
+  color: #f7f8ff !important;
+}
+.theme-swatch {
+  font-size: 36px;
+}
+.appearance-settings {
+  border-block: 1px solid var(--border);
+  padding: 14px 0;
+  margin: 18px 0;
+}
+.sky-view {
+  display: none;
+}
+:root[data-theme="night-sky"] .sky-view {
+  display: block;
+  margin: 24px 0;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px;
+  background: linear-gradient(140deg, #101630f5, #1b1a41f5);
+  color: var(--text);
+}
+.sky-view h2 {
+  margin: 6px 0 10px;
+}
+.sky-view p {
+  line-height: 1.65;
+}
+.sky-view button,
+.sky-view input {
+  min-height: 44px;
+}
+.sky-map-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.sky-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--muted);
+}
+.sky-legend span:before {
+  content: "○";
+  margin-right: 5px;
+}
+.sky-legend .mastered:before {
+  content: "✦";
+  color: #bcefff;
+}
+.sky-legend .inProgress:before {
+  content: "◒";
+  color: #c7b3ff;
+}
+.sky-legend .reviewDue:before {
+  content: "◇";
+  color: #ffcaac;
+}
+.constellation-map {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 330px;
+  overflow: visible;
+}
+.sky-line {
+  stroke: #454c79;
+  stroke-width: 1.3;
+  fill: none;
+}
+.sky-line.mastered {
+  stroke: #96c8ff;
+  filter: drop-shadow(0 0 3px #afaaff);
+}
+.sky-node circle {
+  fill: #151d38;
+  stroke: #8996bd;
+  stroke-width: 1.5;
+}
+.sky-node.mastered circle:not(.node-hit) {
+  fill: #cff7ff;
+  stroke: #a8d6ff;
+  filter: drop-shadow(0 0 5px #a899ff);
+}
+.sky-node.inProgress circle:not(.node-hit) {
+  fill: #5b4c8f;
+  stroke: #c4b0fa;
+}
+.sky-node.reviewDue circle:not(.node-hit) {
+  stroke: #ffd1af;
+  stroke-width: 2.5;
+  stroke-dasharray: 2 2;
+}
+.sky-node.current circle:not(.node-hit) {
+  stroke: #7de2ff;
+  stroke-width: 3;
+}
+.sky-node text {
+  fill: #edf0ff;
+  font:
+    14px Arial,
+    sans-serif;
+  text-anchor: middle;
+}
+.sky-node [data-star-key] {
+  cursor: pointer;
+}
+.sky-node:focus-visible {
+  outline: none;
+}
+.sky-node:focus-visible circle:not(.node-hit) {
+  stroke: var(--focus);
+  stroke-width: 4;
+}
+.sky-node .node-hit {
+  fill: transparent;
+  stroke: none;
+  filter: none;
+}
+.sky-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.sky-catalog {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.sky-surah-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  background: #11172f;
+  min-width: 0;
+}
+.sky-surah-card h3 {
+  font-size: 17px;
+}
+.sky-surah-card .constellation-map {
+  height: 130px;
+}
+.sky-surah-card p {
+  font-size: 14px;
+}
+.sky-surah-card.complete {
+  border-color: #9eceee;
+  box-shadow: inset 0 0 25px #7e8df01a;
+}
+.sky-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+.sky-search input {
+  max-width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.sky-ignite circle {
+  animation: celestial-ignite 0.8s ease-out;
+}
+.celestial-complete {
+  position: fixed;
+  z-index: 10001;
+  inset: auto 20px 26px auto;
+  max-width: calc(100% - 40px);
+  padding: 20px 26px;
+  background: #171c3ff5;
+  border: 1px solid #aea3ef;
+  border-radius: 20px;
+  color: #f7f8ff;
+  box-shadow: 0 0 40px #7b65d635;
+  animation: celestial-enter 0.25s ease-out;
+}
+.celestial-complete strong {
+  font-size: 20px;
+}
+.celestial-complete p {
+  color: #c9d1ee;
+}
+.celestial-complete:before {
+  content: "✦";
+  display: block;
+  font-size: 40px;
+  color: #ace4ff;
+  animation: celestial-shoot 1.8s ease-out;
+  pointer-events: none;
+}
+@keyframes sky-twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes celestial-answer {
+  0% {
+    opacity: 0.4;
+    filter: drop-shadow(0 0 14px #afa9ff99);
+  }
+  100% {
+    opacity: 1;
+    filter: none;
+  }
+}
+@keyframes celestial-ignite {
+  0% {
+    opacity: 0.3;
+    stroke-width: 6;
+  }
+  100% {
+    opacity: 1;
+    stroke-width: 1.5;
+  }
+}
+@keyframes celestial-enter {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes celestial-shoot {
+  0% {
+    translate: -35px -15px;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+html[data-celestial-motion="reduced"]
+  :is(
+    #sky-backdrop i,
+    .sky-ignite circle,
+    .celestial-complete,
+    .celestial-complete:before
+  ),
+html[data-sky-visible="false"] #sky-backdrop i {
+  animation: none !important;
+}
+:root[data-theme="night-sky"][data-celestial-motion="reduced"]
+  :is(.achievement-art, .success-celebration, .mode-transition) {
+  animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sky-ignite circle,
+  .celestial-complete,
+  .celestial-complete:before,
+  #sky-backdrop i {
+    animation: none !important;
+  }
+  :root[data-theme="night-sky"] .achievement-art {
+    animation: none !important;
+  }
+}
+@media (prefers-contrast: more) {
+  :root[data-theme="night-sky"] {
+    --border: #9da7d8;
+    --muted: #dde4ff;
+    --surface: #0c1128;
+    --surface-raised: #192143;
+  }
+  :root[data-theme="night-sky"] .sky-line {
+    stroke: #929fc8;
+  }
+}
+@media (max-width: 760px) {
+  .theme-options {
+    grid-template-columns: 1fr;
+  }
+  .sky-catalog {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  :root[data-theme="night-sky"] .page-heading {
+    padding: 22px 20px 88px;
+    min-height: 220px;
+  }
+  :root[data-theme="night-sky"] .page-heading:after {
+    font-size: 65px;
+    right: 18px;
+  }
+  .sky-view {
+    padding: 16px;
+  }
+  .sky-node text {
+    font-size: 16px;
+  }
+}
+@media (max-width: 460px) {
+  .sky-catalog {
+    grid-template-columns: 1fr;
+  }
+  :root[data-theme="night-sky"] .sky-view {
+    padding: 16px;
+  }
+  :root[data-theme="night-sky"] .page-heading h1 {
+    max-width: 80%;
+  }
+}
+.celestial-complete {
+  pointer-events: none;
+}
+.celestial-complete button {
+  pointer-events: auto;
+}
+:root[data-theme="night-sky"] [data-theme-choice="simple"] {
+  color: #293b35;
+}
+
+:root[data-theme="night-sky"]
+  :is(
+    .tabs,
+    .ayah-number,
+    .level-step,
+    .level-active,
+    .quest-progress-label,
+    .recall-grade,
+    .recall-history,
+    .recall-grades,
+    .recording-player
+  ) {
+  background: var(--surface-raised);
+  border-color: var(--border);
+  color: var(--text);
+}
+:root[data-theme="night-sky"] .ayah-item {
+  color: var(--muted);
+}
+:root[data-theme="night-sky"] .ayah-item.current {
+  background: #33326b;
+  color: var(--text);
+}
+[data-active-constellation] {
+  overflow-x: auto;
+}
+.constellation-map.dense {
+  min-width: 640px;
+  max-height: none;
+}
+@media (max-width: 600px) {
+  .constellation-map:not(.dense) .node-hit {
+    r: 56px;
+  }
+}
+:root[data-theme="night-sky"] body:has(.falling-stage) #sky-backdrop i {
+  animation: none;
+}
+:root[data-theme="night-sky"] .nav-pill {
+  background: #292f55;
+  color: var(--muted);
+}
+:root[data-theme="night-sky"] [data-tone="error"] {
+  color: var(--error);
+}
+:root[data-theme="night-sky"] progress::-webkit-progress-bar {
+  background: #292f55;
+  border-radius: 6px;
+}
+:root[data-theme="night-sky"] progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #7de2ff, #a499ff);
+  border-radius: 6px;
+}
+.sky-view .celestial-complete {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  margin-top: 18px;
+  max-width: 100%;
+  width: fit-content;
+  pointer-events: auto;
+}
+:root[data-theme="night-sky"] .celestial-inline-success {
+  position: relative;
+  inset: auto;
+  transform: none;
+  margin: 12px 0;
+  max-width: 100%;
+  width: fit-content;
+  flex-direction: row;
+  gap: 12px;
+  box-shadow: none;
+}
+:root[data-theme="night-sky"]
+  :is(
+    .chain-choices label,
+    .falling-scroll,
+    .vanishing-line,
+    .lab-opening,
+    .recall-grades button
+  ) {
+  background: var(--surface-raised);
+  color: var(--text);
+  border-color: var(--border);
+}
+:root[data-theme="night-sky"] .recall-grades button[data-recall-grade="Again"] {
+  background: #3d2638;
+  color: #ffcccc;
+  border-color: #b27e99;
+}
+:root[data-theme="night-sky"] .recall-grades button[data-recall-grade="Good"] {
+  background: #23404b;
+  color: #d4fff4;
+  border-color: #84bab9;
+}
+:root[data-theme="night-sky"] .recall-grades button[data-recall-grade="Easy"] {
+  background: #343160;
+  color: #eee4ff;
+  border-color: #b1a4ed;
+}

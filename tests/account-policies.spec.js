@@ -22,6 +22,28 @@ test("database policies isolate accounts and enforce opt-in, redaction, score ca
       "insert into public.learner_progress(user_id,payload) values ($1,$2)",
       [a, JSON.stringify({ "ayah-goals-v1": "{}" })],
     );
+    const appearanceDoc = JSON.stringify({
+      version: 1,
+      theme: "night-sky",
+      reduceEffects: true,
+      updatedAt: new Date().toISOString(),
+    });
+    await db.query(
+      "insert into public.learner_appearance(user_id,settings) values ($1,$2)",
+      [a, appearanceDoc],
+    );
+    await assert.rejects(
+      db.query(
+        "insert into public.learner_appearance(user_id,settings) values ($1,$2)",
+        [b, appearanceDoc],
+      ),
+    );
+    await assert.rejects(
+      db.query(
+        "update public.learner_appearance set settings=$1 where user_id=$2",
+        [JSON.stringify({}), a],
+      ),
+    );
     const progressDoc = JSON.stringify({ "ayah-goals-v1": '{"version":1}' });
     assert.equal(
       (
@@ -60,6 +82,14 @@ test("database policies isolate accounts and enforce opt-in, redaction, score ca
     assert.equal(
       (await db.query("select * from public.learner_progress")).rows.length,
       0,
+    );
+    assert.equal(
+      (await db.query("select * from public.learner_appearance")).rows.length,
+      0,
+    );
+    await db.query(
+      "insert into public.learner_appearance(user_id,settings) values ($1,$2)",
+      [b, appearanceDoc],
     );
     assert.equal(
       (
@@ -129,6 +159,7 @@ test("database policies isolate accounts and enforce opt-in, redaction, score ca
       1,
     );
     await assert.rejects(db.query("select * from public.learner_progress"));
+    await assert.rejects(db.query("select * from public.learner_appearance"));
     await assert.rejects(
       db.query("select * from public.leaderboard_preferences"),
     );

@@ -126,3 +126,7 @@ See [account setup, privacy boundaries, and launch requirements](docs/accounts-a
 ## Persistent login and device sync
 
 The website now offers **Create account**, returning-user **Sign in**, and **Continue with Google**. Sessions persist on each device until sign-out; optional automatic private sync and revision conflicts protect progress across devices. Guest progress stays separate. See [the exact Supabase/Railway activation steps](docs/activate-accounts.md) and run [the complete account setup SQL](supabase/SETUP_ACCOUNTS.sql) in the project's SQL Editor. Hosted provider/admin settings and real email delivery still require activation and live verification.
+
+## Optional Night Sky theme
+
+Open Encouragement settings → Appearance to preview and apply Night Sky; Simple remains the default. See the [theme guide](docs/night-sky.md), [screen captures](docs/night-sky-screenshots/README.md), and optional owner-only [appearance migration](supabase/migrations/20261020_appearance.sql) for cross-device preferences.

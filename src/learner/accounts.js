@@ -143,10 +143,12 @@ function showAccount(learning) {
   const run = async (action) => {
     const buttons = [...dialog.querySelectorAll("button")];
     buttons.forEach((b) => (b.disabled = true));
+    status.dataset.tone = "info";
     try {
       await action();
     } catch (e) {
       status.textContent = e.message || "The request could not be completed.";
+      status.dataset.tone = "error";
     } finally {
       buttons.forEach((b) => (b.disabled = false));
     }
@@ -353,7 +355,7 @@ function showAccount(learning) {
         return;
       const { error } = await client.rpc("delete_my_account");
       if (error) throw error;
-      for (const key of progressKeys) profileStorage.removeItem(key);
+      for (const key of [...progressKeys,"ayah-appearance-v1","ayah-sky-celebrations-v1"]) profileStorage.removeItem(key);
       await client.auth.signOut({ scope: "local" });
       location.reload();
     });
@@ -393,3 +395,5 @@ async function showLeaderboard() {
       "The shared leaderboard could not load. Your personal learning still works.";
   }
 }
+
+export const appearanceAccount = () => ({client, userId:user?.id || null});

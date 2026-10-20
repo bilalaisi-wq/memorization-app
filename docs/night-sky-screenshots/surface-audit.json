@@ -1,0 +1,166 @@
+[
+  {
+    "screen": "night-practice",
+    "bright": []
+  },
+  {
+    "screen": "night-partial-puzzle",
+    "bright": []
+  },
+  {
+    "screen": "night-puzzle-quest",
+    "bright": []
+  },
+  {
+    "screen": "night-puzzle-success",
+    "bright": []
+  },
+  {
+    "screen": "night-puzzle-quest-level-2",
+    "bright": []
+  },
+  {
+    "screen": "night-puzzle-quest-level-3",
+    "bright": []
+  },
+  {
+    "screen": "night-active-recall",
+    "bright": []
+  },
+  {
+    "screen": "night-ayah-chain",
+    "bright": []
+  },
+  {
+    "screen": "night-lab-falling",
+    "bright": []
+  },
+  {
+    "screen": "night-lab-vanishing",
+    "bright": []
+  },
+  {
+    "screen": "night-lab-jigsaw",
+    "bright": []
+  },
+  {
+    "screen": "night-lab-match",
+    "bright": []
+  },
+  {
+    "screen": "night-lab-chain",
+    "bright": []
+  },
+  {
+    "screen": "night-lab-continue",
+    "bright": []
+  },
+  {
+    "screen": "night-lab-detective",
+    "bright": []
+  },
+  {
+    "screen": "night-lab-error",
+    "bright": []
+  },
+  {
+    "screen": "night-match-audio",
+    "bright": []
+  },
+  {
+    "screen": "night-match-continuation",
+    "bright": []
+  },
+  {
+    "screen": "night-gallery",
+    "bright": []
+  },
+  {
+    "screen": "night-poetic-tafsir",
+    "bright": []
+  },
+  {
+    "screen": "night-daily",
+    "bright": []
+  },
+  {
+    "screen": "night-achievements",
+    "bright": []
+  },
+  {
+    "screen": "night-activity",
+    "bright": []
+  },
+  {
+    "screen": "night-goals",
+    "bright": []
+  },
+  {
+    "screen": "night-settings",
+    "bright": []
+  },
+  {
+    "screen": "night-theme-chooser",
+    "bright": []
+  },
+  {
+    "screen": "night-tutorial",
+    "bright": []
+  },
+  {
+    "screen": "night-signup",
+    "bright": []
+  },
+  {
+    "screen": "night-signin-loading",
+    "bright": []
+  },
+  {
+    "screen": "night-signin-error",
+    "bright": []
+  },
+  {
+    "screen": "night-self-assessment",
+    "bright": []
+  },
+  {
+    "screen": "night-compare",
+    "bright": []
+  },
+  {
+    "screen": "night-confirmed-completion",
+    "bright": []
+  },
+  {
+    "screen": "night-long-surah",
+    "bright": []
+  },
+  {
+    "screen": "night-tablet",
+    "bright": []
+  },
+  {
+    "screen": "night-phone-long-surah",
+    "bright": []
+  },
+  {
+    "screen": "night-phone-practice",
+    "bright": []
+  },
+  {
+    "screen": "night-phone-daily",
+    "bright": []
+  },
+  {
+    "screen": "night-phone-200-percent",
+    "bright": []
+  },
+  {
+    "screen": "night-account",
+    "bright": []
+  },
+  {
+    "screen": "night-leaderboard",
+    "bright": []
+  }
+]

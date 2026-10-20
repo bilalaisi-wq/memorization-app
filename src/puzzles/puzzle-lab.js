@@ -73,6 +73,7 @@ export function mountPuzzleLab(
     pauseGame = () => {};
   const say = (text) => {
     status.textContent = text;
+    status.dataset.tone = "info";
   };
   const stopAudio = () => {
     studyAudioStop("lab");
@@ -133,6 +134,7 @@ export function mountPuzzleLab(
     if (done) return;
     mistakes++;
     say(message || "Try another arrangement. No points are lost.");
+    status.dataset.tone = "error";
   };
   const finish = () => {
     if (done) return;

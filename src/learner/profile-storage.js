@@ -13,6 +13,7 @@ export const scopedStorage = (id) => ({
 });
 export const selectProfile = (id) => {
   owner = id || null;
+  if(typeof window!=="undefined")window.dispatchEvent(new CustomEvent("ayahprofilechange",{detail:{owner}}));
 };
 export const profileKey = (key) => (owner ? `ayah-user:${owner}:${key}` : key);
 export const profileStorage = {
