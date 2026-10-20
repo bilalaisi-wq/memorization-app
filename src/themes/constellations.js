@@ -277,7 +277,7 @@ export function mountSkyProgress(
       drawCatalog();
     };
   }
-  const anchor = main.querySelector(".explore-nav");
+  const anchor = main.querySelector(".site-menu") || main.querySelector(".explore-nav");
   anchor.after(root);
   draw();
   if (changes.completed.length)

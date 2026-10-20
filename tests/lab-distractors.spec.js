@@ -1,3 +1,4 @@
+import { menu } from "./menu-helper.js";
 import { test, expect } from "@playwright/test";
 import { existsSync } from "node:fs";
 import { surahs } from "../src/data.js";
@@ -24,7 +25,7 @@ const open = async (page, game = "falling") => {
     };
   });
   await page.goto("/");
-  await page.locator("#nav-lab").click();
+  await (await menu(page)).locator("#nav-lab").click();
   if (game !== "falling") await page.locator(`[data-game="${game}"]`).click();
 };
 const noReward = async (page) => {

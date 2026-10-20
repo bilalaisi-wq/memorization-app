@@ -36,3 +36,22 @@ Automated tests exercise the real Supabase client against mocked provider respon
 The cloud execution environment's proxy initially denied requests to the Supabase and Railway hosts. Their domains were added to the saved environment draft; review/save and **publish the environment settings** to apply that configuration before retrying live checks. Saving a draft alone does not enable current-instance networking.
 
 See [privacy/deployment requirements](accounts-and-privacy.md) for adult/parent account restrictions, sensitive learning data, retention and operator-specific notices.
+
+## Google “Access blocked / invalid request” troubleshooting
+
+The browser uses Supabase PKCE; Supabase, rather than Railway, exchanges the Google authorization code. The Google Cloud **Web application** client configured in Supabase must therefore list exactly:
+
+`https://ycgyuatjgdbhiakqourg.supabase.co/auth/v1/callback`
+
+under **Authorized redirect URIs** (not JavaScript origins). Railway's URL belongs in Supabase's allowed return URLs, and its origin without the trailing slash belongs in Google's JavaScript origins. Verify that the client ID in Supabase is the same Web client whose redirect list you edit. Save changes before retrying in a fresh sign-in attempt. Never use an Android/Desktop client here.
+
+- `redirect_uri_mismatch`: correct the exact callback URI on that Google client.
+- `invalid_client` / `deleted_client`: replace the provider credentials directly in Supabase with a valid Web client pair.
+- `access_denied` / testing-only access: add the account as a consent-screen test user, or publish the consent configuration as appropriate.
+- `invalid_request`: expand Google's error details to identify the rejected parameter; the generic headline alone does not identify the cause.
+
+The app no longer adds duplicate Google scopes and requests account selection explicitly. A read-only live check on 2026-10-20 confirmed Supabase redirects to a configured Google client with the expected Supabase callback. The execution proxy blocked opening the Google response, so end-to-end Google authorization is not verified. A browser publishable key cannot edit Google client settings or Supabase provider secrets; these require the owner's provider dashboards.
+
+## Owner developer view
+
+After Supabase verifies the signed-in user through `auth.getUser()`, the confirmed email `bilalaisi@gmail.com` enables the Developer mode menu entry and editorial status notes. Guests and other accounts do not receive these UI notes. No password is hard-coded and entering an email alone does not activate the view. This is a presentation-only developer workspace, not server authorization: it cannot administer accounts, modify private learner rows or publish content. Future privileged tools must use server-checked roles/RLS before they are added.

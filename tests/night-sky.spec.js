@@ -1,3 +1,4 @@
+import { menu } from "./menu-helper.js";
 import { test, expect } from "@playwright/test";
 import { createLearningStore } from "../src/learning-store.js";
 import { surahs } from "../src/data.js";
@@ -14,7 +15,7 @@ const night = (page) =>
     appearance,
   );
 async function chooser(page) {
-  await page
+  await (await menu(page))
     .getByRole("button", { name: "Encouragement settings", exact: true })
     .click();
   await page.getByRole("button", { name: "Choose theme", exact: true }).click();
@@ -142,7 +143,7 @@ test("real retained records light exactly one star per ayah; puzzle wins do not 
     for (const [k, v] of Object.entries(values)) localStorage.setItem(k, v);
   }, retainedFixture());
   await page.goto("/");
-  await page.getByRole("button", { name: "My plan & achievements" }).click();
+  await (await menu(page)).getByRole("button", { name: "My plan & achievements" }).click();
   const card = page.locator('[data-sky-surah="108"]');
   // The catalogue is paginated: search brings the saved surah into view.
   await page.locator("#sky-surah-search").fill("108");
@@ -183,7 +184,7 @@ test("all core modes and all seven Lab games use dark surfaces without changing 
         page.locator('.reference-card [lang="ar"]').first(),
       ).toHaveText(text);
   }
-  await page.locator("#nav-lab").click();
+  await (await menu(page)).locator("#nav-lab").click();
   for (const game of [
     "falling",
     "vanishing",
@@ -201,7 +202,7 @@ test("all core modes and all seven Lab games use dark surfaces without changing 
     ).toBe("rgb(16, 22, 48)");
     await expect(page.locator(".lab-game")).toBeVisible();
   }
-  await page.locator("#nav-gallery").click();
+  await (await menu(page)).locator("#nav-gallery").click();
   await page.getByRole("tab", { name: "Poetic Tafsir", exact: true }).click();
   await expect(page.locator("#gallery-poetry-panel")).toBeVisible();
   await page.locator("#nav-daily").evaluate((el) => el.click());

@@ -1,3 +1,4 @@
+import { menu } from "./menu-helper.js";
 import { test, expect } from "@playwright/test";
 import { surahs } from "../src/data.js";
 import { createLearningStore, LEARNING_KEY } from "../src/learning-store.js";
@@ -48,7 +49,7 @@ async function seed(page, storage) {
 }
 const openLab = async (page) => {
   await page.goto("/");
-  await page.locator("#nav-lab").click();
+  await (await menu(page)).locator("#nav-lab").click();
 };
 const finishFalling = async (page, keyboard = false) => {
   const n = await page.locator("[data-slot]").count();
@@ -213,7 +214,7 @@ test("Gallery shows stable ayah unlocks, missing-image fallback and persisted fu
   const fixture = reviewed(["108:1", "108:2", "108:3"]);
   await seed(page, fixture.storage);
   await page.goto("/");
-  await page.locator("#nav-gallery").click();
+  await (await menu(page)).locator("#nav-gallery").click();
   await expect(page.locator("[data-gallery-surah]")).toHaveCount(13);
   const card = page.locator('[data-gallery-surah="108"]');
   await expect(card).toContainText("3 / 3 sections revealed");
@@ -225,7 +226,7 @@ test("Gallery shows stable ayah unlocks, missing-image fallback and persisted fu
   await page.locator("#skip-reveal").click();
   await expect(page.locator("dialog")).toBeVisible();
   await expect(page.locator("dialog")).toContainText(
-    "awaiting source verification",
+    "Keep building your memory",
   );
   await expect(page.locator("dialog a")).toHaveCount(2);
   await page.getByRole("button", { name: "Close story" }).click();
@@ -237,7 +238,7 @@ test("Gallery shows stable ayah unlocks, missing-image fallback and persisted fu
     ),
   ).toBe(3);
   await page.reload();
-  await page.locator("#nav-gallery").click();
+  await (await menu(page)).locator("#nav-gallery").click();
   await expect(
     page.locator('[data-gallery-surah="108"] .art-complete'),
   ).toBeVisible();
@@ -251,7 +252,7 @@ test("reduced motion disables reveal animations and reviews preserve FSRS dates"
   const before = fixture.learning.getRecord("1:2").memory.nextReview;
   await seed(page, fixture.storage);
   await page.goto("/");
-  await page.locator("#nav-gallery").click();
+  await (await menu(page)).locator("#nav-gallery").click();
   await page.locator('[data-artwork="1"]').click();
   await expect(page.locator('[data-art-ayah="2"]')).toHaveClass(/art-open/);
   await expect(page.locator("[data-status]")).toContainText("Ayah 2");
@@ -312,7 +313,7 @@ test("Falling Words supports RTL keyboard placement, retry feedback and daily XP
     ),
   ).toBe(2);
   await page.reload();
-  await page.locator("#nav-lab").click();
+  await (await menu(page)).locator("#nav-lab").click();
   await expect(page.locator(".lab-recommendation")).toContainText(
     "order practice mistakes",
   );
@@ -430,7 +431,7 @@ test.describe("touch layout", () => {
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
-    await page.locator("#nav-gallery").tap();
+    await (await menu(page)).locator("#nav-gallery").tap();
     await expect(page.locator("[data-gallery-surah]")).toHaveCount(13);
     expect(
       await page.evaluate(
@@ -541,7 +542,7 @@ test("leaving a timed Quest peek does not reset an in-progress Lab round", async
   await page.goto("/");
   await page.locator('[data-mode="quiz"]').click();
   await page.locator("#peek-words").click();
-  await page.locator("#nav-lab").click();
+  await (await menu(page)).locator("#nav-lab").click();
   while (
     Number(await page.locator(".falling-block").getAttribute("data-index")) >= 4
   )

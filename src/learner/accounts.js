@@ -1,3 +1,4 @@
+import { setDeveloperUser } from "../developer/access.js";
 import { accountDefaults } from "./account-config.js";
 import { CloudProgress } from "./cloud-progress.js";
 import {
@@ -75,6 +76,7 @@ export async function initializeAccounts(config = {}) {
       if (result.error) throw result.error;
       user = result.data.user;
     }
+    setDeveloperUser(user);
     selectProfile(user?.id);
     if (user) {
       cloud = new CloudProgress(client, user.id, scopedStorage(user.id), () => {
@@ -101,6 +103,7 @@ export async function initializeAccounts(config = {}) {
     accountError =
       "The account service is unavailable. Guest learning remains available.";
     user = null;
+    setDeveloperUser(null);
     selectProfile(null);
   }
 }
@@ -228,7 +231,8 @@ function showAccount(learning) {
         const { error } = await client.auth.signInWithOAuth({
           provider: "google",
           options: {
-            scopes: "openid email",
+            // Supabase supplies Google email/profile scopes. Avoid duplicate scopes.
+            queryParams: { prompt: "select_account" },
             redirectTo:
               import.meta.env.VITE_AUTH_REDIRECT_URL || accountDefaults.siteUrl,
           },

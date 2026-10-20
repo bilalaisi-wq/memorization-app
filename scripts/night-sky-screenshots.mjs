@@ -1,3 +1,4 @@
+async function menu(page) { const toggle=page.locator('#site-menu-toggle'); if(await toggle.getAttribute('aria-expanded')==='false') await toggle.click(); return page; }
 // QA-only screenshots. All sample progress is generated through the production learning store.
 // Run with Vite already serving: node scripts/night-sky-screenshots.mjs [internal base URL]
 import { chromium } from "@playwright/test";
@@ -99,10 +100,10 @@ async function shot(name, locator = null, target = page) {
 await page.goto(base);
 await page.locator(".reference-card").waitFor();
 await shot("simple-practice");
-await page.getByRole("button", { name: "My plan & achievements" }).click();
+await (await menu(page)).getByRole("button", { name: "My plan & achievements" }).click();
 await shot("simple-daily");
 await page.locator("#nav-learn").evaluate((el) => el.click());
-await page.locator("#nav-encouragement").click();
+await (await menu(page)).locator("#nav-encouragement").click();
 await page.getByRole("button", { name: "Choose theme", exact: true }).click();
 await page.locator('[data-theme-choice="night-sky"]').click();
 await page.locator("[data-reduce-celestial]").check();
@@ -129,7 +130,7 @@ await page.locator('[data-mode="sequence"]').click();
 await page.locator("#chain-all").click();
 await page.locator("#chain-start").click();
 await shot("night-ayah-chain");
-await page.locator("#nav-lab").click();
+await (await menu(page)).locator("#nav-lab").click();
 await page.locator("#lab-mute").click();
 for (const game of [
   "falling",
@@ -150,27 +151,27 @@ for (const type of ["audio", "continuation"]) {
   await page.locator("#match-type").selectOption(type);
   await shot(`night-match-${type}`);
 }
-await page.locator("#nav-gallery").click();
+await (await menu(page)).locator("#nav-gallery").click();
 await shot("night-gallery");
 await page.getByRole("tab", { name: "Poetic Tafsir", exact: true }).click();
 await shot("night-poetic-tafsir");
-await page.getByRole("button", { name: "My plan & achievements" }).click();
+await (await menu(page)).getByRole("button", { name: "My plan & achievements" }).click();
 await shot("night-daily");
 await shot("night-achievements", page.locator(".achievements-section"));
 await shot("night-activity", page.locator(".activity-section"));
 await page.locator("[data-edit-goals]").click();
 await shot("night-goals");
 await page.keyboard.press("Escape");
-await page.locator("#nav-encouragement").click();
+await (await menu(page)).locator("#nav-encouragement").click();
 await shot("night-settings");
 await page.getByRole("button", { name: "Choose theme", exact: true }).click();
 await shot("night-theme-chooser");
 await page.keyboard.press("Escape");
 await page.locator(".experience-dialog [data-close]").click();
-await page.locator("#nav-tutorial").click();
+await (await menu(page)).locator("#nav-tutorial").click();
 await shot("night-tutorial");
 await page.keyboard.press("Escape");
-await page.getByRole("button", { name: "Sign in", exact: true }).click();
+await (await menu(page)).getByRole("button", { name: "Sign in", exact: true }).click();
 await page.locator('[data-auth-mode="signup"]').click();
 await shot("night-signup");
 let finishRequest, requestSeen;
@@ -227,7 +228,7 @@ await page.setViewportSize({ width: 390, height: 844 });
 await shot("night-phone-long-surah");
 await page.locator("#surah-picker").selectOption("0");
 await shot("night-phone-practice");
-await page.getByRole("button", { name: "My plan & achievements" }).click();
+await (await menu(page)).getByRole("button", { name: "My plan & achievements" }).click();
 await shot("night-phone-daily");
 await page.evaluate(() => (document.documentElement.style.zoom = "2"));
 await shot("night-phone-200-percent");
@@ -246,7 +247,7 @@ await accountPage.route('https://ycgyuatjgdbhiakqourg.supabase.co/**',route=>{
  const path=new URL(route.request().url()).pathname;
  return route.fulfill({headers:{'access-control-allow-origin':'*'},json:path.endsWith('/user')?qaUser:route.request().method()==='GET'||path.endsWith('get_weekly_leaderboard')?[]:null});
 });
-await accountPage.goto(base);await accountPage.getByRole('button',{name:'My account',exact:true}).click();await shot('night-account',null,accountPage);await accountPage.keyboard.press('Escape');await accountPage.getByRole('button',{name:'Leaderboard',exact:true}).click();await accountPage.getByText('No learners have opted in this week yet.').waitFor();await shot('night-leaderboard',null,accountPage);
+await accountPage.goto(base);await (await menu(accountPage)).getByRole('button',{name:'My account',exact:true}).click();await shot('night-account',null,accountPage);await accountPage.keyboard.press('Escape');await (await menu(accountPage)).getByRole('button',{name:'Leaderboard',exact:true}).click();await accountPage.getByText('No learners have opted in this week yet.').waitFor();await shot('night-leaderboard',null,accountPage);
 await writeFile(
   `${out}/README.md`,
   `# Screenshot evidence\n\nGenerated with scripts/night-sky-screenshots.mjs using Chromium. These are isolated QA browser records, not real user activity or production defaults. Sample retained states are produced through the actual FSRS store on distinct days; the completion screenshot follows an actual self-assessed Good grade that makes the last ayah retained. No mockup Qur'an text or invented production achievements is used. Audio is muted in Lab captures. Reduced motion is enabled for stable screenshots.\n\n${manifest.map((name) => `- [${name}](${name}.jpg)`).join("\n")}\n`,

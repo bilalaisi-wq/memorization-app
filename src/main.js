@@ -1,3 +1,4 @@
+import { mountSiteMenu } from "./ui/site-menu.js";
 import { initializeAppearance } from "./themes/appearance.js";
 import { mountSkyProgress, resetSkyObserver } from "./themes/constellations.js";
 import { initializeAccounts, mountAccountControls, appearanceAccount } from "./learner/accounts.js";
@@ -292,6 +293,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
 
     gallery: memoryCallbacks.onGallery,
   });
+  mountSiteMenu(document.querySelector("main"));
 }
 function stop() {
   stopPieceDrag();

@@ -1,3 +1,4 @@
+import { menu } from "./menu-helper.js";
 import { test, expect } from "@playwright/test";
 import { movePiece } from "../src/ui/piece-drag.js";
 import { LEARNING_KEY } from "../src/learning-store.js";
@@ -89,7 +90,7 @@ test("tutorial is optional, skippable, restartable and demonstrations never awar
     .click();
   await page.reload();
   await expect(page.locator(".tutorial-welcome")).toHaveCount(0);
-  await page.locator("#nav-tutorial").click();
+  await (await menu(page)).locator("#nav-tutorial").click();
   await expect(page.locator(".tutorial-dialog")).toBeVisible();
   const before = await page.evaluate(
     (k) => localStorage.getItem(k),
@@ -105,7 +106,7 @@ test("tutorial is optional, skippable, restartable and demonstrations never awar
   expect(
     await page.evaluate((k) => localStorage.getItem(k), LEARNING_KEY),
   ).toBe(before);
-  await page.locator("#nav-tutorial").click();
+  await (await menu(page)).locator("#nav-tutorial").click();
   await page.keyboard.press("Escape");
   await expect(page.locator(".tutorial-dialog")).toHaveCount(0);
 });
@@ -120,7 +121,7 @@ test("tutorial sandbox avoids exposing the ayah in an unfinished independent ass
     (k) => localStorage.getItem(k),
     LEARNING_KEY,
   );
-  await page.locator("#nav-tutorial").click();
+  await (await menu(page)).locator("#nav-tutorial").click();
   await expect(page.locator(".tutorial-demo")).toContainText("Al-Ikhlas");
   await page.locator("#skip-tutorial").click();
   expect(
@@ -151,7 +152,7 @@ test("feedback preferences and custom uploaded audio persist across reload and c
   page,
 }) => {
   await page.goto("/");
-  await page.locator("#nav-encouragement").click();
+  await (await menu(page)).locator("#nav-encouragement").click();
   await page.locator("#success-sound").uncheck();
   await page.locator("#experience-motion").uncheck();
   await page.locator("#success-upload").setInputFiles({
@@ -163,7 +164,7 @@ test("feedback preferences and custom uploaded audio persist across reload and c
     "saved in this browser",
   );
   await page.reload();
-  await page.locator("#nav-encouragement").click();
+  await (await menu(page)).locator("#nav-encouragement").click();
   await expect(page.locator("#success-sound")).not.toBeChecked();
   await expect(page.locator("#experience-motion")).not.toBeChecked();
   await expect(page.locator("#success-file")).toHaveText("my-chime.wav");
@@ -184,7 +185,7 @@ test("correct challenges celebrate without duplicating XP; motion can be disable
     (k) => JSON.parse(localStorage.getItem(k)).wallet.xp,
     LEARNING_KEY,
   );
-  await page.locator("#nav-encouragement").click();
+  await (await menu(page)).locator("#nav-encouragement").click();
   await page.locator("#success-sound").uncheck();
   await page.locator("#experience-motion").uncheck();
   await page.locator("#preview-success").click();
@@ -229,7 +230,7 @@ test("the default chime and uploaded clip use real Web Audio, with no sound when
     };
   });
   await page.goto("/");
-  await page.locator("#nav-encouragement").click();
+  await (await menu(page)).locator("#nav-encouragement").click();
   await page.locator("#preview-success").click();
   await expect.poll(() => page.evaluate(() => window.oscillators)).toBe(3);
   await page
@@ -273,7 +274,7 @@ test("an app-wide configured sound can replace the synthesized chime", async ({
   const downloaded = page.waitForResponse("**/feedback-audio/teacher.wav");
   await page.goto("/");
   await downloaded;
-  await page.locator("#nav-encouragement").click();
+  await (await menu(page)).locator("#nav-encouragement").click();
   await page.locator("#preview-success").click();
   await expect.poll(() => page.evaluate(() => window.buffers)).toBe(1);
 });

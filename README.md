@@ -130,3 +130,7 @@ The website now offers **Create account**, returning-user **Sign in**, and **Con
 ## Optional Night Sky theme
 
 Open Encouragement settings → Appearance to preview and apply Night Sky; Simple remains the default. See the [theme guide](docs/night-sky.md), [screen captures](docs/night-sky-screenshots/README.md), and optional owner-only [appearance migration](supabase/migrations/20261020_appearance.sql) for cross-device preferences.
+
+## Site menu and developer view
+
+The **☰ Menu** button expands a scrollable column of tools and settings, closes after selecting an item, and supports Escape. Confirmed owner sign-in (`bilalaisi@gmail.com`, verified by Supabase) exposes a presentation-only Developer mode and editorial notes; learners do not see pending artwork/source-verification messages. See [account setup and Google troubleshooting](docs/activate-accounts.md) for provider-dashboard requirements. [Mobile menu](docs/menu-mobile.jpg) · [Night Sky menu](docs/menu-night-sky.jpg).

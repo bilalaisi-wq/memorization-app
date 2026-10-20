@@ -1,9 +1,10 @@
+import { menu } from "./menu-helper.js";
 import {test, expect} from '@playwright/test';
 
 test('Mastery Gallery replaces Journey and contains accessible blank Poetic Tafsir rewards', async ({page})=>{
   await page.goto('/');
   await expect(page.locator('#nav-journey')).toHaveCount(0);
-  await page.locator('#nav-gallery').click();
+  await (await menu(page)).locator('#nav-gallery').click();
   await expect(page.locator('.page-heading h1')).toHaveText('My Mastery Gallery');
   await expect(page.locator('#gallery-art-panel')).toBeVisible();
   const poetry=page.getByRole('tab',{name:'Poetic Tafsir',exact:true});

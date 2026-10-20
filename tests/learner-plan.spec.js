@@ -1,3 +1,4 @@
+import { menu } from "./menu-helper.js";
 import { readFileSync } from "node:fs";
 import { test, expect } from "@playwright/test";
 import { surahs } from "../src/data.js";
@@ -149,7 +150,7 @@ test("goal form and recommendations persist through reload and navigation to the
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "My plan & achievements" }).click();
+  await (await menu(page)).getByRole("button", { name: "My plan & achievements" }).click();
   await page.getByRole("button", { name: "Set my goals", exact: true }).click();
   await page.locator('[name="aim"]').selectOption("surahs");
   await page.locator('[name="target"][value="114"]').check();
@@ -160,7 +161,7 @@ test("goal form and recommendations persist through reload and navigation to the
     "Puzzle Quest",
   );
   await page.reload();
-  await page.getByRole("button", { name: "My plan & achievements" }).click();
+  await (await menu(page)).getByRole("button", { name: "My plan & achievements" }).click();
   await expect(page.locator(".recommendation-card")).toContainText("An-Nas");
   await page.locator("[data-next-step]").click();
   await expect(page.locator('[data-mode="quiz"]')).toHaveAttribute(
@@ -175,7 +176,7 @@ test("study history, graphics, and monthly activity survive reload without farmi
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await page.locator(".word-bank [data-word]").first().click();
-  await page.getByRole("button", { name: "My plan & achievements" }).click();
+  await (await menu(page)).getByRole("button", { name: "My plan & achievements" }).click();
   await expect(page.locator(".streak-grid")).toContainText("1 day active");
   await expect(page.locator(".achievement-badge")).toHaveCount(6);
   await expect(page.locator(".activity-day.active")).toHaveCount(1);
@@ -185,7 +186,7 @@ test("study history, graphics, and monthly activity survive reload without farmi
     ),
   ).toBe(true);
   await page.reload();
-  await page.getByRole("button", { name: "My plan & achievements" }).click();
+  await (await menu(page)).getByRole("button", { name: "My plan & achievements" }).click();
   await expect(page.locator(".activity-day.active")).toHaveCount(1);
   const state = await page.evaluate(() =>
     JSON.parse(localStorage.getItem("ayah-learning-v1")),
@@ -201,7 +202,7 @@ test("configured account entry offers signup and Google without sending email au
     return route.fulfill({ json: {} });
   });
   await page.goto("/");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await (await menu(page)).getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(page.locator('[data-auth-mode="signup"]')).toBeVisible();
   await expect(page.locator('input[type="email"]')).toBeVisible();
   await expect(
@@ -243,7 +244,7 @@ test("learning export includes goals and activity without recording blobs", asyn
 }) => {
   await page.goto("/");
   await page.locator(".word-bank [data-word]").first().click();
-  await page.getByRole("button", { name: "My plan & achievements" }).click();
+  await (await menu(page)).getByRole("button", { name: "My plan & achievements" }).click();
   await page.locator('[data-confidence="shaky"]').click();
   const downloadEvent = page.waitForEvent("download");
   await page.locator("#export-learning").click();

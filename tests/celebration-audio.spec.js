@@ -1,3 +1,4 @@
+import { menu } from "./menu-helper.js";
 import { test, expect } from '@playwright/test';
 
 test('success artwork cycles, accepts future manifest images, and respects reduced motion', async ({ page }) => {
@@ -27,7 +28,7 @@ test('Lab automatically pronounces selected choices, replaces audio stop with pe
     };
   });
   await page.goto('/');
-  await page.locator('#nav-lab').click();
+  await (await menu(page)).locator('#nav-lab').click();
   await expect(page.locator('#lab-stop-audio')).toHaveCount(0);
   await expect(page.locator('#fall-pause')).toBeVisible();
   for (const game of ['vanishing','jigsaw','match','chain','continue','detective']) {
@@ -43,7 +44,7 @@ test('Lab automatically pronounces selected choices, replaces audio stop with pe
   await page.locator('.lab-game [data-choice]').first().click();
   expect(await page.evaluate(()=>window.audioEvents.at(-1).muted)).toBe(true);
   await page.reload();
-  await page.locator('#nav-lab').click();
+  await (await menu(page)).locator('#nav-lab').click();
   await expect(page.locator('#lab-mute')).toHaveText('Unmute audio');
 });
 
@@ -68,7 +69,7 @@ test('rapid piece choices finish their recordings in order rather than interrupt
     };
   });
   await page.goto('/');
-  await page.locator('#nav-lab').click();
+  await (await menu(page)).locator('#nav-lab').click();
   await page.locator('[data-game="jigsaw"]').click();
   await page.evaluate(()=>{
     const ids=[...document.querySelectorAll('[data-group]')].slice(0,2).map(piece=>piece.dataset.group);

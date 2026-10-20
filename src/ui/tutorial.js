@@ -47,7 +47,7 @@ const steps = [
   ],
   [
     "Mastery Gallery",
-    "Revisit your permanent collectibles and see scheduled review dates. The initial Gallery covers thirteen surahs. Final artwork and tafsir narratives are awaiting editorial work; geometric previews are clearly labeled placeholders.",
+    "Revisit your permanent collectibles and see scheduled review dates. Your artwork grows as you complete independent recall checkpoints.",
   ],
   [
     "Encouragement and preferences",
@@ -162,7 +162,7 @@ export function showTutorial(callbacks) {
       };
     } else if (step === 7 || step === 8)
       demo.innerHTML =
-        '<img class="tutorial-art" src="/mastery-art/placeholder.svg" alt="Geometric placeholder for future reward artwork"><p>Example only: earned sections remain visible. Final artwork is pending.</p>';
+        '<img class="tutorial-art" src="/mastery-art/placeholder.svg" alt="Geometric reward artwork"><p>Example only: earned sections remain visible.</p>';
     else if (step === 4)
       demo.innerHTML =
         '<div class="tutorial-daily"><strong>Due reviews → Independent recall first</strong><p>Weak ayahs → Study, then assess</p><p>New memorization → A little at a time</p></div>';
