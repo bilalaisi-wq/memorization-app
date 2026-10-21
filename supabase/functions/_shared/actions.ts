@@ -13,7 +13,7 @@ import {
   locked,
   services,
 } from "./runtime.ts";
-import { availableContent } from "./available-content.js";
+import {catalog,availableReference,allowedReference} from "./content-policy.js";
 type Services = ReturnType<typeof services>;
 async function customer(s: Services, user: string) {
   return await db<any>(
@@ -229,7 +229,7 @@ export async function passages(req: Request, s: Services, user: any) {
     throw new BillingError(400, "Unknown passage action.");
   }
   const { title, surah, firstAyah, lastAyah } = request;
-  const count = (availableContent as Record<string, number>)[surah];
+  const count = catalog.chapters.find(c=>c.id===surah)?.verseCount;
   if (
     typeof title !== "string" || !title.trim() || title.trim().length > 80 ||
     !Number.isInteger(surah) || !count || !Number.isInteger(firstAyah) ||
@@ -241,6 +241,9 @@ export async function passages(req: Request, s: Services, user: any) {
       "Choose a valid passage from the currently available library.",
     );
   }
+  const refs=Array.from({length:lastAyah-firstAyah+1},(_,i)=>`${surah}:${firstAyah+i}`);
+  if(!refs.every(availableReference))throw new BillingError(400,'This range is not fully published.');
+  if(!refs.every(key=>allowedReference(key,entitlements)))throw new BillingError(403,'Your subscription does not include this juz.');
   return await db(
     s.admin.from("saved_passages").insert({
       user_id: user.id,

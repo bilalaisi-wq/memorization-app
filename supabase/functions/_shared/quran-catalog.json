@@ -1,0 +1,2459 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "url": "https://api.quran.com/api/v4/chapters?language=en",
+      "sha256": "ff6ef5aadcc7710271179c0f9c1519c89ae613b11c8ba3265873c6c4fc6aed0b"
+    },
+    {
+      "url": "https://api.quran.com/api/v4/juzs",
+      "sha256": "756f55e24c8c6efb1f0cb05245848b58a7b79540026e34bb84ffa5949380ef49"
+    }
+  ],
+  "chapters": [
+    {
+      "id": 1,
+      "name": "Al-Fatihah",
+      "arabic": "الفاتحة",
+      "verseCount": 7,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 7,
+          "juz": 1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Al-Baqarah",
+      "arabic": "البقرة",
+      "verseCount": 286,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 141,
+          "juz": 1
+        },
+        {
+          "first": 142,
+          "last": 252,
+          "juz": 2
+        },
+        {
+          "first": 253,
+          "last": 286,
+          "juz": 3
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Ali 'Imran",
+      "arabic": "آل عمران",
+      "verseCount": 200,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 92,
+          "juz": 3
+        },
+        {
+          "first": 93,
+          "last": 200,
+          "juz": 4
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "An-Nisa",
+      "arabic": "النساء",
+      "verseCount": 176,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 23,
+          "juz": 4
+        },
+        {
+          "first": 24,
+          "last": 147,
+          "juz": 5
+        },
+        {
+          "first": 148,
+          "last": 176,
+          "juz": 6
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Al-Ma'idah",
+      "arabic": "المائدة",
+      "verseCount": 120,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 81,
+          "juz": 6
+        },
+        {
+          "first": 82,
+          "last": 120,
+          "juz": 7
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Al-An'am",
+      "arabic": "الأنعام",
+      "verseCount": 165,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 110,
+          "juz": 7
+        },
+        {
+          "first": 111,
+          "last": 165,
+          "juz": 8
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Al-A'raf",
+      "arabic": "الأعراف",
+      "verseCount": 206,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 87,
+          "juz": 8
+        },
+        {
+          "first": 88,
+          "last": 206,
+          "juz": 9
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Al-Anfal",
+      "arabic": "الأنفال",
+      "verseCount": 75,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 40,
+          "juz": 9
+        },
+        {
+          "first": 41,
+          "last": 75,
+          "juz": 10
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "At-Tawbah",
+      "arabic": "التوبة",
+      "verseCount": 129,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 92,
+          "juz": 10
+        },
+        {
+          "first": 93,
+          "last": 129,
+          "juz": 11
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Yunus",
+      "arabic": "يونس",
+      "verseCount": 109,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 109,
+          "juz": 11
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Hud",
+      "arabic": "هود",
+      "verseCount": 123,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 5,
+          "juz": 11
+        },
+        {
+          "first": 6,
+          "last": 123,
+          "juz": 12
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Yusuf",
+      "arabic": "يوسف",
+      "verseCount": 111,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 52,
+          "juz": 12
+        },
+        {
+          "first": 53,
+          "last": 111,
+          "juz": 13
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Ar-Ra'd",
+      "arabic": "الرعد",
+      "verseCount": 43,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 43,
+          "juz": 13
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Ibrahim",
+      "arabic": "ابراهيم",
+      "verseCount": 52,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 52,
+          "juz": 13
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Al-Hijr",
+      "arabic": "الحجر",
+      "verseCount": 99,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 99,
+          "juz": 14
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "An-Nahl",
+      "arabic": "النحل",
+      "verseCount": 128,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 128,
+          "juz": 14
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Al-Isra",
+      "arabic": "الإسراء",
+      "verseCount": 111,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 111,
+          "juz": 15
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Al-Kahf",
+      "arabic": "الكهف",
+      "verseCount": 110,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 74,
+          "juz": 15
+        },
+        {
+          "first": 75,
+          "last": 110,
+          "juz": 16
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Maryam",
+      "arabic": "مريم",
+      "verseCount": 98,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 98,
+          "juz": 16
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Taha",
+      "arabic": "طه",
+      "verseCount": 135,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 135,
+          "juz": 16
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Al-Anbya",
+      "arabic": "الأنبياء",
+      "verseCount": 112,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 112,
+          "juz": 17
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Al-Hajj",
+      "arabic": "الحج",
+      "verseCount": 78,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 78,
+          "juz": 17
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Al-Mu'minun",
+      "arabic": "المؤمنون",
+      "verseCount": 118,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 118,
+          "juz": 18
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "name": "An-Nur",
+      "arabic": "النور",
+      "verseCount": 64,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 64,
+          "juz": 18
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Al-Furqan",
+      "arabic": "الفرقان",
+      "verseCount": 77,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 20,
+          "juz": 18
+        },
+        {
+          "first": 21,
+          "last": 77,
+          "juz": 19
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "name": "Ash-Shu'ara",
+      "arabic": "الشعراء",
+      "verseCount": 227,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 227,
+          "juz": 19
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "name": "An-Naml",
+      "arabic": "النمل",
+      "verseCount": 93,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 55,
+          "juz": 19
+        },
+        {
+          "first": 56,
+          "last": 93,
+          "juz": 20
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "name": "Al-Qasas",
+      "arabic": "القصص",
+      "verseCount": 88,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 88,
+          "juz": 20
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "name": "Al-'Ankabut",
+      "arabic": "العنكبوت",
+      "verseCount": 69,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 45,
+          "juz": 20
+        },
+        {
+          "first": 46,
+          "last": 69,
+          "juz": 21
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "name": "Ar-Rum",
+      "arabic": "الروم",
+      "verseCount": 60,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 60,
+          "juz": 21
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "name": "Luqman",
+      "arabic": "لقمان",
+      "verseCount": 34,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 34,
+          "juz": 21
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "name": "As-Sajdah",
+      "arabic": "السجدة",
+      "verseCount": 30,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 30,
+          "juz": 21
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "name": "Al-Ahzab",
+      "arabic": "الأحزاب",
+      "verseCount": 73,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 30,
+          "juz": 21
+        },
+        {
+          "first": 31,
+          "last": 73,
+          "juz": 22
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "name": "Saba",
+      "arabic": "سبإ",
+      "verseCount": 54,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 54,
+          "juz": 22
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "name": "Fatir",
+      "arabic": "فاطر",
+      "verseCount": 45,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 45,
+          "juz": 22
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "name": "Ya-Sin",
+      "arabic": "يس",
+      "verseCount": 83,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 27,
+          "juz": 22
+        },
+        {
+          "first": 28,
+          "last": 83,
+          "juz": 23
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "name": "As-Saffat",
+      "arabic": "الصافات",
+      "verseCount": 182,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 182,
+          "juz": 23
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "name": "Sad",
+      "arabic": "ص",
+      "verseCount": 88,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 88,
+          "juz": 23
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "name": "Az-Zumar",
+      "arabic": "الزمر",
+      "verseCount": 75,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 31,
+          "juz": 23
+        },
+        {
+          "first": 32,
+          "last": 75,
+          "juz": 24
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "name": "Ghafir",
+      "arabic": "غافر",
+      "verseCount": 85,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 85,
+          "juz": 24
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "name": "Fussilat",
+      "arabic": "فصلت",
+      "verseCount": 54,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 46,
+          "juz": 24
+        },
+        {
+          "first": 47,
+          "last": 54,
+          "juz": 25
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "name": "Ash-Shuraa",
+      "arabic": "الشورى",
+      "verseCount": 53,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 53,
+          "juz": 25
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "name": "Az-Zukhruf",
+      "arabic": "الزخرف",
+      "verseCount": 89,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 89,
+          "juz": 25
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "name": "Ad-Dukhan",
+      "arabic": "الدخان",
+      "verseCount": 59,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 59,
+          "juz": 25
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "name": "Al-Jathiyah",
+      "arabic": "الجاثية",
+      "verseCount": 37,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 37,
+          "juz": 25
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "name": "Al-Ahqaf",
+      "arabic": "الأحقاف",
+      "verseCount": 35,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 35,
+          "juz": 26
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "name": "Muhammad",
+      "arabic": "محمد",
+      "verseCount": 38,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 38,
+          "juz": 26
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "name": "Al-Fath",
+      "arabic": "الفتح",
+      "verseCount": 29,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 29,
+          "juz": 26
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "name": "Al-Hujurat",
+      "arabic": "الحجرات",
+      "verseCount": 18,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 18,
+          "juz": 26
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "name": "Qaf",
+      "arabic": "ق",
+      "verseCount": 45,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 45,
+          "juz": 26
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "name": "Adh-Dhariyat",
+      "arabic": "الذاريات",
+      "verseCount": 60,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 30,
+          "juz": 26
+        },
+        {
+          "first": 31,
+          "last": 60,
+          "juz": 27
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "name": "At-Tur",
+      "arabic": "الطور",
+      "verseCount": 49,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 49,
+          "juz": 27
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "name": "An-Najm",
+      "arabic": "النجم",
+      "verseCount": 62,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 62,
+          "juz": 27
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "name": "Al-Qamar",
+      "arabic": "القمر",
+      "verseCount": 55,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 55,
+          "juz": 27
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "name": "Ar-Rahman",
+      "arabic": "الرحمن",
+      "verseCount": 78,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 78,
+          "juz": 27
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "name": "Al-Waqi'ah",
+      "arabic": "الواقعة",
+      "verseCount": 96,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 96,
+          "juz": 27
+        }
+      ]
+    },
+    {
+      "id": 57,
+      "name": "Al-Hadid",
+      "arabic": "الحديد",
+      "verseCount": 29,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 29,
+          "juz": 27
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "name": "Al-Mujadila",
+      "arabic": "المجادلة",
+      "verseCount": 22,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 22,
+          "juz": 28
+        }
+      ]
+    },
+    {
+      "id": 59,
+      "name": "Al-Hashr",
+      "arabic": "الحشر",
+      "verseCount": 24,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 24,
+          "juz": 28
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "name": "Al-Mumtahanah",
+      "arabic": "الممتحنة",
+      "verseCount": 13,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 13,
+          "juz": 28
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "name": "As-Saf",
+      "arabic": "الصف",
+      "verseCount": 14,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 14,
+          "juz": 28
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "name": "Al-Jumu'ah",
+      "arabic": "الجمعة",
+      "verseCount": 11,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 11,
+          "juz": 28
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "name": "Al-Munafiqun",
+      "arabic": "المنافقون",
+      "verseCount": 11,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 11,
+          "juz": 28
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "name": "At-Taghabun",
+      "arabic": "التغابن",
+      "verseCount": 18,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 18,
+          "juz": 28
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "name": "At-Talaq",
+      "arabic": "الطلاق",
+      "verseCount": 12,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 12,
+          "juz": 28
+        }
+      ]
+    },
+    {
+      "id": 66,
+      "name": "At-Tahrim",
+      "arabic": "التحريم",
+      "verseCount": 12,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 12,
+          "juz": 28
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "name": "Al-Mulk",
+      "arabic": "الملك",
+      "verseCount": 30,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 30,
+          "juz": 29
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "name": "Al-Qalam",
+      "arabic": "القلم",
+      "verseCount": 52,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 52,
+          "juz": 29
+        }
+      ]
+    },
+    {
+      "id": 69,
+      "name": "Al-Haqqah",
+      "arabic": "الحاقة",
+      "verseCount": 52,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 52,
+          "juz": 29
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "name": "Al-Ma'arij",
+      "arabic": "المعارج",
+      "verseCount": 44,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 44,
+          "juz": 29
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "name": "Nuh",
+      "arabic": "نوح",
+      "verseCount": 28,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 28,
+          "juz": 29
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "name": "Al-Jinn",
+      "arabic": "الجن",
+      "verseCount": 28,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 28,
+          "juz": 29
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "name": "Al-Muzzammil",
+      "arabic": "المزمل",
+      "verseCount": 20,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 20,
+          "juz": 29
+        }
+      ]
+    },
+    {
+      "id": 74,
+      "name": "Al-Muddaththir",
+      "arabic": "المدثر",
+      "verseCount": 56,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 56,
+          "juz": 29
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "name": "Al-Qiyamah",
+      "arabic": "القيامة",
+      "verseCount": 40,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 40,
+          "juz": 29
+        }
+      ]
+    },
+    {
+      "id": 76,
+      "name": "Al-Insan",
+      "arabic": "الانسان",
+      "verseCount": 31,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 31,
+          "juz": 29
+        }
+      ]
+    },
+    {
+      "id": 77,
+      "name": "Al-Mursalat",
+      "arabic": "المرسلات",
+      "verseCount": 50,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 50,
+          "juz": 29
+        }
+      ]
+    },
+    {
+      "id": 78,
+      "name": "An-Naba",
+      "arabic": "النبإ",
+      "verseCount": 40,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 40,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "name": "An-Nazi'at",
+      "arabic": "النازعات",
+      "verseCount": 46,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 46,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 80,
+      "name": "'Abasa",
+      "arabic": "عبس",
+      "verseCount": 42,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 42,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 81,
+      "name": "At-Takwir",
+      "arabic": "التكوير",
+      "verseCount": 29,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 29,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "name": "Al-Infitar",
+      "arabic": "الإنفطار",
+      "verseCount": 19,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 19,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "name": "Al-Mutaffifin",
+      "arabic": "المطففين",
+      "verseCount": 36,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 36,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "name": "Al-Inshiqaq",
+      "arabic": "الإنشقاق",
+      "verseCount": 25,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 25,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "name": "Al-Buruj",
+      "arabic": "البروج",
+      "verseCount": 22,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 22,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "name": "At-Tariq",
+      "arabic": "الطارق",
+      "verseCount": 17,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 17,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 87,
+      "name": "Al-A'la",
+      "arabic": "الأعلى",
+      "verseCount": 19,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 19,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 88,
+      "name": "Al-Ghashiyah",
+      "arabic": "الغاشية",
+      "verseCount": 26,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 26,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 89,
+      "name": "Al-Fajr",
+      "arabic": "الفجر",
+      "verseCount": 30,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 30,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 90,
+      "name": "Al-Balad",
+      "arabic": "البلد",
+      "verseCount": 20,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 20,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 91,
+      "name": "Ash-Shams",
+      "arabic": "الشمس",
+      "verseCount": 15,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 15,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 92,
+      "name": "Al-Layl",
+      "arabic": "الليل",
+      "verseCount": 21,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 21,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 93,
+      "name": "Ad-Duhaa",
+      "arabic": "الضحى",
+      "verseCount": 11,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 11,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 94,
+      "name": "Ash-Sharh",
+      "arabic": "الشرح",
+      "verseCount": 8,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 8,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 95,
+      "name": "At-Tin",
+      "arabic": "التين",
+      "verseCount": 8,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 8,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 96,
+      "name": "Al-'Alaq",
+      "arabic": "العلق",
+      "verseCount": 19,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 19,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 97,
+      "name": "Al-Qadr",
+      "arabic": "القدر",
+      "verseCount": 5,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 5,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 98,
+      "name": "Al-Bayyinah",
+      "arabic": "البينة",
+      "verseCount": 8,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 8,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 99,
+      "name": "Az-Zalzalah",
+      "arabic": "الزلزلة",
+      "verseCount": 8,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 8,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 100,
+      "name": "Al-'Adiyat",
+      "arabic": "العاديات",
+      "verseCount": 11,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 11,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "name": "Al-Qari'ah",
+      "arabic": "القارعة",
+      "verseCount": 11,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 11,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "name": "At-Takathur",
+      "arabic": "التكاثر",
+      "verseCount": 8,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 8,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "name": "Al-'Asr",
+      "arabic": "العصر",
+      "verseCount": 3,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 3,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "name": "Al-Humazah",
+      "arabic": "الهمزة",
+      "verseCount": 9,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 9,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "name": "Al-Fil",
+      "arabic": "الفيل",
+      "verseCount": 5,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 5,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "name": "Quraysh",
+      "arabic": "قريش",
+      "verseCount": 4,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 4,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "name": "Al-Ma'un",
+      "arabic": "الماعون",
+      "verseCount": 7,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 7,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "name": "Al-Kawthar",
+      "arabic": "الكوثر",
+      "verseCount": 3,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 3,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 109,
+      "name": "Al-Kafirun",
+      "arabic": "الكافرون",
+      "verseCount": 6,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 6,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 110,
+      "name": "An-Nasr",
+      "arabic": "النصر",
+      "verseCount": 3,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 3,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 111,
+      "name": "Al-Masad",
+      "arabic": "المسد",
+      "verseCount": 5,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 5,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "name": "Al-Ikhlas",
+      "arabic": "الإخلاص",
+      "verseCount": 4,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 4,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 113,
+      "name": "Al-Falaq",
+      "arabic": "الفلق",
+      "verseCount": 5,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 5,
+          "juz": 30
+        }
+      ]
+    },
+    {
+      "id": 114,
+      "name": "An-Nas",
+      "arabic": "الناس",
+      "verseCount": 6,
+      "ranges": [
+        {
+          "first": 1,
+          "last": 6,
+          "juz": 30
+        }
+      ]
+    }
+  ],
+  "juzs": [
+    {
+      "id": 1,
+      "verseCount": 148,
+      "ranges": [
+        {
+          "surah": 1,
+          "first": 1,
+          "last": 7
+        },
+        {
+          "surah": 2,
+          "first": 1,
+          "last": 141
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "verseCount": 111,
+      "ranges": [
+        {
+          "surah": 2,
+          "first": 142,
+          "last": 252
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "verseCount": 126,
+      "ranges": [
+        {
+          "surah": 2,
+          "first": 253,
+          "last": 286
+        },
+        {
+          "surah": 3,
+          "first": 1,
+          "last": 92
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "verseCount": 131,
+      "ranges": [
+        {
+          "surah": 3,
+          "first": 93,
+          "last": 200
+        },
+        {
+          "surah": 4,
+          "first": 1,
+          "last": 23
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "verseCount": 124,
+      "ranges": [
+        {
+          "surah": 4,
+          "first": 24,
+          "last": 147
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "verseCount": 110,
+      "ranges": [
+        {
+          "surah": 4,
+          "first": 148,
+          "last": 176
+        },
+        {
+          "surah": 5,
+          "first": 1,
+          "last": 81
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "verseCount": 149,
+      "ranges": [
+        {
+          "surah": 5,
+          "first": 82,
+          "last": 120
+        },
+        {
+          "surah": 6,
+          "first": 1,
+          "last": 110
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "verseCount": 142,
+      "ranges": [
+        {
+          "surah": 6,
+          "first": 111,
+          "last": 165
+        },
+        {
+          "surah": 7,
+          "first": 1,
+          "last": 87
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "verseCount": 159,
+      "ranges": [
+        {
+          "surah": 7,
+          "first": 88,
+          "last": 206
+        },
+        {
+          "surah": 8,
+          "first": 1,
+          "last": 40
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "verseCount": 127,
+      "ranges": [
+        {
+          "surah": 8,
+          "first": 41,
+          "last": 75
+        },
+        {
+          "surah": 9,
+          "first": 1,
+          "last": 92
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "verseCount": 151,
+      "ranges": [
+        {
+          "surah": 9,
+          "first": 93,
+          "last": 129
+        },
+        {
+          "surah": 10,
+          "first": 1,
+          "last": 109
+        },
+        {
+          "surah": 11,
+          "first": 1,
+          "last": 5
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "verseCount": 170,
+      "ranges": [
+        {
+          "surah": 11,
+          "first": 6,
+          "last": 123
+        },
+        {
+          "surah": 12,
+          "first": 1,
+          "last": 52
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "verseCount": 154,
+      "ranges": [
+        {
+          "surah": 12,
+          "first": 53,
+          "last": 111
+        },
+        {
+          "surah": 13,
+          "first": 1,
+          "last": 43
+        },
+        {
+          "surah": 14,
+          "first": 1,
+          "last": 52
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "verseCount": 227,
+      "ranges": [
+        {
+          "surah": 15,
+          "first": 1,
+          "last": 99
+        },
+        {
+          "surah": 16,
+          "first": 1,
+          "last": 128
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "verseCount": 185,
+      "ranges": [
+        {
+          "surah": 17,
+          "first": 1,
+          "last": 111
+        },
+        {
+          "surah": 18,
+          "first": 1,
+          "last": 74
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "verseCount": 269,
+      "ranges": [
+        {
+          "surah": 18,
+          "first": 75,
+          "last": 110
+        },
+        {
+          "surah": 19,
+          "first": 1,
+          "last": 98
+        },
+        {
+          "surah": 20,
+          "first": 1,
+          "last": 135
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "verseCount": 190,
+      "ranges": [
+        {
+          "surah": 21,
+          "first": 1,
+          "last": 112
+        },
+        {
+          "surah": 22,
+          "first": 1,
+          "last": 78
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "verseCount": 202,
+      "ranges": [
+        {
+          "surah": 23,
+          "first": 1,
+          "last": 118
+        },
+        {
+          "surah": 24,
+          "first": 1,
+          "last": 64
+        },
+        {
+          "surah": 25,
+          "first": 1,
+          "last": 20
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "verseCount": 339,
+      "ranges": [
+        {
+          "surah": 25,
+          "first": 21,
+          "last": 77
+        },
+        {
+          "surah": 26,
+          "first": 1,
+          "last": 227
+        },
+        {
+          "surah": 27,
+          "first": 1,
+          "last": 55
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "verseCount": 171,
+      "ranges": [
+        {
+          "surah": 27,
+          "first": 56,
+          "last": 93
+        },
+        {
+          "surah": 28,
+          "first": 1,
+          "last": 88
+        },
+        {
+          "surah": 29,
+          "first": 1,
+          "last": 45
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "verseCount": 178,
+      "ranges": [
+        {
+          "surah": 29,
+          "first": 46,
+          "last": 69
+        },
+        {
+          "surah": 30,
+          "first": 1,
+          "last": 60
+        },
+        {
+          "surah": 31,
+          "first": 1,
+          "last": 34
+        },
+        {
+          "surah": 32,
+          "first": 1,
+          "last": 30
+        },
+        {
+          "surah": 33,
+          "first": 1,
+          "last": 30
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "verseCount": 169,
+      "ranges": [
+        {
+          "surah": 33,
+          "first": 31,
+          "last": 73
+        },
+        {
+          "surah": 34,
+          "first": 1,
+          "last": 54
+        },
+        {
+          "surah": 35,
+          "first": 1,
+          "last": 45
+        },
+        {
+          "surah": 36,
+          "first": 1,
+          "last": 27
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "verseCount": 357,
+      "ranges": [
+        {
+          "surah": 36,
+          "first": 28,
+          "last": 83
+        },
+        {
+          "surah": 37,
+          "first": 1,
+          "last": 182
+        },
+        {
+          "surah": 38,
+          "first": 1,
+          "last": 88
+        },
+        {
+          "surah": 39,
+          "first": 1,
+          "last": 31
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "verseCount": 175,
+      "ranges": [
+        {
+          "surah": 39,
+          "first": 32,
+          "last": 75
+        },
+        {
+          "surah": 40,
+          "first": 1,
+          "last": 85
+        },
+        {
+          "surah": 41,
+          "first": 1,
+          "last": 46
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "verseCount": 246,
+      "ranges": [
+        {
+          "surah": 41,
+          "first": 47,
+          "last": 54
+        },
+        {
+          "surah": 42,
+          "first": 1,
+          "last": 53
+        },
+        {
+          "surah": 43,
+          "first": 1,
+          "last": 89
+        },
+        {
+          "surah": 44,
+          "first": 1,
+          "last": 59
+        },
+        {
+          "surah": 45,
+          "first": 1,
+          "last": 37
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "verseCount": 195,
+      "ranges": [
+        {
+          "surah": 46,
+          "first": 1,
+          "last": 35
+        },
+        {
+          "surah": 47,
+          "first": 1,
+          "last": 38
+        },
+        {
+          "surah": 48,
+          "first": 1,
+          "last": 29
+        },
+        {
+          "surah": 49,
+          "first": 1,
+          "last": 18
+        },
+        {
+          "surah": 50,
+          "first": 1,
+          "last": 45
+        },
+        {
+          "surah": 51,
+          "first": 1,
+          "last": 30
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "verseCount": 399,
+      "ranges": [
+        {
+          "surah": 51,
+          "first": 31,
+          "last": 60
+        },
+        {
+          "surah": 52,
+          "first": 1,
+          "last": 49
+        },
+        {
+          "surah": 53,
+          "first": 1,
+          "last": 62
+        },
+        {
+          "surah": 54,
+          "first": 1,
+          "last": 55
+        },
+        {
+          "surah": 55,
+          "first": 1,
+          "last": 78
+        },
+        {
+          "surah": 56,
+          "first": 1,
+          "last": 96
+        },
+        {
+          "surah": 57,
+          "first": 1,
+          "last": 29
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "verseCount": 137,
+      "ranges": [
+        {
+          "surah": 58,
+          "first": 1,
+          "last": 22
+        },
+        {
+          "surah": 59,
+          "first": 1,
+          "last": 24
+        },
+        {
+          "surah": 60,
+          "first": 1,
+          "last": 13
+        },
+        {
+          "surah": 61,
+          "first": 1,
+          "last": 14
+        },
+        {
+          "surah": 62,
+          "first": 1,
+          "last": 11
+        },
+        {
+          "surah": 63,
+          "first": 1,
+          "last": 11
+        },
+        {
+          "surah": 64,
+          "first": 1,
+          "last": 18
+        },
+        {
+          "surah": 65,
+          "first": 1,
+          "last": 12
+        },
+        {
+          "surah": 66,
+          "first": 1,
+          "last": 12
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "verseCount": 431,
+      "ranges": [
+        {
+          "surah": 67,
+          "first": 1,
+          "last": 30
+        },
+        {
+          "surah": 68,
+          "first": 1,
+          "last": 52
+        },
+        {
+          "surah": 69,
+          "first": 1,
+          "last": 52
+        },
+        {
+          "surah": 70,
+          "first": 1,
+          "last": 44
+        },
+        {
+          "surah": 71,
+          "first": 1,
+          "last": 28
+        },
+        {
+          "surah": 72,
+          "first": 1,
+          "last": 28
+        },
+        {
+          "surah": 73,
+          "first": 1,
+          "last": 20
+        },
+        {
+          "surah": 74,
+          "first": 1,
+          "last": 56
+        },
+        {
+          "surah": 75,
+          "first": 1,
+          "last": 40
+        },
+        {
+          "surah": 76,
+          "first": 1,
+          "last": 31
+        },
+        {
+          "surah": 77,
+          "first": 1,
+          "last": 50
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "verseCount": 564,
+      "ranges": [
+        {
+          "surah": 78,
+          "first": 1,
+          "last": 40
+        },
+        {
+          "surah": 79,
+          "first": 1,
+          "last": 46
+        },
+        {
+          "surah": 80,
+          "first": 1,
+          "last": 42
+        },
+        {
+          "surah": 81,
+          "first": 1,
+          "last": 29
+        },
+        {
+          "surah": 82,
+          "first": 1,
+          "last": 19
+        },
+        {
+          "surah": 83,
+          "first": 1,
+          "last": 36
+        },
+        {
+          "surah": 84,
+          "first": 1,
+          "last": 25
+        },
+        {
+          "surah": 85,
+          "first": 1,
+          "last": 22
+        },
+        {
+          "surah": 86,
+          "first": 1,
+          "last": 17
+        },
+        {
+          "surah": 87,
+          "first": 1,
+          "last": 19
+        },
+        {
+          "surah": 88,
+          "first": 1,
+          "last": 26
+        },
+        {
+          "surah": 89,
+          "first": 1,
+          "last": 30
+        },
+        {
+          "surah": 90,
+          "first": 1,
+          "last": 20
+        },
+        {
+          "surah": 91,
+          "first": 1,
+          "last": 15
+        },
+        {
+          "surah": 92,
+          "first": 1,
+          "last": 21
+        },
+        {
+          "surah": 93,
+          "first": 1,
+          "last": 11
+        },
+        {
+          "surah": 94,
+          "first": 1,
+          "last": 8
+        },
+        {
+          "surah": 95,
+          "first": 1,
+          "last": 8
+        },
+        {
+          "surah": 96,
+          "first": 1,
+          "last": 19
+        },
+        {
+          "surah": 97,
+          "first": 1,
+          "last": 5
+        },
+        {
+          "surah": 98,
+          "first": 1,
+          "last": 8
+        },
+        {
+          "surah": 99,
+          "first": 1,
+          "last": 8
+        },
+        {
+          "surah": 100,
+          "first": 1,
+          "last": 11
+        },
+        {
+          "surah": 101,
+          "first": 1,
+          "last": 11
+        },
+        {
+          "surah": 102,
+          "first": 1,
+          "last": 8
+        },
+        {
+          "surah": 103,
+          "first": 1,
+          "last": 3
+        },
+        {
+          "surah": 104,
+          "first": 1,
+          "last": 9
+        },
+        {
+          "surah": 105,
+          "first": 1,
+          "last": 5
+        },
+        {
+          "surah": 106,
+          "first": 1,
+          "last": 4
+        },
+        {
+          "surah": 107,
+          "first": 1,
+          "last": 7
+        },
+        {
+          "surah": 108,
+          "first": 1,
+          "last": 3
+        },
+        {
+          "surah": 109,
+          "first": 1,
+          "last": 6
+        },
+        {
+          "surah": 110,
+          "first": 1,
+          "last": 3
+        },
+        {
+          "surah": 111,
+          "first": 1,
+          "last": 5
+        },
+        {
+          "surah": 112,
+          "first": 1,
+          "last": 4
+        },
+        {
+          "surah": 113,
+          "first": 1,
+          "last": 5
+        },
+        {
+          "surah": 114,
+          "first": 1,
+          "last": 6
+        }
+      ]
+    }
+  ]
+}

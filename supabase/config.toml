@@ -13,3 +13,6 @@ verify_jwt = false
 
 [functions.billing-close]
 verify_jwt = false
+
+[functions.quran-content]
+verify_jwt = false

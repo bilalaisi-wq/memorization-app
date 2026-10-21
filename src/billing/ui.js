@@ -1,3 +1,6 @@
+import { mountSegmentReview } from "../passage/review-menu.js";
+const openPassageStudio = (ctx) =>
+  import("../passage/ui.js").then((m) => m.openPassageStudio(ctx));
 import { billingClient, stripeRedirect } from "./client.js";
 import { esc } from "../ui/dom.js";
 import { surahs } from "../data.js";
@@ -74,11 +77,13 @@ function date(value) {
 }
 export function mountBillingControls(nav, context) {
   const api = billingClient(context.client);
+  mountSegmentReview(nav, context);
   for (
     const [label, open] of [
       ["Plans & pricing", () => pricing(context, api)],
       ["Subscription & billing", () => account(context, api)],
       ["Passage Builder", () => passages(context, api)],
+      ["Passage memorization", () => openPassageStudio(context)],
       ["Advanced revision & analytics", () => insights(context, api)],
     ]
   ) {
@@ -272,6 +277,15 @@ async function account(ctx, api) {
 async function passages(ctx, api) {
   const d = dialog("Passage Builder"),
     root = d.querySelector("[data-billing-content]");
+  const studio = document.createElement("button");
+  studio.className = "primary";
+  studio.textContent = "Open memorization studio";
+  studio.onclick = () => {
+    d.close();
+    d.remove();
+    openPassageStudio(ctx);
+  };
+  root.before(studio);
   if (!ctx.user) {
     root.innerHTML =
       '<p>Save named passages with Explorer or Pathfinder. The existing Ayah Chain remains free.</p><button class="primary">Sign in</button>';

@@ -1,0 +1,448 @@
+{
+  "schemaVersion": 1,
+  "key": "2:255",
+  "surah": 2,
+  "ayah": 255,
+  "juz": 3,
+  "textUthmani": "ٱللَّهُ لَآ إِلَـٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ ۚ لَا تَأْخُذُهُۥ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُۥ مَا فِى ٱلسَّمَـٰوَٰتِ وَمَا فِى ٱلْأَرْضِ ۗ مَن ذَا ٱلَّذِى يَشْفَعُ عِندَهُۥٓ إِلَّا بِإِذْنِهِۦ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَىْءٍ مِّنْ عِلْمِهِۦٓ إِلَّا بِمَا شَآءَ ۚ وَسِعَ كُرْسِيُّهُ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضَ ۖ وَلَا يَـُٔودُهُۥ حِفْظُهُمَا ۚ وَهُوَ ٱلْعَلِىُّ ٱلْعَظِيمُ",
+  "translation": "Allāh - there is no deity except Him, the Ever-Living, the Self-Sustaining. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and whatever is on the earth. Who is it that can intercede with Him except by His permission? He knows what is [presently] before them and what will be after them, and they encompass not a thing of His knowledge except for what He wills. His Kursī extends over the heavens and the earth, and their preservation tires Him not. And He is the Most High, the Most Great.",
+  "translationSource": {
+    "resourceId": 20,
+    "name": "Saheeh International",
+    "text": "Allāh - there is no deity except Him, the Ever-Living,<sup foot_note=196031>1</sup> the Self-Sustaining.<sup foot_note=196030>2</sup> Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and whatever is on the earth. Who is it that can intercede with Him except by His permission? He knows what is [presently] before them and what will be after them,<sup foot_note=196029>3</sup> and they encompass not a thing of His knowledge except for what He wills. His Kursī<sup foot_note=196028>4</sup> extends over the heavens and the earth, and their preservation tires Him not. And He is the Most High,<sup foot_note=196027>5</sup> the Most Great.<sup foot_note=196026>6</sup>"
+  },
+  "sources": [
+    {
+      "url": "https://api.quran.com/api/v4/verses/by_key/2:255?words=true&word_fields=text_uthmani,audio_url&translations=20",
+      "sha256": "4b8ab81d15e1edc45dafc7dd9c4ee62b9ef3da9f123021e9300a9b9932d08e47"
+    },
+    {
+      "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=2:255",
+      "sha256": "75b0dec63a84be576879cb6e3c08bd10684ada37a80b79d667d830441a2be562"
+    }
+  ],
+  "words": [
+    {
+      "position": 1,
+      "text": "ٱللَّهُ",
+      "translation": "Allah ",
+      "transliteration": "al-lahu",
+      "audioSource": "wbw/002_255_001.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 2,
+      "text": "لَآ",
+      "translation": "(there is) no",
+      "transliteration": "lā",
+      "audioSource": "wbw/002_255_002.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 3,
+      "text": "إِلَـٰهَ",
+      "translation": "God",
+      "transliteration": "ilāha",
+      "audioSource": "wbw/002_255_003.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 4,
+      "text": "إِلَّا",
+      "translation": "except",
+      "transliteration": "illā",
+      "audioSource": "wbw/002_255_004.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 5,
+      "text": "هُوَ",
+      "translation": "Him",
+      "transliteration": "huwa",
+      "audioSource": "wbw/002_255_005.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 6,
+      "text": "ٱلْحَىُّ",
+      "translation": "the Ever-Living",
+      "transliteration": "l-ḥayu",
+      "audioSource": "wbw/002_255_006.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 7,
+      "text": "ٱلْقَيُّومُ ۚ",
+      "translation": "the Sustainer of all that exists",
+      "transliteration": "l-qayūmu",
+      "audioSource": "wbw/002_255_007.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 8,
+      "text": "لَا",
+      "translation": "Not",
+      "transliteration": "lā",
+      "audioSource": "wbw/002_255_009.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 9,
+      "text": "تَأْخُذُهُۥ",
+      "translation": "overtakes Him",
+      "transliteration": "takhudhuhu",
+      "audioSource": "wbw/002_255_010.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 10,
+      "text": "سِنَةٌۭ",
+      "translation": "slumber",
+      "transliteration": "sinatun",
+      "audioSource": "wbw/002_255_011.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 11,
+      "text": "وَلَا",
+      "translation": "[and] not",
+      "transliteration": "walā",
+      "audioSource": "wbw/002_255_012.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 12,
+      "text": "نَوْمٌۭ ۚ",
+      "translation": "sleep",
+      "transliteration": "nawmun",
+      "audioSource": "wbw/002_255_013.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 13,
+      "text": "لَّهُۥ",
+      "translation": "To Him (belongs)",
+      "transliteration": "lahu",
+      "audioSource": "wbw/002_255_015.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 14,
+      "text": "مَا",
+      "translation": "what(ever)",
+      "transliteration": "mā",
+      "audioSource": "wbw/002_255_016.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 15,
+      "text": "فِى",
+      "translation": "(is) in",
+      "transliteration": "fī",
+      "audioSource": "wbw/002_255_017.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 16,
+      "text": "ٱلسَّمَـٰوَٰتِ",
+      "translation": "the heavens",
+      "transliteration": "l-samāwāti",
+      "audioSource": "wbw/002_255_018.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 17,
+      "text": "وَمَا",
+      "translation": "and what(ever)",
+      "transliteration": "wamā",
+      "audioSource": "wbw/002_255_019.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 18,
+      "text": "فِى",
+      "translation": "(is) in",
+      "transliteration": "fī",
+      "audioSource": "wbw/002_255_020.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 19,
+      "text": "ٱلْأَرْضِ ۗ",
+      "translation": "the earth",
+      "transliteration": "l-arḍi",
+      "audioSource": "wbw/002_255_021.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 20,
+      "text": "مَن",
+      "translation": "Who",
+      "transliteration": "man",
+      "audioSource": "wbw/002_255_023.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 21,
+      "text": "ذَا",
+      "translation": "(is) the one",
+      "transliteration": "dhā",
+      "audioSource": "wbw/002_255_024.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 22,
+      "text": "ٱلَّذِى",
+      "translation": "who",
+      "transliteration": "alladhī",
+      "audioSource": "wbw/002_255_025.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 23,
+      "text": "يَشْفَعُ",
+      "translation": "can intercede",
+      "transliteration": "yashfaʿu",
+      "audioSource": "wbw/002_255_026.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 24,
+      "text": "عِندَهُۥٓ",
+      "translation": "with Him",
+      "transliteration": "ʿindahu",
+      "audioSource": "wbw/002_255_027.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 25,
+      "text": "إِلَّا",
+      "translation": "except",
+      "transliteration": "illā",
+      "audioSource": "wbw/002_255_028.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 26,
+      "text": "بِإِذْنِهِۦ ۚ",
+      "translation": "by His permission",
+      "transliteration": "bi-idh'nihi",
+      "audioSource": "wbw/002_255_029.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 27,
+      "text": "يَعْلَمُ",
+      "translation": "He knows",
+      "transliteration": "yaʿlamu",
+      "audioSource": "wbw/002_255_031.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 28,
+      "text": "مَا",
+      "translation": "what",
+      "transliteration": "mā",
+      "audioSource": "wbw/002_255_032.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 29,
+      "text": "بَيْنَ",
+      "translation": "(is)",
+      "transliteration": "bayna",
+      "audioSource": "wbw/002_255_033.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 30,
+      "text": "أَيْدِيهِمْ",
+      "translation": "before them",
+      "transliteration": "aydīhim",
+      "audioSource": "wbw/002_255_034.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 31,
+      "text": "وَمَا",
+      "translation": "and what",
+      "transliteration": "wamā",
+      "audioSource": "wbw/002_255_035.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 32,
+      "text": "خَلْفَهُمْ ۖ",
+      "translation": "(is) behind them",
+      "transliteration": "khalfahum",
+      "audioSource": "wbw/002_255_036.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 33,
+      "text": "وَلَا",
+      "translation": "And not",
+      "transliteration": "walā",
+      "audioSource": "wbw/002_255_038.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 34,
+      "text": "يُحِيطُونَ",
+      "translation": "they encompass",
+      "transliteration": "yuḥīṭūna",
+      "audioSource": "wbw/002_255_039.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 35,
+      "text": "بِشَىْءٍۢ",
+      "translation": "anything",
+      "transliteration": "bishayin",
+      "audioSource": "wbw/002_255_040.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 36,
+      "text": "مِّنْ",
+      "translation": "of",
+      "transliteration": "min",
+      "audioSource": "wbw/002_255_041.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 37,
+      "text": "عِلْمِهِۦٓ",
+      "translation": "His Knowledge",
+      "transliteration": "ʿil'mihi",
+      "audioSource": "wbw/002_255_042.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 38,
+      "text": "إِلَّا",
+      "translation": "except",
+      "transliteration": "illā",
+      "audioSource": "wbw/002_255_043.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 39,
+      "text": "بِمَا",
+      "translation": "[of] what",
+      "transliteration": "bimā",
+      "audioSource": "wbw/002_255_044.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 40,
+      "text": "شَآءَ ۚ",
+      "translation": "He willed",
+      "transliteration": "shāa",
+      "audioSource": "wbw/002_255_045.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 41,
+      "text": "وَسِعَ",
+      "translation": "Extends",
+      "transliteration": "wasiʿa",
+      "audioSource": "wbw/002_255_047.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 42,
+      "text": "كُرْسِيُّهُ",
+      "translation": "His Seat",
+      "transliteration": "kur'siyyuhu",
+      "audioSource": "wbw/002_255_048.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 43,
+      "text": "ٱلسَّمَـٰوَٰتِ",
+      "translation": "(to) the heavens",
+      "transliteration": "l-samāwāti",
+      "audioSource": "wbw/002_255_049.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 44,
+      "text": "وَٱلْأَرْضَ ۖ",
+      "translation": "and the earth",
+      "transliteration": "wal-arḍa",
+      "audioSource": "wbw/002_255_050.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 45,
+      "text": "وَلَا",
+      "translation": "And not",
+      "transliteration": "walā",
+      "audioSource": "wbw/002_255_052.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 46,
+      "text": "يَـُٔودُهُۥ",
+      "translation": "tires Him",
+      "transliteration": "yaūduhu",
+      "audioSource": "wbw/002_255_053.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 47,
+      "text": "حِفْظُهُمَا ۚ",
+      "translation": "(the) guarding of both of them",
+      "transliteration": "ḥif'ẓuhumā",
+      "audioSource": "wbw/002_255_054.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 48,
+      "text": "وَهُوَ",
+      "translation": "And He",
+      "transliteration": "wahuwa",
+      "audioSource": "wbw/002_255_056.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 49,
+      "text": "ٱلْعَلِىُّ",
+      "translation": "(is) the Most High",
+      "transliteration": "l-ʿaliyu",
+      "audioSource": "wbw/002_255_057.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 50,
+      "text": "ٱلْعَظِيمُ",
+      "translation": "the Most Great",
+      "transliteration": "l-ʿaẓīmu",
+      "audioSource": "wbw/002_255_058.mp3",
+      "audioVerified": false
+    }
+  ],
+  "segments": [
+    {
+      "id": "full",
+      "firstWord": 1,
+      "lastWord": 50,
+      "reference": "2:255",
+      "kind": "whole-ayah",
+      "review": {
+        "status": "source-validated",
+        "basis": "Complete ayah boundary; no internal recitation stop asserted."
+      }
+    }
+  ],
+  "audioAssets": [
+    {
+      "file": "2/255/full.mp3",
+      "source": "https://verses.quran.com/Alafasy/mp3/002255.mp3",
+      "sha256": "00e62c8d72dcdb5f62dd87bb85e14abf3fc93d01c8171374baccbc913bb55833",
+      "bytes": 831865,
+      "durationMs": 51958
+    }
+  ]
+}

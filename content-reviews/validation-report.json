@@ -1,0 +1,850 @@
+{
+  "schemaVersion": 1,
+  "metadataReferences": 6236,
+  "fullyVerifiedJuz": [
+    30
+  ],
+  "fullSurahExpansion": [
+    67
+  ],
+  "longAyahPilots": [
+    "2:255",
+    "2:282"
+  ],
+  "internalSegmentsApproved": 0,
+  "scope": "Source-validated Uthmanic text, translation 20, word boundaries and decoded Alafasy full-ayah audio. New word audio alignment and internal stops are not approved.",
+  "verses": [
+    {
+      "key": "67:1",
+      "juz": 29,
+      "words": 9,
+      "bundleSha256": "9ea23b339a870f0101128118891b22ecbd10c33b5498e89713329752ade9b4d4",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:1?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "a8bfc1f14622d1f632c50274a2cedb4446501a53721e7ec444e2d5c312fd7460"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:1",
+          "sha256": "250aff0721b87dfc8d6f92755306b5be9fa753e57067dfb29c4f15b569dad8d9"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/1/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067001.mp3",
+          "sha256": "ec72e1cdd54ea73f02f88dd9da0b58ecb07b69c3bbdf53eb2b236d5e42ca3a19",
+          "bytes": 173162,
+          "durationMs": 10789
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:2",
+      "juz": 29,
+      "words": 11,
+      "bundleSha256": "bbfbc4bcb9c81b1791164c25dac3ed653b4df9c92175b72f97e85e433cccc6bd",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:2?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "1aa804bf5d23de59ed2caed979e181d42f83a594e7e98398e79fa4d5f81f11b8"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:2",
+          "sha256": "62001d3066a367727dcf0cceb20f859ebec62fbda8a4a98becfcedd666a06eb6"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/2/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067002.mp3",
+          "sha256": "3565f1890a740195d0d4f87b0129eeac9de34680ad5045cf2e90d690a08cc05d",
+          "bytes": 222899,
+          "durationMs": 13897
+        }
+      ],
+      "wordAudioOrdinalMismatches": 3
+    },
+    {
+      "key": "67:3",
+      "juz": 29,
+      "words": 18,
+      "bundleSha256": "2e0261a95b0575df1114761cb5eca36d757a6cf3375ed3a5457c01e397af2f17",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:3?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "be6e00ea4b107aacb210542bef613719fb6656238dace4cfea29cd13cbc456fc"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:3",
+          "sha256": "061425e29a6604ad71a002f074d24831e4b6d4eec9a913bc2981c8123b85b798"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/3/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067003.mp3",
+          "sha256": "95c9e55cdea6f56f0dd23e1d0b797f22ca84194b97ac4fc7e440b20a7fdcc3f7",
+          "bytes": 305237,
+          "durationMs": 19043
+        }
+      ],
+      "wordAudioOrdinalMismatches": 13
+    },
+    {
+      "key": "67:4",
+      "juz": 29,
+      "words": 10,
+      "bundleSha256": "3508634e8a6275a4ae065f9a832da58bbb7c34551a1fadb6f90ad442b9464c36",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:4?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "503b199f93c099811888473e48eb30913673b440579913eb5514eac1072e0704"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:4",
+          "sha256": "df2a5498cdee732b626987fcbc46277f9f9460b42c004478ae02ec91e7de449c"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/4/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067004.mp3",
+          "sha256": "1d672cd9c2685df2626e70f9221ba2bcf58dcb112b597c215dea01a42b519d8b",
+          "bytes": 207016,
+          "durationMs": 12904
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:5",
+      "juz": 29,
+      "words": 12,
+      "bundleSha256": "dff1214e5080e8e94cb9e2ebc4a385d91b8a8c848896dd87281002ecd5185b14",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:5?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "bfbda09d24b28f9551c0d9a171db56eea564672394de2b19c98e36047e717413"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:5",
+          "sha256": "149674e6c018783fd8f6bd89c29db66d8db067ecb474b0ae3836b01a2d3cd89e"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/5/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067005.mp3",
+          "sha256": "4d5ab7ba2ded29f141761633c2ac55e3945f87da26c55bdb44735e33de13904f",
+          "bytes": 317776,
+          "durationMs": 19827
+        }
+      ],
+      "wordAudioOrdinalMismatches": 4
+    },
+    {
+      "key": "67:6",
+      "juz": 29,
+      "words": 7,
+      "bundleSha256": "992e59d4f0dd2f25468750de0f825f1a657af9e4dffd2f2d4e31bdbcd3ee987a",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:6?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "bdef32e1e0ca8e86238cb7b9773168b51593368263886412b5036540463deba2"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:6",
+          "sha256": "8a024b466e169643eb85efe2688cb302f567f13192e3ac38250c39e6069cedaf"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/6/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067006.mp3",
+          "sha256": "f64617ac7e5188f90ad808761f073267882e50a9646d6aeb996f5570335db101",
+          "bytes": 167728,
+          "durationMs": 10449
+        }
+      ],
+      "wordAudioOrdinalMismatches": 2
+    },
+    {
+      "key": "67:7",
+      "juz": 29,
+      "words": 8,
+      "bundleSha256": "dbccc71e99b04a7d76ff009035ccd71272c8f6f668307be3a38f84d667f63ba1",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:7?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "92e6854702b0eaf947f3f32e3259d64e4350eb40271f665c491fac86507dd56b"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:7",
+          "sha256": "bff94ddfc5ae039c168b00f54ac60bf42fb911b2a2c9412eefa6b74a36e6b0ee"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/7/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067007.mp3",
+          "sha256": "ebe0b89cc8edde46c062d14ff4404f3b052b180ebb23b3c5963280358ccc2068",
+          "bytes": 174834,
+          "durationMs": 10893
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:8",
+      "juz": 29,
+      "words": 13,
+      "bundleSha256": "964448ac59b1074e6e974abc97c68d4c818eaedda575c562d6199187fa727a6f",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:8?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "7b72d998e25bb0147b6600e666e03b6a04e83cfdc72fc6079c6dc628019a2274"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:8",
+          "sha256": "e8c70c08f5e511280fb899717038c286ea200f7a54becd78d70fa6fd3dbd7362"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/8/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067008.mp3",
+          "sha256": "0d5579d201229f13e42e00f2358c69c2334b24e126c00f928646b003666e2b27",
+          "bytes": 303983,
+          "durationMs": 18965
+        }
+      ],
+      "wordAudioOrdinalMismatches": 9
+    },
+    {
+      "key": "67:9",
+      "juz": 29,
+      "words": 18,
+      "bundleSha256": "c2cb5624fca191f19df306c98f4a4690d192914466940696ec3691f2a062ff81",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:9?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "01332a704f178d2008dd6cf2095740821555bacb522372e46931328411bc82a2"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:9",
+          "sha256": "e737da08c25fdb09f1cacdf5c2471495d6a1a7ce05959ca71cb6671942eddd3a"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/9/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067009.mp3",
+          "sha256": "4f77d9d3f3ca1ad493516abf6bb725bc0c009b322d959cb220db4413e090d242",
+          "bytes": 328225,
+          "durationMs": 20480
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:10",
+      "juz": 29,
+      "words": 11,
+      "bundleSha256": "8270cd273ad3360b496bc2c12818bdfa9dd5b8ca5b8a4ae5895fdf0a27e7e5e7",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:10?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "a9428049a0ce102a3c6ebae613b48f6e9ef695810f07ff2dd5f2519f0e1fffe2"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:10",
+          "sha256": "80fc6521a275bd7b284625b2763c52ff5fe4ab284586c74f801f30a66b7c34d2"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/10/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067010.mp3",
+          "sha256": "f62888da3eb6891774336296a38c63a499644c58c9114caa74466500b110feee",
+          "bytes": 206180,
+          "durationMs": 12852
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:11",
+      "juz": 29,
+      "words": 5,
+      "bundleSha256": "2902ee48205d2caf6728e6f0a8025c0aef5584e42faf75fd10dad17d23230407",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:11?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "137e65954974c0e59bfde9ab982b0c8b3ab5c71b88b19c9470a8575105c9bad6"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:11",
+          "sha256": "a1d59951cfb66f0fed23bc3f949d0ae8f1a354bb1958b35da857c3328ca86c43"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/11/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067011.mp3",
+          "sha256": "9eca4208c49c1452d40ab29321d9644ce67f6c8cabe68e881781b0415c733ad2",
+          "bytes": 143487,
+          "durationMs": 8934
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:12",
+      "juz": 29,
+      "words": 9,
+      "bundleSha256": "b68633d91ebf6f99bfb7fb05cbe75d369303a263431819e838d0f295021823d2",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:12?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "f9a2df92e143bf14f1815c0b1624fc2af70b5019f13794a7b2c2a8525deedac5"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:12",
+          "sha256": "d3d51be7ad87a1058a3bf47c84fb8500f0c22ee90838d3352489044415c2f948"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/12/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067012.mp3",
+          "sha256": "5597c9f3491e6983e1765a346bf4f1a4d497401a01e38b74221669ef5c656ea3",
+          "bytes": 225825,
+          "durationMs": 14080
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:13",
+      "juz": 29,
+      "words": 9,
+      "bundleSha256": "ffc0f7344d08f98d20c67d3a4d2b041d2b3a8e437c049ccf4fea4ec76a09c912",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:13?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "0c870587290bba398d9fed303ee4602dae684a65634c2dc1064bffd74a6727db"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:13",
+          "sha256": "34f56d50e72eaeaefd3820b473cd964f45a61dbafc1ba5836dd08f6e1b349584"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/13/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067013.mp3",
+          "sha256": "9460891b32a9661b07315099f37f7b4d9e708eb3da66f90ce832925adc787f5c",
+          "bytes": 216211,
+          "durationMs": 13479
+        }
+      ],
+      "wordAudioOrdinalMismatches": 4
+    },
+    {
+      "key": "67:14",
+      "juz": 29,
+      "words": 7,
+      "bundleSha256": "ba59b888b56ffb61ae006c96fddb9e469312f1a7ec4ca1bc3c9dbadb5295e2dd",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:14?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "968e30718ded2ffb8024e0cbe5e3f5e09a1ec298af737d296d7542b7bf51014e"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:14",
+          "sha256": "a3524a54d3722784721b36d265538e5c66a2106cb2f116b974822c19bf562af4"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/14/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067014.mp3",
+          "sha256": "ac6a2bf11ac7a514ad3d31cbbf14a76cc5dd770100d0707a0e2765593eb0292f",
+          "bytes": 116737,
+          "durationMs": 7262
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:15",
+      "juz": 29,
+      "words": 14,
+      "bundleSha256": "8bccf34368444c266232e0c05bfc7d6a48cd8a07e9ed4b65c9538a4247ec5b79",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:15?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "c853ed75d264b0865557b7b9eaf9858d249058a1c01562457a1ecde9a5eb5e19"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:15",
+          "sha256": "a3f4a3e1a9b078fca7d2df543bfd5792d5c7143321a57c39ba2e787d94b24f40"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/15/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067015.mp3",
+          "sha256": "02c2a2153452236898e3f8db6f6d2a0ff5b858fe7814c7adfdcc24f2d6ecd679",
+          "bytes": 246305,
+          "durationMs": 15360
+        }
+      ],
+      "wordAudioOrdinalMismatches": 2
+    },
+    {
+      "key": "67:16",
+      "juz": 29,
+      "words": 11,
+      "bundleSha256": "834e40602203881776c62dc11932d38aca2f70ebb44d677761186050882c94c1",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:16?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "821f4cc47fc87635479631bbb066b3bb8648ed6a5046832fa8956b81d9a41bf4"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:16",
+          "sha256": "f5167e299eccdcb3a3b07794e9b01663b7a3e7c44f277f9b02eecd45b3190265"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/16/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067016.mp3",
+          "sha256": "1cd56dd8f88c03142dcc1f9d2c67909217d69a926883d8def9b0b647e391b061",
+          "bytes": 221227,
+          "durationMs": 13793
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:17",
+      "juz": 29,
+      "words": 12,
+      "bundleSha256": "040632ec52fdc80e46a90fba7227ff3d82437979188c50c1f3777d5f45cb4e55",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:17?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "2a6bb6540027d2136e037e1bfe88a56a4d2249ac2958c7cb9dd5e604164c603d"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:17",
+          "sha256": "c92621d54411e5cca9650e4d31e6602239ef5583c13725485074e79d8635cbf3"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/17/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067017.mp3",
+          "sha256": "499f86317ff59099d26ead2af27828a1908eec83d595e49ed0ce78f2c697c6c2",
+          "bytes": 261769,
+          "durationMs": 16327
+        }
+      ],
+      "wordAudioOrdinalMismatches": 3
+    },
+    {
+      "key": "67:18",
+      "juz": 29,
+      "words": 8,
+      "bundleSha256": "1cf556e2f01f47f4c828493591768f1b0064fc1a82dea843a5d00923852678c6",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:18?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "51ff0bf4fb04420969acf2735c2552d4f2243a3b32527bd4859a3067c52a62d3"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:18",
+          "sha256": "f3b4404fad059b2d40de944e434b72bb8300c22d651311cf5bb038fa3e35a35b"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/18/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067018.mp3",
+          "sha256": "b6b6741df3daf4c5eac3245366bbabbb05489bf61c5007d599c4a5a287725c7c",
+          "bytes": 152264,
+          "durationMs": 9482
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:19",
+      "juz": 29,
+      "words": 15,
+      "bundleSha256": "ce649d6e0b5b24d8d2d1edf88097d8fff89aedf38dd2d3dab14fcd0c2fc443e5",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:19?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "6bc596d76c4740993da48c014a133f88d1e27dd5ac9535adb25821953b878477"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:19",
+          "sha256": "6586a55d7ef8fcfc0238915317f7f463d6a8dfa2d58ae7d5e7642c23ac226d4f"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/19/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067019.mp3",
+          "sha256": "e7f490693337988240e336c407a0949b30d93112ca6d3867b0c0ffe9fd3dce00",
+          "bytes": 401785,
+          "durationMs": 25078
+        }
+      ],
+      "wordAudioOrdinalMismatches": 8
+    },
+    {
+      "key": "67:20",
+      "juz": 29,
+      "words": 15,
+      "bundleSha256": "fb1b17d769421b6c8bcbe65c23161e6d64f63d202c1420d61f5a32bfbe71ab67",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:20?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "eef48021053170971eda7b2bc657adbc1fe613f572382a9ed967d8f2ec594dbd"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:20",
+          "sha256": "d7b4c90c1664afbfac2f7684f0ced7a35a7be61cdd960769933282fbdfa0f4d8"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/20/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067020.mp3",
+          "sha256": "299548c81c39f5c312446a2192b41ba35963cb0c29cafd30a76fb7f53b15fed3",
+          "bytes": 317776,
+          "durationMs": 19827
+        }
+      ],
+      "wordAudioOrdinalMismatches": 5
+    },
+    {
+      "key": "67:21",
+      "juz": 29,
+      "words": 12,
+      "bundleSha256": "bcbecc719b4a209c41902e2c9a27d0936368a3260ce8f77b3020fcbed686bc86",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:21?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "591f1a136a470c37c8ae440275310e43bc77026b90c08bf94f9bd4d1a7276dd9"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:21",
+          "sha256": "5e2fb5fad2de887f968ae07096714c6031beca428fa1433a59d61b2a861661b5"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/21/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067021.mp3",
+          "sha256": "e28058f0eabe6a795ef71b27bd8d4f6199c5254333e0cbe4d3387b9acb932cba",
+          "bytes": 223735,
+          "durationMs": 13949
+        }
+      ],
+      "wordAudioOrdinalMismatches": 5
+    },
+    {
+      "key": "67:22",
+      "juz": 29,
+      "words": 12,
+      "bundleSha256": "0ee2328541d40097042f95fdf7e0cdf9f457a31303820c6f779c6c79f62c8131",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:22?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "12ae9b82912185b01556d98f6f7e8ce930064adc175cc9aaf4944ee4904feb3b"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:22",
+          "sha256": "e2e583532fcee9889447d3337c4e1c596db82806a5eb15af7472aee564e8bb3b"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/22/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067022.mp3",
+          "sha256": "82adcf06b1fa2c26affcfd2314601054ad73fe97248382e5c3bf94d30e1cc5ab",
+          "bytes": 298967,
+          "durationMs": 18651
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:23",
+      "juz": 29,
+      "words": 12,
+      "bundleSha256": "efe34e3eba01614a6b4ab85cf98e0641d1ceb2672aeae1b3cdabf520b9136863",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:23?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "fd13637b009bd4db8a9622a9b58a81a5a075c1220b077628fd9b72bb8da28653"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:23",
+          "sha256": "2b188835c1580bd8663e23e4a5a099184546eb9b5e8f5229902ed6b187f7d055"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/23/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067023.mp3",
+          "sha256": "84e4aeba7acd04d9f997a68fcb791a81c5aca6cf4d04936f42d4d000a025e80d",
+          "bytes": 241289,
+          "durationMs": 15047
+        }
+      ],
+      "wordAudioOrdinalMismatches": 3
+    },
+    {
+      "key": "67:24",
+      "juz": 29,
+      "words": 8,
+      "bundleSha256": "446268299abb45e6beeb30dd8d4c1142435952894a61df48bdf6ea2eccafcaa1",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:24?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "c7fddc5041d78eb34966588808be9a30179c7f1bc04459c2a505f391dd8fe8ed"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:24",
+          "sha256": "4e0fb825f84aa7597be03bb3f1a27f8f51f9bd9dd81d4fa7e49971b8b13f8311"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/24/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067024.mp3",
+          "sha256": "37c6774cff918fe7634dac5c0cebd437f8d193367c97a06b18feba4ed058b451",
+          "bytes": 123425,
+          "durationMs": 7680
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:25",
+      "juz": 29,
+      "words": 7,
+      "bundleSha256": "9e5a47ae29a42a15b861b7dcbce08be51c16b9215a15bca611c01da96d6f11de",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:25?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "8c32dfe5d506d1252ea38a0d4b033d0e270e3ebe392ceb790119bdfffa88bbd4"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:25",
+          "sha256": "53ba44ed8ef278f5e49ae9332fd1e857ab74690fc019fab92d97eafb14225002"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/25/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067025.mp3",
+          "sha256": "744c2f965ec2dca6dcfa0237076773164ec883f9f570f9a418c2a4a54579c4eb",
+          "bytes": 156443,
+          "durationMs": 9744
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:26",
+      "juz": 29,
+      "words": 9,
+      "bundleSha256": "40cbe4077bf7b2f997d0684f7e0a6e3a0e5786a5a85fd19f8541ddde0ae5a9da",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:26?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "36ff3e2224e473dc160423461266ca9e7f5c6bd56d8df48f27781ad0593a11c9"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:26",
+          "sha256": "eda175cb5ee717a514ec4ddb128f179d98b9aed8ccaaecc7e0395c1618c96c36"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/26/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067026.mp3",
+          "sha256": "2db85cd587d6faacf70014772617772e9b215599cd1d86cffb039e63308299f7",
+          "bytes": 216211,
+          "durationMs": 13479
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:27",
+      "juz": 29,
+      "words": 13,
+      "bundleSha256": "b8ceb7d7c6eac38772d75cb16e0621b17deaceaac24a6f90a9663b9361f32cf5",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:27?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "6f90da741a882c6f153803551d9d85c9706b19d382e3a99f36d10439db657993"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:27",
+          "sha256": "9431a421c372bf0d00314c9543107d555cac5fe328dcc92ceb9d9a290154a07d"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/27/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067027.mp3",
+          "sha256": "7dd7cb5aaeb5807c9b523a655588cedf97df274ef416bc6e0525d7f7b027b813",
+          "bytes": 280159,
+          "durationMs": 17476
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:28",
+      "juz": 29,
+      "words": 15,
+      "bundleSha256": "08258ebe1abb4f90fb013045e11c122db5e19d92a7749bde72866962fce9e15f",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:28?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "f2f7df704ac2c0ada2a8ee714f84e92e3fa9bee41e22d2d70ddb95281272fb29"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:28",
+          "sha256": "487dc734ce39eefbcf6a3e18b7239a62947005cd8bfee6311441ef00a9e9ecc7"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/28/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067028.mp3",
+          "sha256": "ee0c06d0dd5c6c4432a7ce344cb8ad053b6fbc08800627ba9e0c8181d468c7c9",
+          "bytes": 326135,
+          "durationMs": 20349
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "67:29",
+      "juz": 29,
+      "words": 13,
+      "bundleSha256": "5e665a676c126563af38637e0381154f74e795ae1df0b2eb111f08e2810845eb",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:29?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "4955a32a1c17a15224640ad0d15771545e5f6042d2c117c1023d948ad51205dc"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:29",
+          "sha256": "e29f5e2b7b9bb28ddc5dd68e8fb5a696d729931c20525f6bb717998523c34f78"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/29/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067029.mp3",
+          "sha256": "5827cc9977fdb46997914bbff5ab5fef81c0ea60e34b5f5de3e17af668ecf924",
+          "bytes": 250484,
+          "durationMs": 15621
+        }
+      ],
+      "wordAudioOrdinalMismatches": 6
+    },
+    {
+      "key": "67:30",
+      "juz": 29,
+      "words": 10,
+      "bundleSha256": "9f70a2b1855c7672f2f2415f090610d0fb07e5cc6e38a80b6602f207a93080d0",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/67:30?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "0aaa621e97704cf747801893b33d897b61ec793a6a4dfe819989c17746a80521"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=67:30",
+          "sha256": "258742ca110ab7778e46d1751e42c3040b89b7afea5f37fc4691d9cd7c9db1da"
+        }
+      ],
+      "audio": [
+        {
+          "file": "67/30/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/067030.mp3",
+          "sha256": "119434f0c38ae65e3cca5acc3b36c06c721c7b05eb8f96f63b90b970cc4768ee",
+          "bytes": 296042,
+          "durationMs": 18469
+        }
+      ],
+      "wordAudioOrdinalMismatches": 0
+    },
+    {
+      "key": "2:255",
+      "juz": 3,
+      "words": 50,
+      "bundleSha256": "762baf15b923f544dcc1c5b2c404fab9030e375cefac917cac6c50a40ebc6d55",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/2:255?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "4b8ab81d15e1edc45dafc7dd9c4ee62b9ef3da9f123021e9300a9b9932d08e47"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=2:255",
+          "sha256": "75b0dec63a84be576879cb6e3c08bd10684ada37a80b79d667d830441a2be562"
+        }
+      ],
+      "audio": [
+        {
+          "file": "2/255/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/002255.mp3",
+          "sha256": "00e62c8d72dcdb5f62dd87bb85e14abf3fc93d01c8171374baccbc913bb55833",
+          "bytes": 831865,
+          "durationMs": 51958
+        }
+      ],
+      "wordAudioOrdinalMismatches": 43
+    },
+    {
+      "key": "2:282",
+      "juz": 3,
+      "words": 128,
+      "bundleSha256": "b2ec22e91675ff6ebf61efdae72585a1fb0c4dad471451a5e901ce6c0984dcb2",
+      "sources": [
+        {
+          "url": "https://api.quran.com/api/v4/verses/by_key/2:282?words=true&word_fields=text_uthmani,audio_url&translations=20",
+          "sha256": "0a1b0f71b8a44a44b1e182d644c32e66d6671a6ce026c8877aaa98854ecd5993"
+        },
+        {
+          "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=2:282",
+          "sha256": "2e6e83728e243894079609a2785ff4c986527f12b79c56549260a55b58a0e7db"
+        }
+      ],
+      "audio": [
+        {
+          "file": "2/282/full.mp3",
+          "source": "https://verses.quran.com/Alafasy/mp3/002282.mp3",
+          "sha256": "39be4f798cdfc6cb7dec4502ab8c9a51d68d5c9f79fb0100c46658b6886b654d",
+          "bytes": 2318128,
+          "durationMs": 144849
+        }
+      ],
+      "wordAudioOrdinalMismatches": 118
+    }
+  ]
+}

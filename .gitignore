@@ -5,3 +5,5 @@ test-results/
 .env
 .env.local
 .env.*.local
+# Premium source and media must never enter the static/public build.
+.quran-private/

@@ -1,0 +1,311 @@
+{
+  "schema_version": "0.1-draft",
+  "purpose": "Memorization display segments, NOT fatwa or certified waqf guide",
+  "status": "research_draft_unapproved",
+  "license_note": "Keep canonical Quran text untouched; derive segment slices from already verified word data. Respect Quran text provider attribution/license.",
+  "sources": [
+    "https://quran.com/2/255",
+    "https://quran.com/2/282",
+    "https://corpus.quran.com/wordbyword.jsp?chapter=2&verse=255",
+    "https://corpus.quran.com/wordbyword.jsp?chapter=2&verse=282",
+    "https://tanzil.net/docs/pause_marks"
+  ],
+  "verses": [
+    {
+      "verse_key": "2:255",
+      "total_words": 50,
+      "word_indexing": "1-based inclusive, canonical orthographic words; not morphological subparts",
+      "riwayah": "Hafs an Asim; Medina Mushaf-style marks",
+      "segments": [
+        {
+          "segment": 1,
+          "start_word": 1,
+          "end_word": 7,
+          "arabic_topic": "التوحيد والقيومية",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 2,
+          "start_word": 8,
+          "end_word": 12,
+          "arabic_topic": "تنزيه الله عن السنة والنوم",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 3,
+          "start_word": 13,
+          "end_word": 19,
+          "arabic_topic": "ملك السماوات والأرض",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۗ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 4,
+          "start_word": 20,
+          "end_word": 26,
+          "arabic_topic": "الشفاعة بإذنه",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 5,
+          "start_word": 27,
+          "end_word": 32,
+          "arabic_topic": "علم ما بين أيدي الخلق وما خلفهم",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۖ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 6,
+          "start_word": 33,
+          "end_word": 40,
+          "arabic_topic": "الإحاطة بالعلم بمشيئته",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 7,
+          "start_word": 41,
+          "end_word": 44,
+          "arabic_topic": "سعة الكرسي",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۖ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 8,
+          "start_word": 45,
+          "end_word": 47,
+          "arabic_topic": "حفظ السماوات والأرض",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 9,
+          "start_word": 48,
+          "end_word": 50,
+          "arabic_topic": "العلو والعظمة",
+          "boundary_type": "verse_end",
+          "source_pause_symbol": "end_of_ayah",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        }
+      ]
+    },
+    {
+      "verse_key": "2:282",
+      "total_words": 128,
+      "word_indexing": "1-based inclusive, canonical orthographic words; not morphological subparts",
+      "riwayah": "Hafs an Asim; Medina Mushaf-style marks",
+      "segments": [
+        {
+          "segment": 1,
+          "start_word": 1,
+          "end_word": 10,
+          "arabic_topic": "توثيق الدين المؤجل",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 2,
+          "start_word": 11,
+          "end_word": 14,
+          "arabic_topic": "الكتابة بالعدل",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 3,
+          "start_word": 15,
+          "end_word": 22,
+          "arabic_topic": "واجب الكاتب",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 4,
+          "start_word": 23,
+          "end_word": 27,
+          "arabic_topic": "إملاء صاحب الحق",
+          "boundary_type": "phrase_only_no_attested_pause_mark",
+          "source_pause_symbol": "none",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 5,
+          "start_word": 28,
+          "end_word": 34,
+          "arabic_topic": "التقوى وعدم الانتقاص",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 6,
+          "start_word": 35,
+          "end_word": 51,
+          "arabic_topic": "حالة العاجز ووليه",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 7,
+          "start_word": 52,
+          "end_word": 55,
+          "arabic_topic": "طلب الشاهدين",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۖ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 8,
+          "start_word": 56,
+          "end_word": 65,
+          "arabic_topic": "بديل الشهادة عند عدم وجود رجلين",
+          "boundary_type": "phrase_only_no_attested_pause_mark",
+          "source_pause_symbol": "none",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 9,
+          "start_word": 66,
+          "end_word": 71,
+          "arabic_topic": "التذكير عند الخطأ",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 10,
+          "start_word": 72,
+          "end_word": 77,
+          "arabic_topic": "استجابة الشهود",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 11,
+          "start_word": 78,
+          "end_word": 86,
+          "arabic_topic": "كتابة الدين مهما كان مقداره",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 12,
+          "start_word": 87,
+          "end_word": 95,
+          "arabic_topic": "حكمة التوثيق",
+          "boundary_type": "phrase_only_no_attested_pause_mark",
+          "source_pause_symbol": "none",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 13,
+          "start_word": 96,
+          "end_word": 107,
+          "arabic_topic": "استثناء التجارة الحاضرة",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۗ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 14,
+          "start_word": 108,
+          "end_word": 110,
+          "arabic_topic": "الإشهاد عند البيع",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 15,
+          "start_word": 111,
+          "end_word": 115,
+          "arabic_topic": "حماية الكاتب والشهيد",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۚ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 16,
+          "start_word": 116,
+          "end_word": 120,
+          "arabic_topic": "التحذير من الإضرار",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۗ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 17,
+          "start_word": 121,
+          "end_word": 122,
+          "arabic_topic": "الأمر بالتقوى",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۖ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 18,
+          "start_word": 123,
+          "end_word": 124,
+          "arabic_topic": "التعليم من الله",
+          "boundary_type": "mushaf_pause_mark_present",
+          "source_pause_symbol": "ۗ",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        },
+        {
+          "segment": 19,
+          "start_word": 125,
+          "end_word": 128,
+          "arabic_topic": "إحاطة علم الله",
+          "boundary_type": "verse_end",
+          "source_pause_symbol": "end_of_ayah",
+          "review_status": "pending_qualified_tajwid_review",
+          "is_approved_recitation_stop": false
+        }
+      ]
+    }
+  ]
+}

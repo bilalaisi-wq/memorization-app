@@ -144,3 +144,7 @@ Existing deployments can run [`20261021_leaderboard_top_ten.sql`](supabase/migra
 ## Subscriptions (test-mode integration)
 
 Menu → **Plans & pricing**, **Subscription & billing**, **Passage Builder**, and **Advanced revision & analytics** provide subscription-aware tools. All existing free learning stays free. Checkout is disabled until Stripe test prices, server secrets, functions and webhook are configured; Guardian/AI are initially disabled. The verified library remains Al-Fatihah and Juz Amma. See [billing setup, security model, hosted test checklist and live limitations](docs/billing.md). Run `npm run check:billing` and `npm run test:billing` for Edge checks in addition to the production build and Playwright suite.
+
+## Long-ayah Passage Builder and segment review
+
+Menu → **Passage memorization** opens bounded phrase workspaces, full-ayah reconstruction, Passage Chain and independent FSRS recall. The segmentation framework applies to every long ayah; the supplied 2:255/2:282 draft is kept as unapproved seed metadata. Qualified server-assigned reviewers can separately review visual divisions, waqf, restart points and audio timings. Existing Arabic text, audio, short-ayah games and learning mechanics are unchanged. [Content readiness, private deployment and teacher review guide](docs/passage-builder.md) lists exactly what is validated and what still requires deployment or human approval.

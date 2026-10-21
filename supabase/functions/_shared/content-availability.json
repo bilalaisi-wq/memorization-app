@@ -1,0 +1,538 @@
+{
+  "schemaVersion": 1,
+  "freeSurahs": [
+    1,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114
+  ],
+  "premium": [
+    {
+      "key": "67:1",
+      "wordCount": 9,
+      "audioSha256": "ec72e1cdd54ea73f02f88dd9da0b58ecb07b69c3bbdf53eb2b236d5e42ca3a19",
+      "sha256": "9ea23b339a870f0101128118891b22ecbd10c33b5498e89713329752ade9b4d4",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:2",
+      "wordCount": 11,
+      "audioSha256": "3565f1890a740195d0d4f87b0129eeac9de34680ad5045cf2e90d690a08cc05d",
+      "sha256": "bbfbc4bcb9c81b1791164c25dac3ed653b4df9c92175b72f97e85e433cccc6bd",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:3",
+      "wordCount": 18,
+      "audioSha256": "95c9e55cdea6f56f0dd23e1d0b797f22ca84194b97ac4fc7e440b20a7fdcc3f7",
+      "sha256": "2e0261a95b0575df1114761cb5eca36d757a6cf3375ed3a5457c01e397af2f17",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:4",
+      "wordCount": 10,
+      "audioSha256": "1d672cd9c2685df2626e70f9221ba2bcf58dcb112b597c215dea01a42b519d8b",
+      "sha256": "3508634e8a6275a4ae065f9a832da58bbb7c34551a1fadb6f90ad442b9464c36",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:5",
+      "wordCount": 12,
+      "audioSha256": "4d5ab7ba2ded29f141761633c2ac55e3945f87da26c55bdb44735e33de13904f",
+      "sha256": "dff1214e5080e8e94cb9e2ebc4a385d91b8a8c848896dd87281002ecd5185b14",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:6",
+      "wordCount": 7,
+      "audioSha256": "f64617ac7e5188f90ad808761f073267882e50a9646d6aeb996f5570335db101",
+      "sha256": "992e59d4f0dd2f25468750de0f825f1a657af9e4dffd2f2d4e31bdbcd3ee987a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:7",
+      "wordCount": 8,
+      "audioSha256": "ebe0b89cc8edde46c062d14ff4404f3b052b180ebb23b3c5963280358ccc2068",
+      "sha256": "dbccc71e99b04a7d76ff009035ccd71272c8f6f668307be3a38f84d667f63ba1",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:8",
+      "wordCount": 13,
+      "audioSha256": "0d5579d201229f13e42e00f2358c69c2334b24e126c00f928646b003666e2b27",
+      "sha256": "964448ac59b1074e6e974abc97c68d4c818eaedda575c562d6199187fa727a6f",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:9",
+      "wordCount": 18,
+      "audioSha256": "4f77d9d3f3ca1ad493516abf6bb725bc0c009b322d959cb220db4413e090d242",
+      "sha256": "c2cb5624fca191f19df306c98f4a4690d192914466940696ec3691f2a062ff81",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:10",
+      "wordCount": 11,
+      "audioSha256": "f62888da3eb6891774336296a38c63a499644c58c9114caa74466500b110feee",
+      "sha256": "8270cd273ad3360b496bc2c12818bdfa9dd5b8ca5b8a4ae5895fdf0a27e7e5e7",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:11",
+      "wordCount": 5,
+      "audioSha256": "9eca4208c49c1452d40ab29321d9644ce67f6c8cabe68e881781b0415c733ad2",
+      "sha256": "2902ee48205d2caf6728e6f0a8025c0aef5584e42faf75fd10dad17d23230407",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:12",
+      "wordCount": 9,
+      "audioSha256": "5597c9f3491e6983e1765a346bf4f1a4d497401a01e38b74221669ef5c656ea3",
+      "sha256": "b68633d91ebf6f99bfb7fb05cbe75d369303a263431819e838d0f295021823d2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:13",
+      "wordCount": 9,
+      "audioSha256": "9460891b32a9661b07315099f37f7b4d9e708eb3da66f90ce832925adc787f5c",
+      "sha256": "ffc0f7344d08f98d20c67d3a4d2b041d2b3a8e437c049ccf4fea4ec76a09c912",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:14",
+      "wordCount": 7,
+      "audioSha256": "ac6a2bf11ac7a514ad3d31cbbf14a76cc5dd770100d0707a0e2765593eb0292f",
+      "sha256": "ba59b888b56ffb61ae006c96fddb9e469312f1a7ec4ca1bc3c9dbadb5295e2dd",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:15",
+      "wordCount": 14,
+      "audioSha256": "02c2a2153452236898e3f8db6f6d2a0ff5b858fe7814c7adfdcc24f2d6ecd679",
+      "sha256": "8bccf34368444c266232e0c05bfc7d6a48cd8a07e9ed4b65c9538a4247ec5b79",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:16",
+      "wordCount": 11,
+      "audioSha256": "1cd56dd8f88c03142dcc1f9d2c67909217d69a926883d8def9b0b647e391b061",
+      "sha256": "834e40602203881776c62dc11932d38aca2f70ebb44d677761186050882c94c1",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:17",
+      "wordCount": 12,
+      "audioSha256": "499f86317ff59099d26ead2af27828a1908eec83d595e49ed0ce78f2c697c6c2",
+      "sha256": "040632ec52fdc80e46a90fba7227ff3d82437979188c50c1f3777d5f45cb4e55",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:18",
+      "wordCount": 8,
+      "audioSha256": "b6b6741df3daf4c5eac3245366bbabbb05489bf61c5007d599c4a5a287725c7c",
+      "sha256": "1cf556e2f01f47f4c828493591768f1b0064fc1a82dea843a5d00923852678c6",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:19",
+      "wordCount": 15,
+      "audioSha256": "e7f490693337988240e336c407a0949b30d93112ca6d3867b0c0ffe9fd3dce00",
+      "sha256": "ce649d6e0b5b24d8d2d1edf88097d8fff89aedf38dd2d3dab14fcd0c2fc443e5",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:20",
+      "wordCount": 15,
+      "audioSha256": "299548c81c39f5c312446a2192b41ba35963cb0c29cafd30a76fb7f53b15fed3",
+      "sha256": "fb1b17d769421b6c8bcbe65c23161e6d64f63d202c1420d61f5a32bfbe71ab67",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:21",
+      "wordCount": 12,
+      "audioSha256": "e28058f0eabe6a795ef71b27bd8d4f6199c5254333e0cbe4d3387b9acb932cba",
+      "sha256": "bcbecc719b4a209c41902e2c9a27d0936368a3260ce8f77b3020fcbed686bc86",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:22",
+      "wordCount": 12,
+      "audioSha256": "82adcf06b1fa2c26affcfd2314601054ad73fe97248382e5c3bf94d30e1cc5ab",
+      "sha256": "0ee2328541d40097042f95fdf7e0cdf9f457a31303820c6f779c6c79f62c8131",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:23",
+      "wordCount": 12,
+      "audioSha256": "84e4aeba7acd04d9f997a68fcb791a81c5aca6cf4d04936f42d4d000a025e80d",
+      "sha256": "efe34e3eba01614a6b4ab85cf98e0641d1ceb2672aeae1b3cdabf520b9136863",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:24",
+      "wordCount": 8,
+      "audioSha256": "37c6774cff918fe7634dac5c0cebd437f8d193367c97a06b18feba4ed058b451",
+      "sha256": "446268299abb45e6beeb30dd8d4c1142435952894a61df48bdf6ea2eccafcaa1",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:25",
+      "wordCount": 7,
+      "audioSha256": "744c2f965ec2dca6dcfa0237076773164ec883f9f570f9a418c2a4a54579c4eb",
+      "sha256": "9e5a47ae29a42a15b861b7dcbce08be51c16b9215a15bca611c01da96d6f11de",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:26",
+      "wordCount": 9,
+      "audioSha256": "2db85cd587d6faacf70014772617772e9b215599cd1d86cffb039e63308299f7",
+      "sha256": "40cbe4077bf7b2f997d0684f7e0a6e3a0e5786a5a85fd19f8541ddde0ae5a9da",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:27",
+      "wordCount": 13,
+      "audioSha256": "7dd7cb5aaeb5807c9b523a655588cedf97df274ef416bc6e0525d7f7b027b813",
+      "sha256": "b8ceb7d7c6eac38772d75cb16e0621b17deaceaac24a6f90a9663b9361f32cf5",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:28",
+      "wordCount": 15,
+      "audioSha256": "ee0c06d0dd5c6c4432a7ce344cb8ad053b6fbc08800627ba9e0c8181d468c7c9",
+      "sha256": "08258ebe1abb4f90fb013045e11c122db5e19d92a7749bde72866962fce9e15f",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:29",
+      "wordCount": 13,
+      "audioSha256": "5827cc9977fdb46997914bbff5ab5fef81c0ea60e34b5f5de3e17af668ecf924",
+      "sha256": "5e665a676c126563af38637e0381154f74e795ae1df0b2eb111f08e2810845eb",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "67:30",
+      "wordCount": 10,
+      "audioSha256": "119434f0c38ae65e3cca5acc3b36c06c721c7b05eb8f96f63b90b970cc4768ee",
+      "sha256": "9f70a2b1855c7672f2f2415f090610d0fb07e5cc6e38a80b6602f207a93080d0",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "2:255",
+      "wordCount": 50,
+      "audioSha256": "00e62c8d72dcdb5f62dd87bb85e14abf3fc93d01c8171374baccbc913bb55833",
+      "sha256": "762baf15b923f544dcc1c5b2c404fab9030e375cefac917cac6c50a40ebc6d55",
+      "juz": 3,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "2:282",
+      "wordCount": 128,
+      "audioSha256": "39be4f798cdfc6cb7dec4502ab8c9a51d68d5c9f79fb0100c46658b6886b654d",
+      "sha256": "b2ec22e91675ff6ebf61efdae72585a1fb0c4dad471451a5e901ce6c0984dcb2",
+      "juz": 3,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    }
+  ],
+  "fullyVerifiedJuz": [
+    30
+  ],
+  "fullyVerifiedSurahs": [
+    1,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    67
+  ],
+  "privateDeploymentRequired": true
+}
