@@ -255,7 +255,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
   if (mode === "sequence") mountSequence(document.querySelector("main"), surah);
   mountSkyProgress(document.querySelector("main"), learning, surahs, surah, key(), mode, memoryCallbacks);
   mountMemoryTip(document.querySelector("main"), mode);
-  mountAccountControls(document.querySelector("main"), learning);
+  mountAccountControls(document.querySelector("main"), learning, {onRecall:memoryCallbacks.onRecall, onPassage:memoryCallbacks.onPassage});
   const planButton = document.createElement("button");
   planButton.className = "text-button";
   planButton.textContent = "My plan & achievements";
@@ -395,6 +395,15 @@ function markStudyBeforeRecall(target) {
 }
 let galleryFocus = null;
 const memoryCallbacks = {
+  onPassage(passage) {
+    const target=surahs.findIndex(s=>s.id===passage.surah);
+    if(target<0 || !Number.isInteger(passage.first_ayah) || !Number.isInteger(passage.last_ayah) || passage.first_ayah<1 || passage.last_ayah<passage.first_ayah || passage.last_ayah>surahs[target].verses.length)return;
+    if(passage.first_ayah===passage.last_ayah){memoryCallbacks.onStudy(`${passage.surah}:${passage.first_ayah}`);return;}
+    const ids=Array.from({length:passage.last_ayah-passage.first_ayah+1},(_,i)=>passage.first_ayah+i);
+    for(const id of ids) if(!markStudyBeforeRecall(`${passage.surah}:${id}`))return;
+    stop();chapter=target;verses=surahs[chapter].verses;ayah=passage.first_ayah-1;mode="sequence";reset();
+    mountSequence(document.querySelector("main"),surahs[chapter],ids);
+  },
   currentKey: key,
   onGallery(id = null) {
     galleryFocus = typeof id === "number" && gallerySurahIds.includes(id) ? id : null;

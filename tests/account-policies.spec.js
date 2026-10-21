@@ -6,7 +6,7 @@ test("database policies isolate accounts and enforce opt-in, redaction, score ca
   const db = new PGlite();
   try {
     await db.exec(
-      `create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to anon,authenticated;`,
+      `create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to anon,authenticated;`,
     );
     const setup = readFileSync(
       new URL("../supabase/SETUP_ACCOUNTS.sql", import.meta.url),

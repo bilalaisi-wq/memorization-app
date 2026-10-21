@@ -1,0 +1,15 @@
+# Each user endpoint verifies the bearer JWT with Supabase auth.getUser().
+# Stripe webhooks authenticate with their raw-body Stripe signature instead.
+[functions.billing-checkout]
+verify_jwt = false
+[functions.billing-portal]
+verify_jwt = false
+[functions.billing-refresh]
+verify_jwt = false
+[functions.billing-passages]
+verify_jwt = false
+[functions.billing-webhook]
+verify_jwt = false
+
+[functions.billing-close]
+verify_jwt = false

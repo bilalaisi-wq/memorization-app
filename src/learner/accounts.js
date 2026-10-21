@@ -1,3 +1,4 @@
+import { mountBillingControls } from "../billing/ui.js";
 import { leaderboardMarkup } from "./leaderboard.js";
 import { setDeveloperUser } from "../developer/access.js";
 import { accountDefaults } from "./account-config.js";
@@ -108,7 +109,7 @@ export async function initializeAccounts(config = {}) {
     selectProfile(null);
   }
 }
-export function mountAccountControls(main, learning) {
+export function mountAccountControls(main, learning, callbacks = {}) {
   const nav = main.querySelector(".explore-nav");
   if (!nav) return;
   for (const [label, action] of [
@@ -122,6 +123,7 @@ export function mountAccountControls(main, learning) {
     button.dataset.accountControl = "true";
     nav.append(button);
   }
+  mountBillingControls(nav, {client,user,learning,signIn:()=>showAccount(learning),...callbacks});
 }
 function dialogShell(title) {
   const dialog = document.createElement("dialog");

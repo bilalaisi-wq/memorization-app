@@ -7,11 +7,15 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "playwright test"
+    "test": "playwright test",
+    "test:billing": "deno test --allow-env --allow-read supabase/functions/_shared/billing_test.ts",
+    "check:billing": "deno check supabase/functions/billing-checkout/index.ts supabase/functions/billing-portal/index.ts supabase/functions/billing-refresh/index.ts supabase/functions/billing-passages/index.ts supabase/functions/billing-webhook/index.ts supabase/functions/billing-close/index.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.10",
     "@playwright/test": "^1.56.0",
+    "deno": "2.9.6",
+    "stripe": "23.0.0",
     "vite": "^7.1.0"
   },
   "dependencies": {

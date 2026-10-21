@@ -22,12 +22,12 @@ export function stopSequence() {
     state.active = "";
   }
 }
-export function mountSequence(main, surah) {
+export function mountSequence(main, surah, initialAyahs = null) {
   stopSequence();
-  if (!state || state.surah.id !== surah.id)
+  if (!state || state.surah.id !== surah.id || initialAyahs)
     state = {
       surah,
-      chosen: [1, 2],
+      chosen: initialAyahs || [1, 2],
       wordOrder: {},
       banks: {},
       chain: [],
@@ -47,6 +47,7 @@ export function mountSequence(main, surah) {
     node.remove();
     node = next;
   }
+  main.querySelector(".sequence-panel")?.remove();
   root = document.createElement("section");
   root.className = "sequence-panel";
   main.append(root);
