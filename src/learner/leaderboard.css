@@ -1,0 +1,71 @@
+.account-dialog.leaderboard-dialog { width: min(880px, calc(100% - 24px)); }
+.weekly-ranking { --rank-ink:#254c43; --rank-muted:#586b60; --rank-card:#fffef7; --rank-line:#d8dfcc; --rank-accent:#347861; color:var(--rank-ink); }
+.ranking-heading { text-align:center; padding:10px 0 24px; }
+.ranking-kicker { font-size:10px; font-weight:800; letter-spacing:.2em; color:var(--rank-accent); }
+.ranking-heading h3 { font-family:Georgia,serif; font-size:clamp(25px,4vw,36px); margin:12px 0 6px; }
+.account-dialog .ranking-heading p { margin:0; color:var(--rank-muted); }
+.ranking-chips { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin-top:18px; }
+.ranking-chips span { font-size:11px; font-weight:700; padding:7px 10px; border-radius:30px; background:#e8efdf; color:var(--rank-ink); }
+.sky-ranking-title,.rank-comet { display:none; }
+.ranking-podium { list-style:none; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); align-items:end; gap:12px; padding:0; margin:0 0 26px; }
+.podium-card { position:relative; min-width:0; text-align:center; border:1px solid var(--rank-line); border-radius:22px 22px 12px 12px; background:var(--rank-card); overflow:hidden; padding:18px 10px 0; }
+.podium-1 { grid-column:2; grid-row:1; background:linear-gradient(160deg,#fffae3,#f3e5b4); border-color:#d5ad51; box-shadow:0 8px 24px #b8943522; }
+.podium-2 { grid-column:1; grid-row:1; }
+.podium-3 { grid-column:3; grid-row:1; }
+.rank-place { display:inline-block; font-size:11px; font-weight:800; letter-spacing:.06em; padding:5px 9px; border-radius:20px; background:#ebeddf; }
+.podium-1 .rank-place { background:#efd888; color:#594215; }
+.rank-art { height:86px; display:grid; place-items:center; }
+.podium-1 .rank-art { height:112px; }
+.rank-medal { display:grid; place-items:center; width:66px; height:66px; border-radius:50%; border:3px double #bca56c; background:linear-gradient(145deg,#fff7d7,#d8c092); color:#705722; font-size:36px; box-shadow:0 4px 0 #9a83552b; }
+.podium-1 .rank-medal { width:84px; height:84px; color:#8a5b16; font-size:46px; background:linear-gradient(145deg,#fff7b3,#efc85e); border-color:#d49b2d; }
+.podium-2 .rank-medal { background:linear-gradient(145deg,#f9ffff,#c6d6d5); border-color:#96aaa9; color:#536c70; }
+.rank-alias { display:block; overflow-wrap:anywhere; min-width:0; font-size:16px; }
+.rank-totals { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px 12px; margin:12px 0; font-variant-numeric:tabular-nums; }
+.podium-card .rank-totals strong { display:block; flex-basis:100%; font-size:25px; }
+.rank-totals small { font-size:11px; font-weight:600; }
+.rank-totals span { font-size:11px; color:var(--rank-muted); }
+.rank-caption { display:block; font-size:10px; color:var(--rank-muted); margin:0 0 15px; }
+.podium-step { display:grid; place-items:center; height:38px; margin:0 -10px; background:#e2eadb; font-size:21px; font-weight:800; color:#41624b; }
+.podium-1 .podium-step { height:64px; background:#e7cb79; color:#665022; }
+.podium-2 .podium-step { height:48px; }
+.ranking-rest-title { font-size:12px; letter-spacing:.05em; margin:20px 0 10px; color:var(--rank-muted); }
+.ranking-runners { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+.runner-card { display:flex; align-items:center; gap:12px; border:1px solid var(--rank-line); border-radius:14px; padding:12px 14px; background:var(--rank-card); }
+.runner-number { width:22px; text-align:center; font-weight:700; color:var(--rank-muted); flex-shrink:0; }
+.runner-star { font-size:26px; color:#b99344; }
+.runner-card .rank-alias { flex:1; font-size:14px; }
+.runner-card .rank-totals { margin:0; justify-content:flex-end; max-width:48%; }
+.runner-card .rank-totals strong { font-size:17px; }
+.account-dialog .ranking-note p { font-size:12px; line-height:1.6; margin:6px 0; color:var(--rank-muted); }
+.ranking-note { margin-top:24px; padding:18px 0 0; border-top:1px solid var(--rank-line); }
+.ranking-note > strong { font-size:14px; }
+.ranking-empty { text-align:center; border:1px dashed var(--rank-line); border-radius:22px; padding:24px; background:var(--rank-card); }
+.ranking-empty > span { font-size:52px; color:var(--rank-accent); }
+.ranking-empty h4 { font-size:20px; margin:8px 0; }
+:root[data-theme="night-sky"] .weekly-ranking { --rank-ink:#f1efff; --rank-muted:#b9bfdc; --rank-card:#1b2142; --rank-line:#41496e; --rank-accent:#b2a8ff; }
+:root[data-theme="night-sky"] .simple-ranking-title,:root[data-theme="night-sky"] .rank-medal,:root[data-theme="night-sky"] .podium-step { display:none; }
+:root[data-theme="night-sky"] .sky-ranking-title { display:inline; }
+:root[data-theme="night-sky"] .ranking-chips span,:root[data-theme="night-sky"] .rank-place { background:#30365a; color:#e4dfff; }
+:root[data-theme="night-sky"] .ranking-podium { align-items:center; }
+:root[data-theme="night-sky"] .podium-card { background:radial-gradient(ellipse at 50% 30%,#39356377,transparent 70%),#171c38; padding-bottom:18px; border-radius:22px; }
+:root[data-theme="night-sky"] .podium-1 { background:radial-gradient(ellipse at 50% 35%,#824f744d,transparent 75%),linear-gradient(145deg,#343059,#1b2040); border-color:#d8b56f; box-shadow:0 0 26px #d89a3f22; padding-top:24px; padding-bottom:24px; }
+:root[data-theme="night-sky"] .podium-1 .rank-place { background:#5e492b; color:#ffe3a1; }
+:root[data-theme="night-sky"] .rank-comet { display:block; width:100%; height:100%; overflow:visible; }
+:root[data-theme="night-sky"] .rank-art { height:98px; }
+:root[data-theme="night-sky"] .podium-1 .rank-art { height:148px; }
+.rank-comet { --comet:#a89bff; color:#b4c7ff; }
+.podium-1 .rank-comet { --comet:#ffbf68; }
+.podium-3 .rank-comet { --comet:#76d9e4; }
+.comet-tail-outer { fill:var(--comet); opacity:.24; }
+.comet-tail-inner { fill:var(--comet); opacity:.62; }
+.comet-halo { fill:var(--comet); opacity:.22; filter:blur(5px); }
+.comet-core { fill:var(--comet); filter:drop-shadow(0 0 7px var(--comet)); }
+.comet-glint { fill:#fff5d8; }
+:root[data-theme="night-sky"] .runner-star { color:#c3b9ff; text-shadow:0 0 10px #a995ff80; }
+:root[data-theme="night-sky"] .podium-1 .rank-totals strong { color:#ffe0a0; }
+:root[data-theme="night-sky"][data-celestial-motion="full"]:not([data-sky-visible="false"]) .comet-flight { animation:comet-drift 4s ease-in-out infinite alternate; }
+@keyframes comet-drift { from { transform:translate(-3px,2px); } to { transform:translate(4px,-3px); } }
+@media (max-width:540px) { .account-dialog.leaderboard-dialog { padding:18px 12px; } .ranking-podium { gap:5px; } .podium-card { padding-left:5px; padding-right:5px; border-radius:15px; } .rank-alias { font-size:12px; } .rank-totals { gap:4px; } .podium-card .rank-totals strong { font-size:21px; } .rank-caption { font-size:9px; } .rank-art { height:68px; } .podium-1 .rank-art { height:90px; } .rank-medal { width:48px; height:48px; font-size:27px; } .podium-1 .rank-medal { width:62px; height:62px; font-size:34px; } .podium-step { margin-left:-5px; margin-right:-5px; } :root[data-theme="night-sky"] .rank-art { height:72px; } :root[data-theme="night-sky"] .podium-1 .rank-art { height:105px; } .runner-card { padding:10px 8px; gap:7px; } .runner-card .rank-totals { gap:4px 7px; } .runner-card .rank-totals span { font-size:10px; } }
+@media (prefers-reduced-motion:reduce) { .comet-flight { animation:none !important; } }
+
+:root[data-theme="night-sky"] .podium-1 .rank-comet { width:135%; max-width:none; }

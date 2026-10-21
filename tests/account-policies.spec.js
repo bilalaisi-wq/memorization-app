@@ -188,6 +188,19 @@ test("database policies isolate accounts and enforce opt-in, redaction, score ca
       ),
       [a],
     );
+    // The public RPC exposes at most ten, with the existing ranking and redaction.
+    await db.exec(`
+      insert into auth.users select ('00000000-0000-0000-0000-' || lpad(n::text,12,'0'))::uuid from generate_series(10,23) n;
+      insert into public.leaderboard_preferences(user_id,alias,enabled)
+        select id, 'Star' || right(id::text,2), true from auth.users where id::text >= '00000000-0000-0000-0000-000000000010';
+      insert into public.weekly_activity(user_id,week_start,xp,stars,recalls)
+        select user_id,date_trunc('week',now() at time zone 'UTC')::date,100,2,1 from public.leaderboard_preferences where enabled;
+      set role anon;
+    `);
+    const topTen = (await db.query('select * from public.get_weekly_leaderboard()')).rows;
+    assert.equal(topTen.length, 10);
+    assert.equal(topTen[0].alias, 'Star10');
+    assert.equal(topTen[9].alias, 'Star19');
   } finally {
     await db.close();
   }

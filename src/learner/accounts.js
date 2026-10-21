@@ -1,3 +1,4 @@
+import { leaderboardMarkup } from "./leaderboard.js";
 import { setDeveloperUser } from "../developer/access.js";
 import { accountDefaults } from "./account-config.js";
 import { CloudProgress } from "./cloud-progress.js";
@@ -384,6 +385,7 @@ function showPrivacy() {
 async function showLeaderboard() {
   const dialog = dialogShell("Weekly practice leaderboard"),
     area = dialog.querySelector("[data-content]");
+  dialog.classList.add("leaderboard-dialog");
   if (!client) {
     area.innerHTML =
       "<p>The shared leaderboard is not activated yet. No sample users or invented scores are shown. You can track your personal progress in Daily Quests.</p>";
@@ -393,7 +395,7 @@ async function showLeaderboard() {
   try {
     const { data, error } = await client.rpc("get_weekly_leaderboard");
     if (error) throw error;
-    area.innerHTML = `<p>Opt-in, self-reported practice totals for the current UTC week. Recitation is not automatically verified. Your own pace matters more than rank.</p><ol class="leaderboard-list">${data.map((row) => `<li><strong>${esc(row.alias)}</strong><span>${row.xp} XP · ${row.stars} stars · ${row.recalls} independent recall attempts</span></li>`).join("") || "<li>No learners have opted in this week yet.</li>"}</ol>`;
+    area.innerHTML = leaderboardMarkup(data);
   } catch {
     area.textContent =
       "The shared leaderboard could not load. Your personal learning still works.";

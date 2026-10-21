@@ -134,3 +134,9 @@ Open Encouragement settings → Appearance to preview and apply Night Sky; Simpl
 ## Site menu and developer view
 
 The **☰ Menu** button expands a scrollable column of tools and settings, closes after selecting an item, and supports Escape. Confirmed owner sign-in (`bilalaisi@gmail.com`, verified by Supabase) exposes a presentation-only Developer mode and editorial notes; learners do not see pending artwork/source-verification messages. See [account setup and Google troubleshooting](docs/activate-accounts.md) for provider-dashboard requirements. [Mobile menu](docs/menu-mobile.jpg) · [Night Sky menu](docs/menu-night-sky.jpg).
+
+## Weekly leaderboard
+
+The optional weekly leaderboard shows only the top ten: a gold/silver/bronze podium in Simple, or a larger golden comet, two smaller comets, and star-marked ranks in Night Sky. Scores, privacy opt-in, and the existing XP/recall ranking are unchanged. Motion respects reduced-effects settings. [Design previews](docs/leaderboard-previews/README.md) use clearly documented mock data for QA only.
+
+Existing deployments can run [`20261021_leaderboard_top_ten.sql`](supabase/migrations/20261021_leaderboard_top_ten.sql) in Supabase to reduce the public RPC response from 50 to ten. The UI enforces ten even before this migration; new installations use the updated combined setup script. This migration has been tested locally, not applied to the hosted project.

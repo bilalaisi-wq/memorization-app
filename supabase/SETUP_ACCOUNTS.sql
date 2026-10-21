@@ -80,7 +80,7 @@ language sql stable security definer set search_path='' as $$
   select p.alias,w.xp,w.stars,w.recalls from public.weekly_activity w
   join public.leaderboard_preferences p on p.user_id=w.user_id and p.enabled
   where w.week_start=date_trunc('week',now() at time zone 'UTC')::date
-  order by w.xp desc,w.recalls desc,p.alias limit 50;
+  order by w.xp desc,w.recalls desc,p.alias limit 10;
 $$;
 create or replace function public.delete_my_account() returns void
 language plpgsql security definer set search_path='' as $$
