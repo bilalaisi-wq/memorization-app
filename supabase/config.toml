@@ -20,3 +20,7 @@ verify_jwt = false
 # Manual auth.getUser plus adult pilot approval, subscription and atomic allowance.
 [functions.recitation-compare]
 verify_jwt = false
+
+# Verified identity, subscription, adult pilot, consent and atomic coach quota.
+[functions.hifz-coach]
+verify_jwt = false

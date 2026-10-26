@@ -726,4 +726,29 @@ export function openPassageStudio(ctx) {
   d.showModal();
   draw();
   if (memory.warning || workWarning) note(memory.warning || workWarning, true);
+  if (ctx.coachTarget) (async () => {
+    try {
+      const target = ctx.coachTarget;
+      const all = await Promise.all(target.refs.map(get));
+      if (!d.isConnected) return;
+      if (ctx.coachAction === "review") {
+        const active = memory.snapshot().active;
+        if (active && !active.graded) {
+          await drawAssessment();
+          note("Resuming your unfinished passage assessment before starting another.");
+          return;
+        }
+        const saved = target.unit;
+        const segment = saved?.type === "segment" ? all[0].segments.find(s => s.id === saved.segment) : null;
+        if (!saved || saved.type === "segment" && !segment || (await recallUnit(all, segment)).id !== saved.id) throw Error("The reviewed recall unit changed. Check current boundaries before starting a new assessment.");
+        await beginRecall(all, segment);
+      } else {
+        selectedRefs = target.refs.slice(0, 10);
+        bundle = all[0]; page = 0; segmentId = "full";
+        restoreWork(); draw();
+        note("Coach practice suggestion opened. Review dates and mastery are unchanged.");
+      }
+    } catch (e) { note(e.message, true); }
+  })();
+
 }

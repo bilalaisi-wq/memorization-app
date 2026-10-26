@@ -152,3 +152,7 @@ Menu → **Passage memorization** opens bounded phrase workspaces, full-ayah rec
 ## Experimental recitation comparison
 
 Active Recall includes opt-in adult-pilot AI transcription and tentative word comparison, separately from learner self-assessment and puzzle correctness. It never verifies tajweed or awards mastery. Uploads are off by default behind server adult approval, privacy/AI flags, subscription and atomic monthly quotas. See [setup, privacy, limitations and teacher evaluation requirements](docs/experimental-recitation.md).
+
+## Hifz Coach
+
+Menu → Hifz Coach provides local daily/weekly plans from recorded goals, due FSRS cards, recent self-assessments, mistakes and passage transitions. Optional server-side AI selects bounded planning options after consent, verified AI subscription/adult access, and an atomic monthly allowance check. Identical daily summaries are cached; AI never changes the scheduler or certifies mastery. See [setup, planning rules, privacy and limitations](docs/hifz-coach.md).

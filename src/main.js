@@ -255,7 +255,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
   if (mode === "sequence") mountSequence(document.querySelector("main"), surah);
   mountSkyProgress(document.querySelector("main"), learning, surahs, surah, key(), mode, memoryCallbacks);
   mountMemoryTip(document.querySelector("main"), mode);
-  mountAccountControls(document.querySelector("main"), learning, {onRecall:memoryCallbacks.onRecall, onPassage:memoryCallbacks.onPassage});
+  mountAccountControls(document.querySelector("main"), learning, {onRecall:memoryCallbacks.onRecall, onPassage:memoryCallbacks.onPassage,onCoachStep:(target,nextMode,game)=>{memoryCallbacks.onStudy(target);if(nextMode==="lab"){memoryCallbacks.onLab();if(["falling","vanishing","jigsaw","match","chain","continue","detective"].includes(game))document.querySelector(`[data-game="${game}"]`)?.click();}}});
   const planButton = document.createElement("button");
   planButton.className = "text-button";
   planButton.textContent = "My plan & achievements";

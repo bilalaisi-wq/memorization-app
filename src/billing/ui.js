@@ -80,6 +80,7 @@ export function mountBillingControls(nav, context) {
   mountSegmentReview(nav, context);
   for (
     const [label, open] of [
+      ["Hifz Coach", () => import("../coach/ui.js").then(m=>m.openCoach({...context,onPassageStudio:(target,action)=>openPassageStudio({...context,coachTarget:target,coachAction:action})}))],
       ["Plans & pricing", () => pricing(context, api)],
       ["Subscription & billing", () => account(context, api)],
       ["Passage Builder", () => passages(context, api)],

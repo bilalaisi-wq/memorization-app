@@ -1,0 +1,53 @@
+.coach-dialog {
+  width: min(960px,95vw);
+}
+.coach-hero {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+  background: linear-gradient(125deg,#ece7ff77,#c7e7e744);
+}
+.coach-hero > span {
+  font-size: 3.5rem;
+  color: var(--primary,#8a71c6);
+}
+.coach-dialog form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-block: 1.25rem;
+  align-items: end;
+}
+.coach-dialog label {
+  display: block;
+}
+.coach-dialog input[type=number] {
+  display: block;
+  max-width: 10rem;
+}
+.coach-tasks,
+.coach-week {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,210px),1fr));
+  gap: .8rem;
+}
+.coach-tasks article,
+.coach-week article {
+  border: 1px solid #948ac166;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.coach-source {
+  padding: .8rem;
+  border-inline-start: 4px solid #9c85db;
+}
+.coach-dialog pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: .85rem;
+}
+.coach-dialog details {
+  margin-block: 1rem;
+}

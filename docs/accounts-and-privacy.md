@@ -44,3 +44,7 @@ Subscriptions use Stripe-hosted Checkout and Customer Portal; the app does not c
 ## Optional experimental adult AI pilot
 
 Local recording remains the default. Explicitly approved adult accounts can opt in per recording to server-mediated OpenAI transcription; child uploads are unsupported. No app-side audio/transcript storage is added. Private model/evaluation metadata, usage ledgers and optional feedback categories are separate from learning history and leaderboards. The AI panel can delete analysis metadata; account deletion cascades AI records. Provider processing/retention needs separate operator review and cannot be reversed by local deletion. See [experimental comparison privacy and deployment requirements](experimental-recitation.md).
+
+## Optional Hifz Coach
+
+Local coach plans read existing records without changing them. Adult AI-pilot users can separately consent to sending minimized learning aggregates (not Quran text, specific ayah references, audio, names or raw histories) to OpenAI for bounded planning options. Server cache/usage is separate from progress and leaderboards; users can clear the cache while usage counters remain for quota enforcement. Coach preferences are device-local and account-scoped, and account deletion cascades server coach data. See [coach privacy and activation](hifz-coach.md).

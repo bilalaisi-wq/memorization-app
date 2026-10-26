@@ -362,7 +362,7 @@ function showAccount(learning) {
         return;
       const { error } = await client.rpc("delete_my_account");
       if (error) throw error;
-      for (const key of [...progressKeys,"ayah-appearance-v1","ayah-sky-celebrations-v1"]) profileStorage.removeItem(key);
+      for (const key of [...progressKeys,"ayah-coach-settings-v1","ayah-appearance-v1","ayah-sky-celebrations-v1"]) profileStorage.removeItem(key);
       await client.auth.signOut({ scope: "local" });
       location.reload();
     });
