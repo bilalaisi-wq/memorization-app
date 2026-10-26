@@ -1,0 +1,12 @@
+{
+  "status": "not_evaluated_by_qualified_teachers",
+  "model": "whisper-1",
+  "providerSnapshot": "not exposed by provider",
+  "comparisonVersion": "arabic-token-alignment-v1",
+  "qualifiedTeacherReviewedRecordings": 0,
+  "falsePositiveRate": null,
+  "falseNegativeRate": null,
+  "abstentionRate": null,
+  "productionAccuracyEstablished": false,
+  "notes": "Automated synthetic, mock-provider, browser and database tests do not measure real recitation accuracy. Obtain consented adult recordings, independent qualified teacher labels and held-out evaluation across all documented conditions before broader launch. No child uploads are supported."
+}

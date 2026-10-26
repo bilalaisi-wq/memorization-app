@@ -7,3 +7,5 @@ test-results/
 .env.*.local
 # Premium source and media must never enter the static/public build.
 .quran-private/
+# Consented recitation evaluation recordings/transcripts stay outside Git.
+.recitation-evaluation/

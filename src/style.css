@@ -2995,3 +2995,11 @@ main .text-button, main .primary, .lab-game button, .lab-settings label { font-s
 :root[data-theme="night-sky"] .menu-toggle { color: #e8e6ff; border-color: #43466b; }
 @keyframes menu-expand { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) { .site-menu .explore-nav { animation: none; } }
+
+.experimental-recitation { margin-top:1rem;padding:1rem;border:1px solid var(--border,#8e85b9);border-radius:1rem; }
+.experimental-recitation summary { cursor:pointer;font-weight:700; }
+.experimental-recitation label { display:block;margin:1rem 0; }
+.experimental-recitation textarea { display:block;width:100%;min-height:6rem;font:1.4rem Uthmanic,serif; }
+.experimental-recitation .arabic { font-family:Uthmanic,serif;font-size:1.8rem;line-height:2;overflow-wrap:anywhere; }
+.experimental-recitation li { margin-block:.6rem; }
+.experimental-recitation button { margin:.25rem; }

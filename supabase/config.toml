@@ -16,3 +16,7 @@ verify_jwt = false
 
 [functions.quran-content]
 verify_jwt = false
+
+# Manual auth.getUser plus adult pilot approval, subscription and atomic allowance.
+[functions.recitation-compare]
+verify_jwt = false

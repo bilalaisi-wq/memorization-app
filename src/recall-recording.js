@@ -1,3 +1,4 @@
+import { createAiPanel } from "./recitation/ai-panel.js";
 import {
   stopEncouragement,
   cancelTransitions,
@@ -21,12 +22,14 @@ export function createRecallRecording({ onReference, onChange }) {
   const element = document.createElement("section");
   element.className = "recall-recording";
   element.setAttribute("aria-label", "Recitation recording and comparison");
-  element.innerHTML = `<h3>Hear your recall</h3><p>Record from memory, then compare with the reciter. Your recording stays in this tab and is cleared when you leave this session. Recording does not verify pronunciation.</p>
+  element.innerHTML = `<h3>Hear your recall</h3><p>Record from memory, then compare with the reciter. Your recording stays in this tab unless you explicitly submit it through the experimental adult-pilot panel, and is cleared when you leave this session. Recording does not verify pronunciation.</p>
     <div class="record-actions"><button class="primary small" id="record-recall">● Record my recitation</button><button class="text-button" id="stop-recording" disabled>Stop recording</button><span id="recording-time" aria-label="Recording duration">0:00</span></div>
     <p id="recording-status" role="status" aria-live="polite">Ready to record. Microphone permission is requested when you start.</p>
     <div class="recording-tracks"><label>Your recitation<audio id="learner-recording" controls preload="metadata"></audio></label><label>Reciter<audio id="reference-recording" controls preload="none"></audio></label></div>
     <div class="record-actions"><button class="text-button" id="play-my-recording" disabled>Listen to my recitation</button><button class="text-button" id="recall-audio">♫ Listen first (study assistance)</button><button class="primary small" id="compare-recordings" disabled>Play both together</button><button class="text-button" id="stop-comparison">Stop playback</button></div>
     <div class="recording-volumes"><label>Your volume <input id="learner-volume" type="range" min="0" max="1" step="0.05" value="1"></label><label>Reciter volume <input id="reference-volume" type="range" min="0" max="1" step="0.05" value="0.7"></label></div><p class="recording-help">Both tracks start together. Use their individual players to replay or seek, and adjust the volumes to hear each voice. Timing is not automatically aligned. You can still self-assess without a microphone.</p>`;
+  const ai = createAiPanel();
+  element.append(ai.element);
   const find = (id) => element.querySelector(`#${id}`);
   const mine = find("learner-recording"),
     reference = find("reference-recording");
@@ -68,6 +71,7 @@ export function createRecallRecording({ onReference, onChange }) {
   };
   const clear = () => {
     generation++;
+    ai.reset();
     clearInterval(timer);
     stopPlayback();
     if (recorder?.state === "recording") recorder.stop();
@@ -91,6 +95,7 @@ export function createRecallRecording({ onReference, onChange }) {
     stopEncouragement();
     cancelTransitions();
     stopPlayback();
+    ai.reset();
     pending = true;
     const request = ++generation;
     status("Waiting for microphone permission…");
@@ -126,6 +131,7 @@ export function createRecallRecording({ onReference, onChange }) {
         if (blob.size) {
           url = URL.createObjectURL(blob);
           mine.src = url;
+          ai.setRecording(blob);
           status(
             "Recording ready. After reciting, reveal the ayah and compare by ear.",
           );
@@ -217,6 +223,7 @@ export function createRecallRecording({ onReference, onChange }) {
       if (context && context.id !== next.id) clear();
       const changed = !context || context.id !== next.id;
       context = next;
+      ai.setContext(next);
       if (reference.getAttribute("src") !== next.audio)
         reference.src = next.audio;
       find("recall-audio").textContent =
@@ -234,10 +241,12 @@ export function createRecallRecording({ onReference, onChange }) {
     dispose() {
       disposed = true;
       clear();
+      ai.dispose();
       reference.removeAttribute("src");
       reference.load();
     },
   };
+  ai.onDelete(() => { clear(); update(); });
   current = controller;
   return controller;
 }

@@ -11,7 +11,9 @@
     "test:billing": "deno test --allow-env --allow-read supabase/functions/_shared/billing_test.ts",
     "check:billing": "deno check supabase/functions/billing-checkout/index.ts supabase/functions/billing-portal/index.ts supabase/functions/billing-refresh/index.ts supabase/functions/billing-passages/index.ts supabase/functions/billing-webhook/index.ts supabase/functions/billing-close/index.ts",
     "test:content": "deno test --allow-env --allow-read supabase/functions/_shared/quran_test.ts",
-    "check:content": "deno check supabase/functions/quran-content/index.ts"
+    "check:content": "deno check supabase/functions/quran-content/index.ts",
+    "test:recitation": "deno test --allow-env --allow-read supabase/functions/_shared/recitation_test.ts",
+    "check:recitation": "deno check supabase/functions/recitation-compare/index.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.10",
