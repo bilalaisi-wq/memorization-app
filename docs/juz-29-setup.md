@@ -10,7 +10,7 @@ This is source validation, **not scholar approval of internal recitation stops**
 
 ## Deploy (administrator)
 
-1. Set up existing accounts and billing. Install [20261023_passage_content.sql](../supabase/migrations/20261023_passage_content.sql) for private storage/passage progress if not already installed. Retain the existing segmentation review migrations and run [20261030_juz29_review_sources.sql](../supabase/migrations/20261030_juz29_review_sources.sql) after them to register the new long-ayah sources; this creates no approvals.
+1. Set up existing accounts and billing. Install [20261023_passage_content.sql](../supabase/migrations/20261023_passage_content.sql) for private storage/passage progress if not already installed. Paste and run the entire [SETUP_JUZ29_REVIEWS.sql](../supabase/SETUP_JUZ29_REVIEWS.sql) to create the review schema and register long-ayah sources in the correct order. This also fixes `relation "public.quran_review_heads" does not exist`. It is safe to rerun and creates no reviewer roles or recitation-stop approvals. Expect `review_table_exists = true` and `registered_sources = 35` (or more if you have registered additional sources).
 2. Sign in once as **bilalaisi@gmail.com**, the previously configured owner address. Then run the entire [20261029_developer_access.sql](../supabase/migrations/20261029_developer_access.sql) in Supabase SQL Editor. This provisions only that existing confirmed account. Rerunning does not reset its mode. The recent spoken spelling does not create an additional authorized identity.
 3. Prepare protected files locally from the repository root (Python, curl, ffmpeg/ffprobe required):
 
