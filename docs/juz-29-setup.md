@@ -10,8 +10,8 @@ This is source validation, **not scholar approval of internal recitation stops**
 
 ## Deploy (administrator)
 
-1. Set up existing accounts and billing. Install [20261023_passage_content.sql](../supabase/migrations/20261023_passage_content.sql) for private storage/passage progress if not already installed. Paste and run the entire [SETUP_JUZ29_REVIEWS.sql](../supabase/SETUP_JUZ29_REVIEWS.sql) to create the review schema and register long-ayah sources in the correct order. This also fixes `relation "public.quran_review_heads" does not exist`. It is safe to rerun and creates no reviewer roles or recitation-stop approvals. Expect `review_table_exists = true` and `registered_sources = 35` (or more if you have registered additional sources).
-2. Sign in once as **bilalaisi@gmail.com**, the previously configured owner address. Then run the entire [20261029_developer_access.sql](../supabase/migrations/20261029_developer_access.sql) in Supabase SQL Editor. This provisions only that existing confirmed account. Rerunning does not reset its mode. The recent spoken spelling does not create an additional authorized identity.
+1. Open Supabase SQL Editor and paste the **entire [SETUP_JUZ29.sql](../supabase/SETUP_JUZ29.sql)**, then Run. It installs all SQL prerequisites together: billing tables, private passage storage, review schema, source registry and developer access. It fixes both `public.billing_config` missing and `public.quran_review_heads` missing errors. Existing progress/reviews/configuration are preserved; it does not activate payments or upload content.
+2. Sign in once as **bilalaisi@gmail.com**, the previously configured owner address, before running the setup. If you already ran it before signing in, sign in and rerun the same file. Expect `billing_ready = true`, `review_ready = true`, `registered_sources = 35` (or more), and `developer_account_provisioned = true`. No teacher roles or recitation-stop approvals are created.
 3. Prepare protected files locally from the repository root (Python, curl, ffmpeg/ffprobe required):
 
    ```sh

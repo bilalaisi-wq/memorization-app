@@ -6,6 +6,8 @@ Use a Stripe **test sandbox first**. This guide prepares payments; it does not c
 
 Open [your SQL Editor](https://supabase.com/dashboard/project/ycgyuatjgdbhiakqourg/sql/new).
 
+For Juz 29/developer setup, use the complete [SETUP_JUZ29.sql](../supabase/SETUP_JUZ29.sql), which also installs missing billing prerequisites.
+
 If billing is already installed (`public.billing_config` exists), skip this SQL step. If accounts work but billing has not been installed, paste and run the entire [billing migration](../supabase/migrations/20261022_billing.sql). Do not reset the database. On a fresh project only, use [SETUP_ACCOUNTS.sql](../supabase/SETUP_ACCOUNTS.sql) instead. If you rerun an older billing setup after enabling developer preview, rerun [20261029_developer_access.sql](../supabase/migrations/20261029_developer_access.sql) afterward to restore the newer entitlement function.
 
 ## 2. Create Stripe products and prices
