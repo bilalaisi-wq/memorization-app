@@ -20,7 +20,7 @@ export const profileStorage = {
   getItem: (key) => localStorage.getItem(profileKey(key)),
   setItem: (key, value) => {
     localStorage.setItem(profileKey(key), value);
-    if (progressKeys.includes(key))
+    if (progressKeys.includes(key) || key === "ayah-rewards-v1")
       for (const listener of listeners) listener(owner, key);
   },
   removeItem: (key) => localStorage.removeItem(profileKey(key)),

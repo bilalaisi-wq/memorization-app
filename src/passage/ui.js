@@ -1,3 +1,4 @@
+import { awardStudy } from "../rewards/store.js";
 import {
   canonicalSlice,
   studySegmentation,
@@ -436,6 +437,7 @@ export function openPassageStudio(ctx) {
         !good,
       );
       if (good) {
+        awardStudy({mode:"passage",unit:bundle.key,action:"completion",xp:8});
         successCue(
           `passage-window-${bundle.key}-${page}`,
           "Beautiful work. Connect what you remember.",
@@ -470,6 +472,7 @@ export function openPassageStudio(ctx) {
         !good,
       );
       if (good) {
+        awardStudy({mode:"passage",unit:bundle.key,action:"completion",xp:8});
         successCue(
           `passage-whole-${bundle.key}`,
           "Ayah connected. Keep growing.",
@@ -546,7 +549,7 @@ export function openPassageStudio(ctx) {
           : "The ayah sequence needs another look.",
         !good,
       );
-      if (good) successCue("passage-chain", "Your passage is connected.");
+      if (good) { awardStudy({mode:"passage",unit:selectedRefs.join("|"),action:"chain",xp:8});successCue("passage-chain", "Your passage is connected."); }
     };
   }
   async function beginRecall(all, segment = null) {
@@ -703,6 +706,7 @@ export function openPassageStudio(ctx) {
         try {
           stop();
           const result = memory.grade(a.id, b.dataset.grade);
+          awardStudy({mode:"passage-recall",unit:a.unitId,action:"assessment",xp:result.independent?10:3});
           assessmentBundles = null;
           draw();
           note(

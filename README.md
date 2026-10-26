@@ -156,3 +156,7 @@ Active Recall includes opt-in adult-pilot AI transcription and tentative word co
 ## Hifz Coach
 
 Menu → Hifz Coach provides local daily/weekly plans from recorded goals, due FSRS cards, recent self-assessments, mistakes and passage transitions. Optional server-side AI selects bounded planning options after consent, verified AI subscription/adult access, and an atomic monthly allowance check. Identical daily summaries are cached; AI never changes the scheduler or certifies mastery. See [setup, planning rules, privacy and limitations](docs/hifz-coach.md).
+
+## All-mode rewards and Nature Companions
+
+Learning XP now covers practice interactions, Quest, recall, every Lab game, chains and passages, and automatically updates opted-in weekly leaderboards. **Menu → My companion & shop** offers earned-only Seeds, nature avatars, outfits, homes and private profile pictures. Spending does not reduce XP, stars or mastery. Apply the [new rewards/shop migration and activation guide](docs/rewards-and-shop.md) for account wardrobes and cross-device currency; automatic leaderboard publishing also supports the older account backend.

@@ -3003,3 +3003,5 @@ main .text-button, main .primary, .lab-game button, .lab-settings label { font-s
 .experimental-recitation .arabic { font-family:Uthmanic,serif;font-size:1.8rem;line-height:2;overflow-wrap:anywhere; }
 .experimental-recitation li { margin-block:.6rem; }
 .experimental-recitation button { margin:.25rem; }
+.study-xp {font-size:.9rem;font-weight:700;color:var(--text,#625179);white-space:nowrap;}
+.avatar .header-companion,.avatar img {width:100%;height:100%;border-radius:50%;object-fit:cover;}

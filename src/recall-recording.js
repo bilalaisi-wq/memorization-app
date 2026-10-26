@@ -1,3 +1,4 @@
+import { awardStudy } from "./rewards/store.js";
 import { createAiPanel } from "./recitation/ai-panel.js";
 import {
   stopEncouragement,
@@ -132,6 +133,7 @@ export function createRecallRecording({ onReference, onChange }) {
           url = URL.createObjectURL(blob);
           mine.src = url;
           ai.setRecording(blob);
+          if(context?.key)awardStudy({mode:"active-recall",unit:context.key,action:"recording",xp:2});
           status(
             "Recording ready. After reciting, reveal the ayah and compare by ear.",
           );

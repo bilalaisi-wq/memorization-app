@@ -48,3 +48,7 @@ Local recording remains the default. Explicitly approved adult accounts can opt 
 ## Optional Hifz Coach
 
 Local coach plans read existing records without changing them. Adult AI-pilot users can separately consent to sending minimized learning aggregates (not Quran text, specific ayah references, audio, names or raw histories) to OpenAI for bounded planning options. Server cache/usage is separate from progress and leaderboards; users can clear the cache while usage counters remain for quota enforcement. Coach preferences are device-local and account-scoped, and account deletion cascades server coach data. See [coach privacy and activation](hifz-coach.md).
+
+## Learning rewards and private customization
+
+Opted-in leaderboard accounts automatically sync minimal dated XP receipts (hashed receipt ID, UTC day, mode and totals; no Quran references or recordings). Nonparticipants can explicitly sync private earnings in the shop. Private wardrobe/purchases, balance and resized profile pictures are owner-only; public rankings show aliases, weekly totals and curated nature companions, never uploaded photos. Users can remove/export pictures/customization; deleting the account cascades reward and profile rows. Guest data remains local and separate. See [reward persistence, retention and shop activation](rewards-and-shop.md); the operator must update actual privacy/backup/log-retention notices before deployment.

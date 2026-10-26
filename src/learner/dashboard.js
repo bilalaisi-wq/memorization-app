@@ -1,3 +1,4 @@
+import { rewardSummary } from "../rewards/store.js";
 import { esc } from "../ui/dom.js";
 import { profileStorage } from "./profile-storage.js";
 import {
@@ -49,7 +50,7 @@ export function mountLearnerDashboard(root, store, surahs, callbacks) {
       puzzles: week.reduce((n, [, v]) => n + v.puzzles, 0),
       recalls: week.reduce((n, [, v]) => n + v.recalls, 0),
     };
-    area.innerHTML = `<section class="goal-card"><div><span class="eyebrow">YOUR LEARNING PLAN</span><h2>${goals ? "Small steps toward your goals" : "Make a plan that fits your life"}</h2><p>${goals ? `${goals.minutes} minutes · ${goals.days} days each week · ${esc({ daily: "A steady daily habit", surahs: "Memorize selected surahs", review: "Strengthen what I know" }[goals.aim])}` : "Choose what you want to learn and what you already know. Your starting point is self-reported; it never awards mastery."}</p></div><button class="primary small" data-edit-goals>${goals ? "Edit my goals" : "Set my goals"}</button></section>
+    area.innerHTML = `<p class="study-xp-total">✦ ${rewardSummary(store).xp} total learning XP across all modes · Nature Companions is in the menu.</p><section class="goal-card"><div><span class="eyebrow">YOUR LEARNING PLAN</span><h2>${goals ? "Small steps toward your goals" : "Make a plan that fits your life"}</h2><p>${goals ? `${goals.minutes} minutes · ${goals.days} days each week · ${esc({ daily: "A steady daily habit", surahs: "Memorize selected surahs", review: "Strengthen what I know" }[goals.aim])}` : "Choose what you want to learn and what you already know. Your starting point is self-reported; it never awards mastery."}</p></div><button class="primary small" data-edit-goals>${goals ? "Edit my goals" : "Set my goals"}</button></section>
     <section class="recommendation-card"><h3>${esc(suggestion.title)}</h3><p>${esc(suggestion.reason)}</p><p><strong>${esc(chapter?.name || "")} · Ayah ${esc(suggestion.key?.split(":")[1] || "")}</strong></p><button class="primary small" data-next-step>Start suggested step →</button><fieldset class="confidence-check"><legend>How does your memory feel?</legend>${[
       ["new", "Still learning"],
       ["shaky", "A little shaky"],

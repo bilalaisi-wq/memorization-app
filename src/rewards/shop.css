@@ -1,0 +1,118 @@
+.nature-shop {
+  width: min(1000px,96vw);
+}
+.shop-heading {
+  text-align: center;
+  padding: 1rem;
+}
+.shop-heading h2 {
+  font-size: 2.2rem;
+}
+.companion-home {
+  display: grid;
+  grid-template-columns: minmax(140px,260px) 1fr;
+  gap: 1.5rem;
+  border-radius: 1.6rem;
+  padding: 1.5rem;
+  background: linear-gradient(130deg,#98bca52e,#b3a1df33);
+  align-items: center;
+}
+.nature-avatar {
+  width: 100%;
+  max-width: 230px;
+  filter: drop-shadow(0 8px 10px #42375416);
+}
+.seed-balance {
+  font-size: 1.8rem;
+  color: #648f6e;
+}
+.profile-photo {
+  display: block;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.shop-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin: 1.4rem 0;
+}
+.shop-categories [aria-pressed=true] {
+  background: #ac99da33;
+  border-radius: 1rem;
+}
+.shop-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,185px),1fr));
+  gap: 1rem;
+}
+.shop-items article {
+  border: 1px solid #9c98b755;
+  border-radius: 1.2rem;
+  padding: 1rem;
+  text-align: center;
+  background: linear-gradient(150deg,#a9cfb01a,#ab9cda14);
+}
+.shop-items .nature-avatar {
+  height: 150px;
+}
+.shop-items h3 {
+  font-size: 1.1rem;
+}
+.shop-items p {
+  min-height: 3rem;
+}
+.shop-items strong,
+.shop-items small {
+  display: block;
+  margin: .6rem 0;
+}
+.nature-shop label {
+  display: block;
+}
+.nature-shop input[type=file] {
+  display: block;
+  max-width: 100%;
+  margin: .7rem 0;
+}
+.rank-companion {
+  width: 42px;
+  height: 42px;
+  vertical-align: middle;
+  margin-inline: .4rem;
+}
+.podium-card .rank-companion {
+  width: 64px;
+  height: 64px;
+}
+@media (max-width:600px) {
+  .companion-home {
+    grid-template-columns: 1fr;
+  }
+  .companion-home > .nature-avatar {
+    margin: auto;
+    max-width: 170px;
+  }
+  .shop-heading h2 {
+    font-size: 1.7rem;
+  }
+}
+.companion-home > div,
+.shop-items article {
+  min-width: 0;
+}
+.nature-shop {
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+.nature-shop input[type=file] {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.nature-shop button {
+  max-width: 100%;
+  white-space: normal;
+}

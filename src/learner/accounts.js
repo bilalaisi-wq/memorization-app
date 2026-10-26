@@ -1,3 +1,6 @@
+import {receiveRemoteRewards} from "../rewards/store.js";
+import { avatarSvg } from "../rewards/catalog.js";
+import { RewardPublisher } from "../rewards/publisher.js";
 import { mountBillingControls } from "../billing/ui.js";
 import { leaderboardMarkup } from "./leaderboard.js";
 import { setDeveloperUser } from "../developer/access.js";
@@ -12,6 +15,13 @@ import {
   onProfileChange,
 } from "./profile-storage.js";
 import { esc } from "../ui/dom.js";
+let rewardPublisher=null, rewardReady=null, natureProfile=null, natureLoaded=false;
+function drawAccountAvatar(){
+ const node=document.querySelector('.avatar');if(!node||!natureProfile)return;
+ const photo=natureProfile.photo;
+ if(typeof photo==='string'&&photo.length<=70000&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(photo)){node.replaceChildren();const img=document.createElement('img');img.src=photo;img.alt='Your private profile picture';node.append(img);}else node.innerHTML=avatarSvg(natureProfile,'header-companion');
+}
+window.addEventListener('ayahnaturechange',event=>{natureProfile=event.detail;drawAccountAvatar();});
 let client = null,
   user = null,
   accountError = "",
@@ -112,9 +122,19 @@ export async function initializeAccounts(config = {}) {
 export function mountAccountControls(main, learning, callbacks = {}) {
   const nav = main.querySelector(".explore-nav");
   if (!nav) return;
+  if(!natureLoaded){natureLoaded=true;if(client&&user)client.rpc("my_nature_profile",{expected_user:user.id}).then(({data})=>{if(data){natureProfile=data;receiveRemoteRewards(data);drawAccountAvatar();}}).catch(()=>{});else try{natureProfile=JSON.parse(profileStorage.getItem("ayah-nature-profile-v1"));}catch{}}
+  drawAccountAvatar();
+  if(client&&user&&!rewardPublisher){
+    rewardPublisher=new RewardPublisher(client,learning,profileStorage,user.id);
+    rewardReady=client.from("leaderboard_preferences").select("enabled").eq("user_id",user.id).maybeSingle().then(({data})=>{rewardPublisher.enabled=data?.enabled===true;rewardPublisher.schedule();}).catch(()=>{});
+    onProfileChange(id=>{if(id===user?.id)rewardPublisher.schedule();});
+    window.addEventListener("ayahrewardschanged",()=>rewardPublisher.schedule());
+    window.addEventListener("online",()=>rewardPublisher.schedule());
+  }
   for (const [label, action] of [
+    ["My companion & shop", () => import("../rewards/shop.js").then(m=>m.openNatureShop({client,user,learning,publisher:rewardPublisher}))],
     [user ? "My account" : "Sign in", () => showAccount(learning)],
-    ["Leaderboard", () => showLeaderboard()],
+    ["Leaderboard", () => showLeaderboard(learning)],
   ]) {
     const button = document.createElement("button");
     button.className = "text-button";
@@ -245,7 +265,7 @@ function showAccount(learning) {
     area.querySelector("[data-privacy]").onclick = showPrivacy;
     return;
   }
-  area.innerHTML = `<p>You’re signed in. Your progress is separate from guest and other accounts on this browser. You stay signed in on each device until you sign out. Saved private progress loads on a new device; enable automatic sync below to keep future changes backed up.</p><label><input type="checkbox" data-sync-enabled> Automatically sync my learning progress across devices</label><p data-sync-status role="status"></p><div class="account-actions"><button class="primary" data-save>Save private cloud backup</button><button class="text-button" data-restore>Restore cloud backup</button><button class="text-button" data-copy>Copy guest progress into empty account</button><button class="text-button" data-export>Download my account data</button><button class="text-button" data-signout>Sign out on this device</button><button class="text-button" data-signout-all>Sign out on all devices</button></div><h3>Optional weekly leaderboard</h3><p>Share only a made-up alias and weekly game/recall totals. No email, ayah details, goals, or recordings are public. Rankings are self-reported practice, not verified recitation.</p><label>Public alias <input data-alias maxlength="24" placeholder="e.g. Cedar42" pattern="[A-Za-z0-9 _-]{3,24}"></label><label><input data-opt-in type="checkbox"> Share my alias and this week’s totals publicly</label><button class="primary small" data-publish>Update leaderboard preference</button><button class="text-button" data-privacy>Privacy information</button><hr><p>Deleting your account removes server backups, public rankings, and this account’s progress on this browser. Download a copy first if wanted.</p><button class="text-button" data-delete>Delete my account and data</button>`;
+  area.innerHTML = `<p>You’re signed in. Your progress is separate from guest and other accounts on this browser. You stay signed in on each device until you sign out. Saved private progress loads on a new device; enable automatic sync below to keep future changes backed up.</p><label><input type="checkbox" data-sync-enabled> Automatically sync my learning progress across devices</label><p data-sync-status role="status"></p><div class="account-actions"><button class="primary" data-save>Save private cloud backup</button><button class="text-button" data-restore>Restore cloud backup</button><button class="text-button" data-copy>Copy guest progress into empty account</button><button class="text-button" data-export>Download my account data</button><button class="text-button" data-signout>Sign out on this device</button><button class="text-button" data-signout-all>Sign out on all devices</button></div><h3>Optional weekly leaderboard</h3><p>Share only a made-up alias and weekly learning totals. No email, ayah details, goals, or recordings are public. Rankings are self-reported practice, not verified recitation. Opting in automatically syncs dated XP receipts without Quran references to keep totals up to date; profile photos remain private.</p><label>Public alias <input data-alias maxlength="24" placeholder="e.g. Cedar42" pattern="[A-Za-z0-9 _-]{3,24}"></label><label><input data-opt-in type="checkbox"> Share my alias, companion and this week’s totals publicly</label><button class="primary small" data-publish>Update leaderboard preference</button><button class="text-button" data-privacy>Privacy information</button><hr><p>Deleting your account removes server backups, public rankings, and this account’s progress on this browser. Download a copy first if wanted.</p><button class="text-button" data-delete>Delete my account and data</button>`;
   const syncToggle = area.querySelector("[data-sync-enabled]");
   syncToggle.checked = cloud?.enabled || false;
   area.querySelector("[data-sync-status]").textContent =
@@ -282,7 +302,7 @@ function showAccount(learning) {
     run(async () => {
       if (
         learning.snapshot().records &&
-        Object.keys(learning.snapshot().records).length
+        (Object.keys(learning.snapshot().records).length || JSON.parse(profileStorage.getItem("ayah-rewards-v1")||"{}").events?.length)
       )
         throw new Error(
           "This account already has progress. Guest records will not overwrite it.",
@@ -293,7 +313,7 @@ function showAccount(learning) {
         )
       )
         return;
-      for (const key of progressKeys) {
+      for (const key of [...progressKeys,"ayah-rewards-v1"]) {
         const value = localStorage.getItem(key);
         if (value !== null) profileStorage.setItem(key, value);
       }
@@ -301,7 +321,7 @@ function showAccount(learning) {
     });
   area.querySelector("[data-export]").onclick = () => {
     const url = URL.createObjectURL(
-      new Blob([JSON.stringify(profileBackup(), null, 2)], {
+      new Blob([JSON.stringify({...profileBackup(),"ayah-rewards-v1":profileStorage.getItem("ayah-rewards-v1"),"nature-profile":natureProfile||profileStorage.getItem("ayah-nature-profile-v1")}, null, 2)], {
         type: "application/json",
       }),
     );
@@ -331,6 +351,7 @@ function showAccount(learning) {
     });
   area.querySelector("[data-publish]").onclick = () =>
     run(async () => {
+      await rewardReady;
       const enabled = area.querySelector("[data-opt-in]").checked,
         alias = area.querySelector("[data-alias]").value.trim();
       if (enabled && !/^[A-Za-z0-9 _-]{3,24}$/.test(alias))
@@ -342,14 +363,10 @@ function showAccount(learning) {
         chosen_alias: enabled ? alias : null,
       });
       if (error) throw error;
-      if (enabled) {
-        const result = await client.rpc("publish_weekly_activity", {
-          learning: learning.snapshot(),
-        });
-        if (result.error) throw result.error;
-      }
+      if(rewardPublisher)rewardPublisher.enabled=enabled;
+      if(enabled&&rewardPublisher)await rewardPublisher.flush();
       status.textContent = enabled
-        ? "Your weekly totals are shared under your alias. Update here after future practice."
+        ? "Your weekly XP updates automatically across learning modes while you are opted in."
         : "You are opted out and your public ranking has been removed.";
     });
   area.querySelector("[data-delete]").onclick = () =>
@@ -362,7 +379,7 @@ function showAccount(learning) {
         return;
       const { error } = await client.rpc("delete_my_account");
       if (error) throw error;
-      for (const key of [...progressKeys,"ayah-coach-settings-v1","ayah-appearance-v1","ayah-sky-celebrations-v1"]) profileStorage.removeItem(key);
+      for (const key of [...progressKeys,"ayah-coach-settings-v1","ayah-rewards-v1","ayah-reward-remote-v1","ayah-nature-profile-v1","ayah-appearance-v1","ayah-sky-celebrations-v1"]) profileStorage.removeItem(key);
       await client.auth.signOut({ scope: "local" });
       location.reload();
     });
@@ -384,7 +401,7 @@ function showPrivacy() {
   dialog.querySelector("[data-content]").innerHTML =
     `<p>Guest progress stays in this browser. Adult accounts use Supabase authentication and optional Google sign-in. The authentication provider receives your email and sign-in information. Do not enter a child’s information or use a real name as a public alias.</p><p>Goals, learning history, and progress are saved locally per account. Saved private progress is loaded when signing in on a new device. You can save manually or opt in to automatic sync; only then are subsequent changes uploaded to private account storage. Recordings stay in memory in the tab and are never included in progress backups or published. Approved adult pilot users may explicitly send their own recording to the experimental transcription provider; the AI panel explains processing, deletion, and limits.</p><p>Public leaderboard participation is off by default. Opting in publishes a chosen alias and weekly totals only. You can opt out, export your progress, or delete your account in account settings.</p><p>Sign-in sessions persist on this device until sign-out. On shared devices, browser storage can be accessed by someone with access to the browser. Sign out and clear site data after exporting or backing up if needed. No advertising trackers are included.</p><p>The site operator must publish their identity, privacy contact, retention policy, provider terms, and applicable regional notices before enabling public registration. Legal compliance depends on the deployment and jurisdiction; this interface is not a legal certification.</p>`;
 }
-async function showLeaderboard() {
+async function showLeaderboard(learning) {
   const dialog = dialogShell("Weekly practice leaderboard"),
     area = dialog.querySelector("[data-content]");
   dialog.classList.add("leaderboard-dialog");
@@ -395,9 +412,13 @@ async function showLeaderboard() {
   }
   area.textContent = "Loading this week’s opt-in activity…";
   try {
+    await rewardReady;
+    let rewardError="";
+    if(rewardPublisher?.enabled)try{await rewardPublisher.flush();}catch(e){rewardError=e.message;}
     const { data, error } = await client.rpc("get_weekly_leaderboard");
     if (error) throw error;
     area.innerHTML = leaderboardMarkup(data);
+    if(rewardError)dialog.querySelector("[data-account-status]").textContent=rewardError;
   } catch {
     area.textContent =
       "The shared leaderboard could not load. Your personal learning still works.";

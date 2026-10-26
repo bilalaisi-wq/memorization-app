@@ -1,3 +1,4 @@
+import { expectDisplayedLearningXP } from "./reward-total-helper.js";
 import { test, expect } from "@playwright/test";
 test("seven ayahs, partial building and word order challenge", async ({
   page,
@@ -293,10 +294,12 @@ test("repeat wins unlock harder levels and persist; solved round cannot be farme
     await page.locator("#next").click();
   };
   await solve();
-  await expect(page.locator(".xp-line")).toContainText("15 XP");
+  await expectDisplayedLearningXP(page,15);
+  const solvedXP=await page.locator("[data-learning-xp]").textContent();
   await page.locator('.build-zone [data-word="0"]').click();
+  await expect(page.locator("[data-learning-xp]")).toHaveText(solvedXP);
   await expect(page.locator(".build-zone .piece")).toHaveCount(4);
-  await expect(page.locator(".xp-line")).toContainText("15 XP");
+  await expectDisplayedLearningXP(page,15);
   await page.locator("#next").click();
   await solve();
   await expect(page.locator(".feedback")).toContainText("New level unlocked");
@@ -312,12 +315,12 @@ test("repeat wins unlock harder levels and persist; solved round cannot be farme
   await page.locator("#next").click();
   await expect(page.locator(".quest-banner")).toContainText("Level 3 / 3");
   await expect(page.locator(".word-bank .piece")).toHaveCount(10);
-  await expect(page.locator(".xp-line")).toContainText("80 XP");
+  await expectDisplayedLearningXP(page,80);
   await page.reload();
   await page.locator("#surah-picker").selectOption("3");
   await page.locator('[data-mode="quiz"]').click();
   await expect(page.locator(".quest-banner")).toContainText("Level 3 / 3");
-  await expect(page.locator(".xp-line")).toContainText("80 XP");
+  await expectDisplayedLearningXP(page,80);
   await page.locator("#peek-words").click();
   await expect(
     page.locator(".word-bank .arabic").filter({ hasText: "؟" }),
@@ -326,7 +329,7 @@ test("repeat wins unlock harder levels and persist; solved round cannot be farme
     page.locator(".word-bank .arabic").filter({ hasText: "؟" }),
   ).not.toHaveCount(0, { timeout: 10000 });
   await solve();
-  await expect(page.locator(".xp-line")).toContainText("85 XP");
+  await expectDisplayedLearningXP(page,85);
   expect(
     await page.evaluate(
       () => JSON.parse(localStorage.getItem("ayah-mastery"))["112:1"],

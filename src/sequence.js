@@ -1,3 +1,4 @@
+import { awardStudy } from "./rewards/store.js";
 import {
   successCue,
   studyAudioStart,
@@ -325,6 +326,7 @@ function bind() {
       state.chain.every((id, i) => id === state.chosen[i])
     ) {
       stopSequence();
+      awardStudy({mode:"chain",unit:`${state.surah.id}:${state.chosen.join("-")}`,action:"completion",xp:8});
       successCue(
         `chain:${state.surah.id}:${state.chosen.join(",")}`,
         "Your ayahs connect beautifully!",

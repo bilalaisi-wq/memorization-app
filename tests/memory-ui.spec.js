@@ -1,3 +1,4 @@
+import { expectDisplayedLearningXP } from "./reward-total-helper.js";
 import { test, expect } from "@playwright/test";
 import { createLearningStore, LEARNING_KEY } from "../src/learning-store.js";
 import { surahs } from "../src/data.js";
@@ -236,7 +237,7 @@ test("puzzle reward caps preserve levels and progress without creating recall cr
     await page.locator("#next").click();
     if (round < 2) await page.locator("#next").click();
   }
-  await expect(page.locator(".xp-line")).toContainText("70 XP");
+  await expectDisplayedLearningXP(page,70);
   await expect(page.locator(".feedback")).toContainText("reward limit");
   const m = await memory(page);
   expect(m.independentAttempts).toBe(0);

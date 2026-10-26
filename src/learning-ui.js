@@ -1,3 +1,4 @@
+import { awardStudy } from "./rewards/store.js";
 import { profileBackup } from "./learner/profile-storage.js";
 import { mountLearnerDashboard } from "./learner/dashboard.js";
 import { successCue } from "./ui/encouragement.js";
@@ -98,7 +99,7 @@ export function mountDailyDashboard(main, store, surahs, callbacks) {
     daily.suggested[0] ||
     daily.dueToday[0]?.key ||
     daily.upcoming[0]?.key;
-  root.innerHTML = `<section class="quest-banner daily-intro"><span class="quest-mascot" aria-hidden="true">✦</span><div><h2>Daily Quest</h2><p>No lost points for a break. Return to the ayahs that need attention.</p></div><div class="star-score">★ ${state.wallet.stars} stars<small>${state.wallet.xp} XP</small></div>${first ? `<button class="primary" id="start-due-review" data-start-recall="${first}">${daily.dueNow.length ? "Start review" : "Start recall assessment"} →</button>` : ""}</section>
+  root.innerHTML = `<section class="quest-banner daily-intro"><span class="quest-mascot" aria-hidden="true">✦</span><div><h2>Daily Quest</h2><p>No lost points for a break. Return to the ayahs that need attention.</p></div><div class="star-score">★ ${state.wallet.stars} stars<small>${state.wallet.xp} XP · puzzle &amp; recall rewards</small></div>${first ? `<button class="primary" id="start-due-review" data-start-recall="${first}">${daily.dueNow.length ? "Start review" : "Start recall assessment"} →</button>` : ""}</section>
  <section class="memory-metrics"><article><span>Puzzle progress</span><strong>${daily.puzzleCompleted} / ${surahs.reduce((n, s) => n + s.verses.length, 0)}</strong><small>Game achievements stay yours</small></article><article><span>Memorization mastery</span><strong>${daily.retained} retained</strong><small>Self-assessed across distinct days</small></article><article><span>Retrieval today</span><strong>${daily.reviewedToday} ayahs</strong><small>Independent scheduled recall</small></article></section>
  <div class="daily-columns"><section><h3>Ayahs due today <span>${daily.dueToday.length}</span></h3><p>${daily.dueNow.length} ready now. Review dates use ${esc(state.timeZone)}.</p><ul>${renderList(daily.dueToday, "due") || "<li>No reviews due today. A short new assessment can start your memory schedule.</li>"}</ul>${daily.dueToday.length > 8 ? "<small>Showing the first 8; completing reviews brings the next ones forward.</small>" : ""}</section><section><h3>Weak ayahs <span>${daily.weak.length}</span></h3><p>Study help is welcome. It does not certify independent recall.</p><ul>${renderList(daily.weak, "weak") || "<li>No weak ayahs recorded yet.</li>"}</ul></section><section><h3>Suggested new memorization</h3><p>Study first, then try reciting without the text.</p><ul>${renderList(daily.suggested, "new") || "<li>Your whole library has a recall schedule.</li>"}</ul></section></div>
  <section class="daily-columns upcoming-reviews"><section><h3>Next scheduled reviews</h3><ul>${renderList(daily.upcoming, "due") || "<li>No future reviews yet. Your first self-assessment sets the schedule.</li>"}</ul></section></section>
@@ -195,7 +196,8 @@ export function mountRecall(main, store, surahs, callbacks) {
         (b.onclick = () => {
           stopLearningAudio();
           try {
-            store.gradeRecall(a.id, b.dataset.recallGrade);
+            const graded=store.gradeRecall(a.id, b.dataset.recallGrade);
+            if(!graded.duplicate)awardStudy({mode:"active-recall",unit:a.key,action:"assessment",xp:2});
             error = "";
             draw();
             root.querySelector(".recall-result")?.focus();

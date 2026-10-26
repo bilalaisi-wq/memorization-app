@@ -1,3 +1,4 @@
+import { awardStudy, rewardSummary } from "./rewards/store.js";
 import { mountSiteMenu } from "./ui/site-menu.js";
 import { initializeAppearance } from "./themes/appearance.js";
 import { mountSkyProgress, resetSkyObserver } from "./themes/constellations.js";
@@ -102,7 +103,7 @@ let extras = [],
   stars = 0,
   xp = 0,
   streak = 0;
-({ stars, xp, streak } = learning.snapshot().wallet);
+({ stars, xp, streak } = {...learning.snapshot().wallet,xp:rewardSummary(learning).xp});
 let completed = new Set(
   Object.values(learning.snapshot().records)
     .filter((r) => r.game.completed)
@@ -176,13 +177,13 @@ function piece(i, zone) {
   return `<div class="piece-wrap"><button class="piece color-${i % 9} ${gold ? "divine-gold" : ""} ${activeWord === i ? "sounding" : ""}" data-word="${i}" data-zone="${zone}" draggable="true" aria-label="${blank ? "Hidden word" : extra ? entry.roman : v.roman[i]}, ${zone === "bank" ? "add to practice" : "remove from practice"}"><svg class="puzzle-outline" viewBox="0 0 180 140" preserveAspectRatio="none" aria-hidden="true"><path d="${outline(position, v.words.length)}"/></svg>${blank ? "" : gold ? '<span class="gold-sparkles" aria-hidden="true">✧ ˚ ✦</span>' : illustration(art)}<span class="arabic" lang="ar" dir="rtl">${blank ? "؟" : extra ? entry.text : v.words[i]}</span><span class="roman">${blank ? "Recall this word" : extra ? entry.roman : v.roman[i]}</span><span class="word-meaning">${blank ? "" : meaning}</span><span class="piece-dot">${zone === "bank" ? "+" : "−"}</span></button><button class="piece-listen" data-listen="${i}" aria-label="Listen to this piece" title="Listen to this piece">${icon(activeWord === i && playing ? "pause" : "headphones")}</button></div>`;
 }
 function render() {
-  ({ stars, xp, streak } = learning.snapshot().wallet);
+  ({ stars, xp, streak } = {...learning.snapshot().wallet,xp:rewardSummary(learning).xp});
   const v = verses[ayah],
     surah = surahs[chapter],
     count = chapterCompleted();
   app.innerHTML = `
 <aside class="sidebar"><a class="brand" href="#" aria-label="Ayah home"><span class="brand-mark">۞</span><span>ayah<span class="brand-period">.</span></span></a><div class="sidebar-sub">A LITTLE EACH DAY. A LIFETIME WITH YOU.</div><div class="nav-label">YOUR SPACE</div><button class="nav-item active" id="nav-learn">${icon("grid")} Memorization <span class="nav-pill">${totalAyahs}</span></button><button class="nav-item" id="nav-daily">${icon("repeat")} Daily quests</button><button class="nav-item" id="nav-progress">${icon("book")} My progress</button><div class="surah-label">CHOOSE A SURAH</div><label class="surah-picker-label">Your surah<select id="surah-picker">${surahs.map((s, i) => `<option value="${i}" ${chapter === i ? "selected" : ""}>${s.name} · ${s.verses.length} ayahs</option>`).join("")}</select></label><div class="surah-side"><span class="surah-symbol">${String(surah.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d])}</span><div><strong>${surah.name}</strong><small>${surah.meaning} · ${verses.length} ayahs</small></div></div><div class="ayah-nav">${verses.map((x, i) => `<button data-ayah="${i}" class="ayah-item ${i === ayah ? "current" : ""}"><span class="ayah-number">${completed.has(surah.id + ":" + (i + 1)) ? "✓" : i + 1}</span><span>Ayah ${i + 1}</span>${i === ayah ? '<span class="current-dot"></span>' : ""}</button>`).join("")}</div><div class="sidebar-bottom"><span class="small-flower">✧</span><p>“And We have certainly made<br>the Quran easy to remember.”</p><small>AL-QAMAR · 54:17</small></div></aside>
-<div class="main-shell"><header><div class="breadcrumb">My learning <span>/</span> <strong>${surah.name}</strong></div><div class="header-right"><span class="daily">✧ <b>${completed.size}</b> ayahs practiced</span><span class="avatar">Y</span></div></header><main><div class="page-heading"><div class="eyebrow">MEMORIZE, PIECE BY PIECE</div><h1>Small pieces. Big discoveries.</h1><p>A colorful little adventure, one ayah at a time.</p></div><nav class="explore-nav" aria-label="Explore learning tools"><button class="text-button" id="nav-gallery">Mastery Gallery</button><button class="text-button" id="nav-lab">Puzzle Lab</button></nav><div class="surah-heading"><div><span class="surah-tag">SURAH ${String(surah.id).padStart(3, "0")}</span><h2>${surah.name} <span lang="ar" class="surah-arabic">${surah.arabic}</span></h2><p>${surah.meaning} <span>•</span> ${surah.origin} <span>•</span> ${verses.length} ayahs</p></div><div class="progress-summary"><span>Your progress <b>${count} / ${verses.length} ayahs</b></span><div class="progress-track"><i style="width:${(count / verses.length) * 100}%"></i></div></div></div>
+<div class="main-shell"><header><div class="breadcrumb">My learning <span>/</span> <strong>${surah.name}</strong></div><div class="header-right"><span class="daily">✧ <b>${completed.size}</b> ayahs practiced</span><span class="study-xp" data-learning-xp>${xp} XP</span><span class="avatar">Y</span></div></header><main><div class="page-heading"><div class="eyebrow">MEMORIZE, PIECE BY PIECE</div><h1>Small pieces. Big discoveries.</h1><p>A colorful little adventure, one ayah at a time.</p></div><nav class="explore-nav" aria-label="Explore learning tools"><button class="text-button" id="nav-gallery">Mastery Gallery</button><button class="text-button" id="nav-lab">Puzzle Lab</button></nav><div class="surah-heading"><div><span class="surah-tag">SURAH ${String(surah.id).padStart(3, "0")}</span><h2>${surah.name} <span lang="ar" class="surah-arabic">${surah.arabic}</span></h2><p>${surah.meaning} <span>•</span> ${surah.origin} <span>•</span> ${verses.length} ayahs</p></div><div class="progress-summary"><span>Your progress <b>${count} / ${verses.length} ayahs</b></span><div class="progress-track"><i style="width:${(count / verses.length) * 100}%"></i></div></div></div>
 <section class="reference-card"><div class="reference-top"><span class="section-label"><span class="tiny-dot"></span> AYAH ${v.id} <span class="muted">OF ${verses.length}</span></span><button class="text-button" id="full-audio">${icon(playing ? "pause" : "headphones")} ${playing ? "Stop audio" : "Listen to full ayah"}</button></div><div class="full-verse ${reference ? "" : "reference-hidden"}" lang="ar" dir="rtl">${reference ? v.text + ' <span class="verse-end">' + String(v.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]) + "</span>" : '<span class="hidden-reference">The ayah is hidden for your challenge</span>'}</div><p class="translation">${reference ? v.translation : "Build from memory. Reveal the ayah whenever you need a little help."}</p>${mode !== "practice" ? `<button class="reference-toggle" id="reference-toggle">${icon("eye")} ${reference ? "Hide" : "Reveal"} ayah</button>` : ""}</section>
 <div class="mode-row"><div class="tabs" role="tablist" aria-label="Learning mode">${[
     ["practice", "grid", "Practice"],
@@ -474,7 +475,7 @@ const memoryCallbacks = {
     mountSkyProgress(document.querySelector("main"), learning, surahs, surahs[chapter], key(), mode, memoryCallbacks);
     const current = learning.snapshot();
     preserveAchievements(profileStorage, achievements(current, surahs, summarizeActivity(current, profileStorage)));
-    ({ stars, xp, streak } = learning.snapshot().wallet);
+    ({ stars, xp, streak } = {...learning.snapshot().wallet,xp:rewardSummary(learning).xp});
     try {
       const result = gallery.sync(learning);
       if (result.unlocks.length) {
@@ -590,6 +591,7 @@ function bind() {
         return;
       }
       if (!complete()) return;
+      awardStudy({mode:"practice",unit:key(),action:"complete",xp:8});
       const successId = `${puzzleSessionId}:practice:${key()}`;
       if (ayah < verses.length - 1) {
         ayah++;
@@ -622,7 +624,7 @@ function bind() {
             earned = reward.stars;
             earnedXP = reward.xp;
             mastery[key()] = learning.getRecord(key()).game.puzzleWins;
-            ({ stars, xp, streak } = learning.snapshot().wallet);
+            ({ stars, xp, streak } = {...learning.snapshot().wallet,xp:rewardSummary(learning).xp});
           } catch (e) {
             quizSolved = false;
             feedback = e.message;
@@ -693,8 +695,14 @@ reset();
 
 // Study activity is separate from game XP and independent recall eligibility.
 const noteActivity = event => {
-  if (!event.target.closest('.piece, .piece-listen, .lab-game button, .falling-stage, [data-grab], [data-sequence-word], #build-all, #practice-audio, #full-audio')) return;
-  try { trackStudy(profileStorage, key(), mode, new Date(), learning.snapshot().timeZone); } catch { /* Existing learning remains available if activity storage fails. */ }
+  const target=event.target.closest('.piece, .piece-listen, .lab-game button, .falling-stage, [data-grab], [data-chain-word], [data-chain-listen], .passage-studio [data-word], [data-sequence-word], #build-all, #practice-audio, #full-audio, #lab-replay, .passage-studio [data-listen], [data-recall-listen], [data-compare-audio]');
+  if(!target||target.disabled||target.textContent.includes("Stop")||mode==="quiz"&&quizSolved&&target.matches(".piece"))return;
+  const studio=target.closest('.passage-studio'),sequence=target.closest('.sequence-panel');
+  const rewardMode=studio?'passage':sequence?'chain':mode==='lab'?'lab':({practice:'practice',quiz:'quest',recall:'recall-puzzle',review:'active-recall',sequence:'chain'})[mode];
+  const unit=studio?.querySelector('[data-reference]')?.value||key();
+  const action=Object.entries(target.dataset).map(([k,v])=>`${k}:${v}`).join('|')||target.id||'study';
+  if(rewardMode)awardStudy({mode:rewardMode,unit,action,xp:1});
+  try { trackStudy(profileStorage, unit, studio?"passage":sequence?"chain":mode, new Date(), learning.snapshot().timeZone); } catch { /* Existing learning remains available if activity storage fails. */ }
 };
 document.addEventListener('click', noteActivity, true);
 document.addEventListener('dragstart', noteActivity, true);
@@ -706,3 +714,13 @@ document.addEventListener('ayahappearancechange',()=>{
 });
 window.addEventListener('ayahprofilechange',resetSkyObserver);
 const backdrop=document.createElement('div');backdrop.id='sky-backdrop';backdrop.setAttribute('aria-hidden','true');backdrop.innerHTML='<i></i><i></i><i></i>';document.body.prepend(backdrop);
+
+window.addEventListener('ayahrewardschanged',()=>{
+ const total=rewardSummary(learning);document.querySelector('[data-learning-xp]')?.replaceChildren(document.createTextNode(`${total.xp} XP`));
+});
+
+window.addEventListener('ayahrewardsremote',()=>{const node=document.querySelector('[data-learning-xp]');if(node)node.textContent=`${rewardSummary(learning).xp} XP`;});
+
+document.addEventListener('play',event=>{if(event.target.closest?.('.recall-recording'))awardStudy({mode:'active-recall',unit:learning.snapshot().activeReview?.key||key(),action:`audio:${event.target.id}`,xp:1});},true);
+
+window.addEventListener('ayahrewardserror',()=>{let note=document.querySelector('[data-rewards-warning]');if(!note){note=document.createElement('p');note.dataset.rewardsWarning='true';note.setAttribute('role','status');document.querySelector('main')?.prepend(note);}note.textContent='Study XP could not be saved. Browser storage may be full or need recovery; existing progress has been preserved.';});
