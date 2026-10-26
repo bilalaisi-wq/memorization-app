@@ -17,13 +17,27 @@ test("Every-mode receipts publish automatically after opt-in; inventory spending
     );
     const sql = readFileSync(
       new URL(
-        "../supabase/migrations/20261028_rewards_shop.sql",
+        "../supabase/SETUP_REWARDS_SHOP.sql",
         import.meta.url,
       ),
       "utf8",
     );
     await db.exec(sql);
     await db.exec(sql);
+    const verification = (await db.query(
+      readFileSync(
+        new URL("../supabase/VERIFY_REWARDS_SHOP.sql", import.meta.url),
+        "utf8",
+      ),
+    )).rows[0];
+    expect(verification.catalog_items).toBe(13);
+    expect(verification.reward_rls_enabled).toBe(true);
+    expect(verification.profile_rls_enabled).toBe(true);
+    expect(verification.catalog_rls_enabled).toBe(true);
+    expect(verification.direct_reward_insert_allowed).toBe(false);
+    expect(verification.direct_wallet_update_allowed).toBe(false);
+    expect(verification.direct_price_update_allowed).toBe(false);
+    expect(verification.authenticated_sync_allowed).toBe(true);
     await db.exec(
       `insert into auth.users values('${A}'),('${B}');set role authenticated;set request.jwt.claim.sub='${A}';`,
     );
