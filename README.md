@@ -160,3 +160,7 @@ Menu → Hifz Coach provides local daily/weekly plans from recorded goals, due F
 ## All-mode rewards and Nature Companions
 
 Learning XP now covers practice interactions, Quest, recall, every Lab game, chains and passages, and automatically updates opted-in weekly leaderboards. **Menu → My companion & shop** offers earned-only Seeds, nature avatars, outfits, homes and private profile pictures. Spending does not reduce XP, stars or mastery. Apply the [new rewards/shop migration and activation guide](docs/rewards-and-shop.md) for account wardrobes and cross-device currency; automatic leaderboard publishing also supports the older account backend.
+
+## Juz 29 and payments
+
+[Juz 29 private deployment and developer preview](docs/juz-29-setup.md) covers all 11 surahs / 431 ayahs, server-authorized preview, and saved menu ordering. [Stripe quick start](docs/stripe-quick-start.md) provides the dashboard and deployment steps for test purchases. Private content must be uploaded before live playback is available.

@@ -49,7 +49,15 @@ test("all 6236 references map exactly once to validated surah/juz metadata", () 
   expect(reference("2:255").juz).toBe(3);
   expect(reference("67:1").juz).toBe(29);
   expect(() => reference("2:287")).toThrow();
-  expect(availability.premium).toHaveLength(32);
+  expect(availability.premium).toHaveLength(433);
+  expect(availability.fullyVerifiedJuz).toEqual([29,30]);
+  const juz29=availability.premium.filter(p=>p.juz===29);
+  expect(juz29).toHaveLength(431);
+  expect(new Set(juz29.map(p=>p.key)).size).toBe(431);
+  for (const c of catalog.chapters.filter(c=>c.id>=67&&c.id<=77)) {
+    expect(availability.fullyVerifiedSurahs).toContain(c.id);
+    for(let a=1;a<=c.verseCount;a++) expect(juz29.some(p=>p.key===`${c.id}:${a}`)).toBe(true);
+  }
   expect(allowedReference("78:1", { plan: "free", features: {} })).toBe(true);
   expect(
     allowedReference("67:1", {

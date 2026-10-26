@@ -1,7 +1,7 @@
 """Fetch provenance-backed metadata and private content. Never writes to public/.
 Run from repo root. No upload/deployment, no invented segment review approvals.
 """
-import concurrent.futures, hashlib, html, json, re, subprocess, argparse
+import concurrent.futures, hashlib, html, json, re, subprocess, argparse, unicodedata
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'.quran-private'
@@ -54,7 +54,7 @@ else:keys=[f'67:{i}' for i in range(1,31)]+['2:255','2:282']
 keys=list(dict.fromkeys(keys))
 for key in keys:assert key in lookup,'Unknown reference: '+key
 manifest=[]
-def normal(text):return re.sub(r'[\s\u06d6-\u06dc\u06de\u06e2\u06ed\u06e9]','',text)
+def normal(text):return re.sub(r'[\s\u06d6-\u06dc\u06de\u06e2\u06ed\u06e9]','',unicodedata.normalize('NFD',text))
 def prepare(key):
  s,a=map(int,key.split(':'))
  data,source=api(f'verses/by_key/{key}?words=true&word_fields=text_uthmani,audio_url&translations=20')
@@ -64,6 +64,18 @@ def prepare(key):
  words=[w for w in v['words'] if w['char_type_name']=='word']
  assert [w['position'] for w in words]==list(range(1,len(words)+1))
  assert normal(''.join(w['text_uthmani'] for w in words))==normal(canonical['text_uthmani']),key+' text/word mismatch'
+ # Preserve canonical full-verse spelling and stopping symbols verbatim.
+ canonical_words=[]
+ prefix=""
+ for token in canonical['text_uthmani'].split():
+  if normal(token):
+   canonical_words.append(prefix+token);prefix=''
+  else:
+   if canonical_words:canonical_words[-1]+=' '+token
+   else:prefix+=token+' '
+ assert len(canonical_words)==len(words),key+' canonical word count mismatch'
+ assert all(normal(c)==normal(w['text_uthmani']) for c,w in zip(canonical_words,words)),key+' ordinal mismatch'
+ for w,text in zip(words,canonical_words):w['text_uthmani']=text
  translation=next(t for t in v['translations'] if t['resource_id']==20)
  folder=OUT/str(s)/str(a);folder.mkdir(parents=True,exist_ok=True)
  audio=[]

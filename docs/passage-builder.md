@@ -9,13 +9,13 @@ The application does **not** claim that the entire Qur’an content library has 
 | Material | Validation / readiness |
 |---|---|
 | Existing Al-Fatihah + Juz Amma | 38 complete surahs / 571 ayahs. Existing text, translations, audio, puzzles and FSRS remain unchanged and free. |
-| Al-Mulk (67:1–30), Juz 29 | 30 complete source-validated ayahs prepared for private deployment; exact Uthmani text, translation 20, orthographic word boundaries and full Alafasy audio. Not a complete Juz 29 release. |
+| Juz 29 (67:1–77:50) | All 11 surahs / 431 source-validated ayahs prepared for private deployment and owner review. See [Juz 29 setup](juz-29-setup.md). |
 | Al-Baqarah 2:255 and 2:282, Juz 3 | Two source-validated long-ayah pilots: 50 and 128 words. Not a complete Al-Baqarah or Juz 3 release. |
 | All other surahs/juz | Reference metadata verified; additional content unavailable until separately imported, validated and privately deployed. |
 | Internal recitation stops / restart positions | **No production approvals seeded.** Qualified teacher/scholar decisions are required. |
 | New per-word audio | Original source references are retained, but alignment discrepancies were found. Not offered as verified word audio. New passage practice uses full-ayah audio. Existing free per-word recordings are unchanged. |
 
-Only **Juz 30** is fully available as a juz. There are 39 complete source-validated surahs when the prepared Al-Mulk expansion is counted, plus two isolated Al-Baqarah references: 603 prepared/current ayahs in total. Private assets have been prepared locally, not uploaded to hosted Supabase by this task. Neither payment setup nor metadata alone makes unpublished content available. The UI lists only existing free references and prepared private references; other references are not advertised as usable.
+**Juz 29 and 30** have complete source coverage; only Juz 30 is bundled freely. There are 49 complete source-validated surahs including the prepared private Juz 29, plus two isolated Al-Baqarah references: 1,004 prepared/current ayahs in total. Private assets have been prepared locally, not uploaded to hosted Supabase by this task. Neither payment setup nor metadata alone makes unpublished content available. The UI lists only existing free references and prepared private references; other references are not advertised as usable.
 
 ## Authoritative text and draft handling
 

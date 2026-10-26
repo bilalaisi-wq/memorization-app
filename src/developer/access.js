@@ -6,7 +6,22 @@ export function setDeveloperUser(user) {
     user.email?.trim().toLowerCase() === OWNER_EMAIL;
 }
 export const isDeveloper = () => allowed;
+let client = null;
+let orderRequest = null;
+
+export function configureDeveloperClient(value) { client = value; orderRequest = null; }
+export async function applyMenuOrder(nav) {
+  if (!client) return;
+  orderRequest ||= Promise.resolve(client.from('site_layout').select('menu_order').eq('id',1).maybeSingle()).catch(()=>({error:true}));
+  const {data, error} = await orderRequest;
+  if (error || !Array.isArray(data?.menu_order) || !nav.isConnected) return;
+  for (const label of data.menu_order) {
+    const button = [...nav.children].find(b => b.textContent.trim() === label);
+    if (button) nav.append(button);
+  }
+}
 export function mountDeveloperMenu(nav) {
+  applyMenuOrder(nav).catch(() => {});
   if (!isDeveloper()) return;
   const button = document.createElement('button');
   button.className = 'text-button';
@@ -14,8 +29,39 @@ export function mountDeveloperMenu(nav) {
   button.onclick = () => {
     const dialog = document.createElement('dialog');
     dialog.className = 'account-dialog';
-    dialog.innerHTML = '<button class="text-button" data-close>Close ×</button><h2>Developer mode</h2><p>Editorial diagnostics are visible for your verified owner account.</p><p>Gallery artwork fallbacks and unpublished tafsir status appear in the Gallery. These notes are hidden from learners.</p><p>This view does not grant database administration or publish unverified content.</p>';
-    dialog.querySelector('button').onclick = () => { dialog.close(); dialog.remove(); };
+    dialog.innerHTML = '<button class="text-button" data-close>Close ×</button><h2>Developer mode</h2><p>Your verified owner account can enable server-authorized content preview, or return to regular learner access. AI services retain their safety flags and usage limits.</p><button class="primary" data-enable>Enable developer access</button><button class="text-button" data-disable>Return to learner mode</button><h3>Menu editor</h3><p>Move items up or down, then save to publish the order for everyone. Changes affect navigation only.</p><ol data-items></ol><button class="primary" data-save>Save menu order</button><p role="status" data-status></p>';
+    const status = dialog.querySelector('[data-status]');
+    const items = [...nav.children].filter(b => b.tagName === 'BUTTON');
+    const draw = () => {
+      const list = dialog.querySelector('[data-items]'); list.replaceChildren();
+      items.forEach((item,i) => {
+        const row = document.createElement('li');
+        const name = document.createElement('span'); name.textContent = item.textContent.trim(); row.append(name);
+        for (const [label, delta] of [['↑',-1],['↓',1]]) {
+          const b = document.createElement('button'); b.className='text-button'; b.textContent=label;
+          b.setAttribute('aria-label', `Move ${name.textContent} ${delta<0?'up':'down'}`);
+          b.disabled=i+delta<0 || i+delta>=items.length;
+          b.onclick=()=>{ [items[i],items[i+delta]]=[items[i+delta],items[i]]; items.forEach(el=>nav.append(el)); draw(); };
+          row.append(b);
+        }
+        list.append(row);
+      });
+    }; draw();
+    const run = async fn => { try { if (!client) throw Error('Sign in first.'); await fn(); } catch(e) { status.textContent=e.message; } };
+    for (const [selector,enabled] of [['[data-enable]',true],['[data-disable]',false]]) {
+      dialog.querySelector(selector).onclick=()=>run(async()=>{
+        const {error}=await client.rpc('set_my_developer_mode',{active:enabled});
+        if(error) throw Error('Developer access is not configured. Run the developer setup SQL for your verified owner account.');
+        status.textContent=enabled?'Developer access enabled. Reopen the desired feature to refresh access.':'Regular learner access restored.';
+      });
+    }
+    dialog.querySelector('[data-save]').onclick=()=>run(async()=>{
+      const {error}=await client.rpc('save_site_menu',{items:items.map(b=>b.textContent.trim())});
+      if(error) throw Error('Enable developer mode before saving. Ensure the developer migration is installed.');
+      orderRequest=Promise.resolve({data:{menu_order:items.map(b=>b.textContent.trim())}});
+      status.textContent='Menu order saved for all learners.';
+    });
+    dialog.querySelector('[data-close]').onclick = () => { dialog.close(); dialog.remove(); };
     dialog.oncancel = () => dialog.remove();
     document.body.append(dialog); dialog.showModal();
   };

@@ -81,6 +81,7 @@ export function mountBillingControls(nav, context) {
   for (
     const [label, open] of [
       ["Hifz Coach", () => import("../coach/ui.js").then(m=>m.openCoach({...context,onPassageStudio:(target,action)=>openPassageStudio({...context,coachTarget:target,coachAction:action})}))],
+      ["Juz 29 library", () => import("../content/juz-library.js").then(m=>m.openJuz29(context))],
       ["Plans & pricing", () => pricing(context, api)],
       ["Subscription & billing", () => account(context, api)],
       ["Passage Builder", () => passages(context, api)],
@@ -126,7 +127,7 @@ async function pricing(ctx, api) {
   if (!d.isConnected) return;
   const draw = () => {
     root.innerHTML =
-      `<p>Keep learning, at your pace. Free Juz Amma and all existing free features stay free.</p><p class="billing-library-note"><strong>Available today: Al-Fatihah and all of Juz Amma.</strong> Additional juz are not available yet. Paid content access applies as the verified library expands. AI services are not currently offered.</p><div class="billing-cadence" role="group" aria-label="Billing period"><button class="text-button" data-cadence="monthly" aria-pressed="${!annual}">Monthly</button><button class="text-button" data-cadence="annual" aria-pressed="${annual}">Annual</button></div><div class="pricing-grid">${
+      `<p>Keep learning, at your pace. Free Juz Amma and all existing free features stay free.</p><p class="billing-library-note"><strong>Available today: Al-Fatihah and all of Juz Amma.</strong> Juz 29 (11 surahs, 431 ayahs) is prepared for private deployment and owner review in Passage memorization. Premium playback requires the private library to be deployed. Other additional juz remain unavailable. AI services are not currently offered.</p><div class="billing-cadence" role="group" aria-label="Billing period"><button class="text-button" data-cadence="monthly" aria-pressed="${!annual}">Monthly</button><button class="text-button" data-cadence="annual" aria-pressed="${annual}">Annual</button></div><div class="pricing-grid">${
         plans.map(([id, monthly, yearly, tag, features]) => {
           const disabled = id === "free" || !ent?.checkoutEnabled ||
             (id === "guardian" && !ent?.guardianEnabled);

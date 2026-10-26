@@ -45,7 +45,7 @@
       "key": "67:1",
       "wordCount": 9,
       "audioSha256": "ec72e1cdd54ea73f02f88dd9da0b58ecb07b69c3bbdf53eb2b236d5e42ca3a19",
-      "sha256": "9ea23b339a870f0101128118891b22ecbd10c33b5498e89713329752ade9b4d4",
+      "sha256": "6aa13ee8756e3535f8dc3efa6e1f2f5d7befdc77e2a82392a4492541e22dd5c2",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -59,7 +59,7 @@
       "key": "67:2",
       "wordCount": 11,
       "audioSha256": "3565f1890a740195d0d4f87b0129eeac9de34680ad5045cf2e90d690a08cc05d",
-      "sha256": "bbfbc4bcb9c81b1791164c25dac3ed653b4df9c92175b72f97e85e433cccc6bd",
+      "sha256": "64781116cc050b22697ce8807c38da3d383e1392e62d27c2e9a1312f6fb6c1ef",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -73,7 +73,7 @@
       "key": "67:3",
       "wordCount": 18,
       "audioSha256": "95c9e55cdea6f56f0dd23e1d0b797f22ca84194b97ac4fc7e440b20a7fdcc3f7",
-      "sha256": "2e0261a95b0575df1114761cb5eca36d757a6cf3375ed3a5457c01e397af2f17",
+      "sha256": "05a01f143057634844e69bbb2653604d87c6d5d57b26bb3130035fd4ca357635",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -87,7 +87,7 @@
       "key": "67:4",
       "wordCount": 10,
       "audioSha256": "1d672cd9c2685df2626e70f9221ba2bcf58dcb112b597c215dea01a42b519d8b",
-      "sha256": "3508634e8a6275a4ae065f9a832da58bbb7c34551a1fadb6f90ad442b9464c36",
+      "sha256": "cb04b009610fc04e010849602f437103e43f4ca75f480606c52ad68a78f894c7",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -101,7 +101,7 @@
       "key": "67:5",
       "wordCount": 12,
       "audioSha256": "4d5ab7ba2ded29f141761633c2ac55e3945f87da26c55bdb44735e33de13904f",
-      "sha256": "dff1214e5080e8e94cb9e2ebc4a385d91b8a8c848896dd87281002ecd5185b14",
+      "sha256": "686ffe3ee0e5d8feb962fb9150b1b064c70f974454dd6cf15c4ce49874067c8a",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -129,7 +129,7 @@
       "key": "67:7",
       "wordCount": 8,
       "audioSha256": "ebe0b89cc8edde46c062d14ff4404f3b052b180ebb23b3c5963280358ccc2068",
-      "sha256": "dbccc71e99b04a7d76ff009035ccd71272c8f6f668307be3a38f84d667f63ba1",
+      "sha256": "a99acbcf87689a2fb887fee34fb3e1c2a7ee20910faecd4a32316cacc907f7d3",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -143,7 +143,7 @@
       "key": "67:8",
       "wordCount": 13,
       "audioSha256": "0d5579d201229f13e42e00f2358c69c2334b24e126c00f928646b003666e2b27",
-      "sha256": "964448ac59b1074e6e974abc97c68d4c818eaedda575c562d6199187fa727a6f",
+      "sha256": "5804a83392d19f6832ffa87bdc0cbe5030b90b8e852c32e05820a3f2299dd456",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -157,7 +157,7 @@
       "key": "67:9",
       "wordCount": 18,
       "audioSha256": "4f77d9d3f3ca1ad493516abf6bb725bc0c009b322d959cb220db4413e090d242",
-      "sha256": "c2cb5624fca191f19df306c98f4a4690d192914466940696ec3691f2a062ff81",
+      "sha256": "34e0e32e230eabb82c8ba58a9fff31e144ccd134375eed77d5845dd7b0ea78ff",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -185,7 +185,7 @@
       "key": "67:11",
       "wordCount": 5,
       "audioSha256": "9eca4208c49c1452d40ab29321d9644ce67f6c8cabe68e881781b0415c733ad2",
-      "sha256": "2902ee48205d2caf6728e6f0a8025c0aef5584e42faf75fd10dad17d23230407",
+      "sha256": "aee1e6edab1a25598b7d74174d1271dcbda56082e0ec9516b79341320f1fe30e",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -199,7 +199,7 @@
       "key": "67:12",
       "wordCount": 9,
       "audioSha256": "5597c9f3491e6983e1765a346bf4f1a4d497401a01e38b74221669ef5c656ea3",
-      "sha256": "b68633d91ebf6f99bfb7fb05cbe75d369303a263431819e838d0f295021823d2",
+      "sha256": "067d96ff49105cf92403ba0f324b862101f9840ba6dc418697d9d50659a207e0",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -241,7 +241,7 @@
       "key": "67:15",
       "wordCount": 14,
       "audioSha256": "02c2a2153452236898e3f8db6f6d2a0ff5b858fe7814c7adfdcc24f2d6ecd679",
-      "sha256": "8bccf34368444c266232e0c05bfc7d6a48cd8a07e9ed4b65c9538a4247ec5b79",
+      "sha256": "f77dfe6963cddb3eac5617c9a10cb1f2eda491907defcb4955fb8fe5c2ee5f2e",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -269,7 +269,7 @@
       "key": "67:17",
       "wordCount": 12,
       "audioSha256": "499f86317ff59099d26ead2af27828a1908eec83d595e49ed0ce78f2c697c6c2",
-      "sha256": "040632ec52fdc80e46a90fba7227ff3d82437979188c50c1f3777d5f45cb4e55",
+      "sha256": "1dcba1afeef95fe08fa103a4c29a0469d3dbc53ce20cf2d4e0fcbb359699e585",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -297,7 +297,7 @@
       "key": "67:19",
       "wordCount": 15,
       "audioSha256": "e7f490693337988240e336c407a0949b30d93112ca6d3867b0c0ffe9fd3dce00",
-      "sha256": "ce649d6e0b5b24d8d2d1edf88097d8fff89aedf38dd2d3dab14fcd0c2fc443e5",
+      "sha256": "86a43a3e02eafa0ee01d98ccb006e58a58d89b35da53cee9bd256f0c0b1dbc19",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -311,7 +311,7 @@
       "key": "67:20",
       "wordCount": 15,
       "audioSha256": "299548c81c39f5c312446a2192b41ba35963cb0c29cafd30a76fb7f53b15fed3",
-      "sha256": "fb1b17d769421b6c8bcbe65c23161e6d64f63d202c1420d61f5a32bfbe71ab67",
+      "sha256": "0d0cacf246349741fc488d580bf12e47ec76d2cf5070a382e919ff0422e37191",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -325,7 +325,7 @@
       "key": "67:21",
       "wordCount": 12,
       "audioSha256": "e28058f0eabe6a795ef71b27bd8d4f6199c5254333e0cbe4d3387b9acb932cba",
-      "sha256": "bcbecc719b4a209c41902e2c9a27d0936368a3260ce8f77b3020fcbed686bc86",
+      "sha256": "6237cadf1955d4674dedfaf54206dbb7e726f129ded0a8e8814ea877f6f5f827",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -339,7 +339,7 @@
       "key": "67:22",
       "wordCount": 12,
       "audioSha256": "82adcf06b1fa2c26affcfd2314601054ad73fe97248382e5c3bf94d30e1cc5ab",
-      "sha256": "0ee2328541d40097042f95fdf7e0cdf9f457a31303820c6f779c6c79f62c8131",
+      "sha256": "26c2c409a366cf13597ed0aba3920cb4584a5b5864462d0620246b108370291f",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -353,7 +353,7 @@
       "key": "67:23",
       "wordCount": 12,
       "audioSha256": "84e4aeba7acd04d9f997a68fcb791a81c5aca6cf4d04936f42d4d000a025e80d",
-      "sha256": "efe34e3eba01614a6b4ab85cf98e0641d1ceb2672aeae1b3cdabf520b9136863",
+      "sha256": "8574f5fed927cc961ea12f49de8dc7464907ae08221a2cf8c757ae86c35b22b2",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -395,7 +395,7 @@
       "key": "67:26",
       "wordCount": 9,
       "audioSha256": "2db85cd587d6faacf70014772617772e9b215599cd1d86cffb039e63308299f7",
-      "sha256": "40cbe4077bf7b2f997d0684f7e0a6e3a0e5786a5a85fd19f8541ddde0ae5a9da",
+      "sha256": "2aecffc747db2471702ee3ea6cf0743a0df7d9d83855aab5b6b04c2227bdd8de",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -409,7 +409,7 @@
       "key": "67:27",
       "wordCount": 13,
       "audioSha256": "7dd7cb5aaeb5807c9b523a655588cedf97df274ef416bc6e0525d7f7b027b813",
-      "sha256": "b8ceb7d7c6eac38772d75cb16e0621b17deaceaac24a6f90a9663b9361f32cf5",
+      "sha256": "76b6ca19cd3f74540d06420dfb5c7d3cafcd181103ca749c00142629681dc0a5",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -423,7 +423,7 @@
       "key": "67:28",
       "wordCount": 15,
       "audioSha256": "ee0c06d0dd5c6c4432a7ce344cb8ad053b6fbc08800627ba9e0c8181d468c7c9",
-      "sha256": "08258ebe1abb4f90fb013045e11c122db5e19d92a7749bde72866962fce9e15f",
+      "sha256": "5ad637e043c280168d9e23bc0cb669d06c5f73df95abc3d2c5aecd3c24a830c9",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -437,7 +437,7 @@
       "key": "67:29",
       "wordCount": 13,
       "audioSha256": "5827cc9977fdb46997914bbff5ab5fef81c0ea60e34b5f5de3e17af668ecf924",
-      "sha256": "5e665a676c126563af38637e0381154f74e795ae1df0b2eb111f08e2810845eb",
+      "sha256": "83f9f40fe57ef1e50080947ec6b24d8902bd1867bf5170a84ec67d67096a423e",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -451,7 +451,7 @@
       "key": "67:30",
       "wordCount": 10,
       "audioSha256": "119434f0c38ae65e3cca5acc3b36c06c721c7b05eb8f96f63b90b970cc4768ee",
-      "sha256": "9f70a2b1855c7672f2f2415f090610d0fb07e5cc6e38a80b6602f207a93080d0",
+      "sha256": "fce6b4f110fd14ee7b65541e0bbe7ed5a52d23caf62dfbd8ae68adeaa91902af",
       "juz": 29,
       "status": "source-validated",
       "subAyahReview": "not-reviewed",
@@ -488,13 +488,5639 @@
         "windowed-reconstruction",
         "whole-ayah-recall"
       ]
+    },
+    {
+      "key": "68:1",
+      "wordCount": 4,
+      "audioSha256": "1641f136e588ac701dbb06d4be0f32a3894452a93851fb1ad1c5afc711b5b24e",
+      "sha256": "07f7f81b5068a57671886aedde5eb34e5b55557ca2a4f897f9f60caba0945037",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:2",
+      "wordCount": 5,
+      "audioSha256": "c21f3682d8922049d5f56cf14c981150acfd0387d390946c29170040ee04d64e",
+      "sha256": "2449f873300700ef4ef4a541afc4aa64277388dd6a358a3703653a5c95057806",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:3",
+      "wordCount": 5,
+      "audioSha256": "37704c88978d9d5759436271b966e617ddd2dbc2c51da9b9c7adea086b60e714",
+      "sha256": "ba110ad3ef8a0ec53b4b0bb1db3d0abbdcfea0969f8c5feccb13ee8fd5e0c845",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:4",
+      "wordCount": 4,
+      "audioSha256": "a93c32f63951df252dc5d1fded2d05335efc9e400164257948e3aca3a42edf46",
+      "sha256": "4c9a82494e369fd01ce1403e72a22dfae175ce64e022aeaa9cc4bf725fd1b19d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:5",
+      "wordCount": 2,
+      "audioSha256": "46fe67e40e647637040a9328e64f686a73abae488105c635eea74395d4c0d093",
+      "sha256": "2378804f71cc510d0fbd66a01eb4f32d84d84aec2385006c7787e07933d58857",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:6",
+      "wordCount": 2,
+      "audioSha256": "8939674ec1630369882165e85fcac8a9f7de64b347a861e82a89389cdfa15eea",
+      "sha256": "a3272f7a8a3fb1559cbc87f1c5e381d7f9957feddb5ab8d1c207bcc125373731",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:7",
+      "wordCount": 11,
+      "audioSha256": "ac522519d6ecb63b6c5e2bf117557fc94dc9a108da33f556ff5587824cb37243",
+      "sha256": "6f5d72c109d105a245f0752d3cd987ce97edfee2656ec574caee5b2237a86d1a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:8",
+      "wordCount": 3,
+      "audioSha256": "d36113ea01e5683b586751af50de3bd8505f1f8a2425cf1960cf841fe95e1ee7",
+      "sha256": "45a5ee3fd657afa184b3e3e671ea79a99b8ea17b3f36143202cfaa31c49bacf8",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:9",
+      "wordCount": 4,
+      "audioSha256": "170bc9e0d1dee8113eab1939068ecb99c98600c9649fbcfc413414c756150ed5",
+      "sha256": "908363d9073bcb152a7aa20776459622e3260f87d4f84538cc8d1f6fd5e2586b",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:10",
+      "wordCount": 5,
+      "audioSha256": "d129ab4e123b3e68221d5db3a57ada2f5e817b0de532395ea4e5ae6590069629",
+      "sha256": "6708eeeb9a750a0d3d5738843e47b4cbc3fa58e815a2538c40a8523123cf399a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:11",
+      "wordCount": 3,
+      "audioSha256": "b7fb04f9d1115528575241c7a135bd1e3e0bc2647e22b6bd98ab08fb4a0b5379",
+      "sha256": "7b1c5eb6b532d329ce93cf1aa4761eb16bd68bcf5dd509f912cb5896e1c1a575",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:12",
+      "wordCount": 4,
+      "audioSha256": "462034e646698d374039865e66a01943131ff8a64e637a9fe5bb177ee2a3fa02",
+      "sha256": "758e8eb6612160d33f960cd0c2e879236d0a51fd1fa0b479fea67ccf77656289",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:13",
+      "wordCount": 4,
+      "audioSha256": "1d6360095498cc45d0e6894342433d242839f011ca12b1cd67c80ee1de969f59",
+      "sha256": "4e280bd75aabebbbd0074b8e8f87ead4e29d44a0ab864f244fe0680f4aca35f9",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:14",
+      "wordCount": 5,
+      "audioSha256": "6c155a7c93c0a63fae9d14c335e7fd005b12a760780a54c2c0c8f1b84947b865",
+      "sha256": "959d77f501de6a17a5734e37e5a2a3c08b7b8221d7727cb5b191712e0a275d18",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:15",
+      "wordCount": 7,
+      "audioSha256": "ba9abde4227048f93fbeeba044b32a9335faa080ef1d39e9d457625051d375f3",
+      "sha256": "de4abf927d77355859909b5b848c0aca842a09312433806688f5fb8c8a2433a1",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:16",
+      "wordCount": 3,
+      "audioSha256": "0fe082da26cf9872d14bbd7a8afb5045cae8faaa9106fd3bdd36de640c6b265c",
+      "sha256": "d1bfea52ff7034b7c0c9101040433ab2d3ccafa698e456e0d20220f9cdffec3a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:17",
+      "wordCount": 10,
+      "audioSha256": "9115152bd1ff9da511feeee453694fdc6fbc6edb8cf9e17a77747457e3b52eac",
+      "sha256": "b0182f6deb82e6b95a2a64c65d21072dda5cb1aa28c475c7651a9d411d6e6df1",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:18",
+      "wordCount": 2,
+      "audioSha256": "54e5b67f5c62762d478ee2bd6755c62b4f1cb8128160f88f5c91167fa216ed37",
+      "sha256": "595e89bdcbf16120972391e11e0a490360495e19c343b33bd658d6e482cb15b0",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:19",
+      "wordCount": 7,
+      "audioSha256": "2f4a1abcc42e975e79e7105d1b2710e9b76760125491d4610bdecb2d86bff9bd",
+      "sha256": "ced2f8a793cfeb2a4c4925e3848c2ac89ecd9f1b8d173dea570ddce3ab38cd71",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:20",
+      "wordCount": 2,
+      "audioSha256": "b6bb0644425666452da0a314580f13cb0e0db6acc29e6eae018ee026d5c377ef",
+      "sha256": "9ee49171edfd441c8a6d5de840bf233c05cc2170cd335a7cdf23337316a4221d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:21",
+      "wordCount": 2,
+      "audioSha256": "685a6141276e4b2adfb6f59e6df65b161e0a002160bfbce49e554dc315f94bb4",
+      "sha256": "80f58bb4ddf30f84b85aaefddbe9616948cea1858131238f1d52b6b781baa7e6",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:22",
+      "wordCount": 7,
+      "audioSha256": "d5ba487415d5e042d6396da2c1336fa18f4ec7d6286b0539f98ede65e1774556",
+      "sha256": "438c8b974a94b98c6a67ca44d14e9e55106f8ffe323fbc71d3f54289e0a6da72",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:23",
+      "wordCount": 3,
+      "audioSha256": "820b14277842808193a49740b7eb6260ecaafb71e6901adf249c79c9273bc0d3",
+      "sha256": "0c85f0938ee0c82ca6d76b4be7481db4f88ad0d209ffad444e1dc4dd45111b46",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:24",
+      "wordCount": 6,
+      "audioSha256": "1c3a94ff74f4e93ff7a4dbd728fe77f9361ec5804b4258b9c88dbb20f078af05",
+      "sha256": "f1e7c23410a0432c63b464a65938928da845ee8aa43e854518d52b428cfa1d60",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:25",
+      "wordCount": 4,
+      "audioSha256": "4387a7fc19699b6f51ef40a6edd62e0ed240d6c77463c847903fed17fb251cc3",
+      "sha256": "22c6ab9a0895ae67807be709d2101c15bc09b3eba40cd49d1c59eceaa4154a3b",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:26",
+      "wordCount": 5,
+      "audioSha256": "bf8c37dcce4745f84a775a31ee9aaf97891d416f6684c82df87a08e236801092",
+      "sha256": "9ea3a15b52e8e9ca10b8446293c64d338949f4a195f855c204ff0aea4219aafa",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:27",
+      "wordCount": 3,
+      "audioSha256": "727a7ece05dce579921fd487970e49c31779ad969ab0c55bc9889b4e70e7d06b",
+      "sha256": "de0ad3371f95c6ccce95562c51bd4ca93680b8ecc9bcb5652918663dfc5eb9ba",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:28",
+      "wordCount": 7,
+      "audioSha256": "4f5586df14e74e3a635e44abf2625f5f4db5fac75769fadeebc862af85561d90",
+      "sha256": "f123e5d1b8e60b7c3b25de25e03ec132503c51547242a764ec17f67c9192bc7b",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:29",
+      "wordCount": 6,
+      "audioSha256": "4f32004546f25a64fb6a184d9e15d649a08fd723e8eb1000feff68d08bd1ab65",
+      "sha256": "f6cac85a7be90cc708c6df4941bf1b4892001ad90cf54507e8bb0625687b82e3",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:30",
+      "wordCount": 5,
+      "audioSha256": "70c1194d3a4694a311203feebfe3464ac381c7f3bfa782b412d7e5fe354ab67c",
+      "sha256": "e860009876a4ae3e13ca1323edeada834bfe0ffd268fdaa1b1efac2fc6e3c965",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:31",
+      "wordCount": 5,
+      "audioSha256": "37e5585c5e4d2a61053bbd1335ac5cde5a86afad2778ce3c43a938da0bda8863",
+      "sha256": "f4d746cdc1e9a6570fbdf3d726d9a673cc77bcb67799938cc6b30b3ecb55e619",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:32",
+      "wordCount": 10,
+      "audioSha256": "562707f1d1e98541878b92b7aae9ea4ec7a7ffcf6cece706db07e231573639a9",
+      "sha256": "6491102db5845d1bbb422c97e5f68b67ef3e0a0de49c87de9beb1e46ef592d57",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:33",
+      "wordCount": 8,
+      "audioSha256": "bfa1930c8767e6c7462a1c4f867c7dbfa2c734d5d2f13fbf8b392730e3740693",
+      "sha256": "ec9782daed51dfa553d90a0a4651692752e5f700fe7507ab8376418d942c34ce",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:34",
+      "wordCount": 6,
+      "audioSha256": "95551536bd5d1500eadb0ad6e18a5a554179e8127e07131a7d8ce56e2ac9de9f",
+      "sha256": "94a7e9ec969b57a6a5ac8fc6850115bcd2e6c56c449b575a9bb904e4c51d7588",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:35",
+      "wordCount": 3,
+      "audioSha256": "ad2514825f813194364413a82fbf4f809b438a5c34c198ee8c51a7a494d0f8f2",
+      "sha256": "8e831f0db0e92056587aa2eb3165cf0ebc7b84f4a7a1c5bbc4c305330b65cb26",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:36",
+      "wordCount": 4,
+      "audioSha256": "41558f8d4a1ff0b2f4a5a2604c16f1d5d45567edad5cc3c73f60cf7f89e3aef1",
+      "sha256": "7d8f7728bb922b0ba7826e1ed1cd5409347386f788d739ec88fd33cd68ae3807",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:37",
+      "wordCount": 5,
+      "audioSha256": "ce9698e3d81324ec95fe1c499b2ca2a9e13c6756a632c994d6688da496c8eee0",
+      "sha256": "c3e35e97c3bb674898e0747934b58df54d1c10924151737a16740f8a1ba139b7",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:38",
+      "wordCount": 5,
+      "audioSha256": "0d74d3301f6f7d5c42ad504dc48bf687c6a70c50a89cd2eb431f13946e81dc0f",
+      "sha256": "41b9dba1ca170bd9c427e6e6e20ad2162833987887e328137fd7e4a381f95812",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:39",
+      "wordCount": 12,
+      "audioSha256": "86a03af9ed039d4a8bd76bce35ec735e182fb005df7cfce721e77889c4ca8aa7",
+      "sha256": "78838a5a4d96340fbd748c18405a3ab0aabe2579c5452a3b5e639b0537b25434",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:40",
+      "wordCount": 4,
+      "audioSha256": "85a5adc09fc5074a2b56f434d0206eeb25259eba7be989c2fadd6c02dd24ecd5",
+      "sha256": "c771c2b5ae7ae7dae3ed9a5007b5d04fc22d110136592438a3795dba9e677266",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:41",
+      "wordCount": 8,
+      "audioSha256": "1df7b8aafc3c9847913374e28ff64363533f1c1a068441f5c0e028bb0a0ee039",
+      "sha256": "0b6cb13327359f6627b11c1d9636ffe5dee9906d2fb85cb10da1518ab63ca69e",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:42",
+      "wordCount": 9,
+      "audioSha256": "424173bdfe1d9feb2d31ab3cd440f7702741219497f8c9ad817f47e1fc170b02",
+      "sha256": "2ffbceb29a2d26e4db62c6565e49d8883d018733ce90911761f16b8a18696c8c",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:43",
+      "wordCount": 11,
+      "audioSha256": "50e50e9d9981816b7b20c2d5ac597557c62ac4def42683c57eaf48eb861000dc",
+      "sha256": "15c3246d41146edd103dcdfb6d792fded1e21ed207c35ee20cf563863ef1daeb",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:44",
+      "wordCount": 10,
+      "audioSha256": "026ae2b7bd53281f818336f4d8d26e6776b613f42706bab86b467844ef9dc60c",
+      "sha256": "1fe8966cd2e374cdebe88a18a8073f9c8db2ac5f77c7928e330949d6181d0f82",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:45",
+      "wordCount": 5,
+      "audioSha256": "cd272d926c88d26d8414761306b8874d61953b770da6988a10b9fe06ccb604d2",
+      "sha256": "d42451c957a4297b43cdc5f254b9aef2816bb5ada1408a36a8fbea5304f5b106",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:46",
+      "wordCount": 7,
+      "audioSha256": "8ad7083c4d2bc7def2c5496f4d95337f9f4d4157315b293fbe705a0aa0d0c1b2",
+      "sha256": "7e667b926e0e33ce70ea13265661972ef3eb99726ee18dd4a4ce6154e004d670",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:47",
+      "wordCount": 5,
+      "audioSha256": "32c2c2d03fe6d11b67ad9ff3c696a6e08e2b2c5c10f00f24a755cab81ccda8a7",
+      "sha256": "49717a502dc5215dedbe18f5ac8accfbcedb421b19924b4ba0008ac46020a6c0",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:48",
+      "wordCount": 11,
+      "audioSha256": "b0eb12bcd6dd6db3d4676193ae0d96fd3e74fd74766392a55560d490908cc70e",
+      "sha256": "3ee0d2f765b8bb3bac46799779e03ff947eaab6153a0d8b15d6252e983814118",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:49",
+      "wordCount": 10,
+      "audioSha256": "60b86ff315e5c71798a33bf4c445d77259c2bff31cb8c135b1c747f9feb91d17",
+      "sha256": "fdf3a33b7f95735940ac0648445a95d88508844f3e402ac405c6d0e899dd6892",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:50",
+      "wordCount": 5,
+      "audioSha256": "ab0f46e7f676794e292b7fca0eea337d684b680f54856df50e7578c40f9dfbd8",
+      "sha256": "0edea8906a62a1db6eee7816a1bb6a3852f1945ce77c399966d40ac6fafc6844",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:51",
+      "wordCount": 12,
+      "audioSha256": "c3a5c5811a94e402b514d4988e48331bc2964d7aa255354dd0ff8c5b75a439e0",
+      "sha256": "353c0ca970cf210413935a0c23ac6c30041f7069d4b173b41f099d2dfc50d321",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "68:52",
+      "wordCount": 5,
+      "audioSha256": "b350c5f134fcadcb50e86f847082052e954bc730933cf9b19e92632058372316",
+      "sha256": "04529431e1a3add1a2aceea692d7378233fe6579d904f075f4080c42c8d5eec7",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:1",
+      "wordCount": 1,
+      "audioSha256": "405d0bedf6659f8b430fbe9423c0145571513142f764759a1919ba46ee996a81",
+      "sha256": "b69d16e44b88951eb1801e1ad7b143eb322356faa50408170a9a222287102357",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:2",
+      "wordCount": 2,
+      "audioSha256": "ebe735a0657a9ceaf70ffbe8a2b59c44421a07e177d3588e8f47e6c81203f1b0",
+      "sha256": "0df0ffd9feca6f8f34d48aa5a75f1a628e043cd7db1a50d0fa90e109058a4f2e",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:3",
+      "wordCount": 4,
+      "audioSha256": "c917f75dc310ff57d84948e5f5f1291606a392530198e853d1287c12f217f9af",
+      "sha256": "e266219806aa5fd6964babebbb638b3a33d0f43d9308ae5610d8a6161aa9fc69",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:4",
+      "wordCount": 4,
+      "audioSha256": "1e6b6790c9b39a9cdd2657f093a65d3b85073a7acd9d71d6ac6d89f887a58ee4",
+      "sha256": "b0c1d6684fd29cfae4d876aa798f0533d9d660f06531be525c5482d0131de527",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:5",
+      "wordCount": 4,
+      "audioSha256": "35282853f28115e7620e3567487a1097d2b57f2466283c6fc36f8ce22cce5726",
+      "sha256": "0cfff8dff6e9ab3410d342ae53915cab5ac59d6839442db8c8ff25c80fd91ca9",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:6",
+      "wordCount": 6,
+      "audioSha256": "bf127ecec09afb63bdc0ce424064bec579809c6a3456c386c060fa15c09a2285",
+      "sha256": "681002005662d4d3ce5f3306d658f98d8a22778fb459e713c2f9f912a85c30b8",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:7",
+      "wordCount": 15,
+      "audioSha256": "e15a92bf313179c53d123956a9ddc6510efe7cab0bfde8a6e4ee3ad535f271dc",
+      "sha256": "4371d2c1fb930f07c74f68d2ba929306161fef810cc29a0e69f27ee74b77ea01",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:8",
+      "wordCount": 5,
+      "audioSha256": "f0d687777f1e92447961140aaef6a6701ccc4c00cec937978e830ac997125067",
+      "sha256": "3edb5161354f3918c98e5854bab7280335b6651d3b83d81b0c28293629d90e04",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:9",
+      "wordCount": 6,
+      "audioSha256": "e62195afbf056e327801dac4782e89d8f96cd9c4930b4bdad6db289bfbfa3e46",
+      "sha256": "8f248607e4bf5e2f2464d0c1fb974ad2cabf398573593dcaf6fc4f32be55482f",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:10",
+      "wordCount": 6,
+      "audioSha256": "94f4f58facc5306d45d545b66a16f15b030ad4cf03a00d3a4fbad7fbce926349",
+      "sha256": "6b4ccc94ef5da3daf3b7b2572a0e07e97de6d8f2b69a46357d3d952f6777a2a6",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:11",
+      "wordCount": 7,
+      "audioSha256": "e23f10f8ee1548bf248c112bef38a2fd794e35e559f4a2db9820b56ae510e44a",
+      "sha256": "49f03d2c72866e4d1b1c04381f4e973c7300dde0a922ee904428f95933a4d2d9",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:12",
+      "wordCount": 6,
+      "audioSha256": "bf1650d3b2a116963aab84d5b2cb189774a2dc168cd98e2d112c1fb4e89f46bf",
+      "sha256": "f890e6d8d1b4311e271be4dee0d84b6106969ce0837eba45c882c25822de173b",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:13",
+      "wordCount": 6,
+      "audioSha256": "7a00ae80a577562b1cbb1f3ea83d63439e9014f2e418579f8830d754b0d9e384",
+      "sha256": "3519b327046b468158cfa8332b4641783a1161a59c4f65d694c4ab1816807b05",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:14",
+      "wordCount": 6,
+      "audioSha256": "0c40e651728e6996378b3a09df33decbe6c4c086086bcb304d7a63695ccc4322",
+      "sha256": "002d68529ff03981c4b81edc8bfdb7c96811d0a910207cd5cd6430662290edc3",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:15",
+      "wordCount": 3,
+      "audioSha256": "554bae7d2710a643c07e7fb5a790bfad51225db5f618a205f7c9bc039b1586a2",
+      "sha256": "b764b821d06f2d63def5876456abda4bdc2866671f8f4545dac37a637ddd859c",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:16",
+      "wordCount": 5,
+      "audioSha256": "ea23273e28249884fd146e445b8f8e480dd473471a0b24343ffa98d46bdadca4",
+      "sha256": "aab926249e57f12b251732ae11fd5f7a67fbf5bd67f523b9288c15a3bdbb45d0",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:17",
+      "wordCount": 9,
+      "audioSha256": "883daa406f39667f740a5cab00762c359a99b44bd3c8c943cf2470fe71c0eb60",
+      "sha256": "5989be32fda159d7267d365fd3d65a7aedbe662468e3ed2a8c67e9410f1a133f",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:18",
+      "wordCount": 6,
+      "audioSha256": "ace612f3f5a13d71e48ac5c5e869a22d8f7550155665e097fbc58199b08ff4c5",
+      "sha256": "ea0bc92fc3edf4df57b2c973d41317d824b600440e467a7fafb548ea8b63ad12",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:19",
+      "wordCount": 9,
+      "audioSha256": "29cbaae70061a382209f578a6ba9608bc3ca0ac4501c8a09898ebd93d2f50035",
+      "sha256": "cd1a8db73004cc62d36f10c71febbd71886c0ce603cc7899010e66e860454d1c",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:20",
+      "wordCount": 5,
+      "audioSha256": "553ad8cc36600934a4b73118482683cc8ac9e81f332cc23c5df79265c77c313c",
+      "sha256": "ca7723ddb0af897495a5846844ca0ed7bc66bbe43062e5e4ba8b0a3709e755ac",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:21",
+      "wordCount": 4,
+      "audioSha256": "d7fdc1b746a27a1e6f22f07c3e1dae9972d9f1786c4e0c4c84cdae1ed119e1be",
+      "sha256": "34496d6a9244f1fea1dde36aa996cd28ebb87ef10f68bb7e4db03fb99f15e091",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:22",
+      "wordCount": 3,
+      "audioSha256": "cc34d10f4d36aadff36da649f5de6c5b8a200fe67fa62e437e40e4001774c17b",
+      "sha256": "ca6cae98213b47684fd95f89a879bdf0e7eb6f3d0b39cbcda1a466abef169e9b",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:23",
+      "wordCount": 2,
+      "audioSha256": "47cc68d6937fce7aeaf1c7214c22d8a57903a1d3266d544057624611893b5837",
+      "sha256": "35aa4f6b3256403a06dfa8d86cf151309f4e9255a189aed689adbe1071a123d9",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:24",
+      "wordCount": 8,
+      "audioSha256": "50ad418c953ce3b349bda4757ad579881b5f9232466e8270690620783ab499d4",
+      "sha256": "b85dac846a927067e47c2d989cf35215659bf32a1a9b87465a402646dbba98b8",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:25",
+      "wordCount": 10,
+      "audioSha256": "1e589bcd80ff1396f40e56765f66b5c6320a735bf4a8bb0df97f30e543dddb2b",
+      "sha256": "def44a4b1e3b5d5ba0cccc3ca30688cbdc6e08db6140f911f7c104c4b51388b2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:26",
+      "wordCount": 4,
+      "audioSha256": "36b64c8436b438018abbda58aab78d67c880d2ba5ef9d3add8039dd89586db4d",
+      "sha256": "65856becc34e6a4b000a9afdc0e7493ae833718e50ff38e74b87437eb3060577",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:27",
+      "wordCount": 3,
+      "audioSha256": "29f68b06a16f67d0747deab5a77a536b9cff95f7ae2fe5d82293c0c4ce5dd3ac",
+      "sha256": "4c48bd61007374f0777eb50a9cfb4913079ed855461aa7e98b970f13ff515711",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:28",
+      "wordCount": 4,
+      "audioSha256": "c603720efcc35fc7fbfa8464514e5b55e96e8f555c634b24ce01c5dde3aa8980",
+      "sha256": "4a4693da39808fea6758eda3b490b7c6c7243fb55995757ed6541554f61cc2d6",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:29",
+      "wordCount": 3,
+      "audioSha256": "1749ff33c73f91c9126bf3a46a363b09472396cbf29a8da8d0f125fd252ad5e9",
+      "sha256": "bf2ab1a6a18cf015a12ec8fa028f26844f22782d438c8eb285dffbd398311eac",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:30",
+      "wordCount": 2,
+      "audioSha256": "22efa1ff67e2f27bb601d1009bf147e678a2d685194c7d23d4888caebf1d2240",
+      "sha256": "7618060e605df6a70efed6a4645e6689475bb0ef6e85778ac0c6ad33b1b4138d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:31",
+      "wordCount": 3,
+      "audioSha256": "fb1c125ac260870865c32c218bbbd1c31c8bbcdaa32a4f5cf20f2d265c04278c",
+      "sha256": "7834231bedd975992ff3326ed53bfef4a72c7440c674811cedf90b23efa69da4",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:32",
+      "wordCount": 7,
+      "audioSha256": "9b5f51e0f1f922cff684dcef4170b005f3596261c68c9fa9aafb013a4bfe4a18",
+      "sha256": "19430836218e7fa3f39e0de306ea40f55572b6058da3ba009997092d6de2f71f",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:33",
+      "wordCount": 6,
+      "audioSha256": "c37a9f199c40fdb211563c9aaf119ba5314a3402ffdf11fd1a9ba5f7bd168de3",
+      "sha256": "6938eebbd99c9af93944554e43f929e1efb7d9bd965a8c612958c05654733578",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:34",
+      "wordCount": 5,
+      "audioSha256": "24fea9d94ab7644c16379e84d903c1d8f1e0fc5413bffdbcd17cbb9e585460fc",
+      "sha256": "6cd28f931f4932ae9bcd9e69b5b6fa579dc11402ab1e7976d87bd359925a7605",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:35",
+      "wordCount": 5,
+      "audioSha256": "6a289acc50e31c3f8b2a08a28fc2748d321134b0391a931fcafec2a077adcf85",
+      "sha256": "31ab7152b965af75b3789d6df6f7be6e57f08937e1553b62f2ed65613c8dd262",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:36",
+      "wordCount": 5,
+      "audioSha256": "7eb050dd5ed8dafb60ac55c202a670e42fb0bf42c9612da954d2902af9e5d5b9",
+      "sha256": "ac56bfcbc1987e3922f3fab930abe561be083126707ca99497e346547a9653b4",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:37",
+      "wordCount": 4,
+      "audioSha256": "86a3edf073ba125868d8362b2f3cf811a15e9626dd78d3ae8fda90301d3210b2",
+      "sha256": "afedba24287bd96bba4bb78ae71e790b43c3d8e0c10458dd715cbb3b5d49bfa4",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:38",
+      "wordCount": 4,
+      "audioSha256": "3a93b608c238eed7030023bf308193246a93091c6f1887f5eb41b24c225ef8c2",
+      "sha256": "b985cb262da0c184ed52a75774fc53e7e6a2ca3e6ec7e89939a57afb75af0de3",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:39",
+      "wordCount": 3,
+      "audioSha256": "a560d8ec04c57521bff900fa5dd218f2af2f79ae7e19de34c446692c2b368b12",
+      "sha256": "7b9af6410d9d883b5a8d3f8a4d6636af1584ea2a48a3da0360469a1eafbcdf20",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:40",
+      "wordCount": 4,
+      "audioSha256": "e9fc16a72151be108441ea530aac89b859d7b689a2fa4e2171e3602baba35fbb",
+      "sha256": "5cacfaf0ffbfb0f8915e17b20c58e70d40d58b1909d6e06df66fa4a5d834ef0f",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:41",
+      "wordCount": 7,
+      "audioSha256": "6421dbc3017714ded884417586c31f04fde6e7e6c729b69c00b91a35e0889b3c",
+      "sha256": "9fdda965d229800a76abee1e1b659999f77879331fcbc0f237cad4f822d9802c",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:42",
+      "wordCount": 6,
+      "audioSha256": "ea5d83e6d11a26d5bf8cb30b58976b42d7ad93417b3180d58412d24bebd38f23",
+      "sha256": "53258e29f0846d681a4914ea06fc108d1150c356ba5204ef3bb59341d1d1a037",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:43",
+      "wordCount": 4,
+      "audioSha256": "bce27cf0e8036594f9e4d3fab195f4b8b7e221351491a11f7947be84062659da",
+      "sha256": "3fe100ece064026ebf804706a7b5fdefb78f28c1858b2ca7d1ad295c27130380",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:44",
+      "wordCount": 5,
+      "audioSha256": "76588027f470d76f36087314b069a5cd32ad2686c6023c941b4e668306c1cc87",
+      "sha256": "753facf2fd5e681a527a30d20b943764679af4e9284ccf5b8d5d928d206ff653",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:45",
+      "wordCount": 3,
+      "audioSha256": "06eabdd495916aaeff3815742e751c4a58fe73528c89be047f1ac4fcf9705e29",
+      "sha256": "fb2b00bc386efd49bb670db0153f16b05f3d4de8ca99493fc4e081f84c3745d5",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:46",
+      "wordCount": 4,
+      "audioSha256": "88bdbad73a7f9c1092f518603127569b94e62e215e517b31c8baf937d734f726",
+      "sha256": "f2a376ae20cfed07dd1e5ae22cc4f12b3484862c50f49e686a4a5a7217e088f5",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:47",
+      "wordCount": 6,
+      "audioSha256": "3badd5cfab2de5ec6e1c59e48d8074717c03118844f33a45b36a8f9a2cf97d75",
+      "sha256": "03014caf0fbd39cd15ffb33bdff66974a80ff70bd7175a627374348e9410f4f5",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:48",
+      "wordCount": 3,
+      "audioSha256": "b087ad3f034288d53768a022a0b3e74d60149500e4778bc0b3ac67cc27ef9d47",
+      "sha256": "15d9b6a398a889c24b51cf5ff2fd7c35f268b104066956dd1058d14a71489905",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:49",
+      "wordCount": 5,
+      "audioSha256": "4162c65917ebf29c5c4db450b602ba697c719c2c2580c607dc84b3fdf3d86941",
+      "sha256": "05442b57c0b8dfd63eb7c58dfdb084f292fc7c3f61aa01328fa7428b3afca7e0",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:50",
+      "wordCount": 4,
+      "audioSha256": "39eb6f59c735dce78831666ba08e3ea96b13fb8b78391429c626645fe93553c4",
+      "sha256": "c6f8fa09e583c54e7bddbf81bdfd2fe02ea12afb14fc19a55539846de7234b33",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:51",
+      "wordCount": 3,
+      "audioSha256": "7dda01dc596f0ab7562e2e4d27739d66335849e7c5dcb10002db74d15d7291f6",
+      "sha256": "af1379530c7efbf33a206d4878afda3f9e2e99eb12d8dc3ae7aee3bd213c5837",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "69:52",
+      "wordCount": 4,
+      "audioSha256": "822b9db992b215288c952b7426187fd960958ddaf7b35958b7e244c30e7dbb9b",
+      "sha256": "6071b48605b56c7ed9e23f59bf893c1320ecb7baa1fcf83fb9dbbfd78cd5a1ba",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:1",
+      "wordCount": 4,
+      "audioSha256": "c7df9434eee5c8ac79a3ff9a114cf83b1aca8c3277b237eb909d3da0b25e6ac9",
+      "sha256": "1dcf70135b3d32b839cc45ff37c5df40ffeef73a37f7947d4a17a7d444bcc292",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:2",
+      "wordCount": 4,
+      "audioSha256": "22fc3509e95d3052b646de0ddcb0a2e5764bce89aef7d895874d8467cb6fe235",
+      "sha256": "887458f039d6030d9c18c372a3644c7c4246d5056e1631fd99d896da775ae0fe",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:3",
+      "wordCount": 4,
+      "audioSha256": "a5bea2f0c2b93112d6c44df9befabd7873cf9dd6f5bfd5e1e0c552c3067d6412",
+      "sha256": "89a9fcb98fe4bc8b52899bcccb73e72b8f572ecf863d72d3cc1a8f47efee02bd",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:4",
+      "wordCount": 11,
+      "audioSha256": "80545dd2cfa2d26c030235bc0f9d541eac003681892b0c98368805406413234c",
+      "sha256": "e4eee6b343cc0595515d355d07114f83189f6dbcb949d8e959d4c9f63f0294a1",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:5",
+      "wordCount": 3,
+      "audioSha256": "6e9465b75164696b4b914ca733ee05e36d8549da1e10afc56cf40c10c3b1e074",
+      "sha256": "d28b55623eae43684e7a95a6da46d7b22edbf20508a231fdd353e38670667865",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:6",
+      "wordCount": 3,
+      "audioSha256": "821b7f70cbba74ececc5730d63da4c1fbbaa3ec4aca6fdd86ae24999c2567bcf",
+      "sha256": "de2fc48251daf170784182aef406c3ae28c2422fd8d4e1f313e805fbbfd187f6",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:7",
+      "wordCount": 2,
+      "audioSha256": "1f463e3fd72bc29bb5ef31e8673a2ccd3322550e5e7d9ac02419227a438ee173",
+      "sha256": "d2e676b554cc53c420541428bbe162f40c3d5679e5469c5c65a56588f5726baa",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:8",
+      "wordCount": 4,
+      "audioSha256": "3c5bd4c5f2aeb4c4d81cc5ef9b95eb6a0c63ef81f97c01202e712e0ff6e0bf2c",
+      "sha256": "624fb2c57ec59a6433bd688a9aa98b20cc0e67a619ee6d10e9e0097ca8eb3914",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:9",
+      "wordCount": 3,
+      "audioSha256": "de10f431deee087149939dc64419ccea9e41789a705fa7cf18568b3597053fce",
+      "sha256": "3492f9c4beef4d9183c083497ac33fcad2d0cf99f7365aa2a7165a574ec4c80c",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:10",
+      "wordCount": 4,
+      "audioSha256": "e0a4e365997e7efb1ad66f808a2196488e1e66f886181352d9b5dd72545f20cc",
+      "sha256": "76aa5950b11b8b0476005f774c3d3071798024706c8a68ddf74a26d685ae0847",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:11",
+      "wordCount": 9,
+      "audioSha256": "cb5dfd087fb1c941013f3df56e933e9b2f377ca9cf9e0972f11e2df5c836e1ad",
+      "sha256": "c17927b3865c8884d298fd29701e512ed9943fce741c78873837dd60bbdea383",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:12",
+      "wordCount": 2,
+      "audioSha256": "444a5eb3d7ab6db66697221a07a20f260f6a156bda42fed8543dba23c5b3343a",
+      "sha256": "5fa520db96761fcade3291d7a70941244ba2df706483ced4b4ea56b995dcf566",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:13",
+      "wordCount": 3,
+      "audioSha256": "1423833a96bab5ae08cef9f5d3fd49b22bf291b4f508e9487d5025a7b41c3b16",
+      "sha256": "2cf84ac36a9c6b7fafa7c00a690532996043b2800e8f66825c797e8d2dc5be32",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:14",
+      "wordCount": 6,
+      "audioSha256": "60e0d37c27d950a24332d32f2553c5491abaed2b4fbc72536162dff778a9f492",
+      "sha256": "2316db1c5fa51e235d2f11f4c8d09ec3ec3776ad9427b720237ac59be2659f95",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:15",
+      "wordCount": 3,
+      "audioSha256": "b233bc32a2cf5219225a68330113779c1f434a5f843025b18c675250d5895b5f",
+      "sha256": "ce6f021a441c8c452d87c5f062c559bdf19ee2f2ba66f632bd0e3ef0c9555c38",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:16",
+      "wordCount": 2,
+      "audioSha256": "efd1f109a11a4a987718273804c06b99b88bc43c6327aaa0b7e4819e7c8dfd16",
+      "sha256": "c601dc524a832e177c23cc0e59902599237e436cc63050c780285d009db2adff",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:17",
+      "wordCount": 4,
+      "audioSha256": "14f8b44413c5e34c37550755eb150c10e97d9d7d3a4c71940fec40af3f8f49ce",
+      "sha256": "b2efade1fece448fb4340c0ebdcde3f308de06ebe2d548ef692436d47a34d144",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:18",
+      "wordCount": 2,
+      "audioSha256": "a0e84a0699a2f2602189be07b3b9b4e33fa9ca80e03598972b20de35ae31f6ad",
+      "sha256": "2ba2f1614665312f2bdcf29d1751024c4d97392a74c7b2ff503f78cfa1fedb7a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:19",
+      "wordCount": 4,
+      "audioSha256": "f6740c45ad605bce574ae530f47c6841f73206d7c1b1df6c29aebac2f4cdb789",
+      "sha256": "6ef9985a94595451215c194a0eca1434bd29374786af60a3485bb760a9af06cd",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:20",
+      "wordCount": 4,
+      "audioSha256": "d7ea99fffc61b54693984f318bbd4796366bd740a5c6bafd6dc01490149253d9",
+      "sha256": "c3c79ecfc7a421b18c1b3a108150675a2e315aef6686499cb84752235bdef390",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:21",
+      "wordCount": 4,
+      "audioSha256": "18de00ef46cba00e5092ef0cfa64e97426cccae185512668c319838d903a79bc",
+      "sha256": "f1932781c7aacb600279927ba46abe13dcdf8b67c0c3614549757b03c2897699",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:22",
+      "wordCount": 2,
+      "audioSha256": "3d04c08a6886148d3fdbe2ce891e9fb3d15e36715ea520cdb3e6ee6f3abb8eca",
+      "sha256": "266447f97e850ad5bea01b76bfd1bce3798c95b9c0db3ccd4ea178d686333092",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:23",
+      "wordCount": 5,
+      "audioSha256": "9398fd645a6612ab6b5454f9b2edeee7aba690848414983cf3ec64dc91fbf416",
+      "sha256": "0cb8c359fbbe6a6a21b243e753fce05ad08b987a6f3afa42d1059ff5c09901b3",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:24",
+      "wordCount": 5,
+      "audioSha256": "430bd59868ce833a7be136519ff71b40eeb7a63777f60667e523625fb71ddd61",
+      "sha256": "66d419b37ac37723847cf1044a917b3623cb28750b91e6dd3a7b2fe17763063f",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:25",
+      "wordCount": 2,
+      "audioSha256": "b6d73ee50eba94d8529bb4583ea257522c3eda95ab4d7862a8a9941a413a8a97",
+      "sha256": "ca01187d6ffcfdf89947dcf13613f7f3c80afed1e0f6c7ca407720678da24339",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:26",
+      "wordCount": 4,
+      "audioSha256": "95cb7b55f3764bb53775e27de6bd57d211b8b1d4e0d0cb3c89c986850d57c388",
+      "sha256": "2c2ea8e5e2a76792e21a0c4133a60e856cf2437cd929d22adf1cbd540e7d7181",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:27",
+      "wordCount": 6,
+      "audioSha256": "c5e21539a1e88ba19549d8a6a058cd0c151f5f295cf0686233d3b875834e7ec7",
+      "sha256": "b3db3786b32e4ae34fbee48cb65a77c58daecdb023424294cb82710402637da6",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:28",
+      "wordCount": 5,
+      "audioSha256": "5a8c47ce65784dcda62155b142e5041c6ecc67ae59a7e2f011887318a9a57294",
+      "sha256": "c45ba3ef1659555e3edef1a9473dff39e0d451a41090cf2f3ac21a1d529402ce",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:29",
+      "wordCount": 4,
+      "audioSha256": "e60a1bb318a7dabae12bbb01bb72bcaf1985c360a06656d726b90230f9aa376e",
+      "sha256": "df94aa2e5bcdc30eda5d9af4c2e3c2421c5e8c1247291a8b140736e9f5ce5909",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:30",
+      "wordCount": 10,
+      "audioSha256": "bbe7d316f58ef990bdab38cbb82b68e00489ed9c8e4557cb7d8ba63fa83357bc",
+      "sha256": "0051089088ce9936dfbb78a0a4957b46f877a2c9225a335c9fd66441e31f0c70",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:31",
+      "wordCount": 7,
+      "audioSha256": "184380962dbbd71bf555881fa73ce77c0d9f7e03b74cb4460fbff676b65fed74",
+      "sha256": "47c716a5a71ee58fd01aa83fb723df55239277909969ec40ca4953ca31a97709",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:32",
+      "wordCount": 5,
+      "audioSha256": "0413178ea64e067e5f56fa89e61ba20b275749b09c7a1c4913dd6846e80936f7",
+      "sha256": "f171e447cc4bb4b6887ef05ef57de0c51a9fc0e1af430e32ab9a000d34f8ca46",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:33",
+      "wordCount": 4,
+      "audioSha256": "4c2a2c5e6472779acea908f5e92eb5fe0f2d5fa8d4d2be2dc78d48fea0748976",
+      "sha256": "25b9109707fc3edef61ed5e396990c8a948e92eb20d360ea6a0fab24090df0b0",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:34",
+      "wordCount": 5,
+      "audioSha256": "9d10c8d528994e42f39313fd2c29c3896e7557b5fb311cec7b7feb9bbb5abfce",
+      "sha256": "593505d8302a7bb2869613033634b3bf701465a9ec1a77995cd38f41e9630f99",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:35",
+      "wordCount": 4,
+      "audioSha256": "b1ebcd9c35de43905e360cdc0aa10ab731c9e354300f46d12d3a4ca8320dc573",
+      "sha256": "26637927c372c9432ffd4be9eb3b602e6716f77fa7b6a7ac0bfd9e74e0c6e050",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:36",
+      "wordCount": 5,
+      "audioSha256": "f61bd8300dbfee1cc8a9f8ddfd7fce672bd32720fdd948e94c48ca0c8b6ec729",
+      "sha256": "091c420d3247ceb0d084f3aa9c4e7764d80d8e674b373a1d925ea1eae667daa6",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:37",
+      "wordCount": 5,
+      "audioSha256": "e723837059bd4d300157796aac6b3a183e6bdf479b249ef4493edde7fd84941f",
+      "sha256": "019d75a8c3d0421e036bbdaddeb368bb7bc1c3e7b008c3fe4654bdc20547cea1",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:38",
+      "wordCount": 8,
+      "audioSha256": "e40e0e20b2391d7127bd81703c0a678069366432e14a5470b48eb54c417c9859",
+      "sha256": "c674fd54eab0f03969ad8b26e2a5d62627822efc37d667c40414a44dcca06757",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:39",
+      "wordCount": 5,
+      "audioSha256": "6f127cb01038552cad852b32ef12412e7e551558d6957a83bcd738f4500f2784",
+      "sha256": "c80856876e0760da966b4d78ccc430f5c5eef5afbf2ed31d9a5df565e168affa",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:40",
+      "wordCount": 7,
+      "audioSha256": "140b6931b4a30b5a38c803a97efd7ee260a83989fc83e00afd1e94db0dec9880",
+      "sha256": "c63bf3f04032143fc8e804c576bd107f0f25bdab369d9116e132476b878b9ff4",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:41",
+      "wordCount": 8,
+      "audioSha256": "7c0f3d5c9ca89b571516cbca1698b3dcb30bf0f57cda3e9aa69e68810f1c99d1",
+      "sha256": "a69f9a88004b1b9443a88ce4c40adfd8d7ff3375031b8d9aaadf7d1ac9421208",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:42",
+      "wordCount": 8,
+      "audioSha256": "96ebf9011f617696567ecdec8d73a82ec9d907b66aaf6690148ee0d65d0b8af0",
+      "sha256": "892e1008f80caf24508e64793bfc9037a10e8837e46cdf5925f7183e59a893a5",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:43",
+      "wordCount": 9,
+      "audioSha256": "a5225a677853199f606c8b0975a4acdb4b876ebe7ca00f5cdee42e6807ea3060",
+      "sha256": "7406eac9caf603ab912f99180b2a4bf0fe623ef06ca0318ca5225203034720b0",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "70:44",
+      "wordCount": 9,
+      "audioSha256": "7960a540567d5550034a6ee6c3190111029513da5d57f7e6f97493cda8a2f714",
+      "sha256": "2f959b7892d9b0101fa003c0f0247814abee7a9e2c763f13602d1422d2900eed",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:1",
+      "wordCount": 14,
+      "audioSha256": "29e03c4507c5b72b6886574688d38c329066e0634c81c2fce501975b2a2fadd9",
+      "sha256": "c59c454bc25f1c14a0064ba760e90ecfc18ee04364481bf605aeb4fb39a7c3b5",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:2",
+      "wordCount": 6,
+      "audioSha256": "af7b7f08ca15b5ddca58550491b1273d8ca58a73578c176e0e9f750d2ceec055",
+      "sha256": "b56642bdf2e8deaf297855584d8d85abc6a2869088bf879cc82b1056dd38a8d0",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:3",
+      "wordCount": 5,
+      "audioSha256": "4086faee7c040ecf5e8f025aee2ef4572e2ba917f3b59ab92646908a88c3f920",
+      "sha256": "7e3be23d5dc07ddadbff045595e4b203eda23fcdc812c4382f8c3f77487793ab",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:4",
+      "wordCount": 18,
+      "audioSha256": "8547218dbea372e27f7acb8bccce6bc9fc29d6373ee0974c65ed89aba493a9e9",
+      "sha256": "541adaaee0707f2df5cfe113f18d068129c487a9b251b94c3571e036f915533d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:5",
+      "wordCount": 7,
+      "audioSha256": "1880baea518d7b8b8cda48534a8f55fd2b668e48b854bb5cd78f64020c4ba1bf",
+      "sha256": "3d683749f6b7c3f0e78c21b07abe58d1e7a60c43a8c798396496709ee17906fa",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:6",
+      "wordCount": 5,
+      "audioSha256": "b3281368d97092017be04b93639089efc25a3bd882875a1721cd2db538d97eea",
+      "sha256": "0652200526b1b31544034dec909e3a08a345b18df60694425da7d524228916cd",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:7",
+      "wordCount": 14,
+      "audioSha256": "d0e7a31522a23c862e994f56b5324c06452fcc6c1e78b80048fb2ef7a5ab55e8",
+      "sha256": "703938fcb471c69a6c52d790b76be86e120269149a62be302b4d90b79088a71d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:8",
+      "wordCount": 4,
+      "audioSha256": "baf3def71798979dedeea7e57ab00168c4e51a845f7da48193e812ca68549e33",
+      "sha256": "a98314d9e1cb306a9926487a02e4e5d78c34ac1cad4ced4f57ccc7adf1dfa59b",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:9",
+      "wordCount": 7,
+      "audioSha256": "e03e4520b34f32f85462a9baeb17374b7ada065f5ebace504e8d21603176bd6a",
+      "sha256": "03411e5554b25110af7cae1b0c6409f29fc59ddd1b5542d3a5f90dbaa8374861",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:10",
+      "wordCount": 6,
+      "audioSha256": "2eda042ac9ebc964c6db5c4cf777eb4c81e8489697fdf55fdb370190949f2abd",
+      "sha256": "9cd7a6f3ae8618d4f571ce7d0403d2d712547f0e88c0cb4e629d3251647350c4",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:11",
+      "wordCount": 4,
+      "audioSha256": "83ee80bf4a7b48788e3b63336a8dcbda7f0435ff3e8d72c627915e724d07b0a4",
+      "sha256": "e03a0ce3299ab2cc87562e7a117df66571aca8b5cd1142cd2805c5b814ae5391",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:12",
+      "wordCount": 9,
+      "audioSha256": "b8ae66591d99bd6027b07d6ac5d06e54431961e6172b0bd6c6e77dbe6ee72035",
+      "sha256": "49734080bcd09a0a2922631a9fcfb903e36d54ce97026e34aa641c73bb5b5b82",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:13",
+      "wordCount": 6,
+      "audioSha256": "db76b0b9077093033ac005af8fd68b86f71ec1ffe8f0fcedcfee71a945acd6b0",
+      "sha256": "583e929d6c9c37ab4ab464a561c9cb9452906b68502b09e06d7bf3f2fc881b71",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:14",
+      "wordCount": 3,
+      "audioSha256": "1029905b70097bcde4f30ef4eadc15f4ac8e28f8e906943a4de7e0c50a1bba2f",
+      "sha256": "f4e20413636bda71e8cde657fca58aea09d2c77c323df54c5278b763a7c1f46a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:15",
+      "wordCount": 8,
+      "audioSha256": "148a0a604a62fe95fa8162d5d290baaccf44e70c92c5c0a2f51f437f9e88b255",
+      "sha256": "2fd7706bb0cb1f7c45de5431f2f920183bd3230949779fcaa1d4c29cda636dd1",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:16",
+      "wordCount": 7,
+      "audioSha256": "899838dffc6e92aa6f23b8b60d20f96d9bb83ab83c17786410a1696170caf866",
+      "sha256": "b406a371b2c706a5ecec498c021b31bd59d575913c2ffc96859105993055443b",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:17",
+      "wordCount": 5,
+      "audioSha256": "8daee0ef7403112c09bc0014db060c972d5ff7f7706339061a8897985d3a333c",
+      "sha256": "87fcaefe648fa864a089884548259752f76658edb0e5c5652a76fcc758afe942",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:18",
+      "wordCount": 5,
+      "audioSha256": "f7a771de9e99220ee553a9f04ab93376ced3c2b4d4bb46be3620f9b07a0fbdc2",
+      "sha256": "dc6d185066860cac307c135df40f8a8c3709872ce69e74fb0910b912dadd710a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:19",
+      "wordCount": 5,
+      "audioSha256": "33251a3ab068491b3e97c716dba5f972949ba24bc6a79a37ba983ba96651c6ed",
+      "sha256": "510fb738e8271c5c32c1c7d0a06f97982861d0dbedcbfe7ada1847c69077f5e2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:20",
+      "wordCount": 4,
+      "audioSha256": "e5f3b2f7a0d70c1e2b279efba01b532f3509e7da36a6f6eb62f03ddc0c5baa1d",
+      "sha256": "93220e870f34ff39238d0a3863e3d59231790bb921b315db97822c69eb6cf7fd",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:21",
+      "wordCount": 13,
+      "audioSha256": "80d67efaaf774743bf6fca7b8584dc9e27fa07098edd3315991e9e9daa6fb242",
+      "sha256": "2b104f56d144a3a2a4fc8bd84a46d62cfe91b675719547d169acaf175c52966b",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:22",
+      "wordCount": 3,
+      "audioSha256": "5f686e51ff28ae4d76ad217774785cabe2d6849a80600ca5572108429bc1565f",
+      "sha256": "1b0e8c931d41af33264c4b68138f0a43e8bfb814f4d418d1ceaa191a4b6bb1ae",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:23",
+      "wordCount": 13,
+      "audioSha256": "c7666a4fec30172c8c4b177d0a986e7055ee2950ac1e4a8f238396452aed71ab",
+      "sha256": "1350290796dccaf5f76b807824327a4b699baaf862cda09e762f8d96c08028bf",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:24",
+      "wordCount": 8,
+      "audioSha256": "7b2aef6c746683578ecd3f46789ca7edd6200aa8611b961192428a5a009fa4c7",
+      "sha256": "3a0f9e94f75b79218c0f3c0485818bd5eff521aaf147f76e0fa9b658de815d19",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:25",
+      "wordCount": 12,
+      "audioSha256": "11680c463c1b98d708e8da83e381b6831351ae20f53b1cd4602119981c1a6897",
+      "sha256": "74cc4dfba34e1cd310d867d8244b12e581aa9edfcc30c628d460f662198c3ec6",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:26",
+      "wordCount": 10,
+      "audioSha256": "00e74f0c8db8c47902fef50ac29027cf4748fb78966c6890a4f77251a49468a2",
+      "sha256": "cb6a4fbdd64afb0dcd29e672fdcf594b1af93c63bab47b3b06b9023fd7c3882f",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:27",
+      "wordCount": 10,
+      "audioSha256": "1470dbc863b7edbd7b7ddcddaec9f80508e155a2e0a7120e0828d88e7bff13f2",
+      "sha256": "ac6fbda78b85179aecdd8ea4f6a020546db1140dd548a140911489c662a59565",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "71:28",
+      "wordCount": 15,
+      "audioSha256": "f42853145c4432fdfd4a261b8ea87e49db283252c9c1dfa41169144660cefb57",
+      "sha256": "1948ccedc77d372502a0ad7c5e12ff6a0c4b441e2f1029b6453b91ba95214a22",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:1",
+      "wordCount": 13,
+      "audioSha256": "9e3c77a3e0dda6fcdca78607d48b207d9a03494df2f863c59012684293fcfcf8",
+      "sha256": "c87e4302eb25496097a20234b237559d687c26c443c889f2a96ff1b9749cc275",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:2",
+      "wordCount": 9,
+      "audioSha256": "ada985bf6abb036660066249597bcc556f1397734f9f6ea5de66badb7ce56c34",
+      "sha256": "c719a375dc1d1517d914764ee01f03c856b81d04770e95b65f5aab59e2828a35",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:3",
+      "wordCount": 9,
+      "audioSha256": "4043ec5c3094c64b079fe833d9336276fd09ada948c3e4f386d5239ada4d1b2f",
+      "sha256": "741b0e631d9f8bfacf89b767028e8dedbfd20c86365ced8226f8dfbac728a9a7",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:4",
+      "wordCount": 7,
+      "audioSha256": "a6c29a8e80e804808ba1980745efe028240aaf55ea75c059078c0f406673178b",
+      "sha256": "8536237ef7c4c83de8064353dfc402b791041cc7e24b9ef26929fdc64d2ba837",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:5",
+      "wordCount": 10,
+      "audioSha256": "cfcc407ee5531c98981b74bf1784a5cd559f6198372dc76129ee9926ccaf08f1",
+      "sha256": "1aa2589acab25dee477e1c16a431c76d63480d77d989e1a21747cf799ed04193",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:6",
+      "wordCount": 11,
+      "audioSha256": "e6832483006e6ab0f771a28b0acf598260a28d86364bc9ca909a1b378f675300",
+      "sha256": "00d4855ce453de08255560caa513d19f0acc53872cb5c8a293b34d2356dca614",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:7",
+      "wordCount": 9,
+      "audioSha256": "e5fed746619ea9eda2c32e6e00ebb5bf5986e303654b1fa0b301e894e70ffdc2",
+      "sha256": "fc395bf97dec163f920bfef9268b5527b224031456a3e0ccc9a4a4aeb754c4f2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:8",
+      "wordCount": 8,
+      "audioSha256": "adc83b784309737d3b859dfdf5785cad7660d4ef9dd80dd76691324736d5fa56",
+      "sha256": "57ca7078b4e9d062fd1b94dc535de65bb6315b66ff46f22498892beab4fc3a75",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:9",
+      "wordCount": 13,
+      "audioSha256": "75f0ac43c43b3c6d807b9f10457a0bc76f3cd32003b9be75412993e8e6502259",
+      "sha256": "509e0f7f6669568932846feb9065632b7ddbff9deb235dbc9517c637429ef568",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:10",
+      "wordCount": 13,
+      "audioSha256": "e83168e89f71ad555c852f85e8cc735681772bc76afd79c0cd55670c425eb6ef",
+      "sha256": "6ff281047c4fc564d7dcc3ede9b4e69b702bbe25053e9f6a29708bed0dbbf6ac",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:11",
+      "wordCount": 9,
+      "audioSha256": "4706e15c29425ef4e4102449d72eed228d5c99df03e5e6ef0a1e133f7a7df514",
+      "sha256": "29c253bede694753fffc3f133ed435071d596358fd50162b6d97c33892bf6c98",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:12",
+      "wordCount": 11,
+      "audioSha256": "f69ddcd8dc3aed87104a1535f20bd8c5c2264cb60d3da047590a3d5b7a7ec5c6",
+      "sha256": "0104e1aabaa4ed9cb7abbacde49ffd8ed671fe25448943bbd0dcac6085f2cdd2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:13",
+      "wordCount": 14,
+      "audioSha256": "e3db529100269aeef43c9ffe2a955f5ecd50acef7a033cdc557fce5f0657845d",
+      "sha256": "93f5f695953f69071790f4012774aabb9824544ac89ebb7f4052d188d9f89fb2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:14",
+      "wordCount": 10,
+      "audioSha256": "e87b9efff69c1da9801663c6f8f0cb4ca4f2a31c5fa0abab4e27c84ae7b85059",
+      "sha256": "0ef3589aa61f5a5a9e8e373c1e82f0f348d5d84c943cdd2cd14cd3ab16a7d646",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:15",
+      "wordCount": 5,
+      "audioSha256": "a10f681f2e7a680cfa63b6ad501e0d48375d3ad234983464613a395e9abcd7ef",
+      "sha256": "8bd646304a64b177d9b6a8a4c3b01523d4d20e3848bfe446349537c5ceb597ff",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:16",
+      "wordCount": 7,
+      "audioSha256": "7d260865e06fa7e75eac883e0826bf1c83e3ebe403fd536c17b7634a56efa8f0",
+      "sha256": "a0608015de6a28fdf05def42362a23cb1f5d43cf06c24dfe4dc59f9b6d1399f9",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:17",
+      "wordCount": 10,
+      "audioSha256": "e14123a41a8fa9815eae8c1c54da1a5a16f448000361b1a1f0e8713ca473cf88",
+      "sha256": "b45e3205524e4a763e0e641607a0ac47b974516d7d31869e47334bbef0f76cce",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:18",
+      "wordCount": 8,
+      "audioSha256": "0e5e98221003756cd531045d08421a7b8888ac14d878c1bcf7274ed8bd7fe96d",
+      "sha256": "81a88fc8a509d7dd5631fcfa4851d70642ec9acd15f328b8a041853da8ddc15a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:19",
+      "wordCount": 10,
+      "audioSha256": "0598d398905d903fe557969ae17cb48e11e90eae3cb47de6fd910705c3315e71",
+      "sha256": "73ded2eb545935b2ff40e0d1cae14087d895d6d60de949a870693b4b5aea30e5",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:20",
+      "wordCount": 8,
+      "audioSha256": "7d97735c4d6474c992c7e4b238849c394b59b18bac4f1fb9c89483fcd5799502",
+      "sha256": "ecc6ff07297b82691a3930b429e1f50a90aa3b9ac3e5b21f77cdbc81f0590a63",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:21",
+      "wordCount": 8,
+      "audioSha256": "f36fb240c24b0d048fa53c092ff46a5f6b50f5eb69fa889c9585e245706c683c",
+      "sha256": "7708da6658eb20c3469aadc0efef0821fd4fe6e44acd1555b80c03f4350a3498",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:22",
+      "wordCount": 12,
+      "audioSha256": "af0b3bb1a3bb15aaac931296605f5623bc6f919fb3c0863db5a65c22af711a22",
+      "sha256": "205ca34485a56069e6f40362cd665f557dcc502101394d29be4f016cc5aab1b2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:23",
+      "wordCount": 16,
+      "audioSha256": "6a553a2f3228f5aec6932d699c362a5212f8eeb7f663e363e1a2d8f88872e1ab",
+      "sha256": "6e2dd84768c01cac309ca0e5cb64efe627143b980987a432ed33d0d99c0f77c8",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:24",
+      "wordCount": 11,
+      "audioSha256": "af65ce824661522abdab176561cc371f0a4a5c0b6936d3e6f4973d4eb955f816",
+      "sha256": "8d0cab3fae050db51ddd89d64b76432654a3d7ac1b72510ceacb2a4e1346b308",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:25",
+      "wordCount": 11,
+      "audioSha256": "84fd007dc121ebd31945ee7d8c165fcc15cee19dc87f0824e7a76442fe9ac570",
+      "sha256": "4cf611312d2242756477d4e145ddb30e940b3b48c0feed70988061255998d571",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:26",
+      "wordCount": 7,
+      "audioSha256": "651e1d06cbb4d41673ab9254e3eb015a4e1fa387d1abff42422796b93e6fd013",
+      "sha256": "eacb9f910f3c6813810a646dd64306e3e6ac1025932685d03a626a56543c072f",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:27",
+      "wordCount": 13,
+      "audioSha256": "5f4fc96f84d5aebe0ef75e2b1cf55a0cbd678f52f98ea6d459a950ac4219ffe2",
+      "sha256": "ea5801f1948500d9adeacf9adc02bb94b897c9196d5d97b58b7e0a88ab3998b9",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "72:28",
+      "wordCount": 13,
+      "audioSha256": "5699f8a19d2c2b48fab41009da52adb168dd6f200818b421f068660f9d281af4",
+      "sha256": "de0bf2bba740d8eb189aec2b0588ad0134cc1c0bb2215c34b0d3df56c7c371da",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:1",
+      "wordCount": 2,
+      "audioSha256": "aaef9bfe7b8c23c81127f618351ee2bdb114b86b838cfe79ae07a30f4a03dce1",
+      "sha256": "5ae032da59539a0a7f88033677f8dfe945a92a0442a42cf3892a6eb3f37a0da7",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:2",
+      "wordCount": 4,
+      "audioSha256": "c324e0c7673b8cb6cc625d02772526b069474ae0a5e722a7f86ba719750eb63e",
+      "sha256": "7f6ad4139466ed106c544fcbc582f2b5fecc2fbe674db6b3e6a39c709de03440",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:3",
+      "wordCount": 5,
+      "audioSha256": "8e1362bb0a341af5a11ee7b844b471c28f9f86e98edaf86b89d3df303746be38",
+      "sha256": "93ec8f638a589b69a6538a01c6fedb761d644aa157ee6b47992dc5197cd2cb37",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:4",
+      "wordCount": 6,
+      "audioSha256": "011a43979ff12d5c752ca2c1717bb839aedfb54a3460a07fea75e59062a56ae1",
+      "sha256": "bcd708358f05ce7da5a2bf1c5e010962cd158d420af610e08aabc7e65cffca36",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:5",
+      "wordCount": 5,
+      "audioSha256": "8df788f544e0815a57598a85633c5f4faad636c47616b7ceb45b1f62c38eae2a",
+      "sha256": "dddf018b03b42324946bb52f3f48029fdbde22919fba8a8edb83d6327a5b27c7",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:6",
+      "wordCount": 8,
+      "audioSha256": "7b575fe1caf4f64f5b8c5e39e330020e3df8e32b15a2c9efc0919092c2f895c6",
+      "sha256": "2509c4d75e3f051ba1c171a1b588be8cc9a01af981fd4cfbd7da9ca385f5f06c",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:7",
+      "wordCount": 6,
+      "audioSha256": "89f09950a1b3a57d5671363275858626f27815f1644e5823b40c7c64bcef8ece",
+      "sha256": "a860aa7e403eeb9efbf82389085eabf3b3d0341149f923bed8d76edb1539bf8d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:8",
+      "wordCount": 6,
+      "audioSha256": "2d03a24d153c6e3005b0c5177aa6e3fcda8ff6a135ee0b2c3669914f9405a4e2",
+      "sha256": "a59e3d1c7b61695f39bbe121807ed2149bf678dd78fa610f0a91bbb565688ea2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:9",
+      "wordCount": 9,
+      "audioSha256": "975559b63d0ce109531fecefa5b945a574f6649add0af52f7e0ccaa26cb420b0",
+      "sha256": "4affe48e5452ded5f00b1978701fcec1ee5974f30abf199ee1b9e9c10ef0c137",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:10",
+      "wordCount": 7,
+      "audioSha256": "917654caae62642e0a1b2d2efbd6116b463ef94f03aecbfe7c400422a62a4076",
+      "sha256": "30234c6ba8bc97661ad18bbb220c91ebf9c2e2f727a617985083d95d597d1982",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:11",
+      "wordCount": 6,
+      "audioSha256": "889bc41da5bbae39066be9abb19a27e832f77294e57b04dcbe5952b5897d5103",
+      "sha256": "8107242970430038c2b0c2676dd29545fed9f8114581b16c13c23b05eff9af8d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:12",
+      "wordCount": 4,
+      "audioSha256": "2952f1810cbac29dcdcd66647fb093906c67184a638774e9b95c2468fdf9093e",
+      "sha256": "aa599011f3a34489735126a7bebad964c8c08ee873a49a1b83c2cb82653a36fb",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:13",
+      "wordCount": 5,
+      "audioSha256": "a88ca69e854bd49241c842b0492f9df0bbf757ad1a7a82fa275043b4b85598a0",
+      "sha256": "4a1d0378f3d2f4d065dbd35b31f342c1c687a4c7f5c8cb38fc3322ccf2e2e5ca",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:14",
+      "wordCount": 8,
+      "audioSha256": "3b2bf5769afad4952d54a58951bfb59d8e6b47e4e422a1b790e2801f20e9ff18",
+      "sha256": "1a5059de239d8c425d5172ba04edee749a5c37f60b2dfd5160209c0409d97c37",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:15",
+      "wordCount": 11,
+      "audioSha256": "cc28741abcb327c764225aa1281623b53c74b5b157a4fec7661eebd9ab01c9a3",
+      "sha256": "21177e774018172c81ff6fa75c15225c6b26c1d2c386c2e70ca1560cdb96add7",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:16",
+      "wordCount": 6,
+      "audioSha256": "55c9c814f2e858f041a8fa3f481c94eb3777a63344476eb67bc931c4f8f1b8fa",
+      "sha256": "236a8fc82b4cadcfdef7c5845ee62b678a3ef9a3ea5dcdd89c729b439af7f962",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:17",
+      "wordCount": 8,
+      "audioSha256": "cfd21bbe9ec6d493481fb59bcf96768623cc97d8af9a6bca7def5756ac8d5f6b",
+      "sha256": "6f1f5f230166c7fc7e96a602ab74fd2e95fac364f54dee693da0a7c680a7d879",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:18",
+      "wordCount": 6,
+      "audioSha256": "32fa9bba7863e1e388ba7b4b737d69529918788f32687034385d78d53a2a071f",
+      "sha256": "3a1620146e987aef23e261ae9e572409b9252dd8dd4fa88eba00ba6356085fb1",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:19",
+      "wordCount": 9,
+      "audioSha256": "79ef3120be4719fd632e608cab80aaf9106fb56a207630d7a279e6fe77cb081f",
+      "sha256": "b117bd851b6587431f0083d2410529fe9327ff8d91968a0ad51ccdaa5e0599e1",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "73:20",
+      "wordCount": 78,
+      "audioSha256": "aa14e9460166b1d8a6f72868a68d6d8d5999fc72afa1742a3ca4a79d4fa0db9e",
+      "sha256": "2c3a80005e91a1c17682007ca5a1a8a3143c189a594f88295a46b964b4e27340",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:1",
+      "wordCount": 2,
+      "audioSha256": "959a27f4b0a6cf4cfea16a180aacf29a52c47b721851c0e9d9f4562e1574bba3",
+      "sha256": "d7808f546686c77189816e7241a936d745afb9ab251c66e063040a8b36b433c9",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:2",
+      "wordCount": 2,
+      "audioSha256": "e68c094d3976647786103397f95b275331a967f95817de8994555118bc466e93",
+      "sha256": "c237f942f7d7d43a11c9de5dbdedee8493af81dc341a5bba33641bafc6800193",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:3",
+      "wordCount": 2,
+      "audioSha256": "82b1d0452443042a57d688c55ba1ed441323b9b570cfd67bbf30e2b2db3d1b64",
+      "sha256": "0b736ff9978d455e3cffa2c20873da48bc3d9921244827325d1cf8dfa499d509",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:4",
+      "wordCount": 2,
+      "audioSha256": "57db7a27da87f2b9d5d1628b647dfffec3c2e25edfc7bc316c66058baf543969",
+      "sha256": "d996a69d8b9376dbc96eae88ad21008dc879bf11d19bfcea86d88844b1e30b00",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:5",
+      "wordCount": 2,
+      "audioSha256": "6e5cd4dac52170cd5b4f2418773fb54f933a2f9f40529742e4d6a994f66a5cdc",
+      "sha256": "a77bad9e16a72c5aab2be5d05bd1e9202d75701bbeaecbb43c673aafc68f991b",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:6",
+      "wordCount": 3,
+      "audioSha256": "9015ab5f25074c6165c9e680c7ea297f8d36827096b6fd1673438dd61ce648ae",
+      "sha256": "db5671efe8eb782e5f40b670bd433e2b9f1334ca3e84038aa805c3392304dd89",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:7",
+      "wordCount": 2,
+      "audioSha256": "ee2d6e78319627698c413ae2397954e53b14b154f9fd209e122747cc42e4cead",
+      "sha256": "9fbe9f65c7a7cf46a440371e9191e68b4dee1f885af9d6075afa006ca6221012",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:8",
+      "wordCount": 4,
+      "audioSha256": "3542bfd8a8d4d3dbc251bc7cc65838a555ca247bc11c858527e0da01b8190722",
+      "sha256": "830eced9ba9c6a9ebc9098287b9b6f95849da73448e1838d9a9d611bc199dcf2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:9",
+      "wordCount": 4,
+      "audioSha256": "12cc1eb23e19b374d879694a1c50bd68ea2c2a7717de5465d89177bd90b4c224",
+      "sha256": "7522ea2e2d2a8a95270fede02ee2365240e50812d0ff17a4117af1ad4a5c600a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:10",
+      "wordCount": 4,
+      "audioSha256": "8727bbed7871c9162e6439ff2afd1eae35673e4b787226904db27a0a604fa941",
+      "sha256": "d4993d9854f8ac807ab2e1a3d31f9641012628729740b88ba50927af53897ca4",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:11",
+      "wordCount": 4,
+      "audioSha256": "52e6858a7a046edcb3f0e6b76cbfd0bc5e0cc3fbd2bce8329c5bba75a5c281ea",
+      "sha256": "244aa5cbced56612d8bf3496503e90bc34eee1665821a3554678e72db6446179",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:12",
+      "wordCount": 4,
+      "audioSha256": "06e733577da5724f8dd16d416c7a067dbd1fc0496d2fa254eb77ce79fda4d0fe",
+      "sha256": "351c22b2661539f252cc534c7622e4b3532251407a4f4fd3954c71dbeb465aa8",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:13",
+      "wordCount": 2,
+      "audioSha256": "8ec506cd7197342a3fc03c038838bb681261b101a7a37af92f90af0eb0ee38e3",
+      "sha256": "c33ac6a7f94e3b60fff33fd48b6907314c238a9bae6a3795a5e8301f9087f9d9",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:14",
+      "wordCount": 3,
+      "audioSha256": "97e29f184a3fbcfd2a337bc28a3d944e4bee16f613cb97bacb494e6f896c1b8e",
+      "sha256": "1cf2bbd089b9d0a6244f171edac0157292a40492974141b56926255c2d9aafd5",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:15",
+      "wordCount": 4,
+      "audioSha256": "d8f7f02e33c339b671443161f8f7faacec281e0c5d332337cbf7b82df979c290",
+      "sha256": "fcdb6e8030b9a4f50173a52b9cdf2c6cd966d37518fee17bf8f7452f2b3dd708",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:16",
+      "wordCount": 5,
+      "audioSha256": "8af084800211d5d44914381fe736833369387abfcbfc79efd0b4592f73c5fbfc",
+      "sha256": "308cb9e2e2e851c6c87c40057d31fbb5e9179a4de30a1027e140a6b9ef5b5643",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:17",
+      "wordCount": 2,
+      "audioSha256": "ef0f1c7134f01868bfcfbdb9c36fdde62d7997ae86fb54e88af857b2ec16e8d6",
+      "sha256": "eb25700a628e87554bdf1acc6290dd03031a5ac4b594c8104d1a345aea1c8c30",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:18",
+      "wordCount": 3,
+      "audioSha256": "239068cacf0ea1573b97ade390d3569912571f88202f8bcfd2263462e0b29153",
+      "sha256": "c06a52cfd86a7682e0965418bcf7837d577c6700405e5d4d11e2d4e5d545c421",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:19",
+      "wordCount": 3,
+      "audioSha256": "a8cb4e5e38bd8ad86662c7ab282322fb6881f4e46fb7d1a829e0ffc437dd27b3",
+      "sha256": "ae985641c7b5faee198b27d015f20410debe29d12955b941ad9287e44d1f54b3",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:20",
+      "wordCount": 4,
+      "audioSha256": "e0cdc94a2599ea75ef382596c96f1499bd6a249ff14c7135998264d0e20d85f1",
+      "sha256": "0f93755cd040d7244f05ec77de8ab7915d5c1f8663cd155b0453b7f0f38db313",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:21",
+      "wordCount": 2,
+      "audioSha256": "6c61ca935516eb6872fd74a70e98149614705fd2d07b367591a7f5c259f9dd78",
+      "sha256": "e56d0a0fc56769d40c38f2e3d31c88863f900764a13853b0b3649020f5d84a31",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:22",
+      "wordCount": 3,
+      "audioSha256": "04a9bb9f749c819b3ace095b5dbb228b7faa3e1ada9b89381104ad5ca9627f5c",
+      "sha256": "12538fc719139400bf58d9a429cae6140adeb00f8d34d07a9e9722d6eb42ec21",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:23",
+      "wordCount": 3,
+      "audioSha256": "42d834faa3926ed0d4ea0b6154f58043867753a7fcaa57b1024196e5c29ec65e",
+      "sha256": "4d61e6cd775118f5c989cfecb6ae34440c1b1c65c5ffdffab50c1c55ced5bd13",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:24",
+      "wordCount": 6,
+      "audioSha256": "df17463a6253315acf54703600333ede9a32d003269798c5fb2fc6f4cd26eb97",
+      "sha256": "04d9d0c9a15eca18ac26a7c6f2b972197630f0810bc45b13ddc0bf8319c96b1e",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:25",
+      "wordCount": 5,
+      "audioSha256": "840f4cf072cf6daeb23465ff5cec293e8ae2d2116f508ec1b7530f1723d2de0c",
+      "sha256": "839c9f5b190d764156845a3c94234d52f1da293c609d10467eb2951915f11932",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:26",
+      "wordCount": 2,
+      "audioSha256": "ab421e2f40b9c445f8897ed62cb7dfaa90ebe2026c147b006e106f9bb26d2203",
+      "sha256": "6d37afc43a52708bdd24fdde27ff7a724c5e636084b836564d71c67b431087f5",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:27",
+      "wordCount": 4,
+      "audioSha256": "bca98af48f4340a65a5495ec8d638970bce1deb2df4ae9f669065999f5cf451f",
+      "sha256": "02d8d127668897413d46e42ae4b174acb825c0d3e327ad1bff79300b5e38c462",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:28",
+      "wordCount": 4,
+      "audioSha256": "78725e5a47f728fbc7096df32b35d1c3dee88b646a42960dce6bc98fa72cabb9",
+      "sha256": "5be65d2ce7157fbe1a1a7988f26ca29e1e0db605d81478151619c68d95fc0f1b",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:29",
+      "wordCount": 2,
+      "audioSha256": "4d35ac25cc87578e81a3ee05bae8e9d63569fbf73ef25a720ea8f82d8f4040ea",
+      "sha256": "109713fbabafabbe99b148b0a2874f3d9827a2058fd0f2cc53e91875ad107c44",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:30",
+      "wordCount": 3,
+      "audioSha256": "500cfa97bb35b81efc75ed8fc1cd765309e4e208cb3b20a66a6c3080d866bc0e",
+      "sha256": "dcb41fd707fd334265632a19dee0d40ae4ba7b59d6eb540a00cad6c540d92567",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:31",
+      "wordCount": 57,
+      "audioSha256": "f30420c76d5753d7d06f41f3d06916433537cecd94983864b7dfa68926db416e",
+      "sha256": "8aecf9ad2f9ce08ef12134d050b29a1027201d1c75bc18df324dce28155e2615",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:32",
+      "wordCount": 2,
+      "audioSha256": "3743e2d20fad3860c4db5b642f23f7849c704793af91793b15bc33485084c6b6",
+      "sha256": "cf695145c5e8fa050832b661d337fa6d1bfe02a1044b4d0caf3d0c9d1ad2c3cb",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:33",
+      "wordCount": 3,
+      "audioSha256": "29b2e3b38394eedd353275b6ac5ec606a39efef18ec71e51dd724a6cec575357",
+      "sha256": "178e4e0a65ffd2db95ad127af5e46707e92ae30773e7a7941493541ced1e59b2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:34",
+      "wordCount": 3,
+      "audioSha256": "874a050b6ec0eedc9db87cedf67e3d962135b8855cbca019c0c135ccbb0a026e",
+      "sha256": "0cfcbe13f4f089a027956c4063ecccbfec827e2a6dace9a9d3b9467db36f1f78",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:35",
+      "wordCount": 3,
+      "audioSha256": "60e269a0b4e0988d7bb0b6d72e59ba1435f654692a40c801bf29b1baa4427cbc",
+      "sha256": "852188c3edc7fd623b4b4d0b80d1483bac3f4409a72bbc2e3075a16e44d3e6fe",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:36",
+      "wordCount": 2,
+      "audioSha256": "1328aa8f01c885f06e3bba100fdf2f59351f398a8cf762a6a4258ccc53d76d3f",
+      "sha256": "90fb7533ff71765b7fcd89446f1e43dba3d4fe164f95454eadb22ccc09f271af",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:37",
+      "wordCount": 7,
+      "audioSha256": "6fb5a47d82f0c6d085e624f6f2760722a65ee46c62e7c9c67bc71668978172f1",
+      "sha256": "aed4ba1674fa0745d9bf8a84ce408059eccb37c1439865a540fb8c32d26dec72",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:38",
+      "wordCount": 5,
+      "audioSha256": "5263a21bc0b338b9caeb61b9926b96a6ba9387ab798fffe2fa187b087b10fa23",
+      "sha256": "0a85ca60bdf403b242de2d506056f073dbdeeaa01d564c9f062cdc2ba54db65d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:39",
+      "wordCount": 3,
+      "audioSha256": "d3fbb0c2796971f4c81e3fb0aad398a207a2fd3fa7fbd5662632f5272bfefcbe",
+      "sha256": "fe9ff1c45f7c86fc6cf4289577eb71503ac6a3ea55ddb79c58355726f29d61f7",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:40",
+      "wordCount": 3,
+      "audioSha256": "20e6ec2cb64028143d618f2e97e228f71ae58df633c9eb4e03a3276c5aa0c81e",
+      "sha256": "69e530a14707c81ffb303115db46a61e72ffc2d809670288bd2fc5f6cd49264a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:41",
+      "wordCount": 2,
+      "audioSha256": "df3d2d35a886dc4f495c14990c1ff2f9bcc930d470223ad065cb0a4f98e75f10",
+      "sha256": "58767b9e2f599ae7a394db4cb56dfa037d73bf58ed51b0be896f0c057a640148",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:42",
+      "wordCount": 4,
+      "audioSha256": "b9aefc0da9a1bb5161136e701d16bbd8eef85b310b041bf344cd7d689201495f",
+      "sha256": "5350f47bdfbd4a14977db763142ec4d3b42c327fbc02607d50c7adc3133e1bc2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:43",
+      "wordCount": 5,
+      "audioSha256": "50051a4a6431a393e2869056600fef0f26c28d823442825bfa6d420f60618e87",
+      "sha256": "63179d7a0883c2bfa6ea7cc039ef2668cec03f883585827eb88b7ec1dddc1cc6",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:44",
+      "wordCount": 4,
+      "audioSha256": "011a2b031684133b5227cb833081f896554faf75cb645380eba2bc26063b3b59",
+      "sha256": "ac3e0eb188fcc5faaf1d467100b9209f07c6a7c25c31808451526c38cd61de5a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:45",
+      "wordCount": 4,
+      "audioSha256": "b0af07cc56c95047e968a755801619075b9e54fe1af980afc31f5499af5fdbc2",
+      "sha256": "3cff3621ed7c08550b7530ea112a971bc729ba59d1ad643f19945dd1e1545157",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:46",
+      "wordCount": 4,
+      "audioSha256": "8e4de65828fd50c478399f2baac95f2ebf07c9b62b47a1b9380921876cf63274",
+      "sha256": "f4c72c701034a6e1934a8309cf02d1e1e203fe88e5e9bc65d209418f3a75eb50",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:47",
+      "wordCount": 3,
+      "audioSha256": "470457eda3d4efed6e35ab5ba2fc725676ffb17842658d04d232413ee77169fc",
+      "sha256": "8a958c26b7696c8fdb3a2a6fc61df2ce0e54ea5cbd670865c2c0312d5734deeb",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:48",
+      "wordCount": 4,
+      "audioSha256": "c3876657adc26bfd280cde0ae5c4bdf15c64872ef8d707bb82316cfe9ddd4ba5",
+      "sha256": "0508421652eada76f391ed1ab811879108a57163a4afd27d89cb059b23cb2b25",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:49",
+      "wordCount": 5,
+      "audioSha256": "b5af356e5195c3b16887b2bee66811052fbb21f60317bad937db9110cc3bd888",
+      "sha256": "f788cedc41b57c347dd8a1cf8bc7cfc7a6f702d7a8533af78c9fe25bca618326",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:50",
+      "wordCount": 3,
+      "audioSha256": "eac7618e6863edab4710c26a73a86a07964909c7073caa6094962180fa4692da",
+      "sha256": "16d2d561d13eb1f4faa6f88ce29767817fd3aae59170a604c54ab8a6781557ce",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:51",
+      "wordCount": 3,
+      "audioSha256": "e4982fe402fd585b37a660c0088c62cafbdcb2302530dd0f2dd35c99e6e4644d",
+      "sha256": "2f1ca4719488757a3970a21dffcfb8df83bc0df40b8eb0960de54ab8aaae3288",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:52",
+      "wordCount": 9,
+      "audioSha256": "2f128f328ca7cacc11a71dfd58efebb703ae2dc38fa76d3e7a7a40d8c93fca22",
+      "sha256": "767aca86cd051427a3b31566a3d8000e22b585a3f4927ad637938dcc4fcb8654",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:53",
+      "wordCount": 5,
+      "audioSha256": "2c04a33bced6ac3ba7e4e7084cf8fbdffcc419c67dfc9735cb69d41917ad6279",
+      "sha256": "cfebb1f3bd71497e70f08f0f92c63a5287cdecf5d78eb7f941fc549b79328b7d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:54",
+      "wordCount": 3,
+      "audioSha256": "72e2e71ef15af504056a3da8d4183c64be4104c09941a11ed361f5d2f2c4071c",
+      "sha256": "5540b7ce311ec70d911bbd6587385d4d7f46908667a71c734a1f3a4782404a26",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:55",
+      "wordCount": 3,
+      "audioSha256": "ebbf5f8235aafa287058d2168cdf81d30d78c6ce2fe3cc9bc56bb2e167bfd8f2",
+      "sha256": "1ec96386f985777cc1c5def4ac475cc765d1eb5c60abfb22dbeec01b6952a907",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "74:56",
+      "wordCount": 11,
+      "audioSha256": "f1bed9c87fb3768a7bcc6a4d5e3b45ee729c348e1e5dd2ef3ad6c124c5f3a1c1",
+      "sha256": "001645dcb0fbcdaaaa37f6e6ae28d3bd49ddbdb4f37abde7163416acdfa3ad2a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:1",
+      "wordCount": 4,
+      "audioSha256": "1049fa95bac9a5e3794c1ab4fd4cd85f514dbb4754c95eb4218d501a735f93a3",
+      "sha256": "b46651b9053a3172cea94043f8ed26806977d08f1d21a874b286ca7c2f8a6a3e",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:2",
+      "wordCount": 4,
+      "audioSha256": "30170d6a0a03dd2880e1260f5b33794902425784ff6318bb5daf0c16244a0248",
+      "sha256": "a0eb8b2adfd5b9105f837d00a20818c594f4d0b0f93f35166af7964ce949a911",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:3",
+      "wordCount": 5,
+      "audioSha256": "73e0d447a5c420e6cda007aab08b9d6e02a72d8e35434408624d54ea4f0fde37",
+      "sha256": "7a20da57e9bb76c378f4a7dff7aa9e96f2f9e3823dc983b7111c0f65bb20c92e",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:4",
+      "wordCount": 6,
+      "audioSha256": "1faf0de8ff753321e4dca4e1b2d033dd6f5661cfa14618265dc038bd90198377",
+      "sha256": "06926e6a683c1bac049c302c094ca08e85e30572fdb1560cafa1dc2835b434ef",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:5",
+      "wordCount": 5,
+      "audioSha256": "01f4425c7548bc04dfa740740e99d5abc7fc3b7e2f150175c4bbe16a5809526d",
+      "sha256": "811d6697ed428dd9cac85cfbb95e0ff6c102bbd43e8377577843f0c29d1b29da",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:6",
+      "wordCount": 4,
+      "audioSha256": "0924c2f82d2d858e21e22b900f73745f705afbc6a54f0b00577cdb537e03508f",
+      "sha256": "31fd94e15d67f5ea4b613bdde9194ebd56af3b8057cd8373ad99d5c0f187a5d6",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:7",
+      "wordCount": 3,
+      "audioSha256": "feee44e75a5439992fb66e0d39aa29c2cb0bf25861b222831bdad481058532d4",
+      "sha256": "b15ecf945cc989909fafb899bc7013425468cbf598e01ddf4c4a82230a7a663d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:8",
+      "wordCount": 2,
+      "audioSha256": "edfdebb3d2e97b7dc1090b0518c1457b370b1e3970dcabc7f874acbce6f7813a",
+      "sha256": "d4b4bbf6d15fdf64e34f3c88e47461bae61549d13dac0b4665e9ad4c75c0dfd8",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:9",
+      "wordCount": 3,
+      "audioSha256": "87ecb34f15fcabdc503c0051fd8f2c177767d810cd0b2ea3273c3b1743c625b3",
+      "sha256": "1d9357be5fdd8cbbcc559b1b73b71d3ce4a97e2ba224e7c8c3da729165558c1f",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:10",
+      "wordCount": 5,
+      "audioSha256": "3f0618401af8305315bef224a94e629765c5e7c2c6e79e33aa23361a1e314a55",
+      "sha256": "b1207782edfbd30ed771eb55e6cbbd65e39d07c34d9c5f779359877ffccb6492",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:11",
+      "wordCount": 3,
+      "audioSha256": "336f8d666ec544786989fa694167c346849a6783b41562410b2ef02b8c3fbe17",
+      "sha256": "0b1865c285117cb67f8d0d586c00dd531f199fb289a8a4c34ade4512d6cdae57",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:12",
+      "wordCount": 4,
+      "audioSha256": "d8923f8d58c150f59f06dad49ae8c64256c7a013e2194a43e90283d30472725c",
+      "sha256": "298fa9a58df2a2cf7fb74d242cbba186f9d8509da9a9d428beef1bd075fb9a35",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:13",
+      "wordCount": 6,
+      "audioSha256": "37212b6ae7698ba0bd000e62551fc41688e2f2eb0643d498b7ee3dd8caa2176d",
+      "sha256": "b55426f8ee8c26d2ee654bdbda658ce01d6e8bda9e5dde322689388a8417306c",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:14",
+      "wordCount": 5,
+      "audioSha256": "472a052688c807bd07b60fecdbd83728d466e1bd77082110aba3edaaaf31438d",
+      "sha256": "aed2f2bebba27c4abbeb6f5638d5e59cfcd6c7dbf5ceb708ac546f4422a0bfa4",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:15",
+      "wordCount": 3,
+      "audioSha256": "1cb833f7bdea3a6dd9a0c8cad48cea16563b99c72f15a7c50349eb780327fe45",
+      "sha256": "6c2bf8037b56085b8e99535f6187f6c578b82082d6b0a945448756360e4b2c80",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:16",
+      "wordCount": 6,
+      "audioSha256": "ee9733f514096a64041a69f8f097ef12abaf7afc04d97260c1068afe10a7c3b7",
+      "sha256": "dc6225726b9855ff0e9da8994dba17327c115650c56205c3d1fb90fa329365f2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:17",
+      "wordCount": 4,
+      "audioSha256": "fd99a0ff718248034c0a0893442674f1d29a3b882518656cb71abc8c8733dfba",
+      "sha256": "1115c63f613a2ba9dedaca126783941fdbba1b94f6b2ba99cca55956536f7e93",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:18",
+      "wordCount": 4,
+      "audioSha256": "e3c01934dde15c22e9509a15c76a9c9dd3d072ce228bac9646a739800a073a2b",
+      "sha256": "0792735a56419e80469af93f576d155b8480abdcefa6c3038ff39f0a85cde175",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:19",
+      "wordCount": 4,
+      "audioSha256": "776a2d4aecfff68f700016fef84df3cc61b26dd2662771b95ac288736961b100",
+      "sha256": "ff6985ed8125a92ac4c394248658e9fdadc1a8efc046dd2746f78fb632c43666",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:20",
+      "wordCount": 4,
+      "audioSha256": "39ba34aca86be6308d7b0ef0f1d0bd8f4cce5169b3d615d84924ca1a667abb6f",
+      "sha256": "fa69a024cf19beffbfe80c658cdf3130d40de45779f95d8e8d38f157cb3e3b81",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:21",
+      "wordCount": 2,
+      "audioSha256": "d8805a07e0c243e9f5e3b4e2fb885236d7667927dd07553b2ca48d3cd097968e",
+      "sha256": "e9579c5ea753adf5810ab021826eefea525bdf0d413f559fb97393a33fcc5a35",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:22",
+      "wordCount": 3,
+      "audioSha256": "ca18be5756b089b1ebfd1d7ea26bf711f3ac2971793603042d21751b9376aadc",
+      "sha256": "e45efaeda94d4b4d7fcdefdb3339f5563a092a40d1648b97f4f5b527a81229ed",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:23",
+      "wordCount": 3,
+      "audioSha256": "3abc9047c113a6dc1c2cbbc03d94d6b8b5f02ba7b6f19c5d9ecdbfe60ed31121",
+      "sha256": "989f86bdeafce1b6915f426685b449b049fca86383a07a080cf6762fbdeb0e0c",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:24",
+      "wordCount": 3,
+      "audioSha256": "f9c04aacd28fb06239e88292f64852dce829b2dfa1919f99ccdcd7957e030ca0",
+      "sha256": "65e1641c50150e650103aa787df0a80b06409b21dda1987b67ab376ee2b7e2ea",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:25",
+      "wordCount": 5,
+      "audioSha256": "7203413809fc3220dab88d1b907b704e25dc3d4cf2a3e2f481f9d456f3895597",
+      "sha256": "a74a64ce822c82e43d6eb9ec2133dfde87f149eb9901a5ea73fbffc7889abcc9",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:26",
+      "wordCount": 4,
+      "audioSha256": "4f3bbb1f1fa011abd885dd2265fd19ec8c00c5fdf8a002dd2e96be7c68221ed9",
+      "sha256": "5c5713802625db68343432fcb7989f601478b309802403f866c6e61728cddb19",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:27",
+      "wordCount": 3,
+      "audioSha256": "7cdcddd210f4997d9d30bcdceadbd1c72099b846f5d95943a80dd88e655b5640",
+      "sha256": "475675e51332f7adab6af31f2ea556e02fa010a4c82bc5a15679dcec90897926",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:28",
+      "wordCount": 3,
+      "audioSha256": "8393873741d9a8ace5f7050c5f24f8043620c008ddff32f9d7fb611c28685c6a",
+      "sha256": "2a7da24baf6e0c9d71974a62ef2ff0a5488845206ac1fc674e5a7e16d60a95d2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:29",
+      "wordCount": 3,
+      "audioSha256": "6049147deb5fb56136257ce1d4b0ec2fad0938a92fe4b853f2f2ce2fa075c9c7",
+      "sha256": "fbc74f03ee54e9201c0af34aace156669d2b5e18716197a0e0fb893e5e776686",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:30",
+      "wordCount": 4,
+      "audioSha256": "0176164b7a17149cb095affa8e7efbc01e427e04af91b7eb3910a6b0a1b7047d",
+      "sha256": "f78b81bb6db4386d9d7bfa2c9ca480e505ccbc69dc4578a4f14fd95314a2d476",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:31",
+      "wordCount": 4,
+      "audioSha256": "c0270cc84a06ae8d961616c0f291f837cf347f562f3932774821568ba47837ee",
+      "sha256": "25c733add9fc2f6491105e8c3f05bf9621c122004feb22b4f83bb46b7a807017",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:32",
+      "wordCount": 3,
+      "audioSha256": "97f5880e44c6558ed8737b71ecfee0126217f88273746bf87334dc59773c259e",
+      "sha256": "989993159af3550bdff274a749cb7eec5c8e9943cdd17830afac28adbf4848d3",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:33",
+      "wordCount": 5,
+      "audioSha256": "d9f35aa02d9f4c1989048fa79deec182c248cb4dd63ae71f449aa7bce190a00c",
+      "sha256": "ec7144e65e5ab6cd4bfbe8dbdc292f0194f0e51c0cbe73957f5549734f3a4463",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:34",
+      "wordCount": 3,
+      "audioSha256": "2fa6b2dd8962a6e0577fe84108b299bca0c8b9b5521009f486bae6eec17ca417",
+      "sha256": "7a921fdbab92ee1f33de2a46dde5ed37f008a022214ebe1768d96a99a87a97af",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:35",
+      "wordCount": 4,
+      "audioSha256": "1bd420ecd7cdd0f9b43bcb6977072c4f55d8f7f093391e2fa72e764518e542ea",
+      "sha256": "d1715fb247c02361085aafab175e4d77f827cfae71f6612a541c66997dd0c8ed",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:36",
+      "wordCount": 5,
+      "audioSha256": "bf816704dc1d31f16807bc6513d896d0928996f138e18cd5d61e38a4467f832c",
+      "sha256": "d2bcf21154a3946be8bb3990a1d29379342a3f27f39947c22b17cad0ddd5f212",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:37",
+      "wordCount": 6,
+      "audioSha256": "272bb274cd6b112e4a14210ef1c419d04561b623c5abaa4321cfc0bc414c1af8",
+      "sha256": "3ea7b76f36e8eafbd5117101289e4ba99b0572d28360011f11fa1ee8d1469446",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:38",
+      "wordCount": 5,
+      "audioSha256": "96e9ca4fb811a1170f42dab6f6afce95b2cd12af6034b8591087b6d774954b45",
+      "sha256": "9e96c0b382fa6caaf655b18bf94be26c344ed76337ae0b09b6e79096b8f8429e",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:39",
+      "wordCount": 5,
+      "audioSha256": "982a4b41c7e3153637e6ddd1ab4833d886c1ed1bf78b547420d79fecb1e91403",
+      "sha256": "20bd55e5e27b7084cef2adbfbdf1fea1c345069078e693cece773c50dc684c80",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "75:40",
+      "wordCount": 7,
+      "audioSha256": "5ed3773db4112ff47dc08bfc10594c15103c0a2ecee8d3c3af73823820ec9fd9",
+      "sha256": "150d1cf9980fe9df0701a036430238070e7dab3966cf6d14f3ee2c320e8caa97",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:1",
+      "wordCount": 11,
+      "audioSha256": "a7a5407f01ad735e7a96c4c4beb30cb6570926ddf884e0d794e365300e017e08",
+      "sha256": "8e0d849e10df1c34fbf6abbf5946fb09da1ebbfdf21132bbc3af3abbdd9e3c15",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:2",
+      "wordCount": 10,
+      "audioSha256": "5b0e37a53cc4d85a7699d478887082eab55be018752d560da87147b2d7cc24ce",
+      "sha256": "a81e7183db395bb093e3273bb1035f8810d1f11c7667164237931bc9ce7ac56d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:3",
+      "wordCount": 7,
+      "audioSha256": "0fb3c6ec5b36dbfa10ef6bd8ce066f5a631cc070a4f557edb725c5cf9d0d9de9",
+      "sha256": "4522fe911c03d81088a64a44066adb247537989356ae008e9f28993a763156d4",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:4",
+      "wordCount": 6,
+      "audioSha256": "899dd0e5af9745aeb547429ab0258b9514adfe8bd3191c223ca2c6e3a9646dae",
+      "sha256": "655e29af42d8de339e0a02fb0ff500b130200f4b3944cba9d56b49a50cfb52a7",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:5",
+      "wordCount": 8,
+      "audioSha256": "d0127ecdcec1cce25912714cbb53235fb1cfd7e0f45902e20d6a4966fbdf033b",
+      "sha256": "1dd67d88081a1a5f721b746f0cd9c3f9a255857a66dffc6e8e1ffe57f6370a92",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:6",
+      "wordCount": 7,
+      "audioSha256": "e8b2bcdf58a646816688be74f1eced95557e962d7568b171a9f5a5d9dad62405",
+      "sha256": "9173c5579d3a4d39c09d136342864b24907788c8e75a613105426702a2a5fa3c",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:7",
+      "wordCount": 7,
+      "audioSha256": "b6dc7c6540c17abbdcf3f4fc8dd9ccc2900b313d47515541217b1d77fa599c62",
+      "sha256": "a8489acb0a9a5d543416d4c1034ca5638dc5c8ff387b19061fdf37b47a597309",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:8",
+      "wordCount": 7,
+      "audioSha256": "002f5eb2a45294030477161bdc45aef488b78dfafd0ae62d21e984c49770920c",
+      "sha256": "0f257a32fa8c340e43daf337cc789b82b8a3a5c56c2f5b14ad00a80bccae3f6a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:9",
+      "wordCount": 10,
+      "audioSha256": "8880cd06e706e503208867641a9405169e77f062d2f2c7286ab50eaa8d9b1342",
+      "sha256": "476152f5bd1f8dbfca3b6aa4f7aa8a30818c88685db88c439b760febcde69657",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:10",
+      "wordCount": 7,
+      "audioSha256": "0fd5009a6df00265a90a4147d5bf40df163cf5a188206f213c1fa7d9c609f5fc",
+      "sha256": "ee82a8e680876f37d54641d41ce2217087c3de0984e1915f090157c5d0ee5d57",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:11",
+      "wordCount": 8,
+      "audioSha256": "9810bf24d11129989bb3b7f6a140133912a48f57f011f8983716f56eff46863f",
+      "sha256": "38b213cd167bee7fa82b376bdd471e2d99313637f805fd4ae09574871af77bf7",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:12",
+      "wordCount": 5,
+      "audioSha256": "495d2ad8d5ba535715c821ed40c360ac4e079f58d6f3240f023b33c5263aaa2d",
+      "sha256": "af312e0ab8e6155d28c053b66f4ad59a31cbd5caab089775abc5e200449f8e04",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:13",
+      "wordCount": 10,
+      "audioSha256": "504ce4741070c799bd57d86f07ae89bed2c9a0f6143ee8ec9955d109b6173917",
+      "sha256": "11dd84fd0e8bd8fb6c99bf5ef990a7efb20bfe6984ac2b24db2e3af1e5717372",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:14",
+      "wordCount": 6,
+      "audioSha256": "633bb59fa852ec8c56377f46923b47302e2240d51c34993f6cdd1e5a1b4f894f",
+      "sha256": "bb5e34b84164d8959c3cab5af93dd35c7bcbe0564fb7b564706a7db37964ae29",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:15",
+      "wordCount": 8,
+      "audioSha256": "f91f4d8613c4c631c2b5640c624ff6aec00ed41c65fde285a2b99981e5a855a0",
+      "sha256": "0c6af962614939b188bc5c9bf0fc43c8e5e43827d32e63121dd521930be7557c",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:16",
+      "wordCount": 5,
+      "audioSha256": "4bdfe359e94ce67d2af0d0c3d4852a7b0b450675922d9e7acd713dfceed9a673",
+      "sha256": "5c6f3875b58d3006db409f11f4862ecc70bc8ca705e3f60f891f5abf35dc4622",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:17",
+      "wordCount": 6,
+      "audioSha256": "8dcbe8d3981fdab2a3c585a0285d9e496db2768a261f43acacc3a089543b8c5c",
+      "sha256": "8854294efcc6cae5088f4f24985af00d33eca3887876d675492d5aef2e389857",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:18",
+      "wordCount": 4,
+      "audioSha256": "995a2f319c92f681ae67980f253fcfa92549b0bc908b2570eaca797b9c57b59d",
+      "sha256": "004bef6e69420c49706b2d95bea170a1cb34a10b8daa97ee9255aaffa9643abd",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:19",
+      "wordCount": 9,
+      "audioSha256": "1284da1ea29dccaa096792f29bce9102154926ab27b926e3d7468f9701af7737",
+      "sha256": "a88a064cbddf3c22c364362fb596180f1c291e47be34036b94207d4ac4dab14a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:20",
+      "wordCount": 7,
+      "audioSha256": "619bc99f0ffdf1dc0d5bdfa67cb92586bfe6e9c958f1d3e9e2f67afbec88a677",
+      "sha256": "4daf721053fc7be631cc0f617589d3054eae81a02ccbd04022c0e395787b4bcb",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:21",
+      "wordCount": 13,
+      "audioSha256": "63c38406985b74c7e6d4253c1491aee60b5b6b551f1554aa1e286b926a1d1e2b",
+      "sha256": "2e2acfd6ac3af5fe40ebfae80c8381b85e5419b49d32ed11ed5c3721cda948f2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:22",
+      "wordCount": 8,
+      "audioSha256": "9f14bc073fdd761f90eb06dfc835faabf0c7fade689132160a88a8eaeeef1436",
+      "sha256": "21a62aeffaf8001aee58d80e137b4b8cad492436f07d191d93db56ce7da03da6",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:23",
+      "wordCount": 6,
+      "audioSha256": "eaba06f3085589567a10263ce3387bf00587b5e2c8f02cdbe55fbd484e70fc4c",
+      "sha256": "948b15ac44c813ecaccb4484465066e5958da6d7c648ca2b2204273a4950b1b3",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:24",
+      "wordCount": 9,
+      "audioSha256": "3fefb40a24786626b096876c0e9ee2d5fae0562a41ef6593c89882dace2b4886",
+      "sha256": "03e9a113082069b93c427babe53f2a2dfc3de288dd2934f1eb4662edbaf4e1c4",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:25",
+      "wordCount": 5,
+      "audioSha256": "bbd1813199eb4528f84dc82d4b6a47eb3cc2de1de7271bc9363d79d23477be0a",
+      "sha256": "67225d0f3d25a1834c19d93f888cfa21fb51b78e4f0db17f6c6f62ece65acce0",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:26",
+      "wordCount": 7,
+      "audioSha256": "94a15d5821d66799583ebe13ed206198bcca7cfdcf63d3c13eca8ead2b48c565",
+      "sha256": "686e7c3866f081a1555fa479cb38a35cb8bfbc61b443b3bd089fe7dff241a8f4",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:27",
+      "wordCount": 8,
+      "audioSha256": "a7d80ed40f496949e66be6b07747ae5c02ab4814a1af1b6525aa971fa6fd4e4f",
+      "sha256": "05420226a4d70ea936bdbceb62181c4a8c38ed5a9341552274729d2404a7f457",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:28",
+      "wordCount": 9,
+      "audioSha256": "5dc27c30d7962c1bd6d1f0c8a7e9b1d2b2879274cc4a175c728a8f9651c6e01a",
+      "sha256": "2eb723c9348d65b8fcd709b2c4678dcc169c9c182477555b026e0718869eba3e",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:29",
+      "wordCount": 9,
+      "audioSha256": "ef7a57d4882a7aa915c60e28590b062d24bd9b6ad33d4a59f0fe357c84c31d3c",
+      "sha256": "5c526ca601fdd18b724dc47295456f4296e883d8f9c075cb238b508366f6c44b",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:30",
+      "wordCount": 11,
+      "audioSha256": "56a4f7fbcc3ca69690cc0b5c57ec7866550de40d68dad8a0935cc142bf141a69",
+      "sha256": "70850f5ea7fa76ded16be987b8d78779dc29e2294b7408629708a08307ddcb69",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "76:31",
+      "wordCount": 10,
+      "audioSha256": "fb84cdfdbb10ff92c7375e8e8e8c1adc5bfc221fabd0eb0e193ba47d95ade0d9",
+      "sha256": "993e2a2f084b6173c90d161163a2d71f77f0a87478a2bf82f4315df791571ca3",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:1",
+      "wordCount": 2,
+      "audioSha256": "0f06215c78f415f02d123f8f82441e1cf50adcc2851febe5ac5b2431dda553b6",
+      "sha256": "f2d14feb2045bbadd72bd043f77e3950cc8af9de0d2a254915a35f504965a755",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:2",
+      "wordCount": 2,
+      "audioSha256": "65576381ac5e1f46a28b2b802e02d1a89181c4b8e53001fd12604fd06efa706b",
+      "sha256": "329c3367194d2270606d520d96ae004690d278ed4693265a0c9112d78146ca5f",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:3",
+      "wordCount": 2,
+      "audioSha256": "362f8258ac8c48f22fd0fcbd53285587403db4ef1c222624c260cb579a509e88",
+      "sha256": "79f448a5280ed010dc20b78b9c4d9b415e0ecc9435e59f4f60e356370de8bbe5",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:4",
+      "wordCount": 2,
+      "audioSha256": "303ab157ab4b943e0f9a4f638424c19910720b4944265c4e3edd12022ca8b28b",
+      "sha256": "62b04167f5d2ec7c46679e7505baa415e04e095f5623480a5059be312e333244",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:5",
+      "wordCount": 2,
+      "audioSha256": "23ac90c2725a5721d7accc9839611f976527878ea4b9aa16e8a08c2d91c6b692",
+      "sha256": "68f4ac113df134039a81e0046566b59417035b46849dd4749a7bd4e13c730830",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:6",
+      "wordCount": 3,
+      "audioSha256": "d3349536adbf36c4fda95c78835dab7691ce9dd0a4f1e6bb672ea467f1fcef74",
+      "sha256": "b9d02fef627a7293672d7f62198fcddb7c36f541013668de676e86b30c14c93d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:7",
+      "wordCount": 3,
+      "audioSha256": "3a0823b80b632e68e50788b45623be3d54eca31cf79d9969422ce2601cdfa9cc",
+      "sha256": "30b7c76114bda3aa99437939dc0671e6f3831c30c651c13a89ba0de83c84a16e",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:8",
+      "wordCount": 3,
+      "audioSha256": "a1f73a837dfb67a957e0427bc0897a0aa9c7a4ba90ea11e96190997714344a9b",
+      "sha256": "74871bad00da77b1ffeb5624fc8b1df27f8bfe3e6cc69b2d57c4e1e62f133013",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:9",
+      "wordCount": 3,
+      "audioSha256": "bac744b33803d1f80eebad99b2bb6273a06f13166eee829e723e0049bab0777f",
+      "sha256": "580380d329928da7390c97d8ae1a1a5438de11c8582471557f306348ec503f01",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:10",
+      "wordCount": 3,
+      "audioSha256": "305f7e345a4971bf14ec8452acefa74cbd1d7821c592089e78096bcb4d860c61",
+      "sha256": "05c9e208db279700fc0076dffe95a38cbacafd320bceedb7196d18a1fc4667bb",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:11",
+      "wordCount": 3,
+      "audioSha256": "6c3f0a19da648dcf8c5afae7c3dd5c975533cd7a8111aea7823c09b4bafc7654",
+      "sha256": "0b5ade2bdd791b9fd91fb34e97b60926acbf709528d2b3e08905d6a93d0f18fc",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:12",
+      "wordCount": 3,
+      "audioSha256": "235974e89934218067e04cf0e8d84f87a5ef20741f30d2a9505a5b8f85eb9e02",
+      "sha256": "c24f6c173be4491d5403f69cc14ef3798663477a8a72dce743a196e69590fa3c",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:13",
+      "wordCount": 2,
+      "audioSha256": "b25ce7843e6a53341a7f5ab7e98176d83653ffeb799ddbd667fe0c98d1cb8484",
+      "sha256": "b6117e2b5b97e7c82fddfc1cc27e78014d91407755c50a639bf9ff421f1cafbd",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:14",
+      "wordCount": 5,
+      "audioSha256": "5815da87e8e90446bd33eb84648f0336900a9d1c0967b12e21dfc92520ea75d7",
+      "sha256": "a88d6e23727b0eeb34e9a79163e0570a46e471c16c00870d3f5f294d8beb39cf",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:15",
+      "wordCount": 3,
+      "audioSha256": "88e15903c66f96159144e482c6aa1225d5c3b6c7ed6abca56fae9f51efb2d315",
+      "sha256": "d2734b1fe80263d6666e6caa2e9bfac0f9034d91793d40b2da810e80d95537f9",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:16",
+      "wordCount": 3,
+      "audioSha256": "51a0a9db25232fc12f4fc0bf7bb1445921301d612328874b676387db351862c6",
+      "sha256": "2b152be53c9b26f154e7727f479490dd2cbe60fe6cbaea88eacdae84835d4f99",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:17",
+      "wordCount": 3,
+      "audioSha256": "47efb4d8a0fe192cba45e66872cb25c29c0714945dac10b3a962b6b8ef439e04",
+      "sha256": "bc82e19474a3bc8d34bfa21d40ec530f46ce1f9e9baf26d07b96436c2d120220",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:18",
+      "wordCount": 3,
+      "audioSha256": "784841b27f294273018eed6ca66846e81d42b802c68eaae13f1a547e266b5c5f",
+      "sha256": "397e507c4dd6455ef4da6f18a52d600939ff89b59ebe1a93415c707d20020d01",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:19",
+      "wordCount": 3,
+      "audioSha256": "711b36fa3916d38ca4f2a2fcb74260253c452b58cc0dfd4487e4649be89df089",
+      "sha256": "cc36a67c72c1740f39623abc3c873e3d7c7df610f0d5d8583b0268d1e16f9cf3",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:20",
+      "wordCount": 5,
+      "audioSha256": "5974cdf38298218bcbc389f05f51090b04780eabb8ea7e251acffcb554c57c43",
+      "sha256": "496dfbc5e9fd5ee280cce2cc19f20148d92df341819efbc7c3d1de1442381392",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:21",
+      "wordCount": 4,
+      "audioSha256": "4fa240a064026373fe2296ea0c9accce394a1e8332a6d79cf64439fe7342a803",
+      "sha256": "04fcefebef2e059989e0b9c912e5e98f0c09573dfef3b8d216e219c0e330d686",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:22",
+      "wordCount": 3,
+      "audioSha256": "16ddd5d5515c82001f31396a6c39f28d3c07deb75b1e404028fa41aabab985a8",
+      "sha256": "6715308535a2fb919026b3822bd3779cbef0cd4a00ea4ebc69ff5f727e8fa4aa",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:23",
+      "wordCount": 3,
+      "audioSha256": "745d625962487c30fe2905ad7081ce934b8fd05dbe60feebc84940c42f0bc41c",
+      "sha256": "d45598b5fe022dda9ad0c05c0467317e5a496e5dfe7d968d4a3b11b4c0367ab4",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:24",
+      "wordCount": 3,
+      "audioSha256": "9e7ae3211e806c42bfd3f044c1e17de64e46beedc871436f6015364da8b097ac",
+      "sha256": "ca33642ae5305d39d1c611ca2d39f4ad66448ee15e2211fec6a62cbcc5914082",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:25",
+      "wordCount": 4,
+      "audioSha256": "f8e4aa7afdcc96aee826cb8f0699194abb6a60b6faf1deb68364f3393315e44b",
+      "sha256": "bc2f39311aac028ac48dba7846da8ad1e6fe2c94b5a441f1701068977eb68f5a",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:26",
+      "wordCount": 2,
+      "audioSha256": "77d7b2c41612defa999df84265a56a1f8ff00162052c796739b8ffab3f739814",
+      "sha256": "9be66786c6aca70f79f11502cf8858306b980e7374abbb736d9e8b4fc8e838ca",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:27",
+      "wordCount": 7,
+      "audioSha256": "fff8a0d74c62810c8d3d3578dd7a2a4b5823af7f795f6c987c1e7c66253d136c",
+      "sha256": "1dcc3236b963df1090501346330470be53b253010c108009255df18f3ae607a1",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:28",
+      "wordCount": 3,
+      "audioSha256": "bb0f17d23a2ca5c978e990ecc09a90a45f0dc59d09ef46acfe468d95f201a858",
+      "sha256": "2a5c6536dafb4ad27d958118234c8c3a914422d8b1611e0f618ded9eb75b739b",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:29",
+      "wordCount": 6,
+      "audioSha256": "346f4098e231736be22922fb8d6ecc57580ad7d01b0630f0a8981f00ea16a6f7",
+      "sha256": "f0ea63a3ba24206bc720dfbc9d01153de7c3c48df92de5738e1f2947762e6a97",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:30",
+      "wordCount": 6,
+      "audioSha256": "413ffe8ac492ceea43dd4aea9b73485a5211ba5441be27c2532073aaa446dc3d",
+      "sha256": "83916bd4e89412b157b40bae65fa86e760c2305773ef7658c82924f6e8b6b150",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:31",
+      "wordCount": 6,
+      "audioSha256": "b2ff364711063099334f5a064576986ec8f26741d756f227b64f5a3ae71d1a9c",
+      "sha256": "fc707f3c83397ab5ade5dd2fe380251e80107ec03f5d58cc9d345349609f3d4d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:32",
+      "wordCount": 4,
+      "audioSha256": "4eae85ffec46a28a39764e2b936ea72af38167b1c3e8f244e6f437424fbd88c4",
+      "sha256": "7c80e18b3a53be0616500593cb6de6861a7ba9bd37434747f8f519d4218b50f7",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:33",
+      "wordCount": 3,
+      "audioSha256": "d8873db6f4085d783e97b8d80c90c93b708a3af46f176989f1d9750aa509f558",
+      "sha256": "9f2987eedb00ea920ac463b5a16b4e03c8f45eea0977085412d2770e4273a44c",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:34",
+      "wordCount": 3,
+      "audioSha256": "a0edff1c99a2715a2ce98c613c9ad7a54b141208876f0e0857617dc844fdf05a",
+      "sha256": "ecc14a0232c9de6ba941de3ecd3378fbd8f371ed7648857f676fde1cdea509e3",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:35",
+      "wordCount": 4,
+      "audioSha256": "fbcf9d1bc799ded0af91da2b815a3d2cd7b5cea6259759e562c9843a14b6dc8d",
+      "sha256": "bd24edbcce6a9f00c7bbfb645c61b87ce675ec0ebe78d387f5f692a77c8a7e5e",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:36",
+      "wordCount": 4,
+      "audioSha256": "5e9ea282eef9ce6599cf6497c01e6e3fd6c99621a50a5727df56e2863d5e0d81",
+      "sha256": "acba2275298bd042f3750450dfbd352bd60e98b62477720e1dd1d019807c7460",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:37",
+      "wordCount": 3,
+      "audioSha256": "99a8e85ef41db9ff65a69af0e79c2d739a5d341ddd98ac5ae225e1b11cf480e3",
+      "sha256": "8ebd1a77570b9b8aac910296e9e08fddbfa013add0c9546f69ac7ed29b1b9f8f",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:38",
+      "wordCount": 5,
+      "audioSha256": "eaf41d206688c7cb148f2bf39348b72ff9323db03b530b6ed1e4c889e7619dee",
+      "sha256": "c88eb6040e9ebe03074b41694de88d5be9767f680abb3434f0e858f841bbc7a3",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:39",
+      "wordCount": 5,
+      "audioSha256": "92e423d6077050c053d86fb5f1ccac48441b39e722230addf8bba3c4ec12e2e6",
+      "sha256": "86fc8a2e08adfa9f86eef8f833bb5ff990a25b2c98c3788f6e0e4379ebec5139",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:40",
+      "wordCount": 3,
+      "audioSha256": "0de366756ce66ab26149ea193777e4da95bdc27eceb8b73e537224eed17a0655",
+      "sha256": "1d0f5b311a4f10d979c8a5abca451eeeb104c08436769a02d155c87c108bc4cd",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:41",
+      "wordCount": 5,
+      "audioSha256": "21d582fc51f9e5a6d9150d2bc76e0c5f36ebe9a65caa93b59b6fab16bd58c16f",
+      "sha256": "17332c6ad9e6a292d187394811ae05481f0466b24a101c9852ba7d0d662836e2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:42",
+      "wordCount": 3,
+      "audioSha256": "b21b1142e47b07c23a72b837b4835b669715a95e61c26945930cc39ef313308a",
+      "sha256": "34e86405494d6a4e7c71cc95ab2b49ca3d30b5aeca156e4aa9acb2ae94751535",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:43",
+      "wordCount": 6,
+      "audioSha256": "10fdd77c5fbfc7db1b2210239ef6c3f1462222c8a70d1bafe7262ba4dc3b90aa",
+      "sha256": "2ecf9c4e06eecaf65cd7ebd196ab5553301e74b84cda8184a251eaab78d9e123",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:44",
+      "wordCount": 4,
+      "audioSha256": "6003ac82f94f7ce45ca357bbd0c1f73898d2d549f82b19baa4b10c29794aca49",
+      "sha256": "b685de864c9faf1d99e64d3d3cc770927c83e66ef0af2ae6f97636be52fc52e2",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:45",
+      "wordCount": 3,
+      "audioSha256": "4507a0711ee1a30165fe505437f5876c4fdc61d233961ee7047929cc127f92a4",
+      "sha256": "4f27cc6f1d524df19233f71921de1e1250145987dcfa52e5ae5216bc8a4395c8",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:46",
+      "wordCount": 5,
+      "audioSha256": "3da5da632b85f4d3af6ea9c19af0868513350f2c6f14b932471c6ee644acce33",
+      "sha256": "1fc4d3ca7e35f4deb309081d677f242c0b468986a073dfc97143837ffcf3775d",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:47",
+      "wordCount": 3,
+      "audioSha256": "37dfe6d20aa1f31e2287d1b1ba3f38173671db0a9beec086d6b77b4da9895a05",
+      "sha256": "095cc82a8e4a452e0457c13ee2cca37dcdb3475c7ecdd78563674ad6cb516c35",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:48",
+      "wordCount": 6,
+      "audioSha256": "efcbac2043513e9f79cf6793a82cd332c464e35a78ca6373e78103e13fc67407",
+      "sha256": "e66a4558530ac74210b1b8ae6e949e7dd2a0c475e3658f1f699da3fdde3d81a5",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:49",
+      "wordCount": 3,
+      "audioSha256": "d6e79d4d21f102f3bfb93e2e0c0f638b9f26d9f65b15c29112690df49c8b3f25",
+      "sha256": "b8a7ec4b1aaf35a07758976aeede5b8962adfb9d2e55b0f1c4edf3b3207b22e3",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
+    },
+    {
+      "key": "77:50",
+      "wordCount": 4,
+      "audioSha256": "cf04c0247caeba69b4bcaf48049d3f3614997b99116df1372fc94846aac5be28",
+      "sha256": "d9ee496d4090d67bd1f8f2f075329b2bcaa07ad68425872828250af562e5e326",
+      "juz": 29,
+      "status": "source-validated",
+      "subAyahReview": "not-reviewed",
+      "launchModes": [
+        "full-ayah-audio",
+        "windowed-reconstruction",
+        "whole-ayah-recall"
+      ]
     }
   ],
   "fullyVerifiedJuz": [
+    29,
     30
   ],
   "fullyVerifiedSurahs": [
     1,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
     78,
     79,
     80,
@@ -531,8 +6157,7 @@
     111,
     112,
     113,
-    114,
-    67
+    114
   ],
   "privateDeploymentRequired": true
 }

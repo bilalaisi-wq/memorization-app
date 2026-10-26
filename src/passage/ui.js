@@ -730,6 +730,7 @@ export function openPassageStudio(ctx) {
   d.showModal();
   draw();
   if (memory.warning || workWarning) note(memory.warning || workWarning, true);
+  if (ctx.initialReference) select(ctx.initialReference);
   if (ctx.coachTarget) (async () => {
     try {
       const target = ctx.coachTarget;

@@ -19,7 +19,7 @@ test("responsive pricing shows exact amounts, annual billing, honest content ava
   await expect(page.locator(".pricing-card").nth(3)).toContainText("$99.99");
   await expect(page.locator('[data-plan="guardian"]')).toBeDisabled();
   await expect(page.locator(".billing-library-note")).toContainText(
-    "Additional juz are not available yet",
+    "Juz 29 (11 surahs, 431 ayahs) is prepared",
   );
   expect(
     await page.locator(".pricing-dialog").evaluate((el) =>

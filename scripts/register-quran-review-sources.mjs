@@ -52,7 +52,7 @@ const sql =
   entries.map((e) => `('${e.key}',${e.total},'${e.hash}',${e.duration})`).join(
     ",\n",
   ) + "\non conflict(verse_key) do nothing;\n";
-await writeFile("supabase/migrations/20261025_review_sources.sql", sql);
+await writeFile(process.argv[2] || "supabase/migrations/20261025_review_sources.sql", sql);
 console.log(
   `Prepared ${entries.length} current long-ayah review sources; all 6236 references use the same schema.`,
 );

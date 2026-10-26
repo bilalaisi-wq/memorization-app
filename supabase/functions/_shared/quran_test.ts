@@ -173,3 +173,27 @@ Deno.test("staff access and reviewed stop metadata come only from the server; ca
   assert(!result.segments[1].audioReview);
   assert(queries.includes("source_hash"));
 });
+
+Deno.test('Juz 29 first and last ayahs require paid juz selection or server developer entitlement before private storage',async()=>{
+ let ent:any={plan:'free',features:{}}, reads:string[]=[];
+ const admin:any={
+  auth:{getUser:async()=>({data:{user:{id:'learner',email_confirmed_at:'2026-01-01'}}})},
+  rpc:async(name:string)=>({data:name==='is_quran_reviewer'?false:ent}),
+  storage:{from:(bucket:string)=>{assert(bucket==='quran-premium');return{download:async(path:string)=>{reads.push(path);return{error:true};}};}},
+ };
+ const handler=quranHandler(()=>admin);
+ const request=(key:string)=>new Request('https://api.example.test',{method:'POST',headers:{authorization:'Bearer verified'},body:JSON.stringify({key,asset:'bundle',developer:true,plan:'pathfinder',juz:30})});
+ for(const key of ['67:1','77:50'])assert((await handler(request(key))).status===403);
+ assert(reads.length===0);
+ ent={plan:'explorer',selectedJuz:[28],features:{}};
+ assert((await handler(request('77:50'))).status===403);
+ ent={plan:'explorer',selectedJuz:[29],features:{}};
+ assert((await handler(request('77:50'))).status===503);
+ assert(reads[0]==='77/50/bundle.json');
+ ent={plan:'pathfinder',developer:true,features:{allQuran:true}};
+ assert((await handler(request('67:1'))).status===503);
+ assert(reads[1]==='67/1/bundle.json');
+ ent={plan:'free',features:{}};
+ assert((await handler(request('67:1'))).status===403);
+ assert(reads.length===2);
+});

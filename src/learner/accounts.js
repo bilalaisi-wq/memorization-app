@@ -3,7 +3,7 @@ import { avatarSvg } from "../rewards/catalog.js";
 import { RewardPublisher } from "../rewards/publisher.js";
 import { mountBillingControls } from "../billing/ui.js";
 import { leaderboardMarkup } from "./leaderboard.js";
-import { setDeveloperUser } from "../developer/access.js";
+import { setDeveloperUser, configureDeveloperClient } from "../developer/access.js";
 import { accountDefaults } from "./account-config.js";
 import { CloudProgress } from "./cloud-progress.js";
 import {
@@ -88,6 +88,7 @@ export async function initializeAccounts(config = {}) {
       if (result.error) throw result.error;
       user = result.data.user;
     }
+    configureDeveloperClient(client);
     setDeveloperUser(user);
     selectProfile(user?.id);
     if (user) {
