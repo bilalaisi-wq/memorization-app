@@ -182,7 +182,7 @@ function render() {
     surah = surahs[chapter],
     count = chapterCompleted();
   app.innerHTML = `
-<aside class="sidebar"><a class="brand" href="#" aria-label="Ayah home"><span class="brand-mark">۞</span><span>ayah<span class="brand-period">.</span></span></a><div class="sidebar-sub">A LITTLE EACH DAY. A LIFETIME WITH YOU.</div><div class="nav-label">YOUR SPACE</div><button class="nav-item active" id="nav-learn">${icon("grid")} Memorization <span class="nav-pill">${totalAyahs}</span></button><button class="nav-item" id="nav-daily">${icon("repeat")} Daily quests</button><button class="nav-item" id="nav-progress">${icon("book")} My progress</button><div class="surah-label">CHOOSE A SURAH</div><label class="surah-picker-label">Your surah<select id="surah-picker">${surahs.map((s, i) => `<option value="${i}" ${chapter === i ? "selected" : ""}>${s.name} · ${s.verses.length} ayahs</option>`).join("")}</select></label><div class="surah-side"><span class="surah-symbol">${String(surah.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d])}</span><div><strong>${surah.name}</strong><small>${surah.meaning} · ${verses.length} ayahs</small></div></div><div class="ayah-nav">${verses.map((x, i) => `<button data-ayah="${i}" class="ayah-item ${i === ayah ? "current" : ""}"><span class="ayah-number">${completed.has(surah.id + ":" + (i + 1)) ? "✓" : i + 1}</span><span>Ayah ${i + 1}</span>${i === ayah ? '<span class="current-dot"></span>' : ""}</button>`).join("")}</div><div class="sidebar-bottom"><span class="small-flower">✧</span><p>“And We have certainly made<br>the Quran easy to remember.”</p><small>AL-QAMAR · 54:17</small></div></aside>
+<aside class="sidebar"><a class="brand" href="#" aria-label="Ayah home"><span class="brand-mark">۞</span><span>ayah<span class="brand-period">.</span></span></a><div class="sidebar-sub">A LITTLE EACH DAY. A LIFETIME WITH YOU.</div><div class="nav-label">YOUR SPACE</div><button class="nav-item active" id="nav-learn">${icon("grid")} Memorization Lab <span class="nav-pill">${totalAyahs}</span></button><button class="nav-item" id="nav-puzzle-lab">${icon("grid")} Puzzle Lab</button><button class="nav-item" id="nav-daily">${icon("repeat")} Daily quests</button><button class="nav-item" id="nav-progress">${icon("book")} My progress</button><div class="surah-label">CHOOSE A SURAH</div><label class="surah-picker-label">Your surah<select id="surah-picker">${surahs.map((s, i) => `<option value="${i}" ${chapter === i ? "selected" : ""}>${s.name} · ${s.verses.length} ayahs</option>`).join("")}</select></label><div class="surah-side"><span class="surah-symbol">${String(surah.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d])}</span><div><strong>${surah.name}</strong><small>${surah.meaning} · ${verses.length} ayahs</small></div></div><div class="ayah-nav">${verses.map((x, i) => `<button data-ayah="${i}" class="ayah-item ${i === ayah ? "current" : ""}"><span class="ayah-number">${completed.has(surah.id + ":" + (i + 1)) ? "✓" : i + 1}</span><span>Ayah ${i + 1}</span>${i === ayah ? '<span class="current-dot"></span>' : ""}</button>`).join("")}</div><div class="sidebar-bottom"><span class="small-flower">✧</span><p>“And We have certainly made<br>the Quran easy to remember.”</p><small>AL-QAMAR · 54:17</small></div></aside>
 <div class="main-shell"><header><div class="breadcrumb">My learning <span>/</span> <strong>${surah.name}</strong></div><div class="header-right"><span class="daily">✧ <b>${completed.size}</b> ayahs practiced</span><span class="study-xp" data-learning-xp>${xp} XP</span><span class="avatar">Y</span></div></header><main><div class="page-heading"><div class="eyebrow">MEMORIZE, PIECE BY PIECE</div><h1>Small pieces. Big discoveries.</h1><p>A colorful little adventure, one ayah at a time.</p></div><nav class="explore-nav" aria-label="Explore learning tools"><button class="text-button" id="nav-gallery">Mastery Gallery</button><button class="text-button" id="nav-lab">Puzzle Lab</button></nav><div class="surah-heading"><div><span class="surah-tag">SURAH ${String(surah.id).padStart(3, "0")}</span><h2>${surah.name} <span lang="ar" class="surah-arabic">${surah.arabic}</span></h2><p>${surah.meaning} <span>•</span> ${surah.origin} <span>•</span> ${verses.length} ayahs</p></div><div class="progress-summary"><span>Your progress <b>${count} / ${verses.length} ayahs</b></span><div class="progress-track"><i style="width:${(count / verses.length) * 100}%"></i></div></div></div>
 <section class="reference-card"><div class="reference-top"><span class="section-label"><span class="tiny-dot"></span> AYAH ${v.id} <span class="muted">OF ${verses.length}</span></span><button class="text-button" id="full-audio">${icon(playing ? "pause" : "headphones")} ${playing ? "Stop audio" : "Listen to full ayah"}</button></div><div class="full-verse ${reference ? "" : "reference-hidden"}" lang="ar" dir="rtl">${reference ? v.text + ' <span class="verse-end">' + String(v.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]) + "</span>" : '<span class="hidden-reference">The ayah is hidden for your challenge</span>'}</div><p class="translation">${reference ? v.translation : "Build from memory. Reveal the ayah whenever you need a little help."}</p>${mode !== "practice" ? `<button class="reference-toggle" id="reference-toggle">${icon("eye")} ${reference ? "Hide" : "Reveal"} ayah</button>` : ""}</section>
 <div class="mode-row"><div class="tabs" role="tablist" aria-label="Learning mode">${[
@@ -193,7 +193,7 @@ function render() {
   ]
     .map(
       ([m, ic, label]) =>
-        `<button role="tab" aria-selected="${mode === m}" data-mode="${m}" class="tab ${mode === m ? "selected" : ""}">${icon(ic)} ${label}${m === "practice" ? '<span class="tab-dot"></span>' : ""}</button>`,
+        `<button role="tab" aria-selected="${mode === m || mode === "review" && m === "recall"}" data-mode="${m}" class="tab ${mode === m || mode === "review" && m === "recall" ? "selected" : ""}">${icon(ic)} ${label}${m === "practice" ? '<span class="tab-dot"></span>' : ""}</button>`,
     )
     .join(
       "",
@@ -205,14 +205,15 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
       .join("") ||
     '<span class="bank-empty">Every piece has found a place ✧</span>'
   }</div><div class="builder-footer">${icon("grid")}<span>Match a left tab with the next right socket. Pictures are memory cues, not literal translations. Drag a piece or its ⠿ handle to reorder; use →/← for earlier/later.</span></div></section>
-<section class="practice-controls"><div class="repeat-label"><span class="control-icon">${icon("repeat")}</span><div><strong>Little repetitions, lasting memory</strong><p>Give your selected words a few more moments.</p></div></div><div class="control-fields"><label>Repeat <select id="repeat"><option value="1" ${repeats === 1 ? "selected" : ""}>1 time</option><option value="3" ${repeats === 3 ? "selected" : ""}>3 times</option><option value="5" ${repeats === 5 ? "selected" : ""}>5 times</option><option value="10" ${repeats === 10 ? "selected" : ""}>10 times</option></select></label><label>Speed <select id="speed">${[0.75, 1, 1.25].map((s) => `<option value="${s}" ${speed === s ? "selected" : ""}>${s}×</option>`).join("")}</select></label></div></section><div class="feedback ${feedback.startsWith("Beautiful") ? "success" : ""}" role="status" aria-live="polite">${feedback}</div><div class="bottom-row">${mode === "quiz" ? '<button class="text-button" id="next-ayah">Next ayah →</button>' : ""}<span>✧ Progress is a practice, not a race.</span><button class="primary" id="next">${mode === "practice" ? "Complete & next ayah" : quizSolved ? "Play again →" : "Check my order"} ${icon(mode === "practice" ? "arrow" : "check")}</button></div><footer>Made for a mindful moment with the Quran.<span>Recitation: Mishary Rashid Alafasy · Uthmanic Hafs script</span></footer></main></div>`;
+<section class="practice-controls"><div class="repeat-label"><span class="control-icon">${icon("repeat")}</span><div><strong>Little repetitions, lasting memory</strong><p>Give your selected words a few more moments.</p></div></div><div class="control-fields"><label>Repeat <select id="repeat"><option value="1" ${repeats === 1 ? "selected" : ""}>1 time</option><option value="3" ${repeats === 3 ? "selected" : ""}>3 times</option><option value="5" ${repeats === 5 ? "selected" : ""}>5 times</option><option value="10" ${repeats === 10 ? "selected" : ""}>10 times</option></select></label><label>Speed <select id="speed">${[0.75, 1, 1.25].map((s) => `<option value="${s}" ${speed === s ? "selected" : ""}>${s}×</option>`).join("")}</select></label></div></section><div class="feedback ${feedback.startsWith("Beautiful") ? "success" : ""}" role="status" aria-live="polite">${feedback}</div>${mode === "practice" && feedback.startsWith("Beautiful work. Your word order") ? `<section class="practice-next-step" aria-label="Choose your next step"><h3>What would help you remember this ayah?</h3><p>Correct word order is practice, not proof of memorization. Keep repeating aloud, or try this same ayah with fewer cues.</p><div><button class="text-button" id="practice-stay">Keep practicing this ayah</button><button class="primary" id="practice-quest">Try Puzzle Quest for this ayah</button><button class="text-button" id="practice-next-ayah" ${ayah === verses.length - 1 ? "disabled" : ""}>Next ayah →</button></div></section>` : ""}<div class="bottom-row">${mode === "quiz" ? '<button class="text-button" id="next-ayah">Next ayah →</button>' : ""}<span>✧ Progress is a practice, not a race.</span><button class="primary" id="next">${mode === "practice" ? "Check ayah" : quizSolved ? "Play again →" : "Check my order"} ${icon(mode === "practice" ? "arrow" : "check")}</button></div><footer>Made for a mindful moment with the Quran.<span>Recitation: Mishary Rashid Alafasy · Uthmanic Hafs script</span></footer></main></div>`;
   bind();
   document
     .querySelector("#nav-learn")
-    .classList.toggle("active", mode !== "daily" && mode !== "review");
+    .classList.toggle("active", ["practice","quiz","recall","review","sequence"].includes(mode));
+  document.querySelector("#nav-puzzle-lab").classList.toggle("active", mode === "lab");
   document
     .querySelector("#nav-daily")
-    .classList.toggle("active", mode === "daily" || mode === "review");
+    .classList.toggle("active", mode === "daily");
   if (mode === "gallery")
     mountGallery(
       document.querySelector("main"),
@@ -515,6 +516,7 @@ function bind() {
   document.querySelectorAll("[data-mode]").forEach(
     (b) =>
       (b.onclick = () => {
+        if (!markStudyBeforeRecall(key())) return;
         mode = b.dataset.mode;
         reset();
       }),
@@ -593,13 +595,8 @@ function bind() {
       if (!complete()) return;
       awardStudy({mode:"practice",unit:key(),action:"complete",xp:8});
       const successId = `${puzzleSessionId}:practice:${key()}`;
-      if (ayah < verses.length - 1) {
-        ayah++;
-        reset();
-      } else {
-        feedback = `Beautiful work. You have practiced the final ayah of ${surahs[chapter].name}.`;
-        render();
-      }
+      feedback = "Beautiful work. Your word order is correct. Choose what to practice next.";
+      render();
       stop();
       successCue(successId);
     } else {
@@ -669,6 +666,10 @@ function bind() {
     ayah = (ayah + 1) % verses.length;
     reset();
   });
+  document.querySelector("#practice-stay")?.addEventListener("click", () => { feedback = "Keep practicing at your pace. Say each word aloud."; render(); });
+  document.querySelector("#practice-quest")?.addEventListener("click", () => { if (!markStudyBeforeRecall(key())) return; mode = "quiz"; reset(); });
+  document.querySelector("#practice-next-ayah")?.addEventListener("click", () => { if (ayah < verses.length - 1) { ayah++; reset(); } });
+  document.querySelector("#nav-puzzle-lab").onclick = memoryCallbacks.onLab;
   document.querySelector("#nav-gallery").onclick = memoryCallbacks.onGallery;
   document.querySelector("#nav-lab").onclick = memoryCallbacks.onLab;
   document.querySelector("#nav-daily").onclick = memoryCallbacks.onDaily;

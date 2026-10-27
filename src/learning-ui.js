@@ -38,9 +38,9 @@ const dateLabel = (date, timeZone) =>
         minute: "2-digit",
       }).format(new Date(date))
     : "Not scheduled";
-function clearWorkflow(main) {
+function clearWorkflow(main, keepModes = false) {
   main.querySelector(".reference-card")?.remove();
-  main.querySelector(".mode-row")?.remove();
+  if (!keepModes) main.querySelector(".mode-row")?.remove();
   main.querySelector(".memory-summary")?.remove();
   let node = main.querySelector(".builder");
   while (node) {
@@ -118,7 +118,7 @@ export function mountDailyDashboard(main, store, surahs, callbacks) {
   };
 }
 export function mountRecall(main, store, surahs, callbacks) {
-  clearWorkflow(main);
+  clearWorkflow(main, true);
   const root = document.createElement("section");
   root.className = "self-assessment";
   main.append(root);

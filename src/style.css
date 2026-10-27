@@ -3011,3 +3011,10 @@ main .text-button, main .primary, .lab-game button, .lab-settings label { font-s
 .juz-chapters h3 { margin:0 0 8px; }
 [data-items] li { display:flex; align-items:center; gap:8px; padding:6px; }
 [data-items] li span { flex:1; }
+
+.practice-next-step { margin:20px 0; padding:22px; border:1px solid var(--border,#8aa98b); border-radius:20px; background:var(--surface,#f0f7ed); }
+.practice-next-step h3 { margin-top:0; }
+.practice-next-step > div { display:flex; flex-wrap:wrap; gap:12px; }
+[data-theme="night-sky"] .practice-next-step { background:#141d43; }
+
+@media (max-width:760px) { .sidebar .nav-label { display:block; margin-top:14px; } .sidebar #nav-learn, .sidebar #nav-puzzle-lab { display:flex; width:100%; } }
