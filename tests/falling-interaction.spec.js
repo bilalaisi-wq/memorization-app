@@ -1,3 +1,4 @@
+import {enableDeveloperLab} from "./developer-lab-helper.js";
 import { test, expect } from "@playwright/test";
 import { parkExtra } from "./falling-helper.js";
 async function open(page) {
@@ -21,6 +22,7 @@ async function open(page) {
     };
   });
   await page.goto("/");
+  await enableDeveloperLab(page);
   await page.locator("#nav-puzzle-lab").click();
 }
 test("Start begins automatic motion and looping audio; keyboard works without clicking board", async ({

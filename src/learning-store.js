@@ -1,3 +1,4 @@
+import { arcadeIds } from "./puzzles/arcade/registry.js";
 import { createEmptyCard, fsrs, Rating, State } from "ts-fsrs";
 export const LEARNING_KEY = "ayah-learning-v1";
 export const LEGACY_BACKUP_KEY = "ayah-learning-legacy-v1";
@@ -441,6 +442,7 @@ export function createLearningStore(
             "chain",
             "continue",
             "detective",
+            ...arcadeIds,
           ].includes(game) ||
           typeof sessionId !== "string" ||
           !sessionId ||

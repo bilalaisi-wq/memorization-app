@@ -1,9 +1,17 @@
 // Presentation access only. Never use browser UI gates to authorize server operations.
 const OWNER_EMAIL = 'bilalaisi@gmail.com';
 let allowed = false;
+let preview = false;
+export const isDeveloperMode = () => allowed && preview;
+export function setDeveloperPreview(active) {
+  preview = allowed && active === true;
+  globalThis.dispatchEvent?.(new Event("ayah-developer-mode"));
+}
 export function setDeveloperUser(user) {
+  preview = false;
   allowed = !!user?.id && !!user.email_confirmed_at &&
     user.email?.trim().toLowerCase() === OWNER_EMAIL;
+  globalThis.dispatchEvent?.(new Event('ayah-developer-mode'));
 }
 export const isDeveloper = () => allowed;
 let client = null;
@@ -52,6 +60,7 @@ export function mountDeveloperMenu(nav) {
       dialog.querySelector(selector).onclick=()=>run(async()=>{
         const {error}=await client.rpc('set_my_developer_mode',{active:enabled});
         if(error) throw Error('Developer access is not configured. Run the developer setup SQL for your verified owner account.');
+        setDeveloperPreview(enabled);
         status.textContent=enabled?'Developer access enabled. Reopen the desired feature to refresh access.':'Regular learner access restored.';
       });
     }

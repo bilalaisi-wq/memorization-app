@@ -1,3 +1,4 @@
+import { arcadeGames } from "./arcade/registry.js";
 import { versionedStore } from "../ui/versioned-store.js";
 export const LAB_KEY = "ayah-puzzle-lab-v1";
 export const gameTypes = [
@@ -44,6 +45,7 @@ export const gameTypes = [
     "similar",
   ],
 ];
+const persistedGames = [...gameTypes, ...arcadeGames.map(g=>[g.id,g.title,"",g.category]), ["arcade-example","Arcade preview","","order"]];
 export function createPuzzleStore(storage, surahs) {
   const keys = new Set(
     surahs.flatMap((s) => s.verses.map((v) => `${s.id}:${v.id}`)),
@@ -58,7 +60,7 @@ export function createPuzzleStore(storage, surahs) {
       s.history.every(
         (h) =>
           keys.has(h.key) &&
-          gameTypes.some((g) => g[0] === h.game) &&
+          persistedGames.some((g) => g[0] === h.game) &&
           typeof h.sessionId === "string" &&
           Number.isInteger(h.mistakes) &&
           h.mistakes >= 0,
@@ -70,7 +72,7 @@ export function createPuzzleStore(storage, surahs) {
           keys.has(key) &&
           Object.entries(stats).every(
             ([category, n]) =>
-              gameTypes.some((g) => g[3] === category) &&
+              persistedGames.some((g) => g[3] === category) &&
               Number.isInteger(n) &&
               n >= 0,
           ),
@@ -84,7 +86,8 @@ export function createPuzzleStore(storage, surahs) {
     record(result) {
       return store.transact((s) => {
         if (s.history.some((h) => h.sessionId === result.sessionId)) return;
-        const category = gameTypes.find((g) => g[0] === result.game)[3];
+        const category = persistedGames.find((g) => g[0] === result.game)?.[3];
+        if (!category || !keys.has(result.key) || typeof result.sessionId!=="string" || !result.sessionId || !Number.isInteger(result.mistakes) || result.mistakes<0) throw Error("Invalid Puzzle Lab receipt");
         const stats = (s.weaknesses[result.key] ??= {});
         // Practice-chain failure receipts already counted earlier errors in this run.
         const mistakes = Number.isInteger(result.arcade?.newErrors) && result.arcade.newErrors >= 0 && result.arcade.newErrors <= result.mistakes ? result.arcade.newErrors : result.mistakes;
@@ -123,7 +126,7 @@ export function createPuzzleStore(storage, surahs) {
       return {
         game: "falling",
         reason:
-          "Start with untimed word placement. Recommendations adapt to your practice mistakes.",
+          "Start with visible-word placement. Recommendations adapt to your practice mistakes.",
       };
     },
   };

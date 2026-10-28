@@ -1,3 +1,4 @@
+import {enableDeveloperLab} from "./developer-lab-helper.js";
 import {startFalling,parkExtra} from "./falling-helper.js";
 import { menu } from "./menu-helper.js";
 import { test, expect } from "@playwright/test";
@@ -50,6 +51,7 @@ async function seed(page, storage) {
 }
 const openLab = async (page) => {
   await page.goto("/");
+  await enableDeveloperLab(page);
   await (await menu(page)).locator("#nav-lab").click();
   await startFalling(page);
 };

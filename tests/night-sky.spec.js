@@ -1,3 +1,4 @@
+import {enableDeveloperLab} from "./developer-lab-helper.js";
 import { menu } from "./menu-helper.js";
 import { test, expect } from "@playwright/test";
 import { createLearningStore } from "../src/learning-store.js";
@@ -185,6 +186,7 @@ test("all core modes and all seven Lab games use dark surfaces without changing 
       ).toHaveText(text);
   }
   await (await menu(page)).locator("#nav-lab").click();
+  await enableDeveloperLab(page);
   for (const game of [
     "falling",
     "vanishing",

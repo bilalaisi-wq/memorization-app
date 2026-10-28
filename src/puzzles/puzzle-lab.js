@@ -1,3 +1,7 @@
+import { isDeveloperMode } from "../developer/access.js";
+import { activeProfileId } from "../learner/profile-storage.js";
+import { createRegistry,createLauncher,createContentAdapter,createResultRecorder } from "./arcade/index.js";
+import { registrationExample } from "./arcade/example.js";
 import { mountFalling } from "./falling-ui.js";
 import { labMemoryTips } from "../ui/memory-tips.js";
 import {
@@ -54,7 +58,8 @@ export function mountPuzzleLab(
   main.append(root);
   const key = `${surah.id}:${verse.id}`,
     recommendation = lab.recommend(key, learning);
-  root.innerHTML = `<div class="lab-intro"><span class="eyebrow">TRY ANOTHER WAY</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>These games practice recognition, word order, and recall cues. Game XP is separate from independent spoken memorization and artwork checkpoints.</p><div class="lab-recommendation"><strong>Suggested next step</strong><p>${esc(recommendation.reason)}</p><button class="primary small" id="lab-recommended">${recommendation.game === "recall" ? "Independent recall assessment" : gameTypes.find((g) => g[0] === recommendation.game)[1]}</button></div></div><div class="lab-menu">${gameTypes.map(([id, title, description]) => `<button data-game="${id}" class="lab-game-card"><strong>${title}</strong><span>${description}</span></button>`).join("")}</div><div class="lab-settings"><label>Difficulty<select id="lab-level"><option value="1">1 · Visible words</option><option value="2">2 · Fewer cues</option><option value="3">3 · Concealed words</option><option value="4">4 · Minimal hints</option></select></label><button class="text-button" id="lab-restart">Fresh round</button><button class="text-button" id="lab-replay">♫ Replay ayah</button><button class="text-button" id="lab-mute" aria-pressed="false">Mute audio</button></div><section class="lab-game" aria-label="Puzzle play area"></section><p data-status role="status" aria-live="polite"></p><div class="lab-after"><button class="text-button" id="lab-retry-save" hidden>Retry saving this result</button><button class="primary small" id="lab-next-level" hidden>Try fewer hints →</button><button class="text-button" id="lab-recall">Try independent self-assessment →</button></div>${lab.warning ? `<p role="alert">${esc(lab.warning)}</p>` : ""}`;
+  if (!isDeveloperMode() && !["falling","recall"].includes(recommendation.game)) { recommendation.game="falling"; recommendation.reason="Practice visible word order with Falling Words."; }
+  root.innerHTML = `<div class="lab-intro"><span class="eyebrow">TRY ANOTHER WAY</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>These games practice recognition, word order, and recall cues. Game XP is separate from independent spoken memorization and artwork checkpoints.</p><div class="lab-recommendation"><strong>Suggested next step</strong><p>${esc(recommendation.reason)}</p><button class="primary small" id="lab-recommended">${recommendation.game === "recall" ? "Independent recall assessment" : gameTypes.find((g) => g[0] === recommendation.game)[1]}</button></div></div><div class="lab-menu">${[...gameTypes,["arcade-example","Arcade contract preview","Developer-only shared framework example"]].map(([id, title, description]) => `<button ${id!=="falling" && !isDeveloperMode()?"hidden disabled":""} data-game="${id}" class="lab-game-card"><strong>${title}</strong><span>${description}</span></button>`).join("")}</div><div class="lab-settings"><label>Difficulty<select id="lab-level"><option value="1">1 · Visible words</option><option value="2">2 · Fewer cues</option><option value="3">3 · Concealed words</option><option value="4">4 · Minimal hints</option></select></label><button class="text-button" id="lab-restart">Fresh round</button><button class="text-button" id="lab-replay">♫ Replay ayah</button><button class="text-button" id="lab-mute" aria-pressed="false">Mute audio</button></div><section class="lab-game" aria-label="Puzzle play area"></section><p data-status role="status" aria-live="polite"></p><div class="lab-after"><button class="text-button" id="lab-retry-save" hidden>Retry saving this result</button><button class="primary small" id="lab-next-level" hidden>Try fewer hints →</button><button class="text-button" id="lab-recall">Try independent self-assessment →</button></div>${lab.warning ? `<p role="alert">${esc(lab.warning)}</p>` : ""}`;
   const area = root.querySelector(".lab-game"),
     status = root.querySelector("[data-status]");
   let resultKey = key,
@@ -194,6 +199,7 @@ export function mountPuzzleLab(
     });
   };
   function start(next = game) {
+    if (next!=="falling" && !isDeveloperMode()) return;
     const changedMode = next !== game;
     stopEncouragement();
     gameCleanup?.();
@@ -203,7 +209,7 @@ export function mountPuzzleLab(
     pauseGame = () => {};
     game = next;
     const tipText = root.querySelector(".memory-pro-tip p");
-    if (tipText) tipText.textContent = labMemoryTips[game];
+    if (tipText) tipText.textContent = labMemoryTips[game] || "Say each word aloud as you practice. Arcade practice is separate from independent recall.";
     resultKey = key;
     referenceAudio = verseAudio(verse.id, surah.id);
     level = Number(root.querySelector("#lab-level").value);
@@ -220,7 +226,7 @@ export function mountPuzzleLab(
     root.querySelector("#lab-next-level").hidden = true;
     root.querySelector("#lab-retry-save").hidden = true;
     const levelControl = root.querySelector("#lab-level");
-    levelControl.closest("label").hidden = ["falling", "match", "detective"].includes(
+    levelControl.closest("label").hidden = ["falling", "arcade-example", "match", "detective"].includes(
       game,
     );
     const labels = {
@@ -248,7 +254,8 @@ export function mountPuzzleLab(
       [...levelControl.options].forEach(
         (option, i) => (option.textContent = `${i + 1} · ${labels[i]}`),
       );
-    if (game === "falling") falling();
+    if (game === "arcade-example") arcadePreview();
+    else if (game === "falling") falling();
     else if (game === "vanishing") vanishing();
     else if (game === "jigsaw") jigsaw();
     else if (game === "match") match();
@@ -256,6 +263,24 @@ export function mountPuzzleLab(
     else if (game === "continue") continuation();
     else detective();
     if (changedMode) transitionCue();
+  }
+  function arcadePreview() {
+    const registry=createRegistry(); registry.register(registrationExample);
+    const launcher=createLauncher(registry),adapter=createContentAdapter(surahs);
+    const getAccountId=activeProfileId;
+    const record=createResultRecorder({learning,lab,accountId:getAccountId(),getAccountId});
+    area.innerHTML=`<h3>Shared arcade configuration</h3><label>Journey<select data-journey><option value="single">Single Ayah</option><option value="chain">Ayah Chain</option></select></label><label>Through ayah<input data-end type="number" min="${verse.id}" max="${surah.verses.at(-1).id}" value="${verse.id}"></label><label>Checkpoint rules<select data-rules><option value="classic">Classic · restart chain</option><option value="practice">Practice · keep checkpoints</option></select></label><label>Speed profile<select data-speed><option value="gentle">Gentle</option><option value="steady">Steady</option><option value="swift">Swift</option></select></label><button class="primary" data-launch>Launch preview</button><section data-arcade-host aria-label="Arcade preview"></section>`;
+    area.querySelector('[data-launch]').onclick=()=>{
+      if(!isDeveloperMode())return;
+      try {
+        const mode=area.querySelector('[data-journey]').value;
+        const config=adapter.configure({surah:surah.id,start:verse.id,end:mode==='single'?verse.id:Number(area.querySelector('[data-end]').value),mode,chainMode:area.querySelector('[data-rules]').value,profile:area.querySelector('[data-speed]').value,seed:1});
+        config.keys.forEach(k=>adapter.choices(k)); // refuse unsupported long-ayah workspaces before launch
+        fallingControl=launcher.launch('arcade-example',{muted:()=>muted,root:area.querySelector('[data-arcade-host]'),adapter,config,id:uid(),onComplete:s=>{record(s);callbacks.onWalletChange();}},{developer:isDeveloperMode()});
+      } catch(e){say(e.message);}
+    };
+    pauseGame=()=>fallingControl?.pause();
+    gameCleanup=()=>launcher.dispose();
   }
   function falling() {
     const control = mountFalling(area, {
@@ -816,9 +841,21 @@ export function mountPuzzleLab(
   root.querySelector("#lab-recommended").onclick = () =>
     recommendation.game === "recall"
       ? callbacks.onRecall(key)
-      : start(recommendation.game);
+      : start(isDeveloperMode() ? recommendation.game : "falling");
+  const refreshAccess=()=>{
+    if(!isDeveloperMode() && !["falling","recall"].includes(recommendation.game)) {
+      recommendation.game="falling";
+      recommendation.reason="Practice visible word order with Falling Words.";
+      root.querySelector('.lab-recommendation p').textContent=recommendation.reason;
+      root.querySelector('#lab-recommended').textContent="Falling Words";
+    }
+    root.querySelectorAll('[data-game]').forEach(b=>{const restricted=b.dataset.game!=='falling'&&!isDeveloperMode();b.hidden=restricted;b.disabled=restricted;});
+    if(game!=='falling'&&!isDeveloperMode())start('falling');
+  };
+  globalThis.addEventListener('ayah-developer-mode',refreshAccess);
   start();
   cleanup = () => {
+    globalThis.removeEventListener('ayah-developer-mode',refreshAccess);
     gameCleanup?.();
     stopAudio();
   };

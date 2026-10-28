@@ -1,3 +1,4 @@
+import {enableDeveloperLab} from "./developer-lab-helper.js";
 import {startFalling,parkExtra} from "./falling-helper.js";
 import { menu } from "./menu-helper.js";
 import { test, expect } from "@playwright/test";
@@ -26,6 +27,7 @@ const open = async (page, game = "falling") => {
     };
   });
   await page.goto("/");
+  await enableDeveloperLab(page);
   await (await menu(page)).locator("#nav-lab").click();
   if (game !== "falling") await page.locator(`[data-game="${game}"]`).click();
 };

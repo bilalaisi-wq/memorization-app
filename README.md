@@ -168,3 +168,7 @@ Learning XP now covers practice interactions, Quest, recall, every Lab game, cha
 ## Falling Words 2.0
 
 [Hybrid Stack + Tower gameplay and implementation notes](docs/falling-words.md): seven tetrominoes, single-ayah and chain journeys, Classic/Practice strikes, Hold, audio choices and bounded rewards. No Supabase migration is required.
+
+## Shared arcade foundation
+
+[Framework contract, source adapters, checkpoints and reward rules](docs/shared-arcade-framework.md) prepares six future arcade games without launching them. Falling Words remains available. The six legacy experimental Lab games and the contract preview are visible only in enabled developer mode; existing progress remains intact. No new Supabase migration is required.

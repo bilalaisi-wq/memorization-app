@@ -1,3 +1,4 @@
+import {isDeveloperMode} from "../developer/access.js";
 import { COACH_SETTINGS, coachSnapshot, materializePlan } from "./model.js";
 import {
   COACH_CONSENT,
@@ -103,7 +104,9 @@ export function openCoach(ctx) {
           ? "Split your available time into shorter sessions."
           : "Keep the session short and speak each word as you practice."
       }</p><h3>Suggested Puzzle Lab</h3><p>${
-        s.transitions
+        !isDeveloperMode()
+          ? "Falling Words for visible word-order practice."
+          : s.transitions
           ? "Broken Chain for recorded transition difficulties."
           : s.recentMistakes
           ? "Falling Words for recent puzzle mistakes."

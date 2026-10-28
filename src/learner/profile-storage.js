@@ -1,5 +1,6 @@
 // Guest records retain their existing keys. Authenticated users never read another profile.
 let owner = null;
+export const activeProfileId = () => owner;
 const listeners = new Set();
 export const onProfileChange = (listener) => {
   listeners.add(listener);

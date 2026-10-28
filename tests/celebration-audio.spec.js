@@ -1,3 +1,4 @@
+import {enableDeveloperLab} from "./developer-lab-helper.js";
 import { menu } from "./menu-helper.js";
 import { test, expect } from '@playwright/test';
 
@@ -6,6 +7,7 @@ test('success artwork cycles, accepts future manifest images, and respects reduc
   await page.route('**/celebrations/*.svg', route => route.fulfill({contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="gold"/></svg>'}));
   const manifest = page.waitForResponse('**/celebrations.json');
   await page.goto('/');
+  await enableDeveloperLab(page);
   await manifest;
   await expect(page.locator("#build-all")).toBeVisible();
   await page.waitForTimeout(50);
@@ -29,6 +31,7 @@ test('Lab automatically pronounces selected choices, replaces audio stop with pe
     };
   });
   await page.goto('/');
+  await enableDeveloperLab(page);
   await (await menu(page)).locator('#nav-lab').click();
   await expect(page.locator('#lab-stop-audio')).toHaveCount(0);
   await expect(page.locator('#fall-pause')).toBeVisible();
@@ -52,6 +55,7 @@ test('Lab automatically pronounces selected choices, replaces audio stop with pe
 test('every learning mode offers spoken memorization guidance and mobile text remains readable', async ({page}) => {
   await page.setViewportSize({width:390,height:844});
   await page.goto('/');
+  await enableDeveloperLab(page);
   for(const mode of ['practice','quiz','recall','sequence']) {
     await page.locator(`[data-mode="${mode}"]`).click();
     await expect(page.locator('.memory-pro-tip')).toBeVisible();
@@ -70,6 +74,7 @@ test('rapid piece choices finish their recordings in order rather than interrupt
     };
   });
   await page.goto('/');
+  await enableDeveloperLab(page);
   await (await menu(page)).locator('#nav-lab').click();
   await page.locator('[data-game="jigsaw"]').click();
   await page.evaluate(()=>{
