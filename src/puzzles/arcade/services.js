@@ -3,11 +3,11 @@ export function createAudioManager({AudioClass=globalThis.Audio,owner='arcade'}=
   let audio=null,disposed=false,run=0;
   const stop=()=>{run++;if(audio){audio.onended=null;audio.onerror=null;audio.pause();audio.removeAttribute?.('src');audio.load?.();audio=null;}studyAudioStop(owner);};
   return {
-    async play(url,{loop=false,muted=false}={}) {
+    async play(url,{loop=false,muted=false,onEnded=()=>{},onError=()=>{}}={}) {
       stop();if(disposed)return false;
       const token=run;
       audio=new AudioClass(url);audio.loop=loop;audio.muted=muted;
-      audio.onended=()=>{if(token===run)stop();};audio.onerror=()=>{if(token===run)stop();};
+      audio.onended=()=>{if(token===run){stop();onEnded();}};audio.onerror=()=>{if(token===run){stop();onError();}};
       studyAudioStart(owner);
       try{await audio.play();return token===run && !disposed;}catch{if(token===run)stop();return false;}
     },

@@ -2,7 +2,7 @@
 
 ## Scope and audit
 
-The six future games are **not implemented or advertised as playable**. `src/puzzles/arcade/registry.js` reserves Ayah Asteroids, Sirat Quest, Memory Maze, Ayah Bubble Burst, Ayah Snake and Bridge Builder identifiers. A developer-only contract preview demonstrates registration, shared configuration and persistence, without claiming to implement any of them.
+Ayah Asteroids is now implemented; the other five future games remain **not implemented or advertised as playable**. See [the Asteroids guide](ayah-asteroids.md). `src/puzzles/arcade/registry.js` reserves Ayah Asteroids, Sirat Quest, Memory Maze, Ayah Bubble Burst, Ayah Snake and Bridge Builder identifiers. A developer-only contract preview demonstrates registration, shared configuration and persistence, without claiming to implement any of them.
 
 Audit of the existing application:
 
@@ -104,10 +104,10 @@ The audio manager owns one `Audio` instance, replaces/stops previous playback, c
 
 `tests/arcade-framework.spec.js` covers source provenance, deterministic solvability, phrase coverage and separate stop approval, three strikes, Classic/Practice checkpoints, lifecycle disposal, defensive snapshots, storage/reward retries, historic data, account isolation, FSRS non-interference, audio cleanup, reduced motion and keyboard/touch utilities. Legacy-mode UI regression tests explicitly enter developer preview; public tests verify learner exclusion and revocation cleanup. Existing Falling tests remain in the full suite.
 
-Run `npm test` and `npm run build` before registering the first real game. Then implement one distinct game at a time, with its own engine tests, real pointer/mobile interactions, accessible equivalents and verified phrase review integration where needed. No first new game has been started in this change.
+Run `npm test` and `npm run build` before registering the first real game. Then implement one distinct game at a time, with its own engine tests, real pointer/mobile interactions, accessible equivalents and verified phrase review integration where needed. Ayah Asteroids is the first registered real game; the other five remain planned.
 
 ### Existing review-record conversion
 
 The existing teacher review service uses **one-based inclusive** `startWord`/`endWord` and `displayStatus`. The arcade adapter above uses **zero-based end-exclusive** indices. After verifying the review head's `source_hash` against the authorized canonical bundle's `contentRevision`, convert `startWord` to `startWord - 1`, leave `endWord` unchanged, map `displayStatus` to `status`, and carry the persisted review ID/reference and independent `stopStatus`/`recitationStop`. Never pass draft records as approved, or reuse approval against a different source revision. The contract preview does not fetch teacher records or expose a long-ayah mode; this conversion belongs in a future long-phrase game's authorized loader.
 
-Validation for this change: full Playwright suite **216 passed**; existing Deno backend suites **20 passed** (billing 6, content 4, recitation 5, coach 5); production Vite build passed. No hosted database or provider configuration was changed.
+Original foundation validation: full Playwright suite **216 passed**; existing Deno backend suites **20 passed** (billing 6, content 4, recitation 5, coach 5); production Vite build passed. No hosted database or provider configuration was changed.

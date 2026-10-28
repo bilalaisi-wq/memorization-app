@@ -34,6 +34,7 @@ import {
 import { mountSequence, stopSequence } from "./sequence.js";
 import "./style.css";
 import "./puzzles/falling.css";
+import "./puzzles/arcade/asteroids/asteroids.css";
 import "./themes/night-sky.css";
 import {
   surahs,
@@ -398,6 +399,7 @@ function markStudyBeforeRecall(target) {
 }
 let galleryFocus = null;
 const memoryCallbacks = {
+  async getArcadeBundle(key) {const {loadBundle}=await import("./content/library.js");return loadBundle(key,appearanceAccount().client);},
   onPassage(passage) {
     const target=surahs.findIndex(s=>s.id===passage.surah);
     if(target<0 || !Number.isInteger(passage.first_ayah) || !Number.isInteger(passage.last_ayah) || passage.first_ayah<1 || passage.last_ayah<passage.first_ayah || passage.last_ayah>surahs[target].verses.length)return;
