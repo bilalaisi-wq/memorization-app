@@ -33,6 +33,7 @@ import {
 } from "./learning-ui.js";
 import { mountSequence, stopSequence } from "./sequence.js";
 import "./style.css";
+import "./puzzles/falling.css";
 import "./themes/night-sky.css";
 import {
   surahs,

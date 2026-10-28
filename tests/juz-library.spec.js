@@ -12,6 +12,7 @@ test('Juz 29 lists every surah without exposing premium content to guests',async
 
 test('developer menu editor previews order and saves only navigation labels',async({page})=>{
  await page.goto('/');
+ await expect(page.locator('#site-menu-toggle')).toBeVisible();
  await page.evaluate(async()=>{
   const dev=await import('/src/developer/access.js');
   window.devCalls=[];

@@ -4,7 +4,7 @@ export const gameTypes = [
   [
     "falling",
     "Falling Words",
-    "Place falling words into their right-to-left slots.",
+    "Stack word tetrominoes and build an ayah tower.",
     "order",
   ],
   [
@@ -86,11 +86,13 @@ export function createPuzzleStore(storage, surahs) {
         if (s.history.some((h) => h.sessionId === result.sessionId)) return;
         const category = gameTypes.find((g) => g[0] === result.game)[3];
         const stats = (s.weaknesses[result.key] ??= {});
+        // Practice-chain failure receipts already counted earlier errors in this run.
+        const mistakes = Number.isInteger(result.arcade?.newErrors) && result.arcade.newErrors >= 0 && result.arcade.newErrors <= result.mistakes ? result.arcade.newErrors : result.mistakes;
         stats[category] = Math.max(
           0,
           (stats[category] || 0) +
-            (result.mistakes || 0) -
-            (result.mistakes ? 0 : 1),
+            (mistakes || 0) -
+            (mistakes ? 0 : 1),
         );
         s.history.push({ ...result, at: new Date().toISOString() });
       });

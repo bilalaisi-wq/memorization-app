@@ -164,3 +164,7 @@ Learning XP now covers practice interactions, Quest, recall, every Lab game, cha
 ## Juz 29 and payments
 
 [Juz 29 private deployment and developer preview](docs/juz-29-setup.md) covers all 11 surahs / 431 ayahs, server-authorized preview, and saved menu ordering. [Stripe quick start](docs/stripe-quick-start.md) provides the dashboard and deployment steps for test purchases. Private content must be uploaded before live playback is available.
+
+## Falling Words 2.0
+
+[Hybrid Stack + Tower gameplay and implementation notes](docs/falling-words.md): seven tetrominoes, single-ayah and chain journeys, Classic/Practice strikes, Hold, audio choices and bounded rewards. No Supabase migration is required.

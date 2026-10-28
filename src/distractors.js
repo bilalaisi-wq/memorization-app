@@ -15,6 +15,8 @@ export const distractorWords = surahs.flatMap((surah) =>
     art: verse.meanings[i][1],
     audio: wordAudio(verse.id, i, surah.id),
     surah: surah.id,
+    ayah: verse.id,
+    position: i,
     source: `${surah.name} ${surah.id}:${verse.id}`,
   }))),
 );

@@ -1,3 +1,4 @@
+import { mountFalling } from "./falling-ui.js";
 import { labMemoryTips } from "../ui/memory-tips.js";
 import {
   successCue,
@@ -70,7 +71,9 @@ export function mountPuzzleLab(
     muted = localStorage.getItem("ayah-lab-muted") === "true",
     choiceEntries = [],
     pendingAudio = [],
-    pauseGame = () => {};
+    pauseGame = () => {},
+    fallingControl = null,
+    arcadeMeta = null;
   const say = (text) => {
     status.textContent = text;
     status.dataset.tone = "info";
@@ -157,6 +160,7 @@ export function mountPuzzleLab(
         mistakes,
         hinted,
         xp: reward.xp,
+        ...(arcadeMeta ? {arcade:arcadeMeta} : {}),
       });
       done = true;
       root.querySelector("#lab-retry-save").hidden = true;
@@ -193,6 +197,8 @@ export function mountPuzzleLab(
     const changedMode = next !== game;
     stopEncouragement();
     gameCleanup?.();
+    fallingControl = null;
+    arcadeMeta = null;
     stopAudio();
     pauseGame = () => {};
     game = next;
@@ -258,185 +264,22 @@ export function mountPuzzleLab(
     if (changedMode) transitionCue();
   }
   function falling() {
-    const entries = wordChoices(surah, verse, level + 2);
-    let queue = shuffled(entries.length),
-      cursor = 0,
-      lane = 0,
-      y = 0,
-      paused = false,
-      placed = Array(verse.words.length).fill(null),
-      disposedGame = false;
-    const timed = root.querySelector("#lab-timed").checked;
-    area.innerHTML = `<h3>Falling Words</h3><p>Position 1 is on the right. Move a correct word to its slot. Discard words that do not belong to this ayah. ${timed ? "Blocks descend gently and wait at the bottom; there is no penalty for slow placement." : "Untimed: use ↓ to lower the block whenever you are ready."}</p><div class="falling-scroll"><div class="falling-stage" tabindex="0" role="region" aria-label="Falling word board" aria-keyshortcuts="ArrowLeft ArrowRight ArrowDown Space Delete D" style="--slots:${verse.words.length};min-width:${verse.words.length * 72}px"><div class="falling-block arabic" lang="ar" dir="rtl" role="status" aria-live="polite"></div><div class="falling-slots" dir="rtl">${verse.words.map((_, i) => `<button data-slot="${i}" aria-label="Place in position ${i + 1} from the right"><span>${i + 1}</span></button>`).join("")}</div></div></div><div class="falling-controls"><button class="text-button" id="fall-left" aria-label="Move block left">← Left</button><button class="text-button" id="fall-down">↓ Lower</button><button class="primary small" id="fall-place">Place · Space</button><button class="text-button" id="fall-right" aria-label="Move block right">Right →</button><button class="text-button" id="fall-discard">Discard word · D</button><button class="text-button" id="fall-pause">Pause</button><button class="text-button" id="fall-listen">♫ Hear this word</button></div><p class="falling-counter"></p>`;
-    const stage = area.querySelector(".falling-stage"),
-      block = area.querySelector(".falling-block");
-    let announcedCursor = -1;
-    const paint = () => {
-      if (disposedGame || done || cursor >= queue.length) return;
-      const index = queue[cursor],
-        hidden = level >= 3 || (level === 2 && cursor % 2 === 0);
-      if (announcedCursor !== cursor) {
-        announcedCursor = cursor;
-        playAudio(entries[index].audio, false, true);
-      }
-      const text = hidden ? "؟" : entries[index].text;
-      if (block.textContent !== text) block.textContent = text;
-      block.dataset.index = index;
-      block.dataset.lane = lane;
-      block.style.right = `${(lane / verse.words.length) * 100}%`;
-      block.style.width = `${100 / verse.words.length}%`;
-      block.style.top = `${12 + y * 1.9}px`;
-      area.querySelector(".falling-counter").textContent =
-        `${placed.filter((x) => x !== null).length} / ${verse.words.length} words placed · ${queue.length - cursor} blocks left · ${paused ? "Paused" : "Ready"}`;
-      area.querySelector("#fall-pause").textContent = paused
-        ? "Resume"
-        : "Pause";
-    };
-    const pause = () => {
-      paused = true;
-      paint();
-    };
-    pauseGame = pause;
-    const move = (delta) => {
-      if (paused || done) return;
-      lane = Math.max(0, Math.min(verse.words.length - 1, lane + delta));
-      paint();
-      block.scrollIntoView({ block: "nearest", inline: "nearest" });
-    };
-    const place = (target = lane) => {
-      if (paused || done) return;
-      lane = target;
-      const source = queue[cursor];
-      if (source >= verse.words.length) {
-        fail(
-          "This word is from another ayah. Discard it instead of placing it.",
-        );
-        y = 0;
-        paint();
-        return;
-      }
-      if (placed[lane] !== null) {
-        fail("That position is already filled. Choose an empty slot.");
-        paint();
-        return;
-      }
-      if (verse.words[source] !== verse.words[lane]) {
-        fail("That word belongs in another position. Try again.");
-        y = 0;
-        paint();
-        return;
-      }
-      placed[lane] = source;
-      const slot = area.querySelector(`[data-slot="${lane}"]`);
-      slot.classList.add("slot-filled");
-      slot.innerHTML = `<span class="arabic" lang="ar" dir="rtl">${esc(verse.words[source])}</span>`;
-      cursor++;
-      y = 0;
-      say(`Position ${lane + 1} fits!`);
-      if (cursor === queue.length) {
-        block.hidden = true;
-        finish();
-        return;
-      }
-      paint();
-      successCue(`${session}:position:${lane}`, "That word fits!");
-    };
-    area
-      .querySelectorAll("[data-slot]")
-      .forEach((b) => (b.onclick = () => place(Number(b.dataset.slot))));
-    const discard = () => {
-      if (paused || done) return;
-      if (queue[cursor] < verse.words.length) {
-        fail("This word belongs to the ayah. Keep it and choose its position.");
-        return;
-      }
-      cursor++;
-      y = 0;
-      say("Extra word set aside. Keep looking for the ayah’s words.");
-      if (cursor === queue.length) {
-        block.hidden = true;
-        finish();
-        return;
-      }
-      paint();
-    };
-    area.querySelector("#fall-discard").onclick = discard;
-    area.querySelector("#fall-left").onclick = () => move(1);
-    area.querySelector("#fall-right").onclick = () => move(-1);
-    area.querySelector("#fall-down").onclick = () => {
-      if (!paused) {
-        y = Math.min(100, y + 20);
-        paint();
-      }
-    };
-    area.querySelector("#fall-place").onclick = () => place();
-    area.querySelector("#fall-pause").onclick = () => {
-      if (paused) stopAudio();
-      paused = !paused;
-      paint();
-    };
-    area.querySelector("#fall-listen").onclick = () =>
-      playAudio(entries[queue[cursor]].audio, true);
-    stage.onkeydown = (event) => {
-      if (
-        ![
-          "ArrowLeft",
-          "ArrowRight",
-          "ArrowDown",
-          " ",
-          "d",
-          "D",
-          "Delete",
-        ].includes(event.key)
-      )
-        return;
-      if (event.target.tagName === "BUTTON" && event.key === " ") return;
-      event.preventDefault();
-      if (event.key === "ArrowLeft") move(1);
-      if (event.key === "ArrowRight") move(-1);
-      if (event.key === "ArrowDown" && !paused) {
-        y = Math.min(100, y + 20);
-        paint();
-      }
-      if (event.key === " ") place();
-      if (["d", "D", "Delete"].includes(event.key)) discard();
-    };
-    let dragging = false;
-    block.onpointerdown = (e) => {
-      if (paused || done) return;
-      dragging = true;
-      block.setPointerCapture(e.pointerId);
-    };
-    block.onpointermove = (e) => {
-      if (!dragging) return;
-      const r = stage.getBoundingClientRect();
-      lane = Math.max(
-        0,
-        Math.min(
-          verse.words.length - 1,
-          Math.floor(((r.right - e.clientX) / r.width) * verse.words.length),
-        ),
-      );
-      paint();
-    };
-    block.onpointerup = () => {
-      if (dragging) {
-        dragging = false;
-        place();
-      }
-    };
-    const timer = setInterval(() => {
-      if (!paused && !done && timed) {
-        y = Math.min(100, y + 1.25);
-        paint();
-      }
-    }, 100);
-    paint();
-    gameCleanup = () => {
-      disposedGame = true;
-      clearInterval(timer);
-      stage.onkeydown = null;
-    };
+    const control = mountFalling(area, {
+      surah, verse, level, muted: () => muted, say,
+      onScope(target) { resultKey=target;session=uid(); },
+      onFinish(meta) { arcadeMeta=meta; mistakes=meta.errors.length; hinted ||= meta.usedAudio; finish(); },
+      onFailure(meta) {
+        try {
+          lab.record({key:resultKey,sessionId:`${session}:failed:${uid()}`,game:"falling",mistakes:meta.errors.length,hinted:true,xp:0,arcade:meta});
+          return true;
+        } catch(e) { say(`Your attempt could not be saved: ${e.message}`); return false; }
+      },
+      onExit: () => callbacks.onStudy(key),
+    });
+    fallingControl=control;
+    pauseGame=()=>control.pause();
+    gameCleanup=()=>control.dispose();
+    if(root.querySelector("#lab-timed").checked)control.timed(true);
   }
   function vanishing() {
     const fraction = [0.25, 0.5, 0.75, 1][level - 1],
@@ -947,12 +790,13 @@ export function mountPuzzleLab(
   root.querySelector("#lab-timed").onchange = () => start();
   root.querySelector("#lab-restart").onclick = () => start();
   root.querySelector("#lab-replay").onclick = () =>
-    playAudio(referenceAudio, true);
+    fallingControl ? fallingControl.listen() : playAudio(referenceAudio, true);
   const muteButton = root.querySelector("#lab-mute");
   const updateMute = () => {
     muteButton.textContent = muted ? "Unmute audio" : "Mute audio";
     muteButton.setAttribute("aria-pressed", String(muted));
     if (audio) audio.muted = muted;
+    fallingControl?.mute();
   };
   muteButton.onclick = () => {
     muted = !muted;

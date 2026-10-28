@@ -98,43 +98,28 @@ test("Falling Words rejects wrong blocks, refuses to discard targets, and plays 
 }) => {
   await open(page);
   const n = 4;
-  while (
-    Number(await page.locator(".falling-block").getAttribute("data-index")) < n
-  ) {
-    const index = await page
-      .locator(".falling-block")
-      .getAttribute("data-index");
-    await page.locator(`[data-slot="${index}"]`).click();
+  // Find a source-backed decoy before finishing the ayah; do not rely on a trailing queue.
+  let found=false;
+  for(let attempt=0;attempt<20;attempt++){
+    if(Number(await page.locator('.falling-block').getAttribute('data-index'))>=n){found=true;break;}
+    await page.locator('#lab-restart').click();
   }
-  const filled = await page.locator(".slot-filled").count();
+  expect(found).toBe(true);
   await page.locator('[data-slot="0"]').click();
-  await expect(page.locator("[data-status]")).toContainText("another ayah");
-  await expect(page.locator(".slot-filled")).toHaveCount(filled);
-  await page.waitForTimeout(30);
-  await page.evaluate(() => { window.played = []; });
-  await page.locator("#fall-listen").click();
-  await expect.poll(() => page.evaluate(() => window.played.length)).toBe(1);
-  expect(await page.evaluate(() => window.played[0])).not.toContain("/001_");
-  await page.locator("#fall-pause").click();
-  await page.locator(".falling-stage").focus();
-  await page.keyboard.press("Delete");
+  await expect(page.locator('[data-status]')).toContainText('another ayah');
+  // The current word may advance after an incorrect choice. Every occurrence has audio.
+  await page.evaluate(()=>{window.played=[];});
+  await page.locator('#fall-listen').click();
+  await expect.poll(()=>page.evaluate(()=>window.played.length)).toBe(1);
+  await page.locator('#fall-stop-listening').click();
   await noReward(page);
-  await page.locator("#lab-restart").click();
-  while (
-    Number(await page.locator(".falling-block").getAttribute("data-index")) >= n
-  )
-    await page.locator("#fall-discard").click();
-  const target = await page
-    .locator(".falling-block")
-    .getAttribute("data-index");
-  await page.locator("#fall-discard").click();
-  await expect(page.locator(".falling-block")).toHaveAttribute(
-    "data-index",
-    target,
-  );
-  await expect(page.locator("[data-status]")).toContainText(
-    "belongs to the ayah",
-  );
+  await page.locator('#lab-restart').click();
+  while(Number(await page.locator('.falling-block').getAttribute('data-index'))>=n)await page.locator('#fall-discard').click();
+  const target=await page.locator('.falling-block').getAttribute('data-index');
+  await page.locator('#fall-discard').click();
+  await expect(page.locator('.falling-block')).toHaveAttribute('data-index',target);
+  await expect(page.locator('[data-status]')).toContainText('belongs to the ayah');
+
 });
 
 test("Vanishing Ayah keeps decoys in the mixed bank and rotates them on fresh rounds", async ({

@@ -277,12 +277,12 @@ test("Falling Words supports RTL keyboard placement, retry feedback and daily XP
   await page.locator("#fall-left").click();
   await expect(page.locator(".falling-block")).toHaveAttribute(
     "data-lane",
-    "1",
+    "2",
   );
   await page.locator("#fall-right").click();
   await expect(page.locator(".falling-block")).toHaveAttribute(
     "data-lane",
-    "0",
+    "3",
   );
   while (
     Number(await page.locator(".falling-block").getAttribute("data-index")) >= 4
@@ -335,11 +335,8 @@ test("timed descent pauses for recitation and resumes only after stopping audio"
   });
   await openLab(page);
   await page.locator("#lab-timed").check();
-  await expect
-    .poll(() =>
-      page.locator(".falling-block").evaluate((e) => parseFloat(e.style.top)),
-    )
-    .toBeGreaterThan(12);
+  const initialTop = await page.locator(".falling-block").getAttribute("style");
+  await expect.poll(() => page.locator(".falling-block").getAttribute("style")).not.toBe(initialTop);
   await page.locator("#lab-replay").click();
   await expect(page.locator(".falling-counter")).toContainText("Paused");
   const top = await page.locator(".falling-block").getAttribute("style");
@@ -410,6 +407,7 @@ test.describe("touch layout", () => {
     await openLab(page);
     const n = 4;
     for (let i = 0; i < n + 3; i++) {
+      if(await page.locator(".tower-victory").count()) break;
       const index = await page
         .locator(".falling-block")
         .getAttribute("data-index");
@@ -500,6 +498,7 @@ test("a failed Lab history write can be retried without awarding XP twice", asyn
   }, LAB_KEY);
   await openLab(page);
   for (let i = 0; i < 7; i++) {
+    if(await page.locator(".tower-victory").count()) break;
     const index = await page
       .locator(".falling-block")
       .getAttribute("data-index");

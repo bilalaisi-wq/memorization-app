@@ -7,6 +7,7 @@ test('success artwork cycles, accepts future manifest images, and respects reduc
   const manifest = page.waitForResponse('**/celebrations.json');
   await page.goto('/');
   await manifest;
+  await expect(page.locator("#build-all")).toBeVisible();
   await page.waitForTimeout(50);
   for (const [i, name] of ['one','two','three','one'].entries()) {
     await page.evaluate(async id => (await import('/src/ui/encouragement.js')).successCue(id), `art-${i}`);

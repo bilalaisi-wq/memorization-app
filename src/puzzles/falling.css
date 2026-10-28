@@ -1,0 +1,374 @@
+.tower-heading h3 {
+  font-size: 28px;
+}
+.tower-settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+  padding: 20px;
+  background: #eaf1ec;
+  border-radius: 20px;
+}
+.tower-settings label {
+  display: grid;
+  gap: 7px;
+}
+.tower-settings select,
+.tower-settings input {
+  width: 100%;
+  min-height: 44px;
+  max-width: 100%;
+}
+.tower-hud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  padding: 20px 0;
+}
+.tower-strikes {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+.tower-strikes b {
+  font-size: 26px;
+  color: #8a9f9c;
+}
+.tower-strikes .used {
+  color: #db4b5c;
+}
+.tower-layout {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) minmax(240px, 340px);
+  gap: 20px;
+  align-items: end;
+}
+.tower-board.falling-stage {
+  width: 100%;
+  height: 360px;
+  min-width: 0 !important;
+  border: 2px solid #c6ae68;
+  border-radius: 16px;
+  background-color: #101c36;
+  background-image:
+    linear-gradient(#ffffff0b 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff0b 1px, transparent 1px);
+  background-size: 10% 5.5556%;
+  position: relative;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+.tetromino-cell {
+  position: absolute;
+  left: calc(var(--x) * 10%);
+  top: calc(var(--y) * 100% / 18);
+  width: 10%;
+  height: calc(100% / 18);
+  border: 2px solid #ffffff70;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background: #20ab91;
+  box-shadow: inset 2px 2px 4px #ffffff60;
+  transition:
+    top 0.08s,
+    left 0.08s;
+}
+.shape-I {
+  --piece: #52c4e0;
+}
+.shape-O {
+  --piece: #e7c451;
+}
+.shape-T {
+  --piece: #b68bdb;
+}
+.shape-S {
+  --piece: #69bd8a;
+}
+.shape-Z {
+  --piece: #e78b84;
+}
+.shape-J {
+  --piece: #699cdd;
+}
+.shape-L {
+  --piece: #e6ad6e;
+}
+.tetromino-cell {
+  background: var(--piece, #20ab91);
+}
+.tetromino-cell.ghost {
+  background: transparent;
+  border: 2px dashed #e5dba277;
+  box-shadow: none;
+}
+.tetromino-cell.locked {
+  filter: saturate(0.7);
+}
+.tower-label.falling-block {
+  position: absolute;
+  width: auto;
+  max-width: 95%;
+  min-width: 110px;
+  white-space: nowrap;
+  font-family: Uthmanic, serif;
+  font-size: 32px;
+  line-height: 1.8;
+  color: #fff;
+  background: #102c39ed;
+  border: 1px solid #e6d094;
+  border-radius: 10px;
+  padding: 0 10px;
+  z-index: 3;
+  pointer-events: none;
+  transform: none;
+  transition:
+    top 0.1s,
+    left 0.1s;
+}
+.tower-controls.falling-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 18px 0;
+}
+.tower-controls button,
+.tower-game-over button {
+  min-height: 46px;
+  min-width: 48px;
+  border: 1px solid #9eaa99;
+  border-radius: 12px;
+  padding: 8px 13px;
+  color: #173f38;
+  background: #eff5eb;
+  font: inherit;
+  cursor: pointer;
+}
+.tower-controls button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.tower-construction {
+  padding: 18px;
+  background: #f4f5e9;
+  border-radius: 18px;
+}
+.tower-construction .arabic {
+  font-size: 34px;
+  line-height: 2.1;
+  overflow-wrap: anywhere;
+}
+.tower-construction .falling-slots {
+  position: static;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tower-construction [data-slot] {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 5px 10px;
+  font-family: Uthmanic, serif;
+  font-size: 24px;
+}
+.tower-floors {
+  max-height: 360px;
+  overflow: auto;
+}
+.tower-floors > div {
+  padding: 10px;
+  border: 1px solid #bbaa69;
+  border-radius: 14px;
+  margin: 8px 0;
+  background: #e4ede3;
+}
+.tower-floors p {
+  font-family: Uthmanic, serif;
+  font-size: 24px;
+  line-height: 1.9;
+}
+.tower-overlay {
+  position: absolute;
+  inset: 35% 8% auto;
+  background: #102c39ee;
+  color: #f9e7a8;
+  text-align: center;
+  padding: 15px;
+  z-index: 5;
+  border-radius: 16px;
+}
+.tower-game-over,
+.tower-victory {
+  border: 2px solid #cb9b54;
+  padding: 22px;
+  border-radius: 18px;
+  margin-top: 18px;
+}
+.tower-game-over {
+  border-color: #c76464;
+}
+.tower-layout.correct .locked {
+  animation: tower-shimmer 0.5s;
+}
+.tower-layout.mistake {
+  animation: tower-shake 0.25s;
+}
+.tower-layout.floor {
+  animation: tower-rise 0.6s;
+}
+@keyframes tower-shimmer {
+  50% {
+    filter: brightness(1.5);
+  }
+}
+@keyframes tower-shake {
+  25%,
+  75% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+@keyframes tower-rise {
+  from {
+    transform: translateY(30px);
+    opacity: 0.2;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+[data-theme="night-sky"] .tower-settings,
+[data-theme="night-sky"] .tower-construction,
+[data-theme="night-sky"] .tower-floors > div {
+  background: #162342;
+  color: #f3e8c8;
+}
+[data-theme="night-sky"] .tower-controls button {
+  background: #233851;
+  color: #f3e8c8;
+}
+@media (max-width: 600px) {
+  .tower-layout {
+    grid-template-columns: 1fr;
+  }
+  .tower-board.falling-stage {
+    max-width: 340px;
+    margin: auto;
+  }
+  .tower-floors {
+    max-height: 150px;
+    display: flex;
+    gap: 8px;
+  }
+  .tower-floors > div {
+    min-width: 120px;
+  }
+  .tower-settings {
+    padding: 12px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .tower-label.falling-block {
+    font-size: 30px;
+  }
+  .tower-hud {
+    gap: 10px;
+  }
+  .tower-strikes {
+    margin-left: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tower-game * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.tower-game-over {
+  max-width: min(90vw, 520px);
+  background: #fffaf0;
+  color: #173f38;
+}
+.tower-game-over::backdrop {
+  background: #07142bb8;
+}
+.tower-game-over button {
+  margin: 8px 8px 0 0;
+}
+.tower-board:focus-visible {
+  outline: 3px solid #dfbd5d;
+  outline-offset: 3px;
+}
+
+.tower-board.falling-stage {
+  height: auto;
+  aspect-ratio: 10 / 18;
+  max-width: 300px;
+}
+.tower-label.falling-block {
+  width: 90%;
+  max-width: 90%;
+  min-width: 0;
+  min-height: 0;
+  overflow-wrap: normal;
+  cursor: default;
+}
+.tower-layout {
+  grid-template-columns: minmax(110px, 1fr) minmax(240px, 300px);
+}
+@media (max-width: 600px) {
+  .tower-layout {
+    grid-template-columns: 1fr;
+  }
+  .tower-board.falling-stage {
+    max-width: 270px;
+  }
+}
+
+.tower-layout {
+  grid-template-columns: minmax(180px, 240px) minmax(240px, 300px);
+  justify-content: center;
+  align-items: start;
+}
+.tower-settings > button {
+  align-self: end;
+  min-height: 44px;
+  font-size: 14px;
+}
+.tower-label.falling-block {
+  border-color: var(--piece, #e6d094);
+}
+.tower-overlay {
+  inset: auto 6% 8px;
+}
+.tower-strikes {
+  align-items: center;
+  font-size: 14px;
+}
+@media (max-width: 600px) {
+  .tower-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+[data-theme="night-sky"] .tower-game-over {
+  background: #162342;
+  color: #f3e8c8;
+}
+@media (max-width: 600px) {
+  .tower-controls.falling-controls {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .tower-controls button {
+    min-width: 0;
+    padding: 8px 5px;
+    font-size: 13px;
+    overflow-wrap: normal;
+  }
+}

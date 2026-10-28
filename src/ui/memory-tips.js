@@ -1,5 +1,5 @@
 export const labMemoryTips = {
-  falling: 'Listen to each arriving block and repeat it aloud. Say the word again as you move it to the correct position; discard words from another ayah.',
+  falling: 'Say each word aloud as you move its tetromino. Use Hear this word to echo the reciter, build in recitation order, and discard words from other ayahs. Silent Stack leaves audio under your control.',
   vanishing: 'Say the missing word before choosing a piece. Listen to its pronunciation, repeat it, then recite the complete phrase aloud.',
   jigsaw: 'Read each word group aloud, then practice the join between neighboring groups. Listen and repeat the full phrase after connecting them.',
   match: 'Say the word when you turn its card. Connect its sound with its meaning or continuation, then repeat the matched pair aloud.',
