@@ -66,7 +66,10 @@ export function landing(state) {
 const empty = () => Array.from({ length: ROWS }, () => Array(COLS).fill(null));
 function spawn(s, entry) {
   s.current = { entry, shape: entry?.shape || "T", rotation: 0, x: 3, y: 0 };
-  if (entry && collides(s.board, s.current)) s.board = empty();
+  if (entry && collides(s.board, s.current)) {
+    s.board = empty();
+    s.boardEpoch++;
+  }
 }
 export function createFalling({
   words,
@@ -106,6 +109,8 @@ export function createFalling({
     hold: null,
     board: empty(),
     accepted: [],
+    placements: [],
+    boardEpoch: 0,
     strikes: 0,
     errors: [],
     score: 0,
@@ -160,7 +165,7 @@ export function stepFalling(state, action) {
   }
   if (action.type === "tick" || action.type === "soft") {
     if (!collides(s.board, { ...p, y: p.y + 1 })) p.y++;
-    // Rest at contact until deliberate confirmation: audio/gravity never causes a strike.
+    else return stepFalling(s, { type: "drop" });
     return s;
   }
   if (action.type === "hold") {
@@ -171,24 +176,34 @@ export function stepFalling(state, action) {
     s.event = "hold";
     return s;
   }
-  if (!["drop", "discard"].includes(action.type)) return state;
+  if (action.type !== "drop") return state;
   const e = p.entry,
     next = s.accepted.length;
+  const landed = landing(s);
+  const side =
+    action.slot === undefined && cells(landed).every(([x]) => x < 3 || x > 6);
+  if (side) {
+    s.placements.push({
+      entry: e,
+      piece: landed,
+      kind: "side",
+      epoch: s.boardEpoch,
+    });
+    for (const [x, y] of cells(landed)) s.board[y][x] = e.shape;
+    if (e.target) s.queue.unshift(e);
+    else s.score += 10;
+    s.event = "parked";
+    advance(s);
+    return s;
+  }
   const wrong =
-    action.type === "discard"
-      ? e.target
-      : !e.target ||
-        e.text !== s.words[next] ||
-        (action.slot !== undefined && action.slot !== next);
+    !e.target ||
+    e.text !== s.words[next] ||
+    (action.slot !== undefined && action.slot !== next);
   if (wrong) {
     s.strikes++;
     s.errors.push({
-      kind:
-        action.type === "discard"
-          ? "required-rejected"
-          : e.target
-            ? "sequence"
-            : "distractor-placed",
+      kind: e.target ? "sequence" : "distractor-placed",
       surah: e.surah,
       ayah: e.ayah,
       position: e.position,
@@ -205,13 +220,12 @@ export function stepFalling(state, action) {
     advance(s);
     return s;
   }
-  if (action.type === "discard") {
-    s.score += 10;
-    s.event = "discard";
-    advance(s);
-    return s;
-  }
-  const landed = landing(s);
+  s.placements.push({
+    entry: e,
+    piece: landed,
+    kind: "sequence",
+    epoch: s.boardEpoch,
+  });
   for (const [x, y] of cells(landed)) s.board[y][x] = e.shape;
   s.accepted.push(s.words[next]);
   s.locks++;

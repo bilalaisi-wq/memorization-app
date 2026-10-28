@@ -372,3 +372,9 @@
     overflow-wrap: normal;
   }
 }
+
+.tower-board{isolation:isolate}.tower-board::before{content:"AYAH SEQUENCE";position:absolute;inset:0 30%;border-inline:2px solid #6dd7ac88;background:#27856824;color:#9de1bf;font:10px sans-serif;text-align:center;padding-top:4px;z-index:-1}.tower-board::after{content:"SIDE PARKING";position:absolute;bottom:8px;left:4px;color:#c5b782;font:9px sans-serif}.tower-next-step{margin:18px 0;padding:22px;border:2px solid #c8aa62;border-radius:18px;background:#edf5e8}.tower-next-step button{min-height:48px;margin:8px;padding:10px 16px;border:1px solid #6d9d8c;border-radius:12px;font:inherit}.tower-settings>button{font-size:18px}[data-theme="night-sky"] .tower-next-step{background:#162342;color:#f3e8c8}
+
+.tower-settled-word{position:absolute;z-index:2;max-width:98%;white-space:nowrap;font-family:Uthmanic,serif;font-size:18px;line-height:1.5;padding:1px 4px;border-radius:5px;background:#0c2039df;color:#fff6d9;pointer-events:none}.tower-parking-words span{display:inline-block;font-family:Uthmanic,serif;font-size:25px;line-height:1.9;padding:2px 7px;margin:3px;border:1px solid #8ea78d;border-radius:8px}
+
+.tower-parking-words p{font-family:inherit;font-size:14px;line-height:1.5;margin:8px 0}.tower-hold{order:-1}@media(min-width:601px){.tower-floors{display:flex;flex-direction:column;max-height:540px}.tower-floors .tower-hold{position:sticky;top:0;z-index:4}}

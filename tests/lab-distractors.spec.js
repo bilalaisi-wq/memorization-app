@@ -1,3 +1,4 @@
+import {startFalling,parkExtra} from "./falling-helper.js";
 import { menu } from "./menu-helper.js";
 import { test, expect } from "@playwright/test";
 import { existsSync } from "node:fs";
@@ -93,33 +94,14 @@ test("foreign word groups and ayahs are unchanged contiguous verified passages w
   }
 });
 
-test("Falling Words rejects wrong blocks, refuses to discard targets, and plays foreign audio", async ({
-  page,
-}) => {
-  await open(page);
-  const n = 4;
-  // Find a source-backed decoy before finishing the ayah; do not rely on a trailing queue.
-  let found=false;
-  for(let attempt=0;attempt<20;attempt++){
-    if(Number(await page.locator('.falling-block').getAttribute('data-index'))>=n){found=true;break;}
-    await page.locator('#lab-restart').click();
-  }
-  expect(found).toBe(true);
-  await page.locator('[data-slot="0"]').click();
-  await expect(page.locator('[data-status]')).toContainText('another ayah');
-  // The current word may advance after an incorrect choice. Every occurrence has audio.
-  await page.evaluate(()=>{window.played=[];});
-  await page.locator('#fall-listen').click();
-  await expect.poll(()=>page.evaluate(()=>window.played.length)).toBe(1);
-  await page.locator('#fall-stop-listening').click();
-  await noReward(page);
-  await page.locator('#lab-restart').click();
-  while(Number(await page.locator('.falling-block').getAttribute('data-index'))>=n)await page.locator('#fall-discard').click();
-  const target=await page.locator('.falling-block').getAttribute('data-index');
-  await page.locator('#fall-discard').click();
-  await expect(page.locator('.falling-block')).toHaveAttribute('data-index',target);
-  await expect(page.locator('[data-status]')).toContainText('belongs to the ayah');
-
+test("Falling Words parks foreign words safely and still plays their verified audio",async({page})=>{
+ await open(page);await startFalling(page);
+ for(let i=0;i<20&&Number(await page.locator('.falling-block').getAttribute('data-index'))<4;i++){await page.locator('#lab-restart').click();await startFalling(page);}
+ expect(Number(await page.locator('.falling-block').getAttribute('data-index'))).toBeGreaterThanOrEqual(4);
+ await page.evaluate(()=>window.played=[]);await page.locator('#fall-listen').click();
+ await expect.poll(()=>page.evaluate(()=>window.played.length)).toBe(1);
+ await page.locator('#fall-stop-listening').click();await parkExtra(page);
+ await expect(page.locator('.tower-strikes .used')).toHaveCount(0);await noReward(page);
 });
 
 test("Vanishing Ayah keeps decoys in the mixed bank and rotates them on fresh rounds", async ({

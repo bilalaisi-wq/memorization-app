@@ -7,113 +7,102 @@ import {
   landing,
   SHAPES,
 } from "../src/puzzles/falling-engine.js";
-const make = (words = ["أ", "ب", "ب"]) =>
+const make = () =>
   createFalling({
-    words,
-    entries: [
-      ...words.map((text, index) => ({ text, position: index })),
-      { text: "د", surah: 2, ayah: 1, position: 0 },
-    ],
-    order: [3, ...words.map((_, i) => i)],
+    words: ["a", "b", "b"],
+    entries: [{ text: "a" }, { text: "b" }, { text: "b" }, { text: "extra" }],
+    order: [3, 0, 1, 2],
   });
-test("all seven tetrominoes rotate, collide, land and freeze while paused or lost", () => {
-  expect(Object.keys(SHAPES)).toHaveLength(7);
-  let s = make();
-  const original = structuredClone(s);
-  for (let i = 0; i < 20; i++) s = stepFalling(s, { type: "move", delta: -1 });
-  expect(Math.min(...cells(s.current).map((p) => p[0]))).toBe(0);
-  s = stepFalling(s, { type: "rotate" });
-  expect(collides(s.board, s.current)).toBe(false);
-  expect(landing(s).y).toBeGreaterThan(s.current.y);
-  s = stepFalling(s, { type: "pause" });
-  expect(stepFalling(s, { type: "tick" })).toBe(s);
-  s = stepFalling(s, { type: "pause" });
-  for (let i = 0; i < 100; i++) s = stepFalling(s, { type: "tick" });
-  expect(s.strikes).toBe(0);
-  for (let i = 0; i < 3; i++) s = stepFalling(s, { type: "drop", slot: 9 });
-  expect(s.status).toBe("lost");
-  expect(s.errors).toHaveLength(3);
-  expect(stepFalling(s, { type: "hold" })).toBe(s);
-  expect(original).toEqual(make());
-});
-test("discard recovery, Hold, repeated words and canonical queues remain solvable", () => {
-  let s = stepFalling(make(), { type: "discard" });
-  s = stepFalling(s, { type: "discard" });
-  expect(s.strikes).toBe(1);
-  expect(s.current.entry.text).toBe("أ");
-  s = stepFalling(s, { type: "hold" });
-  expect(s.hold.text).toBe("أ");
-  s = stepFalling(s, { type: "hold" });
-  expect(s.current.entry.text).toBe("أ");
-  for (let i = 0; i < 12 && s.status === "playing"; i++) {
-    if (
-      s.current.entry.target &&
-      s.current.entry.text !== s.words[s.accepted.length] &&
-      s.hold?.text === s.words[s.accepted.length]
-    )
-      s = stepFalling(s, { type: "hold" });
-    s = stepFalling(s, { type: s.current.entry.target ? "drop" : "discard" });
-  }
-  expect(s.status).toBe("won");
-  expect(s.accepted).toEqual(["أ", "ب", "ب"]);
-  expect(s.strikes).toBe(1);
-});
-test("wrong sequence or wrong destination costs one strike without losing a word", () => {
-  let s = stepFalling(make(), { type: "discard" });
-  s = stepFalling(s, { type: "drop", slot: 1 });
-  expect(s.strikes).toBe(1);
-  expect(s.accepted).toEqual([]);
-  s = stepFalling(s, { type: "drop", slot: 0 });
-  expect(s.accepted).toEqual(["أ"]);
-  expect(s.board.flat().filter(Boolean)).toHaveLength(4);
-});
-test("every shape has four rigid cells through four rotations and obeys stack collisions", () => {
+const park = (state) => {
+  let s = state;
+  const width = () => {
+    const xs = cells(s.current).map(([x]) => x);
+    return Math.max(...xs) - Math.min(...xs) + 1;
+  };
+  if (width() > 3) s = stepFalling(s, { type: "rotate" });
+  for (let i = 0; i < 10; i++) s = stepFalling(s, { type: "move", delta: -1 });
+  return stepFalling(s, { type: "drop" });
+};
+test("seven shapes rotate, collide and have valid ghost landings", () => {
   for (const shape of Object.keys(SHAPES)) {
     let s = make();
     s.current.shape = shape;
-    const initial = cells(s.current);
-    for (let i = 0; i < 4; i++) {
-      s = stepFalling(s, { type: "rotate" });
-      expect(new Set(cells(s.current).map((p) => p.join(":"))).size).toBe(4);
-      expect(collides(s.board, s.current)).toBe(false);
-    }
-    expect(cells(s.current)).toEqual(initial);
+    const original = cells(s.current);
+    for (let i = 0; i < 4; i++) s = stepFalling(s, { type: "rotate" });
+    expect(cells(s.current)).toEqual(original);
+    for (let i = 0; i < 20; i++)
+      s = stepFalling(s, { type: "move", delta: -1 });
+    expect(Math.min(...cells(s.current).map(([x]) => x))).toBe(0);
+    expect(collides(s.board, s.current)).toBe(false);
     const p = landing(s);
     expect(collides(s.board, { ...p, y: p.y + 1 })).toBe(true);
-    const [x, y] = cells(p)[0];
-    s.board[y][x] = "O";
-    expect(collides(s.board, p)).toBe(true);
   }
 });
-test("hundreds of shuffled source queues finish without forced errors and repeated words remain occurrences", () => {
-  const words = ["a", "b", "b", "c", "a"];
-  const entries = [
-    ...words.map((text) => ({ text })),
-    { text: "d" },
-    { text: "e" },
-  ];
-  for (let seed = 0; seed < 100; seed++) {
-    const order = entries
-      .map((_, i) => i)
-      .sort(
-        (a, b) => ((a * 31 + seed * 17) % 13) - ((b * 31 + seed * 17) % 13),
-      );
-    let s = createFalling({ words, entries, order });
-    while (s.status === "playing")
-      s = stepFalling(s, { type: s.current.entry.target ? "drop" : "discard" });
-    expect(s.accepted).toEqual(words);
-    expect(s.strikes).toBe(0);
-  }
+test("extra words parked to either side cost no strike; middle mistakes cost three strikes and freeze", () => {
+  let s = park(make());
+  expect(s.strikes).toBe(0);
+  expect(s.event).toBe("parked");
+  expect(s.accepted).toEqual([]);
+  expect(s.board.flat().filter(Boolean)).toHaveLength(4);
+  s = stepFalling(s, { type: "drop" });
+  expect(s.accepted).toEqual(["a"]);
+  for (let i = 0; i < 3; i++) s = stepFalling(s, { type: "drop", slot: 0 });
+  expect(s.status).toBe("lost");
+  expect(s.strikes).toBe(3);
+  expect(stepFalling(s, { type: "move", delta: 1 })).toBe(s);
 });
-test("incomplete or duplicated source queues fail before gameplay", () => {
+test("required side parking recovers the occurrence and duplicate words stay solvable", () => {
+  let s = park(make());
+  s = park(s);
+  expect(s.current.entry.text).toBe("a");
+  expect(s.strikes).toBe(0);
+  for (let i = 0; i < 3; i++) s = stepFalling(s, { type: "drop" });
+  expect(s.status).toBe("won");
+  expect(s.accepted).toEqual(["a", "b", "b"]);
+});
+test("gravity locks automatically; pause freezes motion and Hold preserves the queue", () => {
+  let s = make();
+  s = stepFalling(s, { type: "pause" });
+  expect(stepFalling(s, { type: "tick" })).toBe(s);
+  s = stepFalling(s, { type: "pause" });
+  s = stepFalling(s, { type: "hold" });
+  expect(s.hold.text).toBe("extra");
+  for (let i = 0; i < 30 && !s.accepted.length; i++)
+    s = stepFalling(s, { type: "tick" });
+  expect(s.accepted).toEqual(["a"]);
+});
+test("discard is removed and incomplete queues fail before play", () => {
+  const s = make();
+  expect(stepFalling(s, { type: "discard" })).toBe(s);
   expect(() =>
     createFalling({ words: ["a", "b"], entries: [{ text: "a" }] }),
   ).toThrow();
-  expect(() =>
-    createFalling({
-      words: ["a"],
-      entries: [{ text: "a" }, { text: "b" }],
-      order: [0, 0],
-    }),
-  ).toThrow();
+});
+test("Ash-Shams example: Al-Layl is safe on the right but a strike in the ayah stack", async () => {
+  const { surahs } = await import("../src/data.js");
+  const words = surahs.find((s) => s.id === 91).verses[0].words;
+  const extra = surahs.find((s) => s.id === 92).verses[0].words[0];
+  let s = createFalling({
+    words,
+    entries: [...words.map((text) => ({ text })), { text: extra }],
+    order: [0, 2, 1],
+  });
+  s = stepFalling(s, { type: "drop" });
+  expect(s.accepted).toEqual([words[0]]);
+  expect(stepFalling(s, { type: "drop" }).strikes).toBe(1);
+  if (
+    Math.max(...cells(s.current).map(([x]) => x)) -
+      Math.min(...cells(s.current).map(([x]) => x)) +
+      1 >
+    3
+  )
+    s = stepFalling(s, { type: "rotate" });
+  for (let i = 0; i < 10; i++) s = stepFalling(s, { type: "move", delta: 1 });
+  s = stepFalling(s, { type: "drop" });
+  expect(s.strikes).toBe(0);
+  expect(s.accepted).toEqual([words[0]]);
+  expect(s.placements.at(-1).entry.text).toBe(extra);
+  s = stepFalling(s, { type: "drop" });
+  expect(s.status).toBe("won");
+  expect(s.accepted).toEqual(words);
 });

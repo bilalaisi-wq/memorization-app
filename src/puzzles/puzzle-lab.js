@@ -54,7 +54,7 @@ export function mountPuzzleLab(
   main.append(root);
   const key = `${surah.id}:${verse.id}`,
     recommendation = lab.recommend(key, learning);
-  root.innerHTML = `<div class="lab-intro"><span class="eyebrow">TRY ANOTHER WAY</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>These games practice recognition, word order, and recall cues. Game XP is separate from independent spoken memorization and artwork checkpoints.</p><div class="lab-recommendation"><strong>Suggested next step</strong><p>${esc(recommendation.reason)}</p><button class="primary small" id="lab-recommended">${recommendation.game === "recall" ? "Independent recall assessment" : gameTypes.find((g) => g[0] === recommendation.game)[1]}</button></div></div><div class="lab-menu">${gameTypes.map(([id, title, description]) => `<button data-game="${id}" class="lab-game-card"><strong>${title}</strong><span>${description}</span></button>`).join("")}</div><div class="lab-settings"><label>Difficulty<select id="lab-level"><option value="1">1 · Visible words</option><option value="2">2 · Fewer cues</option><option value="3">3 · Concealed words</option><option value="4">4 · Minimal hints</option></select></label><label class="lab-timed-label"><input type="checkbox" id="lab-timed"> Timed descent (optional)</label><button class="text-button" id="lab-restart">Fresh round</button><button class="text-button" id="lab-replay">♫ Replay ayah</button><button class="text-button" id="lab-mute" aria-pressed="false">Mute audio</button></div><section class="lab-game" aria-label="Puzzle play area"></section><p data-status role="status" aria-live="polite"></p><div class="lab-after"><button class="text-button" id="lab-retry-save" hidden>Retry saving this result</button><button class="primary small" id="lab-next-level" hidden>Try fewer hints →</button><button class="text-button" id="lab-recall">Try independent self-assessment →</button></div>${lab.warning ? `<p role="alert">${esc(lab.warning)}</p>` : ""}`;
+  root.innerHTML = `<div class="lab-intro"><span class="eyebrow">TRY ANOTHER WAY</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>These games practice recognition, word order, and recall cues. Game XP is separate from independent spoken memorization and artwork checkpoints.</p><div class="lab-recommendation"><strong>Suggested next step</strong><p>${esc(recommendation.reason)}</p><button class="primary small" id="lab-recommended">${recommendation.game === "recall" ? "Independent recall assessment" : gameTypes.find((g) => g[0] === recommendation.game)[1]}</button></div></div><div class="lab-menu">${gameTypes.map(([id, title, description]) => `<button data-game="${id}" class="lab-game-card"><strong>${title}</strong><span>${description}</span></button>`).join("")}</div><div class="lab-settings"><label>Difficulty<select id="lab-level"><option value="1">1 · Visible words</option><option value="2">2 · Fewer cues</option><option value="3">3 · Concealed words</option><option value="4">4 · Minimal hints</option></select></label><button class="text-button" id="lab-restart">Fresh round</button><button class="text-button" id="lab-replay">♫ Replay ayah</button><button class="text-button" id="lab-mute" aria-pressed="false">Mute audio</button></div><section class="lab-game" aria-label="Puzzle play area"></section><p data-status role="status" aria-live="polite"></p><div class="lab-after"><button class="text-button" id="lab-retry-save" hidden>Retry saving this result</button><button class="primary small" id="lab-next-level" hidden>Try fewer hints →</button><button class="text-button" id="lab-recall">Try independent self-assessment →</button></div>${lab.warning ? `<p role="alert">${esc(lab.warning)}</p>` : ""}`;
   const area = root.querySelector(".lab-game"),
     status = root.querySelector("[data-status]");
   let resultKey = key,
@@ -142,7 +142,7 @@ export function mountPuzzleLab(
   const finish = () => {
     if (done) return;
     pauseGame();
-    area
+    if (game !== "falling") area
       .querySelectorAll("button:not([data-lab-audio])")
       .forEach((b) => (b.disabled = true));
     try {
@@ -172,11 +172,11 @@ export function mountPuzzleLab(
       say(
         `Challenge complete! +${reward.duplicate ? 0 : reward.xp} game XP. ${reward.xp && !reward.duplicate ? "" : "Today’s reward ceiling for this game is reached. "}This does not certify independent memorization.`,
       );
-      area
+      if (game !== "falling") area
         .querySelectorAll("button:not([data-lab-audio])")
         .forEach((b) => (b.disabled = true));
       root.querySelector("#lab-next-level").hidden =
-        level >= 4 || ["match", "detective"].includes(game);
+        level >= 4 || ["falling", "match", "detective"].includes(game);
     } catch (e) {
       root.querySelector("#lab-retry-save").hidden = false;
       say(e.message + " Your result can be retried without duplicate XP.");
@@ -216,20 +216,14 @@ export function mountPuzzleLab(
       b.classList.toggle("active", b.dataset.game === game);
       b.setAttribute("aria-pressed", String(b.dataset.game === game));
     });
-    root.querySelector(".lab-timed-label").hidden = game !== "falling";
+
     root.querySelector("#lab-next-level").hidden = true;
     root.querySelector("#lab-retry-save").hidden = true;
     const levelControl = root.querySelector("#lab-level");
-    levelControl.closest("label").hidden = ["match", "detective"].includes(
+    levelControl.closest("label").hidden = ["falling", "match", "detective"].includes(
       game,
     );
     const labels = {
-      falling: [
-        "Visible words",
-        "Some concealed",
-        "All concealed",
-        "All concealed",
-      ],
       vanishing: ["25% hidden", "50% hidden", "75% hidden", "100% hidden"],
       jigsaw: [
         "Meanings and transliteration",
@@ -266,7 +260,7 @@ export function mountPuzzleLab(
   function falling() {
     const control = mountFalling(area, {
       surah, verse, level, muted: () => muted, say,
-      onScope(target) { resultKey=target;session=uid(); },
+      onScope(target) { resultKey=target;session=uid(); done=false; },
       onFinish(meta) { arcadeMeta=meta; mistakes=meta.errors.length; hinted ||= meta.usedAudio; finish(); },
       onFailure(meta) {
         try {
@@ -279,7 +273,7 @@ export function mountPuzzleLab(
     fallingControl=control;
     pauseGame=()=>control.pause();
     gameCleanup=()=>control.dispose();
-    if(root.querySelector("#lab-timed").checked)control.timed(true);
+
   }
   function vanishing() {
     const fraction = [0.25, 0.5, 0.75, 1][level - 1],
@@ -787,7 +781,7 @@ export function mountPuzzleLab(
       }),
   );
   root.querySelector("#lab-level").onchange = () => start();
-  root.querySelector("#lab-timed").onchange = () => start();
+
   root.querySelector("#lab-restart").onclick = () => start();
   root.querySelector("#lab-replay").onclick = () =>
     fallingControl ? fallingControl.listen() : playAudio(referenceAudio, true);

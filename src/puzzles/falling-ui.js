@@ -6,31 +6,19 @@ import {
 } from "./falling-engine.js";
 import { wordChoices } from "./lab-choices.js";
 import { shuffled, verseAudio } from "../data.js";
-import { wordIdentity } from "../distractors.js";
 import { esc } from "../ui/dom.js";
 import { studyAudioStart, studyAudioStop } from "../ui/encouragement.js";
 export function mountFalling(
   area,
-  {
-    surah,
-    verse,
-    level,
-    muted,
-    onFinish,
-    onFailure,
-    onExit,
-    say,
-    onChange,
-    onScope,
-  },
+  { surah, verse, muted, onFinish, onFailure, onExit, say, onChange, onScope },
 ) {
   let config = {
       mode: "single",
       first: verse.id,
       last: Math.min(verse.id + 1, surah.verses.length),
       rules: "classic",
-      speed: "relaxed",
-      audio: "silent",
+      speed: "slow",
+      audio: "listen",
     },
     selected = [verse],
     floor = 0,
@@ -47,9 +35,12 @@ export function mountFalling(
     animation = "",
     usedAudio = false,
     recordedErrors = 0;
-  const speeds = { relaxed: 0, slow: 1300, normal: 700, fast: 300 };
+  const speeds = { slow: 1300, normal: 700, fast: 300 };
+  let started = false,
+    awaitingChoice = false,
+    saved = false;
   let lastTick = 0;
-  area.innerHTML = `<div class="tower-heading"><span class="eyebrow">HYBRID STACK + TOWER</span><h3>Falling Words 2.0</h3><p>Drop the next word in recitation order. Set aside words from other ayahs. Speed is optional; puzzle wins do not verify memorization.</p></div><form class="tower-settings"><label>Journey<select name="mode"><option value="single">Single Ayah</option><option value="chain">Ayah Chain</option><option value="marathon">Marathon · Classic</option></select></label><label>First ayah<input name="first" type="number" min="1" max="${surah.verses.length}" value="${config.first}"></label><label>Last ayah<input name="last" type="number" min="1" max="${surah.verses.length}" value="${config.last}"></label><label>Strikes<select name="rules"><option value="classic">Classic · 3 per chain</option><option value="practice">Practice · 3 per ayah</option></select></label><label>Speed<select name="speed"><option value="relaxed">Relaxed · manual descent</option><option value="slow">Slow</option><option value="normal">Normal</option><option value="fast">Fast</option></select></label><label>Recitation<select name="audio"><option value="silent">Silent Stack</option><option value="listen">Listen & Build · loop ayah</option><option value="echo">Echo & Build · listen first</option></select></label><button class="primary small">Start journey</button></form><div class="tower-game"></div>`;
+  area.innerHTML = `<div class="tower-heading"><span class="eyebrow">HYBRID STACK + TOWER</span><h3>Falling Words 2.0</h3><p>Build the ayah in the emerald middle lane. Park extra words in either side lane. Press Start to begin falling blocks and looping recitation.</p></div><form class="tower-settings"><label>Journey<select name="mode"><option value="single">Single Ayah</option><option value="chain">Ayah Chain</option><option value="marathon">Marathon · Classic</option></select></label><label>First ayah<input name="first" type="number" min="1" max="${surah.verses.length}" value="${config.first}"></label><label>Last ayah<input name="last" type="number" min="1" max="${surah.verses.length}" value="${config.last}"></label><label>Strikes<select name="rules"><option value="classic">Classic · 3 per chain</option><option value="practice">Practice · 3 per ayah</option></select></label><label>Speed<select name="speed"><option value="slow">Slow</option><option value="normal">Normal</option><option value="fast">Fast</option></select></label><label>Recitation<select name="audio"><option value="listen">Listen & Build · loop ayah</option><option value="silent">Silent Stack</option><option value="echo">Echo & Build · listen first</option></select></label><button class="primary small">Start</button></form><div class="tower-game"></div>`;
   const root = area.querySelector(".tower-game"),
     form = area.querySelector("form");
   function stopAudio() {
@@ -111,24 +102,8 @@ export function mountFalling(
   function newFloor(strikes = 0) {
     stopAudio();
     failedSaved = false;
-    const v = selected[floor],
-      pool = wordChoices(surah, v, level >= 2 ? 16 : 3);
-    // At higher difficulty prefer source-backed words with similar length/opening sounds.
-    const extra = pool
-      .slice(v.words.length)
-      .sort((a, b) => {
-        const score = (e) =>
-          Math.min(
-            ...v.words.map(
-              (w) =>
-                Math.abs(wordIdentity(w).length - wordIdentity(e.text).length) -
-                (wordIdentity(w)[0] === wordIdentity(e.text)[0] ? 2 : 0),
-            ),
-          );
-        return score(a) - score(b);
-      })
-      .slice(0, level + 2);
-    const entries = [...pool.slice(0, v.words.length), ...extra];
+    const v = selected[floor];
+    const entries = wordChoices(surah, v, 3);
     state = createFalling({
       words: v.words,
       entries,
@@ -137,10 +112,13 @@ export function mountFalling(
     state.strikes = strikes;
     lastTick = Date.now();
     paint();
-    startAudio();
+    if (started) startAudio();
   }
   function start() {
     clearTimeout(transitionTimer);
+    started = true;
+    awaitingChoice = false;
+    saved = false;
     floor = 0;
     floors = [];
     runErrors = [];
@@ -148,14 +126,25 @@ export function mountFalling(
     recordedErrors = 0;
     onScope?.(`${surah.id}:${selected[0].id}`);
     newFloor();
+    root.querySelector(".falling-stage")?.focus({ preventScroll: true });
   }
   function send(action) {
-    if (disposed || listening || echo || state?.status === "transition") return;
-    if (action.type === "pause" && state?.paused) stopAudio();
+    if (
+      disposed ||
+      !started ||
+      awaitingChoice ||
+      listening ||
+      echo ||
+      state?.status === "transition"
+    )
+      return;
     const previous = state;
     state = stepFalling(state, action);
     if (state === previous) return;
-    if (["move", "rotate", "tick", "soft"].includes(action.type)) {
+    if (
+      ["move", "rotate", "tick", "soft"].includes(action.type) &&
+      !state.event
+    ) {
       paintMotion();
       return;
     }
@@ -171,8 +160,12 @@ export function mountFalling(
         e.kind === "required-rejected"
           ? "This word belongs to the ayah. It will return."
           : e.kind === "distractor-placed"
-            ? "This word is from another ayah. Discard it instead."
+            ? "That word does not belong in the middle sequence. Park it in a side lane."
             : "That word belongs in another position. Build in recitation order.",
+      );
+    } else if (state.event === "parked") {
+      say(
+        "Parked safely to the side. Required words return so you can build the sequence.",
       );
     } else if (state.event === "correct") {
       animation = "correct";
@@ -194,23 +187,12 @@ export function mountFalling(
         reference: `${surah.id}:${selected[floor].id}`,
         words: [...state.accepted],
       });
-      if (floor + 1 < selected.length) {
-        const strikes = config.rules === "classic" ? state.strikes : 0;
-        state.status = "transition";
-        paint();
-        transitionTimer = setTimeout(
-          () => {
-            if (disposed) return;
-            floor++;
-            animation = "floor";
-            newFloor(strikes);
-          },
-          matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 650,
-        );
-        return;
+      awaitingChoice = true;
+      if (floor + 1 === selected.length && !saved) {
+        saved = true;
+        onFinish(metadata(true));
       }
       paint();
-      onFinish(metadata(true));
       return;
     }
     paint();
@@ -228,6 +210,7 @@ export function mountFalling(
       audio: config.audio,
       references: selected.map((v) => `${surah.id}:${v.id}`),
       floors: floors.map((f) => f.reference),
+      wordVisibility: "always",
       score: floor * 1000 + (state?.score || 0),
       errors: [...runErrors],
     };
@@ -274,8 +257,6 @@ export function mountFalling(
       over = state.status === "lost",
       won = state.status === "won",
       busy = listening || echo;
-    const hidden =
-      level >= 3 || (level === 2 && state.accepted.length % 2 === 0);
     const labelY = labelPosition();
     const drawCells = (p, kind) =>
       cells(p)
@@ -293,7 +274,20 @@ export function mountFalling(
         ),
       )
       .join("");
-    root.innerHTML = `<div class="tower-hud"><strong>${esc(surah.name)} · Ayah ${v.id}</strong><span>Floor ${floor + 1} / ${selected.length}</span><span>Arcade ${metadata(false).score} · separate from XP</span><span class="tower-strikes" aria-label="${state.strikes} of 3 strikes">Strikes ${[0, 1, 2].map((i) => `<b class="${i < state.strikes ? "used" : ""}">${i < state.strikes ? "✕" : "○"}</b>`).join("")}</span></div><div class="tower-layout ${animation}"><aside class="tower-floors" aria-label="Completed tower floors">${floors.map((f) => `<div><span>✦ ${f.reference}</span><p lang="ar" dir="rtl">${esc(f.words.join(" "))}</p></div>`).join("") || "<p>Your completed ayahs become tower floors.</p>"}<div class="tower-hold"><strong>Hold · C</strong><p lang="ar" dir="rtl">${state.hold ? esc(hidden ? "؟" : state.hold.text) : "—"}</p></div></aside><div class="falling-stage tower-board" tabindex="0" role="region" aria-label="Falling word board" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Space C D Delete P">${locked}${!over && !won && state.status !== "transition" ? drawCells(landing(state), "ghost") + drawCells(state.current, "active") : ""}<div role="status" aria-live="polite" class="falling-block tower-label arabic shape-${e?.shape}" data-index="${e?.index}" data-lane="${state.current.x}" data-shape="${e?.shape}" lang="ar" dir="rtl" style="left:5%;top:${labelY}%" ${over || won || state.status === "transition" ? "hidden" : ""}>${esc(hidden ? "؟" : e?.text || "")}</div>${busy ? '<div class="tower-overlay">Listening · motion paused</div>' : ""}${state.status === "transition" ? '<div class="tower-overlay">✦ Ayah complete · rising to the next floor</div>' : ""}</div></div><div class="falling-controls tower-controls"><button id="fall-left" aria-label="Move block left">←</button><button id="fall-rotate">Rotate ↻</button><button id="fall-right" aria-label="Move block right">→</button><button id="fall-down">↓ Lower</button><button id="fall-place">Drop · Space</button><button id="fall-hold">Hold · C</button><button id="fall-discard">Discard · D</button><button id="fall-pause">${state.paused || busy ? "Resume" : "Pause"}</button><button id="fall-listen">♫ Hear this word</button><button id="fall-ayah">♫ Listen & review ayah</button><button id="fall-stop-listening">Continue / stop listening</button></div><p class="falling-counter" role="status">${state.accepted.length} / ${v.words.length} words placed · ${state.paused || busy ? "Paused" : "Ready"}</p><div class="tower-construction"><h4>Your constructed ayah · right to left</h4><p class="arabic" lang="ar" dir="rtl">${esc(state.accepted.join(" ")) || "—"}</p><div class="falling-slots" dir="rtl">${v.words.map((w, i) => `<button data-slot="${i}" class="${i < state.accepted.length ? "slot-filled" : ""}" aria-label="Place in position ${i + 1} from the right">${i < state.accepted.length ? esc(w) : i + 1}</button>`).join("")}</div></div><p>←/→ move · ↑/X rotate · ↓ lower · Space drop · C hold · D discard · P pause. Say the word aloud after the reciter. Contact with the stack waits for your decision.</p>${over ? `<dialog class="tower-game-over" aria-label="Game Over"><h3>✕ ✕ ✕ · Game Over</h3><p>${config.rules === "practice" ? "Retry this ayah; your completed floors stay." : "Three strikes used. Listen, review, and try a fresh journey."}</p><button id="fall-retry">Retry</button><button id="fall-review">Listen & Review</button><button id="fall-exit">Exit</button></dialog>` : won ? '<section class="tower-victory" role="status"><h3>✦ Tower complete!</h3><p>Every selected ayah is in order. Try independent recall when you feel ready.</p></section>' : ""}`;
+    const settled = state.placements
+      .filter((p) => p.epoch === state.boardEpoch)
+      .map((p) => {
+        const points = cells(p.piece),
+          xs = points.map(([x]) => x),
+          ys = points.map(([, y]) => y);
+        return `<span class="tower-settled-word" lang="ar" dir="rtl" style="left:${Math.min(40, Math.max(1, Math.min(...xs) * 10))}%;top:${Math.min(92, (Math.min(...ys) * 100) / 18)}%">${esc(p.entry.text)}</span>`;
+      })
+      .join("");
+    const parkedWords = state.placements
+      .filter((p) => p.kind === "side")
+      .map((p) => `<span lang="ar" dir="rtl">${esc(p.entry.text)}</span>`)
+      .join("");
+    root.innerHTML = `<div class="tower-hud"><strong>${esc(surah.name)} · Ayah ${v.id}</strong><span>Floor ${floor + 1} / ${selected.length}</span><span>Arcade ${metadata(false).score} · separate from XP</span><span class="tower-strikes" aria-label="${state.strikes} of 3 strikes">Strikes ${[0, 1, 2].map((i) => `<b class="${i < state.strikes ? "used" : ""}">${i < state.strikes ? "✕" : "○"}</b>`).join("")}</span></div><div class="tower-layout ${animation}"><aside class="tower-floors" aria-label="Completed tower floors">${floors.map((f) => `<div><span>✦ ${f.reference}</span><p lang="ar" dir="rtl">${esc(f.words.join(" "))}</p></div>`).join("") || "<p>Your completed ayahs become tower floors.</p>"}<div class="tower-parking-words"><strong>Side parking · words kept visible</strong>${parkedWords || "<p>No words parked yet.</p>"}</div><div class="tower-hold"><strong>Hold · C</strong><p lang="ar" dir="rtl">${state.hold ? esc(state.hold.text) : "—"}</p></div></aside><div class="falling-stage tower-board" tabindex="0" role="region" aria-label="Falling word board" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown Space C P">${locked}${settled}${!over && !won && state.status !== "transition" ? drawCells(landing(state), "ghost") + drawCells(state.current, "active") : ""}<div role="status" aria-live="polite" class="falling-block tower-label arabic shape-${e?.shape}" data-index="${e?.index}" data-lane="${state.current.x}" data-shape="${e?.shape}" lang="ar" dir="rtl" style="left:5%;top:${labelY}%" ${over || won || state.status === "transition" ? "hidden" : ""}>${esc(e?.text || "")}</div>${!started ? '<div class="tower-overlay">Press Start above to begin</div>' : busy ? '<div class="tower-overlay">Listening · motion paused</div>' : ""}${state.status === "transition" ? '<div class="tower-overlay">✦ Ayah complete · rising to the next floor</div>' : ""}</div></div><div class="falling-controls tower-controls"><button id="fall-left" aria-label="Move block left">←</button><button id="fall-rotate">Rotate ↻</button><button id="fall-right" aria-label="Move block right">→</button><button id="fall-down">↓ Lower</button><button id="fall-place">Drop · Space</button><button id="fall-hold">Hold · C</button><button id="fall-pause">${state.paused || busy ? "Resume" : "Pause"}</button><button id="fall-listen">♫ Hear this word</button><button id="fall-ayah">♫ Listen & review ayah</button><button id="fall-stop-listening">Continue / stop listening</button></div><p class="falling-counter" role="status">${state.accepted.length} / ${v.words.length} words placed · ${state.paused || busy ? "Paused" : "Ready"}</p><div class="tower-construction"><h4>Your constructed ayah · right to left</h4><p class="arabic" lang="ar" dir="rtl">${esc(state.accepted.join(" ")) || "—"}</p><div class="falling-slots" dir="rtl">${v.words.map((w, i) => `<button data-slot="${i}" class="${i < state.accepted.length ? "slot-filled" : ""}" aria-label="Place in position ${i + 1} from the right">${i < state.accepted.length ? esc(w) : i + 1}</button>`).join("")}</div></div><p>←/→ move · ↑/X rotate · ↓ lower · Space drop · C hold · P pause. Say the word aloud after the reciter. The emerald middle builds your ayah; side lanes are safe parking. Blocks lock automatically on landing.</p>${over ? `<dialog class="tower-game-over" aria-label="Game Over"><h3>✕ ✕ ✕ · Game Over</h3><p>${config.rules === "practice" ? "Retry this ayah; your completed floors stay." : "Three strikes used. Listen, review, and try a fresh journey."}</p><button id="fall-retry">Retry</button><button id="fall-review">Listen & Review</button><button id="fall-exit">Exit</button></dialog>` : won && floor + 1 === selected.length ? '<section class="tower-victory" role="status"><h3>✦ Tower complete!</h3><p>Every selected ayah is in order. Try independent recall when you feel ready.</p></section>' : ""}`;
     animation = "";
     const bind = (id, fn) => {
       const b = root.querySelector("#" + id);
@@ -305,7 +299,6 @@ export function mountFalling(
     bind("fall-down", () => send({ type: "soft" }));
     bind("fall-place", () => send({ type: "drop" }));
     bind("fall-hold", () => send({ type: "hold" }));
-    bind("fall-discard", () => send({ type: "discard" }));
     bind("fall-pause", () => {
       if (listening || echo) {
         stopAudio();
@@ -337,11 +330,47 @@ export function mountFalling(
           (b.onclick = () =>
             send({ type: "drop", slot: Number(b.dataset.slot) })),
       );
-    if (over || won)
+    if (awaitingChoice) {
+      const panel = document.createElement("section");
+      panel.className = "tower-next-step";
+      panel.setAttribute("aria-label", "After this ayah");
+      panel.innerHTML = `<h3>Ayah complete. What next?</h3><p>All words stay visible. Repeat at the next descent speed, or continue. You can lower the speed whenever you need more time.</p><button data-repeat>Keep practicing this ayah · ${config.speed === "fast" ? "Fast speed" : "faster descent"}</button>${selected[floor].id < surah.verses.length ? "<button data-next>Move to ayah " + (selected[floor].id + 1) + "</button>" : "<p>You reached the final ayah of this surah.</p>"}`;
+      root.append(panel);
+      panel.querySelector("[data-repeat]").onclick = () => {
+        const order = ["slow", "normal", "fast"];
+        config.speed = order[Math.min(2, order.indexOf(config.speed) + 1)];
+        form.elements.speed.value = config.speed;
+        awaitingChoice = false;
+        if (saved) {
+          onScope?.(`${surah.id}:${selected[floor].id}`);
+          saved = false;
+          runErrors = [];
+          recordedErrors = 0;
+          usedAudio = false;
+        }
+        floors.pop();
+        newFloor(config.rules === "classic" ? state.strikes : 0);
+        root.querySelector(".falling-stage")?.focus({ preventScroll: true });
+      };
+      panel.querySelector("[data-next]")?.addEventListener("click", () => {
+        awaitingChoice = false;
+        if (floor + 1 === selected.length) {
+          selected.push(surah.verses[selected[floor].id]);
+          onScope?.(`${surah.id}:${selected[floor + 1].id}`);
+          saved = false;
+        }
+        const strikes = config.rules === "classic" ? state.strikes : 0;
+        floor++;
+        animation = "floor";
+        newFloor(strikes);
+        root.querySelector(".falling-stage")?.focus({ preventScroll: true });
+      });
+    }
+    if (over || won || !started)
       root
         .querySelectorAll(".tower-controls button,[data-slot]")
         .forEach((b) => (b.disabled = true));
-    root.querySelector(".falling-stage").onkeydown = key;
+
     if (keepFocus)
       root.querySelector(".falling-stage").focus({ preventScroll: true });
     if (over) {
@@ -356,7 +385,17 @@ export function mountFalling(
     }
   }
   function key(event) {
-    if (event.target.closest("input,select,textarea")) return;
+    if (
+      !area.isConnected ||
+      !started ||
+      event.target.closest(
+        "input,select,textarea,[contenteditable=true],dialog,a",
+      ) ||
+      (event.target.closest("button") &&
+        (!area.contains(event.target) ||
+          event.target.closest(".tower-next-step,form")))
+    )
+      return;
     const k = event.key.toLowerCase(),
       actions = {
         arrowleft: { type: "move", delta: -1 },
@@ -366,8 +405,6 @@ export function mountFalling(
         arrowdown: { type: "soft" },
         " ": { type: "drop" },
         c: { type: "hold" },
-        d: { type: "discard" },
-        delete: { type: "discard" },
         p: { type: "pause" },
       };
     if (!actions[k]) return;
@@ -398,7 +435,7 @@ export function mountFalling(
       ...data,
       first,
       last,
-      rules: data.mode === "marathon" ? "classic" : data.rules,
+      rules: data.mode === "chain" ? data.rules : "classic",
     };
     selected =
       config.mode === "single"
@@ -423,7 +460,9 @@ export function mountFalling(
   };
   form.elements.audio.onchange = () => {
     config.audio = form.elements.audio.value;
-    startAudio();
+    stopAudio();
+    if (started) startAudio();
+    paint();
   };
   form.elements.speed.onchange = () => {
     config.speed = form.elements.speed.value;
@@ -432,6 +471,8 @@ export function mountFalling(
   const timer = setInterval(() => {
     if (
       disposed ||
+      !started ||
+      awaitingChoice ||
       !state ||
       state.status !== "playing" ||
       state.paused ||
@@ -445,7 +486,8 @@ export function mountFalling(
       send({ type: "tick" });
     }
   }, 100);
-  start();
+  newFloor();
+  document.addEventListener("keydown", key);
   return {
     pause() {
       if (state?.status === "playing" && !state.paused) {
@@ -459,12 +501,9 @@ export function mountFalling(
     mute() {
       if (audio) audio.muted = muted();
     },
-    timed(value) {
-      config.speed = value ? "slow" : "relaxed";
-      form.elements.speed.value = config.speed;
-    },
     dispose() {
       disposed = true;
+      document.removeEventListener("keydown", key);
       clearInterval(timer);
       clearTimeout(transitionTimer);
       stopAudio();

@@ -1,3 +1,4 @@
+import {startFalling,parkExtra} from "./falling-helper.js";
 import { menu } from "./menu-helper.js";
 import { test, expect } from "@playwright/test";
 import { surahs } from "../src/data.js";
@@ -50,6 +51,7 @@ async function seed(page, storage) {
 const openLab = async (page) => {
   await page.goto("/");
   await (await menu(page)).locator("#nav-lab").click();
+  await startFalling(page);
 };
 const finishFalling = async (page, keyboard = false) => {
   const n = await page.locator("[data-slot]").count();
@@ -61,17 +63,12 @@ const finishFalling = async (page, keyboard = false) => {
     if (index >= n) {
       if (keyboard) {
         await page.locator(".falling-stage").focus();
-        await page.keyboard.press("d");
-      } else await page.locator("#fall-discard").click();
+        await parkExtra(page);
+      } else await parkExtra(page);
       continue;
     }
     if (keyboard) {
-      const lane = Number(
-        await page.locator(".falling-block").getAttribute("data-lane"),
-      );
       await page.locator(".falling-stage").focus();
-      for (let k = 0; k < Math.abs(index - lane); k++)
-        await page.keyboard.press(index > lane ? "ArrowLeft" : "ArrowRight");
       await page.keyboard.press("Space");
     } else await page.locator(`[data-slot="${index}"]`).click();
   }
@@ -287,7 +284,7 @@ test("Falling Words supports RTL keyboard placement, retry feedback and daily XP
   while (
     Number(await page.locator(".falling-block").getAttribute("data-index")) >= 4
   )
-    await page.locator("#fall-discard").click();
+    await parkExtra(page);
   const index = Number(
     await page.locator(".falling-block").getAttribute("data-index"),
   );
@@ -297,6 +294,7 @@ test("Falling Words supports RTL keyboard placement, retry feedback and daily XP
   await finishFalling(page, true);
   await expect(page.locator("[data-status]")).toContainText("+8 game XP");
   await page.locator("#lab-restart").click();
+  await startFalling(page);
   await finishFalling(page);
   await expect(page.locator("[data-status]")).toContainText("+0 game XP");
   const state = await page.evaluate(
@@ -334,7 +332,7 @@ test("timed descent pauses for recitation and resumes only after stopping audio"
     };
   });
   await openLab(page);
-  await page.locator("#lab-timed").check();
+  await page.locator("[name=speed]").selectOption("slow");
   const initialTop = await page.locator(".falling-block").getAttribute("style");
   await expect.poll(() => page.locator(".falling-block").getAttribute("style")).not.toBe(initialTop);
   await page.locator("#lab-replay").click();
@@ -411,7 +409,7 @@ test.describe("touch layout", () => {
       const index = await page
         .locator(".falling-block")
         .getAttribute("data-index");
-      if (Number(index) >= n) await page.locator("#fall-discard").tap();
+      if (Number(index) >= n) await parkExtra(page);
       else await page.locator(`[data-slot="${index}"]`).tap();
     }
     await expect(page.locator("[data-status]")).toContainText(
@@ -502,7 +500,7 @@ test("a failed Lab history write can be retried without awarding XP twice", asyn
     const index = await page
       .locator(".falling-block")
       .getAttribute("data-index");
-    if (Number(index) >= 4) await page.locator("#fall-discard").click();
+    if (Number(index) >= 4) await parkExtra(page);
     else await page.locator(`[data-slot="${index}"]`).click();
   }
   await expect(page.locator("#lab-retry-save")).toBeVisible();
@@ -542,10 +540,11 @@ test("leaving a timed Quest peek does not reset an in-progress Lab round", async
   await page.locator('[data-mode="quiz"]').click();
   await page.locator("#peek-words").click();
   await (await menu(page)).locator("#nav-lab").click();
+  await startFalling(page);
   while (
     Number(await page.locator(".falling-block").getAttribute("data-index")) >= 4
   )
-    await page.locator("#fall-discard").click();
+    await parkExtra(page);
   const index = await page.locator(".falling-block").getAttribute("data-index");
   await page.locator(`[data-slot="${index}"]`).click();
   await expect(page.locator(".slot-filled")).toHaveCount(1);

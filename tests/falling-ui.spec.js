@@ -1,3 +1,4 @@
+import { startFalling, parkExtra } from "./falling-helper.js";
 import { test, expect } from "@playwright/test";
 import { LAB_KEY } from "../src/puzzles/puzzle-store.js";
 import { LEARNING_KEY } from "../src/learning-store.js";
@@ -20,9 +21,17 @@ async function open(page) {
   });
   await page.goto("/");
   await page.locator("#nav-puzzle-lab").click();
+  await startFalling(page);
 }
 async function solve(page) {
   for (let i = 0; i < 200; i++) {
+    if (
+      (await page.locator("[data-next]").count()) &&
+      !(await page.locator(".tower-victory").count())
+    ) {
+      await page.locator("[data-next]").click();
+      continue;
+    }
     if (await page.locator(".tower-victory").count()) return;
     if (
       await page.locator(".tower-overlay").filter({ hasText: "rising" }).count()
@@ -35,7 +44,8 @@ async function solve(page) {
     const n = await page.locator("[data-slot]").count(),
       block = page.locator(".falling-block");
     const index = Number(await block.getAttribute("data-index"));
-    await page.locator(index >= n ? "#fall-discard" : "#fall-place").click();
+    if (index >= n) await parkExtra(page);
+    else await page.locator("#fall-place").click();
   }
   throw Error("Unsolved falling journey");
 }
@@ -82,8 +92,12 @@ test("Classic and Practice chains retain floors and apply their strike budgets",
   await form.locator("[name=mode]").selectOption("chain");
   await form.locator("[name=last]").fill("2");
   await form.locator("[name=rules]").selectOption("practice");
-  await form.getByRole("button", { name: "Start journey" }).click();
+  await form.getByRole("button", { name: "Start", exact: true }).click();
   while (!(await page.locator(".tower-hud").textContent()).includes("Ayah 2")) {
+    if (await page.locator("[data-next]").count()) {
+      await page.locator("[data-next]").click();
+      continue;
+    }
     if (await page.locator(".tower-overlay").count()) {
       await expect(page.locator(".tower-overlay")).toHaveCount(0);
       continue;
@@ -92,7 +106,8 @@ test("Classic and Practice chains retain floors and apply their strike budgets",
       i = Number(
         await page.locator(".falling-block").getAttribute("data-index"),
       );
-    await page.locator(i >= n ? "#fall-discard" : "#fall-place").click();
+    if (i >= n) await parkExtra(page);
+    else await page.locator("#fall-place").click();
   }
   await expect(page.locator(".tower-floors")).toContainText("1:1");
   for (let i = 0; i < 3; i++) await page.locator('[data-slot="3"]').click();
@@ -110,11 +125,16 @@ test("Classic and Practice chains retain floors and apply their strike budgets",
   expect(h.arcade.references).toEqual(["1:1", "1:2"]);
   expect(h.arcade.floors).toEqual(["1:1", "1:2"]);
   await page.locator("#lab-restart").click();
+  await startFalling(page);
   await form.locator("[name=mode]").selectOption("chain");
   await form.locator("[name=last]").fill("2");
-  await form.getByRole("button", { name: "Start journey" }).click();
+  await form.getByRole("button", { name: "Start", exact: true }).click();
   await page.locator('[data-slot="3"]').click();
   while (!(await page.locator(".tower-hud").textContent()).includes("Ayah 2")) {
+    if (await page.locator("[data-next]").count()) {
+      await page.locator("[data-next]").click();
+      continue;
+    }
     if (await page.locator(".tower-overlay").count()) {
       await expect(page.locator(".tower-overlay")).toHaveCount(0);
       continue;
@@ -123,7 +143,8 @@ test("Classic and Practice chains retain floors and apply their strike budgets",
       i = Number(
         await page.locator(".falling-block").getAttribute("data-index"),
       );
-    await page.locator(i >= n ? "#fall-discard" : "#fall-place").click();
+    if (i >= n) await parkExtra(page);
+    else await page.locator("#fall-place").click();
   }
   await expect(page.locator(".tower-strikes .used")).toHaveCount(1);
 });
@@ -208,7 +229,7 @@ test("Echo gates the opening, Listen loops safely and chain transitions stop pri
   ).toBeGreaterThanOrEqual(3);
   await form.locator("[name=mode]").selectOption("chain");
   await form.locator("[name=last]").fill("2");
-  await form.getByRole("button", { name: "Start journey" }).click();
+  await form.getByRole("button", { name: "Start", exact: true }).click();
   await solve(page);
   const logs = await page.evaluate(() => window.audioLog);
   const next = logs.findIndex(
@@ -226,7 +247,7 @@ test("Single Ayah can select a later ayah without a chain end and uses its verif
   const form = page.locator(".tower-settings");
   await expect(form.locator("[name=last]")).toBeHidden();
   await form.locator("[name=first]").fill("5");
-  await form.getByRole("button", { name: "Start journey" }).click();
+  await form.getByRole("button", { name: "Start", exact: true }).click();
   await expect(page.locator(".tower-hud")).toContainText("Ayah 5");
   await page.locator("#fall-ayah").click();
   expect(await page.evaluate(() => window.audioLog.at(-1)[1])).toContain(
