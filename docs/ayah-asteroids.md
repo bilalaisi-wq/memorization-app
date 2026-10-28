@@ -59,3 +59,13 @@ Game success is recognition/order practice. It never grades independent recitati
 [Desktop preview](asteroids-previews/desktop.png) · [Mobile preview](asteroids-previews/mobile.png). These are real local UI captures with verified source text, not mock learner progress. Reproduce with a local Vite server on port 5182 and `node scripts/asteroids-screenshots.mjs`.
 
 Validation: the complete Playwright suite passed **230 tests**, including all existing Falling Words tests and **14 new Asteroids tests**. Production Vite build passed. No hosted provider configuration, database migration or Qur'anic source data was changed.
+
+## After a completed flight
+
+Completion now confirms **Flight saved** inside the victory panel. The normal actions are **Play again** (same ayah/range, a fresh session and shuffled seed), **Continue to the next ayah(s)**, **Choose different ayahs**, **Practise with the reciter**, **Try self-assessed recall**, and **Return to study / take a break**. Replay and continuation start a new flight directly, retaining audio preference, difficulty and checkpoint rules. Choose different ayahs focuses the existing configuration form.
+
+A storage failure instead shows an inline error and **Retry saving result**. Successful retry visibly confirms the save and removes the retry action. Starting another activity through the completion choices first requires the current result to be saved; retries retain the same receipt and cannot double-award XP. The learner can still explicitly return to study. Saved recognition progress never becomes independent recall credit.
+
+The next-step suggestion reads existing goals, confidence, intended study time, recorded mistakes, recent flights and actually due FSRS reviews. Due review takes priority; shaky confidence or sequence mistakes suggest Practice. Review goals, confidence in recall, reaching the study-time intention or several recent flights encourage self-assessed recitation and a change of skill. Otherwise, continuation offers one gentle ayah or a short range of up to three, bounded by the surah end. Learners retain all choices. These are local recommendations, not AI judgments, verified mastery claims or scheduler changes.
+
+Completion-flow validation: **233 tests passed** across the full Playwright suite, and the production build passed. Added coverage includes save-failure recovery without duplicate XP, keyboard continuation, fresh replay, recall navigation and goal-aware pacing recommendations.

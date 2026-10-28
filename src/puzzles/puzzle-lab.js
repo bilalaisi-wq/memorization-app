@@ -1,3 +1,6 @@
+import {flightNextSteps} from "./arcade/asteroids/next-steps.js";
+import {readGoals} from "../learner/insights.js";
+import {profileStorage} from "../learner/profile-storage.js";
 import {asteroidsRegistration} from "./arcade/asteroids/ui.js";
 import { isDeveloperMode } from "../developer/access.js";
 import { activeProfileId } from "../learner/profile-storage.js";
@@ -274,8 +277,8 @@ export function mountPuzzleLab(
     area.innerHTML=`<form class="astro-config"><h3>Choose your space voyage</h3><p>Navigate your ship, aim a tractor beam and capture the ayah in order. Extra words are redirected intact.</p><div class="astro-config-fields"><label>Journey<select name="journey"><option value="single">Single Ayah</option><option value="chain">Ayah Chain</option></select></label><label>Starting ayah<input name="first" type="number" min="1" max="${surah.verses.at(-1).id}" value="${verse.id}"></label><label>Through ayah<input name="last" type="number" min="1" max="${surah.verses.at(-1).id}" value="${verse.id}"></label><label>Checkpoints<select name="rules"><option value="classic">Classic · three strikes per run</option><option value="practice">Practice · three per ayah</option></select></label><label>Flight difficulty<select name="difficulty"><option value="beginner">Beginner · slower, next-word cue</option><option value="standard">Standard · busier space, fewer cues</option><option value="expert">Expert · verified phrases, similar distractors</option></select></label></div><p>Expert uses approved phrases or short whole ayahs. Unreviewed long phrases are unavailable.</p><button class="primary" type="submit">Prepare flight</button><p data-flight-error role="status"></p></form><div data-flight-host></div>`;
     const form=area.querySelector('form'),host=area.querySelector('[data-flight-host]'),error=area.querySelector('[data-flight-error]');
     const through=form.elements.last;through.disabled=true;form.elements.journey.onchange=()=>through.disabled=form.elements.journey.value==='single';
-    form.onsubmit=async e=>{
-      e.preventDefault();const token=++launchRun,button=form.querySelector('[type=submit]');button.disabled=true;error.textContent='Preparing verified flight pieces…';
+    let nextLaunchAudio="listen",autoStart=false;
+    const launchFlight=async()=>{const token=++launchRun,button=form.querySelector('[type=submit]');button.disabled=true;error.textContent='Preparing verified flight pieces…';
       try {
         const first=Number(form.elements.first.value),difficulty=form.elements.difficulty.value;
         const config=adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first:Number(through.value),mode:form.elements.journey.value,chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]});
@@ -291,10 +294,25 @@ export function mountPuzzleLab(
           }
         }
         if(cancelled||token!==launchRun)return;
-        fallingControl=launcher.launch('asteroids',{root:host,adapter,config,library:surahs,id:uid(),difficulty,reviews,muted:()=>muted,onComplete:s=>{record(s);callbacks.onWalletChange();},onExit:()=>callbacks.onStudy(key)});
-        error.textContent='Ready. Press Start flight below.';host.scrollIntoView({block:'start'});
-      }catch(e){if(!cancelled)error.textContent=e.message;}finally{if(!cancelled)button.disabled=false;}
+        fallingControl=launcher.launch('asteroids',{root:host,adapter,config,library:surahs,id:uid(),difficulty,reviews,muted:()=>muted,onComplete:s=>{record(s);callbacks.onWalletChange();},initialAudioMode:nextLaunchAudio,
+          getNextSteps:s=>flightNextSteps({session:s.session,elapsed:s.elapsed,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id}),
+          onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),
+          onJourney:async choice=>{
+            nextLaunchAudio=choice.audioMode;
+            if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
+            const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
+            if(!range)throw Error('This surah is complete. Choose another surah from study.');
+            form.elements.rules.value=choice.config.chainMode;form.elements.difficulty.value=difficulty;
+            form.elements.first.value=String(range.first);through.value=String(range.last);
+            form.elements.journey.value=range.first===range.last?'single':'chain';through.disabled=range.first===range.last;
+            nextLaunchAudio=choice.audioMode;autoStart=true;await launchFlight();
+          },onExit:target=>callbacks.onStudy(target)});
+        const startedAutomatically=autoStart;
+        if(autoStart){autoStart=false;fallingControl.start();}
+        error.textContent=startedAutomatically?'Starting your next flight…':'Ready. Press Start flight below.';host.scrollIntoView({block:'start'});
+      }catch(e){if(!cancelled){error.textContent=e.message;if(autoStart){autoStart=false;throw e;}}}finally{if(!cancelled)button.disabled=false;}
     };
+    form.onsubmit=e=>{e.preventDefault();autoStart=false;launchFlight();};
     pauseGame=()=>fallingControl?.pause();
     gameCleanup=()=>{cancelled=true;launchRun++;launcher.dispose();};
   }

@@ -36,7 +36,7 @@ test('Single Ayah wins with a readable RTL sequence and idempotent game XP witho
  await expect(page.locator('.asteroids')).toHaveClass(/astro-victory/);await expect(page.locator('.astro-sequence')).toHaveAttribute('dir','rtl');
  for(const word of surahs[0].verses[0].words)await expect(page.locator('.astro-sequence')).toContainText(word);
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('ayah-learning-v1')));const xp=saved.wallet.xp;expect(saved.records['1:1'].memory.card).toBeNull();
- await page.locator('[data-action=save]').click();const after=await page.evaluate(()=>JSON.parse(localStorage.getItem('ayah-learning-v1')).wallet.xp);expect(after).toBe(xp);
+ await expect(page.locator('.astro-save-state')).toContainText('Flight saved');await expect(page.locator('[data-action=save]')).toHaveCount(0);await page.locator('[data-action=replay]').click();await expect(page.locator('.astro-overlay')).toBeHidden();await expect(page.locator('.astro-sequence')).toContainText('Captured words appear here');const after=await page.evaluate(()=>JSON.parse(localStorage.getItem('ayah-learning-v1')).wallet.xp);expect(after).toBe(xp);
  await page.reload();expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('ayah-puzzle-lab-v1')).history.some(r=>r.game==='asteroids'))).toBe(true);
 });
 
@@ -91,4 +91,24 @@ test('published source-matched approved study phrases enable Expert without appr
  await expect(page.locator('[data-flight-error]')).toContainText('Ready.');await expect(page.locator('.astro-stage')).toBeVisible();
  const first=surahs[0].verses[6].words.slice(0,4).join(' '),second=surahs[0].verses[6].words.slice(4).join(' ');
  await expect(page.locator('.astro-rock').filter({hasText:first})).toHaveCount(1);await expect(page.locator('.astro-rock').filter({hasText:second})).toHaveCount(1);
+});
+
+test('victory offers the next short flight, configurable ayahs and an actual recall route',async({page})=>{
+ test.setTimeout(60000);await open(page);await solve(page,1);
+ await expect(page.locator('[data-action=continue]')).toHaveText('Continue to ayah 2');
+ await page.locator('[data-action=continue]').focus();await page.keyboard.press('Space');
+ await expect(page.locator('[data-sector]')).toContainText('1:2');await expect(page.locator('.astro-overlay')).toBeHidden();await expect(page.locator('[data-astro-audio]')).toHaveValue('silent');
+ await solve(page,2);await page.locator('[data-action=customize]').click();await expect(page.locator('[name=first]')).toBeFocused();
+ await page.locator('[data-action=recall]').click();await expect(page.locator('.astro-stage')).toHaveCount(0);await expect(page.locator('main')).toContainText('SELF-ASSESSED RECITATION');
+});
+
+test('a failed save is visible in the victory panel and retry confirms success without duplicate XP',async({page})=>{
+ await open(page);
+ await page.evaluate(()=>{const set=Storage.prototype.setItem;window.failLabSave=true;Storage.prototype.setItem=function(key,value){if(key==='ayah-puzzle-lab-v1'&&window.failLabSave)throw Error('Storage full');return set.call(this,key,value);};});
+ await solve(page,1);await expect(page.locator('.astro-save-state')).toContainText('not finished saving');await expect(page.locator('[data-action=save]')).toHaveText('Retry saving result');
+ const xp=await page.evaluate(()=>JSON.parse(localStorage.getItem('ayah-learning-v1')).wallet.xp);
+ await page.locator('[data-action=replay]').click();await expect(page.locator('.astro-victory')).toBeVisible();
+ await page.evaluate(()=>window.failLabSave=false);await page.locator('[data-action=save]').click();await expect(page.locator('.astro-save-state')).toContainText('Flight saved');await expect(page.locator('[data-action=save]')).toHaveCount(0);
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('ayah-learning-v1')).wallet.xp)).toBe(xp);
+ await page.locator('[data-action=replay]').click();await expect(page.locator('.astro-overlay')).toBeHidden();
 });
