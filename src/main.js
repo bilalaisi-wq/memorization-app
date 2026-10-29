@@ -1,3 +1,8 @@
+import {isDeveloperMode} from "./developer/access.js";
+import {previewSurahs,loadDeveloperChapter,authorizeChapterAudio,clearPrivateAudio} from "./content/developer-library.js";
+import {catalog} from "./content/library.js";
+import {createStudyWorkspace} from "./content/study-workspace.js";
+import {resolvePlaybackSource} from "./content/private-audio.js";
 import "./puzzles/arcade/maze/maze.css";
 import { awardStudy, rewardSummary } from "./rewards/store.js";
 import { mountSiteMenu } from "./ui/site-menu.js";
@@ -39,7 +44,7 @@ import "./puzzles/arcade/snake/snake.css";
 import "./puzzles/arcade/asteroids/asteroids.css";
 import "./themes/night-sky.css";
 import {
-  surahs,
+  surahs as freeSurahs,
   totalAyahs,
   shuffled,
   wordAudio,
@@ -50,6 +55,8 @@ import {
   challengeReward,
 } from "./data.js";
 import { illustration, outline } from "./illustrations.js";
+const surahs=[...freeSurahs];
+let workspace=null,privateLoadToken=0;
 const icons = {
   play: '<path d="m9 5 10 7-10 7z"/>',
   pause: '<path d="M8 5v14M16 5v14"/>',
@@ -68,7 +75,8 @@ await initializeAccounts();
 initializeAppearance(appearanceAccount());
 const learning = createLearningStore(profileStorage, surahs);
 const gallery = createMasteryStore(profileStorage, surahs);
-const lab = createPuzzleStore(profileStorage, surahs);
+const progressLibrary=[...freeSurahs,...catalog.chapters.filter(c=>previewSurahs.includes(c.id)).map(c=>({id:c.id,verses:Array.from({length:c.verseCount},(_,i)=>({id:i+1}))}))];
+const lab = createPuzzleStore(profileStorage, progressLibrary);
 let puzzleSessionId = "";
 let chapter = 0,
   verses = surahs[0].verses,
@@ -119,6 +127,7 @@ function reset() {
   clearTimeout(peekTimer);
   peeking = false;
   selected = [];
+  workspace=surahs[chapter].developerOnly&&verses[ayah].words.length>24?createStudyWorkspace(verses[ayah].words.length):null;
   roundId++;
   puzzleSessionId =
     globalThis.crypto?.randomUUID?.() || Date.now() + "-" + Math.random();
@@ -186,10 +195,10 @@ function render() {
     surah = surahs[chapter],
     count = chapterCompleted();
   app.innerHTML = `
-<aside class="sidebar"><a class="brand" href="#" aria-label="Ayah home"><span class="brand-mark">۞</span><span>ayah<span class="brand-period">.</span></span></a><div class="sidebar-sub">A LITTLE EACH DAY. A LIFETIME WITH YOU.</div><div class="nav-label">YOUR SPACE</div><button class="nav-item active" id="nav-learn">${icon("grid")} Memorization Lab <span class="nav-pill">${totalAyahs}</span></button><button class="nav-item" id="nav-puzzle-lab">${icon("grid")} Puzzle Lab</button><button class="nav-item" id="nav-daily">${icon("repeat")} Daily quests</button><button class="nav-item" id="nav-progress">${icon("book")} My progress</button><div class="surah-label">CHOOSE A SURAH</div><label class="surah-picker-label">Your surah<select id="surah-picker">${surahs.map((s, i) => `<option value="${i}" ${chapter === i ? "selected" : ""}>${s.name} · ${s.verses.length} ayahs</option>`).join("")}</select></label><div class="surah-side"><span class="surah-symbol">${String(surah.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d])}</span><div><strong>${surah.name}</strong><small>${surah.meaning} · ${verses.length} ayahs</small></div></div><div class="ayah-nav">${verses.map((x, i) => `<button data-ayah="${i}" class="ayah-item ${i === ayah ? "current" : ""}"><span class="ayah-number">${completed.has(surah.id + ":" + (i + 1)) ? "✓" : i + 1}</span><span>Ayah ${i + 1}</span>${i === ayah ? '<span class="current-dot"></span>' : ""}</button>`).join("")}</div><div class="sidebar-bottom"><span class="small-flower">✧</span><p>“And We have certainly made<br>the Quran easy to remember.”</p><small>AL-QAMAR · 54:17</small></div></aside>
+<aside class="sidebar"><a class="brand" href="#" aria-label="Ayah home"><span class="brand-mark">۞</span><span>ayah<span class="brand-period">.</span></span></a><div class="sidebar-sub">A LITTLE EACH DAY. A LIFETIME WITH YOU.</div><div class="nav-label">YOUR SPACE</div><button class="nav-item active" id="nav-learn">${icon("grid")} Memorization Lab <span class="nav-pill">${totalAyahs}</span></button><button class="nav-item" id="nav-puzzle-lab">${icon("grid")} Puzzle Lab</button><button class="nav-item" id="nav-daily">${icon("repeat")} Daily quests</button><button class="nav-item" id="nav-progress">${icon("book")} My progress</button><div class="surah-label">CHOOSE A SURAH</div><label class="surah-picker-label">Your surah<select id="surah-picker">${surahs.filter(s=>!s.developerOnly||isDeveloperMode()).map((s, i) => `<option value="${i}" ${chapter === i ? "selected" : ""}>${s.name} · ${s.verses.length} ayahs</option>`).join("")}${isDeveloperMode()?catalog.chapters.filter(c=>previewSurahs.includes(c.id)&&!surahs.some(s=>s.id===c.id)).map(c=>`<option value="private:${c.id}">⌘ ${c.name} · ${c.verseCount} ayahs · Developer</option>`).join(''):''}</select></label><p data-private-load-status role="status"></p><div class="surah-side"><span class="surah-symbol">${String(surah.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d])}</span><div><strong>${surah.name}</strong><small>${surah.meaning} · ${verses.length} ayahs</small></div></div><div class="ayah-nav">${verses.map((x, i) => `<button data-ayah="${i}" class="ayah-item ${i === ayah ? "current" : ""}"><span class="ayah-number">${completed.has(surah.id + ":" + (i + 1)) ? "✓" : i + 1}</span><span>Ayah ${i + 1}</span>${i === ayah ? '<span class="current-dot"></span>' : ""}</button>`).join("")}</div><div class="sidebar-bottom"><span class="small-flower">✧</span><p>“And We have certainly made<br>the Quran easy to remember.”</p><small>AL-QAMAR · 54:17</small></div></aside>
 <div class="main-shell"><header><div class="breadcrumb">My learning <span>/</span> <strong>${surah.name}</strong></div><div class="header-right"><span class="daily">✧ <b>${completed.size}</b> ayahs practiced</span><span class="study-xp" data-learning-xp>${xp} XP</span><span class="avatar">Y</span></div></header><main><div class="page-heading"><div class="eyebrow">MEMORIZE, PIECE BY PIECE</div><h1>Small pieces. Big discoveries.</h1><p>A colorful little adventure, one ayah at a time.</p></div><nav class="explore-nav" aria-label="Explore learning tools"><button class="text-button" id="nav-gallery">Mastery Gallery</button><button class="text-button" id="nav-lab">Puzzle Lab</button></nav><div class="surah-heading"><div><span class="surah-tag">SURAH ${String(surah.id).padStart(3, "0")}</span><h2>${surah.name} <span lang="ar" class="surah-arabic">${surah.arabic}</span></h2><p>${surah.meaning} <span>•</span> ${surah.origin} <span>•</span> ${verses.length} ayahs</p></div><div class="progress-summary"><span>Your progress <b>${count} / ${verses.length} ayahs</b></span><div class="progress-track"><i style="width:${(count / verses.length) * 100}%"></i></div></div></div>
 <section class="reference-card"><div class="reference-top"><span class="section-label"><span class="tiny-dot"></span> AYAH ${v.id} <span class="muted">OF ${verses.length}</span></span><button class="text-button" id="full-audio">${icon(playing ? "pause" : "headphones")} ${playing ? "Stop audio" : "Listen to full ayah"}</button></div><div class="full-verse ${reference ? "" : "reference-hidden"}" lang="ar" dir="rtl">${reference ? v.text + ' <span class="verse-end">' + String(v.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]) + "</span>" : '<span class="hidden-reference">The ayah is hidden for your challenge</span>'}</div><p class="translation">${reference ? v.translation : "Build from memory. Reveal the ayah whenever you need a little help."}</p>${mode !== "practice" ? `<button class="reference-toggle" id="reference-toggle">${icon("eye")} ${reference ? "Hide" : "Reveal"} ayah</button>` : ""}</section>
-<div class="mode-row"><div class="tabs" role="tablist" aria-label="Learning mode">${[
+${surah.developerOnly?'<aside class="developer-study-note"><strong>Developer preview · private source-validated content</strong><p>Piece audio currently plays the continuous full ayah; isolated word clips await alignment review. Visual workspaces are not approved recitation stops.</p><button class="text-button" id="developer-passage">Open long-ayah Passage Studio</button></aside>':''}<div class="mode-row"><div class="tabs" role="tablist" aria-label="Learning mode">${[
     ["practice", "grid", "Practice"],
     ["quiz", "praise", "Puzzle quest"],
     ["recall", "eye", "Active recall"],
@@ -202,8 +211,9 @@ function render() {
     .join(
       "",
     )}</div><span class="mode-caption">${mode === "practice" ? "Make it yours. Go at your pace." : mode === "quiz" ? "Put every word in its place." : "Same pieces. A little more memory."}</span></div>
-${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" aria-hidden="true">✦</span><div><strong>Ayah ${v.id} quest</strong><p>Find ${v.words.length} words. Leave the ${extras.length} extra words behind!<br><small>Level ${roundLevel} / 3 · ${roundLevel === 1 ? "Find the words" : roundLevel === 2 ? "Some words are blank" : "Most words are blank"} · ${roundLevel === 3 ? "Keep practicing for mastery" : Math.min(2, Math.max(0, (mastery[key()] || 0) - (roundLevel - 1) * 2)) + " / 2 puzzle wins to level up"}</small></p></div><span class="star-score">★ ${stars} stars <small>${quizSolved ? "Round complete!" : attempts + " tries"}</small></span><div class="level-trail">${[1, 2, 3].map((l) => `<span class="level-step ${l === roundLevel ? "level-active" : ""} ${l < roundLevel ? "level-done" : ""}">${l < roundLevel ? "✓" : l} ${["", "Discover", "Remember", "Master"][l]}</span>`).join("")}</div><div class="xp-line"><strong>Learner level ${1 + Math.floor(xp / 100)}</strong><span>${xp} XP · ${streak} clean rounds practiced</span><progress max="100" value="${xp % 100}" aria-label="Progress toward next learner level"></progress></div><p class="quest-help">Two unassisted wins unlock the next level. Every fresh round earns XP. Reveals help you practice; try again without them to level up.</p></section>` : ""}<section class="builder"><div class="builder-heading"><div><h3>${mode === "practice" ? "Your practice space" : mode === "quiz" ? "Build the ayah in order" : "Bring the missing words to mind"}</h3><p>${mode === "practice" ? "Choose a word or a few. Build the part you want to remember." : mode === "quiz" ? "Choose the right words from the mixed bag, then build from right to left." : "Some words are hidden. Use their shapes and colors to recall them."}</p></div><button class="text-button muted" id="clear">↺ Reset</button></div><div class="build-zone ${selected.length ? "has-pieces" : ""}" data-drop="build" dir="rtl">${selected.length ? selected.map((i) => piece(i, "selected")).join("") : `<div class="empty-zone"><span class="empty-puzzle">${icon("grid")}</span><strong>Let’s put the pieces together!</strong><span>Click or drag word pieces below to begin</span></div>`}</div><div class="build-actions"><span class="selected-count"><span class="tiny-dot"></span> ${selected.length} of ${v.words.length} words selected</span><div><button class="text-button" id="build-all">${mode === "practice" ? "Build full ayah" : "Shuffle pieces"}</button>${mode === "quiz" && hidden.size ? '<button class="text-button" id="peek-words">' + icon("eye") + (peeking ? " Words visible for 8 seconds" : " Peek for 8 seconds") + "</button>" : ""}${mode === "recall" ? '<button class="text-button" id="reveal-words">' + icon("eye") + " Reveal words</button>" : ""}<button class="primary small" id="practice-audio" ${!selected.length ? "disabled" : ""}>${icon(playing ? "pause" : "play")} ${playing ? "Stop" : "Listen to my pieces"}</button></div></div>${mode === "quiz" ? '<p class="sequence-hint">Plays your pieces exactly as arranged, including extra words. Compare with the full ayah.</p>' : ""}<div class="word-bank-heading"><span class="section-label">YOUR WORD PIECES</span><span>Tap headphones to hear any piece <span class="rtl-arrow">←</span></span></div><div class="word-bank" dir="rtl" data-drop="bank">${
+${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" aria-hidden="true">✦</span><div><strong>Ayah ${v.id} quest</strong><p>Find ${v.words.length} words. Leave the ${extras.length} extra words behind!<br><small>Level ${roundLevel} / 3 · ${roundLevel === 1 ? "Find the words" : roundLevel === 2 ? "Some words are blank" : "Most words are blank"} · ${roundLevel === 3 ? "Keep practicing for mastery" : Math.min(2, Math.max(0, (mastery[key()] || 0) - (roundLevel - 1) * 2)) + " / 2 puzzle wins to level up"}</small></p></div><span class="star-score">★ ${stars} stars <small>${quizSolved ? "Round complete!" : attempts + " tries"}</small></span><div class="level-trail">${[1, 2, 3].map((l) => `<span class="level-step ${l === roundLevel ? "level-active" : ""} ${l < roundLevel ? "level-done" : ""}">${l < roundLevel ? "✓" : l} ${["", "Discover", "Remember", "Master"][l]}</span>`).join("")}</div><div class="xp-line"><strong>Learner level ${1 + Math.floor(xp / 100)}</strong><span>${xp} XP · ${streak} clean rounds practiced</span><progress max="100" value="${xp % 100}" aria-label="Progress toward next learner level"></progress></div><p class="quest-help">Two unassisted wins unlock the next level. Every fresh round earns XP. Reveals help you practice; try again without them to level up.</p></section>` : ""}<section class="builder"><div class="builder-heading"><div><h3>${mode === "practice" ? "Your practice space" : mode === "quiz" ? "Build the ayah in order" : "Bring the missing words to mind"}</h3><p>${mode === "practice" ? "Choose a word or a few. Build the part you want to remember." : mode === "quiz" ? "Choose the right words from the mixed bag, then build from right to left." : "Some words are hidden. Use their shapes and colors to recall them."}</p></div><button class="text-button muted" id="clear">↺ Reset</button></div><div class="build-zone ${selected.length ? "has-pieces" : ""}" data-drop="build" dir="rtl">${selected.length ? selected.map((i) => piece(i, "selected")).join("") : `<div class="empty-zone"><span class="empty-puzzle">${icon("grid")}</span><strong>Let’s put the pieces together!</strong><span>Click or drag word pieces below to begin</span></div>`}</div><div class="build-actions"><span class="selected-count"><span class="tiny-dot"></span> ${workspace?workspace.all(selected).length:selected.length} of ${v.words.length} words selected</span><div><button class="text-button" id="build-all">${mode === "practice" ? workspace?"Build this workspace":"Build full ayah" : "Shuffle pieces"}</button>${mode === "quiz" && hidden.size ? '<button class="text-button" id="peek-words">' + icon("eye") + (peeking ? " Words visible for 8 seconds" : " Peek for 8 seconds") + "</button>" : ""}${mode === "recall" ? '<button class="text-button" id="reveal-words">' + icon("eye") + " Reveal words</button>" : ""}<button class="primary small" id="practice-audio" ${!selected.length ? "disabled" : ""}>${icon(playing ? "pause" : "play")} ${playing ? "Stop" : surah.developerOnly?"Listen to full ayah":"Listen to my pieces"}</button></div></div>${mode === "quiz" ? `<p class="sequence-hint">${surah.developerOnly?'New chapter word clips await alignment review. Use the full-ayah recitation and individual free distractor recordings to compare.':'Plays your pieces exactly as arranged, including extra words. Compare with the full ayah.'}</p>` : ""}<div class="word-bank-heading"><span class="section-label">YOUR WORD PIECES</span><span>Tap headphones to hear any piece <span class="rtl-arrow">←</span></span></div>${workspace?`<div class="study-workspace-nav"><button class="text-button" data-workspace-step="-1" ${workspace.page===0?'disabled':''}>← Previous workspace</button><button class="text-button" id="workspace-check">Check workspace</button><span>Visual workspace ${workspace.page+1}/${workspace.count} · words ${workspace.first+1}–${workspace.last} · not a recitation stop</span><button class="text-button" data-workspace-step="1" ${workspace.page===workspace.count-1?'disabled':''}>Next workspace →</button></div>`:''}<div class="word-bank" dir="rtl" data-drop="bank">${
     bank
+      .filter(i=>!workspace||i>=v.words.length||i>=workspace.first&&i<workspace.last)
       .filter((i) => !selected.includes(i))
       .map((i) => piece(i, "bank"))
       .join("") ||
@@ -261,7 +271,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
   if (mode === "sequence") mountSequence(document.querySelector("main"), surah);
   mountSkyProgress(document.querySelector("main"), learning, surahs, surah, key(), mode, memoryCallbacks);
   mountMemoryTip(document.querySelector("main"), mode);
-  mountAccountControls(document.querySelector("main"), learning, {onRecall:memoryCallbacks.onRecall, onPassage:memoryCallbacks.onPassage,onCoachStep:(target,nextMode,game)=>{memoryCallbacks.onStudy(target);if(nextMode==="lab"){memoryCallbacks.onLab();if(["falling","vanishing","jigsaw","match","chain","continue","detective"].includes(game))document.querySelector(`[data-game="${game}"]`)?.click();}}});
+  mountAccountControls(document.querySelector("main"), learning, {library:surahs,onRecall:memoryCallbacks.onRecall, onPassage:memoryCallbacks.onPassage,onDeveloperChapter:id=>{if(!isDeveloperMode())return;mode='practice';const picker=document.querySelector('#surah-picker'),index=surahs.findIndex(s=>s.id===id);picker.value=index>=0?String(index):`private:${id}`;picker.dispatchEvent(new Event('change'));},onCoachStep:(target,nextMode,game)=>{memoryCallbacks.onStudy(target);if(nextMode==="lab"){memoryCallbacks.onLab();if(["falling","vanishing","jigsaw","match","chain","continue","detective"].includes(game))document.querySelector(`[data-game="${game}"]`)?.click();}}});
   const planButton = document.createElement("button");
   planButton.className = "text-button";
   planButton.textContent = "My plan & achievements";
@@ -325,7 +335,7 @@ async function play(full, single = null) {
     render();
     return;
   }
-  const list = full ? [-1] : single !== null ? [single] : [...selected];
+  const list = surahs[chapter].developerOnly&&single===null ? [-1] : full ? [-1] : single !== null ? [single] : [...selected];
   if (!list.length) return;
   stop();
   studyAudioStart("practice");
@@ -339,14 +349,15 @@ async function play(full, single = null) {
         if (token !== run) return;
         activeWord = i;
         render();
-        await new Promise((resolve, reject) => {
-          audio = new Audio(
+        const source=await resolvePlaybackSource(
             i < 0
               ? verseAudio(verses[ayah].id, surahs[chapter].id)
               : i >= verses[ayah].words.length
                 ? extras[i - verses[ayah].words.length].audio
-                : wordAudio(verses[ayah].id, i, surahs[chapter].id),
-          );
+                : wordAudio(verses[ayah].id, i, surahs[chapter].id));
+        if(token!==run)return;
+        await new Promise((resolve,reject)=>{
+          audio = new Audio(source);
           audio.playbackRate = speed;
           audio.onended = resolve;
           audio.onerror = () => reject(new Error("audio"));
@@ -401,9 +412,17 @@ function markStudyBeforeRecall(target) {
 }
 let galleryFocus = null;
 const memoryCallbacks = {
+  onLongStudy(target){if(!isDeveloperMode())return;const a=appearanceAccount();import('./passage/ui.js').then(m=>m.openPassageStudio({client:a.client,user:a.userId?{id:a.userId}:null,learning,initialReference:target}));},
   async getArcadeBundle(key) {const {loadBundle}=await import("./content/library.js");return loadBundle(key,appearanceAccount().client);},
-  onPassage(passage) {
-    const target=surahs.findIndex(s=>s.id===passage.surah);
+  async onPassage(passage) {
+    let target=surahs.findIndex(s=>s.id===passage.surah);
+    if(target<0&&isDeveloperMode()&&previewSurahs.includes(passage.surah)){
+      const owner=appearanceAccount().userId,token=++privateLoadToken;
+      try{const loaded=await loadDeveloperChapter(passage.surah,appearanceAccount().client);
+        if(owner!==appearanceAccount().userId||token!==privateLoadToken||!isDeveloperMode())return;
+        surahs.push(loaded);learning.setLibrary(surahs);authorizeChapterAudio(surahs,appearanceAccount().client);target=surahs.length-1;
+      }catch(e){feedback=e.message;render();return;}
+    }
     if(target<0 || !Number.isInteger(passage.first_ayah) || !Number.isInteger(passage.last_ayah) || passage.first_ayah<1 || passage.last_ayah<passage.first_ayah || passage.last_ayah>surahs[target].verses.length)return;
     if(passage.first_ayah===passage.last_ayah){memoryCallbacks.onStudy(`${passage.surah}:${passage.first_ayah}`);return;}
     const ids=Array.from({length:passage.last_ayah-passage.first_ayah+1},(_,i)=>passage.first_ayah+i);
@@ -561,7 +580,7 @@ function bind() {
   document.querySelector("#practice-audio").onclick = () => play(false);
   document.querySelector("#build-all").onclick = () => {
     stop();
-    if (mode === "practice") selected = verses[ayah].words.map((_, i) => i);
+    if (mode === "practice") selected = workspace?workspace.indices():verses[ayah].words.map((_, i) => i);
     else {
       reset();
       return;
@@ -591,7 +610,7 @@ function bind() {
       return;
     }
     if (mode === "practice") {
-      if (!quizCorrect(selected, verses[ayah].words, extras)) {
+      if (!quizCorrect(workspace?workspace.all(selected):selected, verses[ayah].words, extras)) {
         feedback =
           "Build all the words in the correct order before marking this ayah complete. You can keep practicing a smaller part.";
         render();
@@ -605,7 +624,7 @@ function bind() {
       stop();
       successCue(successId);
     } else {
-      if (quizCorrect(selected, verses[ayah].words, extras)) {
+      if (quizCorrect(workspace?workspace.all(selected):selected, verses[ayah].words, extras)) {
         if (!complete()) return;
         quizSolved = mode === "quiz";
         let earned = 0,
@@ -656,7 +675,20 @@ function bind() {
       render();
     }
   };
-  document.querySelector("#surah-picker").onchange = (e) => {
+  document.querySelector('#workspace-check')?.addEventListener('click',()=>{const v=verses[ayah],wanted=workspace.indices();workspace.save(selected);const correct=selected.length===wanted.length&&selected.every((id,i)=>id<v.words.length&&v.words[id]===v.words[wanted[i]]);feedback=correct?'This workspace is correct. Continue through the visual workspaces, then check the full ayah. This is practice, not independent recall.':'Check the order in this workspace and leave extra words in the bank.';if(correct)awardStudy({mode:'practice',unit:key(),action:`workspace:${workspace.page}`,xp:1});render();});
+  document.querySelector('#developer-passage')?.addEventListener('click',()=>{if(isDeveloperMode())import('./passage/ui.js').then(m=>m.openPassageStudio({...appearanceAccount(),user:appearanceAccount().userId?{id:appearanceAccount().userId}:null,initialReference:key()}));});
+  document.querySelectorAll('[data-workspace-step]').forEach(b=>b.onclick=()=>{stop();selected=workspace.go(workspace.page+Number(b.dataset.workspaceStep),selected);feedback='Workspace saved locally in this round. Complete every workspace before checking the full ayah.';render();});
+  document.querySelector("#surah-picker").onchange = async (e) => {
+    if(e.target.value.startsWith('private:')){
+      const id=Number(e.target.value.split(':')[1]),token=++privateLoadToken,owner=appearanceAccount().userId,picker=e.target,status=document.querySelector('[data-private-load-status]');
+      picker.disabled=true;status.textContent='Loading the complete verified chapter…';
+      try{
+        const loaded=await loadDeveloperChapter(id,appearanceAccount().client);
+        if(token!==privateLoadToken||owner!==appearanceAccount().userId||!isDeveloperMode())return;
+        stop();surahs.push(loaded);learning.setLibrary(surahs);authorizeChapterAudio(surahs,appearanceAccount().client);chapter=surahs.length-1;verses=loaded.verses;ayah=0;mode='practice';reset();
+      }catch(error){if(token===privateLoadToken&&picker.isConnected){status.textContent=error.message;picker.value=String(chapter);picker.disabled=false;}}
+      return;
+    }
     chapter = +e.target.value;
     verses = surahs[chapter].verses;
     ayah = 0;
@@ -730,3 +762,14 @@ window.addEventListener('ayahrewardsremote',()=>{const node=document.querySelect
 document.addEventListener('play',event=>{if(event.target.closest?.('.recall-recording'))awardStudy({mode:'active-recall',unit:learning.snapshot().activeReview?.key||key(),action:`audio:${event.target.id}`,xp:1});},true);
 
 window.addEventListener('ayahrewardserror',()=>{let note=document.querySelector('[data-rewards-warning]');if(!note){note=document.createElement('p');note.dataset.rewardsWarning='true';note.setAttribute('role','status');document.querySelector('main')?.prepend(note);}note.textContent='Study XP could not be saved. Browser storage may be full or need recovery; existing progress has been preserved.';});
+
+window.addEventListener('ayah-developer-mode',()=>{
+ if(!isDeveloperMode()){
+  privateLoadToken++;stop();clearPrivateAudio();
+  document.querySelectorAll('.billing-dialog,.passage-studio,.coach-dialog').forEach(d=>d.querySelector('[data-close]')?.click());
+  const current=surahs[chapter]?.id;
+  surahs.splice(0,surahs.length,...freeSurahs);learning.setLibrary(surahs);
+  chapter=Math.max(0,surahs.findIndex(s=>s.id===current));verses=surahs[chapter].verses;ayah=Math.min(ayah,verses.length-1);if(!surahs.some(s=>s.id===current))mode='practice';
+ }
+ reset();
+});

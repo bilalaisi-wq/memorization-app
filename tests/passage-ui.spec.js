@@ -1,3 +1,4 @@
+import {enableDeveloperLab} from "./developer-lab-helper.js";
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { menu } from "./menu-helper.js";
@@ -6,6 +7,7 @@ const long = JSON.parse(
   readFileSync(new URL("./fixtures/2-282.json", import.meta.url)),
 );
 async function open(page) {
+  await enableDeveloperLab(page);
   await menu(page);
   await page.getByRole("button", { name: "Passage memorization", exact: true })
     .click();

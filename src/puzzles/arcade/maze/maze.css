@@ -5,3 +5,5 @@
 :root[data-theme="night-sky"] .memory-maze :is(.maze-sign,.maze-overlay>div,.maze-pad button,.maze-config){background:#263454;color:#edf0ff;border-color:#727a9f}:root[data-theme="night-sky"] .memory-maze :is(.maze-sign,.maze-overlay>div) :is(p,small,strong,h4,h5){color:#edf0ff}:root[data-theme="night-sky"] .maze-config{background:#263454;color:#edf0ff;border-color:#727a9f}:root[data-theme="night-sky"] .maze-config :is(p,label,h3){color:#edf0ff}
 
 .puzzle-lab .memory-maze .maze-pad button{min-height:68px;min-width:64px}
+.puzzle-lab .memory-maze .maze-heading{height:auto;min-height:0;padding:0;background:transparent;border:0;justify-content:flex-start;align-items:center;overflow:visible}.puzzle-lab .memory-maze .maze-heading h3{line-height:1.25}.puzzle-lab .memory-maze .maze-heading .eyebrow{display:block;margin:0}
+.puzzle-lab .memory-maze .maze-pad [data-maze-direction]{font-size:28px;line-height:1}

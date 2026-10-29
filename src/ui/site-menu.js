@@ -6,6 +6,7 @@ export function mountSiteMenu(main) {
   const toggle = document.createElement('button');
   toggle.className = 'text-button menu-toggle';
   toggle.id = 'site-menu-toggle';
+  toggle.setAttribute('aria-label','Menu');
   toggle.setAttribute('aria-expanded', 'false');
   toggle.setAttribute('aria-controls', 'site-menu-options');
   toggle.innerHTML = '<span aria-hidden="true">☰</span> Menu';

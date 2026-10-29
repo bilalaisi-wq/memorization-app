@@ -1,3 +1,4 @@
+import {privateAudioSource} from "./content/private-audio.js";
 import distractorAudio from "./distractor-audio.json" with { type: "json" };
 import additionalSurahs from "./additional-surahs.json" with { type: "json" };
 export const verses = [
@@ -59,9 +60,9 @@ export function shuffled(n) {
   return a;
 }
 export const wordAudio = (ayah, index, surah = 1) =>
-  `/audio/${String(surah).padStart(3, "0")}_${String(ayah).padStart(3, "0")}_${String(index + 1).padStart(3, "0")}.mp3`;
+  privateAudioSource(surah,ayah) || `/audio/${String(surah).padStart(3, "0")}_${String(ayah).padStart(3, "0")}_${String(index + 1).padStart(3, "0")}.mp3`;
 export const verseAudio = (ayah, surah = 1) =>
-  `/audio/${String(surah).padStart(3, "0")}${String(ayah).padStart(3, "0")}.mp3`;
+  privateAudioSource(surah,ayah) || `/audio/${String(surah).padStart(3, "0")}${String(ayah).padStart(3, "0")}.mp3`;
 export const meanings = [
   [
     ["In the name", "name"],

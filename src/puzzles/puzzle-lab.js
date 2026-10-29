@@ -1,3 +1,4 @@
+import {resolvePlaybackSource} from "../content/private-audio.js";
 import {mazeRegistration} from "./arcade/maze/ui.js";
 import {buildMazeChambers} from "./arcade/maze/engine.js";
 import {createAudioLevel,readLabVolume,LAB_VOLUME_KEY} from "./audio-level.js";
@@ -82,6 +83,7 @@ export function mountPuzzleLab(
     gameCleanup = null,
     audio = null,
     audioRun = 0,
+    resolvingAudio = false,
     muted = localStorage.getItem("ayah-lab-muted") === "true",
     recitationVolume=readLabVolume(localStorage),
     choiceEntries = [],
@@ -98,6 +100,7 @@ export function mountPuzzleLab(
     audioLevel.detach();
     studyAudioStop("lab");
     audioRun++;
+    resolvingAudio=false;
     pendingAudio = [];
     if (audio) {
       audio.pause();
@@ -106,7 +109,7 @@ export function mountPuzzleLab(
     }
   };
   const playAudio = async (url, assistance = false, automatic = false) => {
-    if (automatic && audio) { pendingAudio.push(url); return; }
+    if (automatic && (audio||resolvingAudio)) { pendingAudio.push(url); return; }
     if (!automatic) pauseGame();
     stopAudio();
     studyAudioStart("lab");
@@ -127,7 +130,11 @@ export function mountPuzzleLab(
         }
         return;
       }
-      audio = new Audio(urls[i]);
+      resolvingAudio=true;
+      let source;try{source=urls[i]?.startsWith('ayah-private:')?await resolvePlaybackSource(urls[i]):urls[i];}catch{if(run===audioRun){resolvingAudio=false;pendingAudio=[];studyAudioStop('lab');say('Verified recitation could not load. Your word progress is safe.');}return;}
+      if(run!==audioRun)return;
+      resolvingAudio=false;
+      audio = new Audio(source);
       audioLevel.attach(audio);
       audio.muted = muted;
       audio.onended = () => playNext(i + 1);
@@ -270,7 +277,10 @@ export function mountPuzzleLab(
       [...levelControl.options].forEach(
         (option, i) => (option.textContent = `${i + 1} · ${labels[i]}`),
       );
-    if (game === "maze") maze();
+    if(surah.developerOnly&&verse.words.length>24&&!['falling','asteroids','snake','maze'].includes(game)){
+      area.innerHTML='<h3>Long-ayah study workspace</h3><p>This developer prototype uses short-ayah layouts. Use the bounded Passage Studio for this long ayah; no partial puzzle will be recorded as a completed ayah. The four arcade games above support sequential long-ayah words.</p><button class="primary" data-long-study>Open Passage Studio for this ayah</button>';
+      area.querySelector('[data-long-study]').onclick=()=>callbacks.onLongStudy?.(key);
+    }else if (game === "maze") maze();
     else if (game === "snake") snake();
     else if (game === "asteroids") asteroids();
     else if (game === "arcade-example") arcadePreview();
@@ -299,7 +309,7 @@ export function mountPuzzleLab(
         const reviews={};
         for(const key of config.keys){
           const canonical=adapter.words(key);
-          if((difficulty==='expert'&&canonical.length>8)||canonical.length>40){
+          if((difficulty==='expert'&&canonical.length>8)||canonical.length>40&&!config.visualWindows){
             const bundle=await callbacks.getArcadeBundle?.(key);if(cancelled||token!==launchToken)return;
             const review=bundle?.segmentationReview;
             if(!review||review.verseKey!==key||review.sourceHash!==bundle.contentRevision||!review.version||bundle.words.length!==canonical.length||bundle.words.some((w,i)=>w.text!==canonical[i].text))throw Error(`${key}: published teacher-approved phrase boundaries are unavailable. Choose Beginner/Standard for short ayahs.`);
@@ -336,7 +346,7 @@ export function mountPuzzleLab(
       const first=Number(form.elements.first.value);
       const config=adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first:Number(through.value),mode:form.elements.journey.value,chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]});
       // Validate before disposing a completed trail, preserving safe error recovery.
-      config.keys.forEach(k=>adapter.choices(k,{count:6}));
+      config.keys.forEach(k=>adapter.choices(k,{count:6,maxWords:config.visualWindows?1000:40}));
       fallingControl=launcher.launch('snake',{root:host,adapter,config,id:uid(),speed:nextSpeed,initialAudio:nextAudio,muted:()=>muted,volume:()=>recitationVolume,
         onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
         getNextSteps:s=>arcadeNextSteps({session:s.session,elapsed:s.elapsed,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'round'}),
@@ -370,7 +380,7 @@ export function mountPuzzleLab(
         const reviews={};
         for(const key of config.keys) {
           const canonical=adapter.words(key);
-          if((difficulty==='expert'&&canonical.length>8)||canonical.length>40){
+          if((difficulty==='expert'&&canonical.length>8)||canonical.length>40&&!config.visualWindows){
             const bundle=await callbacks.getArcadeBundle?.(key);
             if(cancelled||token!==launchRun)return;
             const review=bundle?.segmentationReview;

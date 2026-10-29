@@ -10,12 +10,12 @@ const cells=food=>Array.from({length:6},(_,i)=>({x:food.x+i%3,y:food.y+Math.floo
 export const foodCells=cells;
 const reduce=(s,type,extra={})=>s.session=reduceSession(s.session,{type,...extra});
 export function buildSnakeSectors(adapter,config){
-  return config.keys.map((reference,index)=>({key:reference,words:adapter.words(reference),audio:adapter.audio(reference),distractors:adapter.choices(reference,{seed:config.seed+index,count:6}).filter(w=>!w.target)}));
+  return config.keys.map((reference,index)=>({key:reference,words:adapter.words(reference),audio:adapter.audio(reference),distractors:adapter.choices(reference,{seed:config.seed+index,count:6,maxWords:config.visualWindows?1000:40}).filter(w=>!w.target)}));
 }
 function resetBody(s){
   const path=[];
   for(let y=GRID.rows-1;y>=0;y--)for(let n=0;n<GRID.columns;n++)path.push({x:(GRID.rows-1-y)%2?GRID.columns-1-n:n,y});
-  const length=3+s.cursor;s.body=path.slice(0,length).reverse();
+  const length=3+(s.session.config.visualWindows?Math.min(s.cursor,12):s.cursor);s.body=path.slice(0,length).reverse();
   const next=path[length],head=s.body[0];
   s.direction=Object.keys(DIRECTIONS).find(d=>DIRECTIONS[d].x===next.x-head.x&&DIRECTIONS[d].y===next.y-head.y);
   s.queued=null;
@@ -59,7 +59,7 @@ function populate(s){
 }
 function freshSector(s){s.cursor=0;s.captured=[];s.portal=null;resetBody(s);populate(s);}
 export function createSnake({id,config,sectors,speed='slow'}){
-  if(!snakeSpeeds[speed]||!sectors.length||sectors.map(s=>s.key).join('|')!==config.keys.join('|')||sectors.some(s=>!s.words.length||s.words.length>40))throw Error('Invalid Snake content or speed');
+  if(!snakeSpeeds[speed]||!sectors.length||sectors.map(s=>s.key).join('|')!==config.keys.join('|')||sectors.some(s=>!s.words.length||s.words.length>(config.visualWindows?1000:40)))throw Error('Invalid Snake content or speed');
   const s={session:createSession({id,game:'snake',config}),sectors:structuredClone(sectors),body:[],direction:'up',queued:null,cursor:0,captured:[],food:[],portal:null,score:0,serial:0,speed,steps:0,elapsed:0,motorPause:false,message:'Press Start trail. Steer into the next word.'};
   freshSector(s);return s;
 }
@@ -91,7 +91,7 @@ export function stepSnake(previous,action){
   if(!inside(head)||tail.some(p=>same(p,head))){
     reduce(s,'motor-error');s.motorPause=true;s.queued=null;s.message='Wall or tail bump — no memory strike. Continue on a safe route.';return s;
   }
-  s.body.unshift(head);if(!correct)s.body.pop();s.steps++;s.elapsed+=snakeSpeeds[s.speed]/1000;
+  s.body.unshift(head);if(!correct||s.session.config.visualWindows&&s.body.length>15)s.body.pop();s.steps++;s.elapsed+=snakeSpeeds[s.speed]/1000;
   if(s.portal&&same(s.portal,head)){
     reduce(s,'checkpoint');s.score+=200;freshSector(s);s.message='Portal crossed! A new ayah trail begins.';return s;
   }

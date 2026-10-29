@@ -1,7 +1,9 @@
+import {enableDeveloperLab} from "./developer-lab-helper.js";
 import { expect, test } from "@playwright/test";
 import { menu } from "./menu-helper.js";
 import { billingUser, mockBilling } from "./billing-fixtures.js";
 const open = async (page) => {
+  await enableDeveloperLab(page);
   await menu(page);
   await page.getByRole("button", { name: "Hifz Coach", exact: true }).click();
   await expect(page.locator("[data-coach]")).toBeVisible();

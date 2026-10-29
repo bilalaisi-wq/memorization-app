@@ -1,3 +1,4 @@
+import {enableDeveloperLab} from "./developer-lab-helper.js";
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { menu } from "./menu-helper.js";
@@ -70,6 +71,7 @@ for (const night of [false, true]) {
         ), billingUser.id);
     }
     await page.goto("/");
+    await enableDeveloperLab(page);
     await menu(page);
     await page.getByRole("button", {
       name: "Teacher segment review",

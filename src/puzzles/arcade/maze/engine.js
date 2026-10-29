@@ -24,7 +24,7 @@ export function buildMazeChambers(adapter,config,library,{difficulty='beginner',
  if(!mazeProfiles[difficulty])throw Error('Unknown maze difficulty');
  return buildSectors(adapter,config,library,{difficulty,reviews}).map(s=>{
   if(s.distractors.length<mazeProfiles[difficulty].choices-1)throw Error('Insufficient verified maze choices');
-  if(!s.phrases)s.distractors=adapter.choices(s.key,{seed:config.seed,count:12}).filter(w=>!w.target).map(w=>({id:`${w.key}:${w.index}-${w.index}`,key:w.key,words:[w],order:-1,target:false}));
+  if(!s.phrases)s.distractors=adapter.choices(s.key,{seed:config.seed,count:12,maxWords:config.visualWindows?1000:40}).filter(w=>!w.target).map(w=>({id:`${w.key}:${w.index}-${w.index}`,key:w.key,words:[w],order:-1,target:false}));
   else {
    const excluded=new Set(s.targets.map(t=>unitIdentity(t))),pool=library.flatMap(ch=>ch.verses.filter(v=>v.words.length<=8).map(v=>{const words=adapter.words(`${ch.id}:${v.id}`);return {id:`${words[0].key}:0-${words.length-1}`,key:words[0].key,words,order:-1,target:false};})).filter(p=>p.key!==s.key&&!excluded.has(unitIdentity(p)));
    const selected=new Map();for(const target of s.targets)for(const p of seededShuffle(pool,config.seed).sort((a,b)=>similarity(b,target)-similarity(a,target)).slice(0,6))selected.set(unitIdentity(p),p);

@@ -186,3 +186,5 @@ Puzzle Lab → **Ayah Serpent** offers continuous grid movement, a growing tail,
 **Ayah Blocks**, **Ayah Space** and **Ayah Serpent** share a persistent recitation-volume slider. Blocks adds B/N rotation and a large mobile movement/rotation/drop pad. [Controls, audio behavior and mobile-app reuse](docs/arcade-audio-controls.md). Existing game IDs and progress remain unchanged; no SQL is needed.
 
 Memory Maze: [gameplay, content integrity and tests](docs/memory-maze.md).
+
+Developer-only Al-A‘raf/Juz 29: [activation, boundaries and validation](docs/developer-library-preview.md).

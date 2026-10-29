@@ -31,7 +31,7 @@ export function createContentAdapter(library) {
       if (!['single','chain'].includes(mode) || !['classic','practice'].includes(chainMode) || !difficultyProfiles[profile] || !Number.isInteger(start) || !Number.isInteger(end) || end < start || end-start > 49 || (mode==='single' && end!==start)) throw Error('Invalid arcade configuration');
       const keys = Array.from({length:end-start+1},(_,i)=>`${surah}:${start+i}`);
       keys.forEach(words);
-      return {keys,mode,chainMode,profile,seed:seed>>>0};
+      return {keys,mode,chainMode,profile,seed:seed>>>0,...(keys.some(k=>verses.get(k).s.developerOnly)?{visualWindows:true}:{})};
     },
     phrases(key, segments) {
       const canonical = words(key);

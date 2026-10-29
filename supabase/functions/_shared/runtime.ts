@@ -10,17 +10,14 @@ export const env = (name: string) => Deno.env.get(name) || "";
 export function services() {
   const mode = env("STRIPE_MODE") || "test";
   const key = env("STRIPE_SECRET_KEY");
-  if (!["test", "live"].includes(mode) || !key.startsWith(`sk_${mode}_`)) {
-    throw new BillingError(
-      503,
-      "Stripe is not configured for this environment.",
-    );
-  }
-  const stripe = new Stripe(key, {
-    httpClient: Stripe.createFetchHttpClient(),
-    maxNetworkRetries: 1,
-    timeout: 15000,
-  });
+  if (!["test", "live"].includes(mode)) throw new BillingError(503,"Invalid billing environment.");
+  // Content/passages still need verified auth and entitlements, but do not call
+  // Stripe. Initialize the payment client only when a payment operation uses it.
+  let stripe: Stripe | null = null;
+  const paymentClient = () => {
+    if (!key.startsWith(`sk_${mode}_`)) throw new BillingError(503,"Stripe is not configured for this environment.");
+    return stripe ||= new Stripe(key,{httpClient:Stripe.createFetchHttpClient(),maxNetworkRetries:1,timeout:15000});
+  };
   const admin = createClient(
     env("SUPABASE_URL"),
     env("SUPABASE_SERVICE_ROLE_KEY"),
@@ -36,7 +33,7 @@ export function services() {
     site.username || site.password || site.search || site.hash ||
     site.pathname !== "/"
   ) throw new BillingError(503, "Billing site URL must be an origin.");
-  return { stripe, admin, mode, site: site.origin, catalog: priceCatalog(env) };
+  return { get stripe(){return paymentClient();}, admin, mode, site: site.origin, catalog: priceCatalog(env) };
 }
 export async function db<T>(
   result: PromiseLike<{ data: T; error: unknown }>,

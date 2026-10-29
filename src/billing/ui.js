@@ -1,3 +1,4 @@
+import {isDeveloperMode} from "../developer/access.js";
 import { mountSegmentReview } from "../passage/review-menu.js";
 const openPassageStudio = (ctx) =>
   import("../passage/ui.js").then((m) => m.openPassageStudio(ctx));
@@ -92,11 +93,12 @@ export function mountBillingControls(nav, context) {
     const b = document.createElement("button");
     b.className = "text-button";
     b.textContent = label;
-    b.onclick = open;
+    b.dataset.developerOnly='true';b.hidden=!isDeveloperMode();b.disabled=!isDeveloperMode();
+    b.onclick = () => {if(isDeveloperMode())open();};
     nav.append(b);
   }
   if (
-    !document.querySelector("[data-billing-return]") &&
+    isDeveloperMode() && !document.querySelector("[data-billing-return]") &&
     ["success", "cancel", "return"].includes(
       new URL(location.href).searchParams.get("billing"),
     )
@@ -277,6 +279,7 @@ async function account(ctx, api) {
   }
 }
 async function passages(ctx, api) {
+  const library=ctx.library||surahs;
   const d = dialog("Passage Builder"),
     root = d.querySelector("[data-billing-content]");
   const studio = document.createElement("button");
@@ -307,7 +310,7 @@ async function passages(ctx, api) {
       `<p>Save a named ayah range, then open its word puzzles and practice the sequence. Existing saved passages remain accessible after your subscription ends.</p>${
         ent.features.passageBuilder
           ? `<form data-passage-form><label>Passage name<input name="title" required maxlength="80" autocomplete="off"></label><label>Surah<select name="surah">${
-            surahs.map((s) => `<option value="${s.id}">${esc(s.name)}</option>`)
+            library.map((s) => `<option value="${s.id}">${esc(s.name)}</option>`)
               .join("")
           }</select></label><div class="passage-range"><label>First ayah<input name="first" type="number" min="1" value="1" required></label><label>Last ayah<input name="last" type="number" min="1" value="2" required></label></div><button class="primary">Save passage</button></form>`
           : "<p>Explorer or Pathfinder is required to save new passages. Use the free Ayah Chain for unlimited practice.</p>"
@@ -315,7 +318,7 @@ async function passages(ctx, api) {
         saved.map((p) =>
           `<article><h4>${esc(p.title)}</h4><p>${
             esc(
-              surahs.find((s) => s.id === p.surah)?.name || "Surah " + p.surah,
+              library.find((s) => s.id === p.surah)?.name || "Surah " + p.surah,
             )
           } · ${p.first_ayah}–${p.last_ayah}</p><button class="primary small" data-open-passage="${
             esc(p.id)

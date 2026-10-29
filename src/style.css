@@ -3018,3 +3018,10 @@ main .text-button, main .primary, .lab-game button, .lab-settings label { font-s
 [data-theme="night-sky"] .practice-next-step { background:#141d43; }
 
 @media (max-width:760px) { .sidebar .nav-label { display:block; margin-top:14px; } .sidebar #nav-learn, .sidebar #nav-puzzle-lab { display:flex; width:100%; } }
+/* An explicit presentation cue, never a server authorization mechanism. */
+:root[data-developer-mode="true"] body{background-image:linear-gradient(125deg,#b7dcca26,#bcabea24,#f3dfae20)}
+:root[data-developer-mode="true"] .main-shell>header{background:linear-gradient(105deg,#edf7ee,#eee9fa 65%,#faf2dc)}
+:root[data-developer-mode="true"] #site-menu-toggle::after{content:"Developer preview";font-size:11px;padding:4px 8px;background:#e6ddf4;color:#5e467d;border-radius:20px;margin-left:8px}
+:root[data-theme="night-sky"][data-developer-mode="true"] .main-shell>header{background:linear-gradient(105deg,#152b40,#302447 65%,#252342)}
+.developer-study-note,.study-workspace-nav{padding:14px 18px;background:#f0ecfa;border:1px solid #c4b8d9;border-radius:16px;margin:14px 0}.study-workspace-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.developer-study-note p{line-height:1.6}.account-photo{padding:16px;border:1px solid var(--line,#d9d4c7);border-radius:18px;margin:16px 0}.account-photo input{max-width:100%}.account-photo .profile-photo{width:100px;height:100px;object-fit:cover;border-radius:50%}.account-photo p{line-height:1.6}[data-private-load-status]{font-size:13px;line-height:1.5;color:var(--muted)}
+:root[data-theme="night-sky"] :is(.developer-study-note,.study-workspace-nav){background:#292b49;border-color:#70638a}

@@ -49,7 +49,7 @@ test("all 6236 references map exactly once to validated surah/juz metadata", () 
   expect(reference("2:255").juz).toBe(3);
   expect(reference("67:1").juz).toBe(29);
   expect(() => reference("2:287")).toThrow();
-  expect(availability.premium).toHaveLength(433);
+  expect(availability.premium).toHaveLength(639);
   expect(availability.fullyVerifiedJuz).toEqual([29,30]);
   const juz29=availability.premium.filter(p=>p.juz===29);
   expect(juz29).toHaveLength(431);
@@ -66,7 +66,7 @@ test("all 6236 references map exactly once to validated surah/juz metadata", () 
     }),
   ).toBe(false);
   expect(allowedReference("67:1", { plan: "explorer", selectedJuz: [29] }))
-    .toBe(true);
+    .toBe(false);
 });
 test("long ayah integrity and windows preserve exact words and never invent reviewed recitation stops", async () => {
   expect(validateBundle(long, "2:282")).toBe(long);

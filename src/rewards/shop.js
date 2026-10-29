@@ -42,18 +42,8 @@ export async function compressPhoto(file) {
     bitmap.close();
   }
 }
-export function openNatureShop({ client, user, learning, publisher }) {
-  const dialog = document.createElement("dialog");
-  dialog.className = "account-dialog nature-shop";
-  dialog.innerHTML =
-    '<button class="text-button" data-close>Close ×</button><div data-shop></div><p data-shop-status role="status" aria-live="polite"></p>';
-  const root = dialog.querySelector("[data-shop]");
-  let profile = null,
-    pending = false,
-    disposed = false,
-    filter = "all",
-    market = items;
-  const local = versionedStore(
+export function createLocalNatureStore(){
+  return versionedStore(
     profileStorage,
     LOCAL_SHOP,
     () => ({
@@ -73,6 +63,19 @@ export function openNatureShop({ client, user, learning, publisher }) {
         typeof v.photo === "string" && v.photo.length <= 70000 &&
           /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(v.photo)),
   );
+}
+export function openNatureShop({ client, user, learning, publisher }) {
+  const dialog = document.createElement("dialog");
+  dialog.className = "account-dialog nature-shop";
+  dialog.innerHTML =
+    '<button class="text-button" data-close>Close ×</button><div data-shop></div><p data-shop-status role="status" aria-live="polite"></p>';
+  const root = dialog.querySelector("[data-shop]");
+  let profile = null,
+    pending = false,
+    disposed = false,
+    filter = "all",
+    market = items;
+  const local = createLocalNatureStore();
   const status = (text) =>
     dialog.querySelector("[data-shop-status]").textContent = text;
   const close = () => {
@@ -132,13 +135,7 @@ export function openNatureShop({ client, user, learning, publisher }) {
     root.innerHTML =
       `<header class="shop-heading"><span class="eyebrow">A LITTLE GARDEN OF REWARDS</span><h2>Nature Companions</h2><p>Grow a companion with the practice you already do. No purchases with money, random prizes, or expiring ownership.</p></header><section class="companion-home">${
         avatarSvg(profile)
-      }<div><h3>Your space to grow</h3><strong class="seed-balance">✿ ${profile.balance} Seeds</strong><p>1 earned XP = 1 Seed · 1 earned star = 5 Seeds. Spending Seeds never removes XP, stars or memorization progress.</p>${
-        profile.photo
-          ? `<img class="profile-photo" src="${
-            esc(profile.photo)
-          }" alt="Your private profile picture">`
-          : ""
-      }<label>Private profile picture<input data-photo type="file" accept="image/jpeg,image/png,image/webp"></label><p>Your picture is private to your account; leaderboards show your nature companion instead. Images are cropped, resized and re-encoded before saving. Avoid sensitive photos.</p><button class="text-button" data-remove-photo>Remove picture</button><button class="text-button" data-no-outfit>Remove outfit</button>${
+      }<div><h3>Your space to grow</h3><strong class="seed-balance">✿ ${profile.balance} Seeds</strong><p>1 earned XP = 1 Seed · 1 earned star = 5 Seeds. Spending Seeds never removes XP, stars or memorization progress.</p><button class="text-button" data-no-outfit>Remove outfit</button>${
         user
           ? '<button class="primary small" data-sync-earnings>Sync my earned rewards</button><p>The displayed balance is your synced account balance. Tap Sync to include learning saved on this device. Syncing sends dated XP receipts without ayah references to your private account. Your chosen companion appears beside your alias only if you opt into the leaderboard.</p>'
           : "<p>Guest customization stays in this browser. Sign in to keep a separate account wardrobe across devices.</p>"
@@ -241,26 +238,6 @@ export function openNatureShop({ client, user, learning, publisher }) {
           }
         })
     );
-    root.querySelector("[data-photo]").onchange = (e) => {
-      const f = e.target.files[0];
-      if (!f) return;
-      action(async () => {
-        const photo = await compressPhoto(f);
-        if (user) await rpc("set_my_profile_photo", { photo_data: photo });
-        else local.transact((p) => p.photo = photo);
-        profile = user ? await rpc("my_nature_profile") : readLocal();
-      });
-    };
-    root.querySelector("[data-remove-photo]").onclick = () =>
-      action(async () => {
-        if (user) {
-          await rpc("set_my_profile_photo", { photo_data: null });
-          profile = await rpc("my_nature_profile");
-        } else {
-          local.transact((p) => p.photo = null);
-          profile = readLocal();
-        }
-      });
     root.querySelector("[data-no-outfit]").onclick = () =>
       action(async () => {
         if (user) {

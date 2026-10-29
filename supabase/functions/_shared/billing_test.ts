@@ -481,3 +481,12 @@ Deno.test("closing billing requires explicit confirmation and verified cancellat
     );
   });
 });
+
+Deno.test('authenticated non-payment services can initialize without Stripe; payment operations still reject missing or mismatched keys',async()=>{
+ const names=['STRIPE_MODE','STRIPE_SECRET_KEY','SUPABASE_URL','SUPABASE_SERVICE_ROLE_KEY','BILLING_SITE_URL'],before=Object.fromEntries(names.map(n=>[n,Deno.env.get(n)]));
+ try{
+  Deno.env.set('STRIPE_MODE','test');Deno.env.set('STRIPE_SECRET_KEY','');Deno.env.set('SUPABASE_URL','https://db.example.test');Deno.env.set('SUPABASE_SERVICE_ROLE_KEY','test-service-fixture');Deno.env.set('BILLING_SITE_URL','https://ayah.example.test');
+  const {services}=await import('./runtime.ts');const s=services();assert.ok(s.admin);assert.equal(s.site,'https://ayah.example.test');let rejected=false;try{void s.stripe;}catch{rejected=true;}assert.ok(rejected);
+  Deno.env.set('STRIPE_SECRET_KEY','sk_live_wrong_environment_fixture');rejected=false;try{void services().stripe;}catch{rejected=true;}assert.ok(rejected);
+ }finally{for(const n of names){if(before[n]===undefined)Deno.env.delete(n);else Deno.env.set(n,before[n]!);}}
+});

@@ -3,14 +3,21 @@ const OWNER_EMAIL = 'bilalaisi@gmail.com';
 let allowed = false;
 let preview = false;
 export const isDeveloperMode = () => allowed && preview;
+function paintDeveloperMode(){
+ if(!globalThis.document)return;
+ document.documentElement.dataset.developerMode=isDeveloperMode()?'true':'false';
+ document.querySelectorAll('[data-developer-only]').forEach(el=>{el.hidden=!isDeveloperMode();el.disabled=!isDeveloperMode();});
+}
 export function setDeveloperPreview(active) {
   preview = allowed && active === true;
+  paintDeveloperMode();
   globalThis.dispatchEvent?.(new Event("ayah-developer-mode"));
 }
 export function setDeveloperUser(user) {
   preview = false;
   allowed = !!user?.id && !!user.email_confirmed_at &&
     user.email?.trim().toLowerCase() === OWNER_EMAIL;
+  paintDeveloperMode();
   globalThis.dispatchEvent?.(new Event('ayah-developer-mode'));
 }
 export const isDeveloper = () => allowed;
@@ -30,10 +37,11 @@ export async function applyMenuOrder(nav) {
 }
 export function mountDeveloperMenu(nav) {
   applyMenuOrder(nav).catch(() => {});
-  if (!isDeveloper()) return;
+  if (!isDeveloper() || nav.querySelector("[data-developer-toggle]")) return;
   const button = document.createElement('button');
   button.className = 'text-button';
   button.textContent = 'Developer mode';
+  button.dataset.developerToggle='true';
   button.onclick = () => {
     const dialog = document.createElement('dialog');
     dialog.className = 'account-dialog';
@@ -49,7 +57,10 @@ export function mountDeveloperMenu(nav) {
           const b = document.createElement('button'); b.className='text-button'; b.textContent=label;
           b.setAttribute('aria-label', `Move ${name.textContent} ${delta<0?'up':'down'}`);
           b.disabled=i+delta<0 || i+delta>=items.length;
-          b.onclick=()=>{ [items[i],items[i+delta]]=[items[i+delta],items[i]]; items.forEach(el=>nav.append(el)); draw(); };
+          b.onclick=()=>{ [items[i],items[i+delta]]=[items[i+delta],items[i]]; items.forEach(el=>nav.append(el));
+            const live=document.querySelector('.explore-nav');
+            if(live&&live!==nav)for(const item of items){const current=[...live.children].find(el=>el.textContent.trim()===item.textContent.trim());if(current)live.append(current);}
+            draw(); };
           row.append(b);
         }
         list.append(row);
@@ -68,6 +79,7 @@ export function mountDeveloperMenu(nav) {
       const {error}=await client.rpc('save_site_menu',{items:items.map(b=>b.textContent.trim())});
       if(error) throw Error('Enable developer mode before saving. Ensure the developer migration is installed.');
       orderRequest=Promise.resolve({data:{menu_order:items.map(b=>b.textContent.trim())}});
+      const live=document.querySelector('.explore-nav');if(live)await applyMenuOrder(live);
       status.textContent='Menu order saved for all learners.';
     });
     dialog.querySelector('[data-close]').onclick = () => { dialog.close(); dialog.remove(); };

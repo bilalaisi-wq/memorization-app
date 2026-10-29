@@ -49,7 +49,7 @@ export function openCoach(ctx) {
     close();
   };
   function draw() {
-    snapshot = coachSnapshot(ctx.learning, profileStorage, surahs, settings);
+    snapshot = coachSnapshot(ctx.learning, profileStorage, ctx.library||surahs, settings);
     const plan = materializePlan(snapshot, advice), s = snapshot.summary;
     root.innerHTML =
       `<p>Suggestions are separate from puzzle correctness and self-assessed memory. No coach action changes FSRS dates, awards mastery or marks work complete.</p><section class="coach-hero"><span aria-hidden="true">✦</span><div><h3>${

@@ -119,6 +119,8 @@ test("Guest shop purchases persist without reducing XP, and photo input is safel
     c.getContext("2d").fillRect(0, 0, 10, 10);
     return c.toDataURL().split(",")[1];
   });
+  await expect(page.locator('.nature-shop [data-photo]')).toHaveCount(0);
+  await page.locator('.nature-shop [data-close]').click();await menu(page);await page.getByRole('button',{name:'Sign in',exact:true}).click();
   await page.locator("[data-photo]").setInputFiles({
     name: "garden.png",
     mimeType: "image/png",
@@ -132,7 +134,7 @@ test("Guest shop purchases persist without reducing XP, and photo input is safel
   await page.locator("[data-remove-photo]").click();
   await expect(page.locator(".profile-photo")).toHaveCount(0);
   expect(
-    await page.locator(".nature-shop").evaluate((e) =>
+    await page.locator(".account-dialog").evaluate((e) =>
       e.scrollWidth <= e.clientWidth + 1
     ),
   ).toBe(true);

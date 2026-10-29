@@ -21,8 +21,10 @@ export function freeReference(key) {
   const r = reference(key);
   return r.surah === 1 || r.juz === 30;
 }
+export const developerReference = key => !!availability.developerOnlySurahs?.includes(reference(key).surah);
 export function allowedReference(key, ent) {
   const r = reference(key);
+  if(developerReference(key)) return ent?.developer === true;
   return freeReference(key) || !!ent?.features?.allQuran ||
     (ent?.plan === "explorer" && ent.selectedJuz?.includes(r.juz));
 }

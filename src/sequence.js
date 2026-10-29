@@ -1,3 +1,4 @@
+import {resolvePlaybackSource} from "./content/private-audio.js";
 import { awardStudy } from "./rewards/store.js";
 import {
   successCue,
@@ -40,6 +41,7 @@ export function mountSequence(main, surah, initialAyahs = null) {
       playing: false,
       active: "",
       started: false,
+      pages:{},activePuzzle:null,
     };
   main.querySelector(".reference-card")?.remove();
   let node = main.querySelector(".builder");
@@ -77,25 +79,28 @@ function wordPiece(id, i) {
 }
 function draw() {
   if (!root?.isConnected) return;
-  const s = state;
-  root.innerHTML = `<section class="chain-config"><div><h3>Build your ayah chain</h3><p>Choose two or more ayahs from ${s.surah.name}. Build their words, then connect the ayahs in surah order.</p></div><fieldset><legend>Choose your ayahs</legend><div class="chain-choices">${s.surah.verses.map((v) => `<label><input type="checkbox" data-chain-choice="${v.id}" ${s.chosen.includes(v.id) ? "checked" : ""}> Ayah ${v.id}</label>`).join("")}</div></fieldset><div class="chain-config-actions"><button class="text-button" id="chain-all">Choose all</button><button class="primary" id="chain-start" ${s.chosen.length < 2 ? "disabled" : ""}>${s.started ? "Start fresh" : "Start my chain"} →</button></div>${s.chosen.length < 2 ? '<p role="status">Choose at least two ayahs to practice their order.</p>' : ""}</section>
+  const s = state;s.pages ||= {};
+  const remaining=s.started?s.cards.filter(id=>!s.chain.includes(id)):[];
+  if(!remaining.includes(s.activePuzzle))s.activePuzzle=remaining[0];
+  const inWindow=(id,i)=>!s.surah.developerOnly||verse(id).words.length<=24||i>=((s.pages[id]||0)*12)&&i<((s.pages[id]||0)*12+12);
+  root.innerHTML = `<section class="chain-config"><div><h3>Build your ayah chain</h3><p>Choose two or more ayahs from ${s.surah.name}. Build their words, then connect the ayahs in surah order.</p></div><fieldset><legend>Choose your ayahs</legend><div class="chain-choices">${s.surah.verses.map((v) => `<label><input type="checkbox" data-chain-choice="${v.id}" ${s.chosen.includes(v.id) ? "checked" : ""}> Ayah ${v.id}</label>`).join("")}</div></fieldset><div class="chain-config-actions"><button class="text-button" id="chain-all">${s.surah.developerOnly?"Choose first ten":"Choose all"}</button><button class="primary" id="chain-start" ${s.chosen.length < 2 ? "disabled" : ""}>${s.started ? "Start fresh" : "Start my chain"} →</button></div>${s.chosen.length < 2 ? '<p role="status">Choose at least two ayahs to practice their order.</p>' : ""}</section>
 ${
   s.started
     ? `<section class="chain-reference"><div class="builder-heading"><h3>Your reference sequence</h3><button class="text-button" id="chain-reference-toggle">${s.showReference ? "Hide" : "Show"} reference</button></div>${s.showReference ? s.chosen.map((id) => `<div class="chain-reference-ayah"><span>Ayah ${id}</span><p class="arabic" lang="ar" dir="rtl">${verse(id).text}</p><small>${verse(id).translation}</small></div>`).join("") : "<p>The reference is hidden. Recall how each ayah leads into the next.</p>"}${s.chosen.some((id, i) => i && id !== s.chosen[i - 1] + 1) ? '<p class="sequence-hint">You chose nonconsecutive ayahs. Practice order follows their positions in the surah and skips the unselected ayahs.</p>' : ""}</section>
 <section class="chain-target"><div class="builder-heading"><div><h3>Your ayah sequence</h3><p>First added ayah plays first. Use the arrows to change the order.</p></div><span>${s.chain.length} / ${s.chosen.length} ayahs</span></div><div class="chain-slots" data-chain-drop-order>${s.chain.length ? s.chain.map((id, index) => `<article class="chain-slot" data-chain-card="${id}" draggable="true"><span class="chain-step">${index + 1}</span><p class="arabic" lang="ar" dir="rtl">${s.wordOrder[id].map((i) => verse(id).words[i]).join(" ")}</p><div><button data-chain-move="${id}:-1" ${index === 0 ? "disabled" : ""} aria-label="Move ayah earlier">↑</button><button data-chain-move="${id}:1" ${index === s.chain.length - 1 ? "disabled" : ""} aria-label="Move ayah later">↓</button><button data-chain-remove="${id}">Return to puzzles</button><button data-chain-full="${id}">♫ Listen</button></div></article>`).join("") : "<p>Finish a word puzzle below, then add that ayah here.</p>"}</div><div class="chain-playback"><label>Repeat <select id="chain-repeat">${[1, 3, 5, 10].map((n) => `<option value="${n}" ${s.repeat === n ? "selected" : ""}>${n} ${n === 1 ? "time" : "times"}</option>`).join("")}</select></label><label>Speed <select id="chain-speed">${[0.75, 1, 1.25].map((n) => `<option value="${n}" ${s.speed === n ? "selected" : ""}>${n}×</option>`).join("")}</select></label><button class="primary" id="chain-play" ${!s.chain.length ? "disabled" : ""}>${s.playing ? "Stop audio" : "Listen to my chain"}</button><button class="text-button" id="chain-reference-audio">♫ Listen in surah order</button></div><p class="sequence-hint">“My chain” plays your chosen order. Compare it with the surah-order recording.</p><button class="primary" id="chain-check">Check my sequence ✓</button></section>
-<div class="chain-puzzles"><h3>Your shuffled ayah puzzles</h3><p>Use the words and their meaning to recognize each ayah. The puzzle labels aren’t ayah numbers.</p>${
+${s.surah.developerOnly?`<label>Active word puzzle<select id="chain-active-puzzle">${remaining.map(id=>`<option value="${id}" ${id===s.activePuzzle?'selected':''}>Ayah ${id}</option>`).join('')}</select></label><p>Only one bounded puzzle is shown at a time. Visual pages are not recitation stops; audio stays continuous.</p>`:''}<div class="chain-puzzles"><h3>Your shuffled ayah puzzles</h3><p>Use the words and their meaning to recognize each ayah. The puzzle labels aren’t ayah numbers.</p>${
         s.cards
-          .filter((id) => !s.chain.includes(id))
+          .filter((id) => !s.chain.includes(id)&&(!s.surah.developerOnly||id===s.activePuzzle))
           .map(
             (id) =>
-              `<section class="chain-puzzle" data-puzzle="${id}"><div class="builder-heading"><h3>Puzzle ${String.fromCharCode(65 + s.cards.indexOf(id))}</h3><button class="text-button" data-chain-reset="${id}">↺ Reset words</button></div><div class="build-zone ${s.wordOrder[id].length ? "has-pieces" : ""}" dir="rtl" data-chain-drop="${id}">${s.wordOrder[id].length ? s.wordOrder[id].map((i) => wordPiece(id, i)).join("") : "<p>Build this ayah from right to left.</p>"}</div><div class="word-bank" dir="rtl">${s.banks[
+              `<section class="chain-puzzle" data-puzzle="${id}"><div class="builder-heading"><h3>Puzzle ${String.fromCharCode(65 + s.cards.indexOf(id))}</h3><button class="text-button" data-chain-reset="${id}">↺ Reset words</button></div><div class="build-zone ${s.wordOrder[id].length ? "has-pieces" : ""}" dir="rtl" data-chain-drop="${id}">${s.wordOrder[id].length ? s.wordOrder[id].filter(i=>inWindow(id,i)).map((i) => wordPiece(id, i)).join("") : "<p>Build this ayah from right to left.</p>"}</div><div class="word-bank" dir="rtl">${s.banks[
                 id
               ]
-                .filter((i) => !s.wordOrder[id].includes(i))
+                .filter((i) => inWindow(id,i)&&!s.wordOrder[id].includes(i))
                 .map((i) => wordPiece(id, i))
                 .join(
                   "",
-                )}</div><div class="chain-puzzle-actions"><button class="text-button" data-chain-preview="${id}" ${!s.wordOrder[id].length ? "disabled" : ""}>♫ Listen to these pieces</button><button class="primary" data-chain-add="${id}" ${s.wordOrder[id].length !== verse(id).words.length ? "disabled" : ""}>Add ayah to chain →</button></div></section>`,
+                )}</div>${s.surah.developerOnly&&verse(id).words.length>24?`<div class="study-workspace-nav"><button data-chain-page="${id}:-1" ${(s.pages[id]||0)===0?'disabled':''}>Previous workspace</button><span>Visual workspace ${(s.pages[id]||0)+1}/${Math.ceil(verse(id).words.length/12)}</span><button data-chain-page="${id}:1" ${(s.pages[id]||0)+1>=Math.ceil(verse(id).words.length/12)?'disabled':''}>Next workspace</button></div>`:''}<div class="chain-puzzle-actions"><button class="text-button" data-chain-preview="${id}" ${!s.wordOrder[id].length ? "disabled" : ""}>♫ Listen to these pieces</button><button class="primary" data-chain-add="${id}" ${s.wordOrder[id].length !== verse(id).words.length ? "disabled" : ""}>Add ayah to chain →</button></div></section>`,
           )
           .join("") ||
         "<p>All your ayahs are in the chain. Check their sequence above!</p>"
@@ -105,6 +110,7 @@ ${
   bind();
 }
 async function play(items) {
+  if(state.surah.developerOnly)items=items.filter(([id],i)=>i===0||id!==items[i-1][0]).map(([id])=>[id,-1]);
   if (state.playing) {
     stopSequence();
     draw();
@@ -122,12 +128,12 @@ async function play(items) {
         if (run !== token) return;
         state.active = id + ":" + i;
         draw();
-        await new Promise((resolve, reject) => {
-          currentAudio = new Audio(
-            i === -1
+        const source=await resolvePlaybackSource(i === -1
               ? verseAudio(id, state.surah.id)
-              : wordAudio(id, i, state.surah.id),
-          );
+              : wordAudio(id, i, state.surah.id));
+        if(run!==token)return;
+        await new Promise((resolve,reject)=>{
+          currentAudio=new Audio(source);
           currentAudio.playbackRate = state.speed;
           currentAudio.onended = resolve;
           currentAudio.onerror = () => reject(new Error("audio"));
@@ -165,15 +171,19 @@ function changeWords(id, i, addOnly = false) {
       ? words
       : words.filter((x) => x !== i)
     : [...words, i];
+  if(state.surah.developerOnly)state.wordOrder[id].sort((a,b)=>Math.floor(a/12)-Math.floor(b/12));
   state.feedback = "";
   draw();
 }
 function bind() {
+  root.querySelector('#chain-active-puzzle')?.addEventListener('change',e=>{stopSequence();state.activePuzzle=Number(e.target.value);draw();});
+  root.querySelectorAll('[data-chain-page]').forEach(b=>b.onclick=()=>{stopSequence();const [id,step]=b.dataset.chainPage.split(':').map(Number);state.pages[id]=Math.max(0,Math.min(Math.ceil(verse(id).words.length/12)-1,(state.pages[id]||0)+step));draw();});
   root.querySelectorAll("[data-chain-choice]").forEach(
     (b) =>
       (b.onchange = () => {
         stopSequence();
         const id = +b.dataset.chainChoice;
+        if(state.surah.developerOnly&&b.checked&&state.chosen.length>=10){state.feedback='Choose up to ten ayahs per passage to keep the workspace manageable.';draw();return;}
         state.chosen = b.checked
           ? [...state.chosen, id].sort((a, b) => a - b)
           : state.chosen.filter((x) => x !== id);
@@ -184,7 +194,7 @@ function bind() {
   );
   root.querySelector("#chain-all").onclick = () => {
     stopSequence();
-    state.chosen = state.surah.verses.map((v) => v.id);
+    state.chosen = state.surah.verses.slice(0,state.surah.developerOnly?10:undefined).map((v) => v.id);
     state.started = false;
     draw();
   };

@@ -40,3 +40,5 @@ Victories save through `createResultRecorder` with stable per-ayah receipts. Rep
 - `tests/maze-ui.spec.js`: actual launcher/keyboard/doorway play, RTL results, save/replay/reload, chain retry, fog/zoom/input guards, audio/volume/failure/disposal, mobile touch/reduced motion/Night Sky, failed saves and unavailable phrase approval.
 
 Run `npx playwright test tests/maze-engine.spec.js tests/maze-ui.spec.js`, then `npm test` and `npm run build`. Physical mobile-device and screen-reader QA remain separate from automated Chromium checks. No hosted content, billing, review approvals or backend configuration is changed by this feature.
+
+Release validation: the full application suite passed **275 Playwright tests** and the production build. Preview images are in `docs/memory-maze-previews/`; reproduce them with Vite on port 5192 and `node scripts/maze-screenshots.mjs`.

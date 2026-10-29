@@ -346,6 +346,7 @@ export function createLearningStore(
     return awarded;
   }
   return {
+    setLibrary(library){validKeys.clear();library.forEach(s=>s.verses.forEach(v=>validKeys.add(`${s.id}:${v.id}`)));},
     get warning() {
       return warning;
     },
@@ -602,7 +603,7 @@ export function createLearningStore(
       fresh();
       const date = nowDate(now),
         day = dayKey(date, data.timeZone);
-      const records = Object.values(data.records);
+      const records = Object.values(data.records).filter(r=>validKeys.has(r.key));
       const dueToday = records
         .filter(
           (r) =>

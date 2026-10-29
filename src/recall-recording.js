@@ -1,3 +1,4 @@
+import {resolvePlaybackSource} from "./content/private-audio.js";
 import { awardStudy } from "./rewards/store.js";
 import { createAiPanel } from "./recitation/ai-panel.js";
 import {
@@ -226,8 +227,9 @@ export function createRecallRecording({ onReference, onChange }) {
       const changed = !context || context.id !== next.id;
       context = next;
       ai.setContext(next);
-      if (reference.getAttribute("src") !== next.audio)
-        reference.src = next.audio;
+      if(next.audio?.startsWith('ayah-private:')){
+        if(reference.dataset.privateSource!==next.audio){reference.dataset.privateSource=next.audio;reference.removeAttribute('src');resolvePlaybackSource(next.audio).then(url=>{if(!disposed&&context?.id===next.id&&context.audio===next.audio)reference.src=url;}).catch(()=>{if(!disposed)status('Verified reference audio could not load. Your recording remains available.');});}
+      }else{delete reference.dataset.privateSource;if(reference.getAttribute('src')!==next.audio)reference.src=next.audio;}
       find("recall-audio").textContent =
         `♫ ${next.declaredRecited ? "Listen to compare" : "Listen first (study assistance)"}`;
       find("record-recall").disabled = busy() || !!next.graded;

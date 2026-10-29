@@ -1,3 +1,4 @@
+import {mountAccountPhoto} from "../rewards/account-photo.js";
 import {receiveRemoteRewards} from "../rewards/store.js";
 import { avatarSvg } from "../rewards/catalog.js";
 import { RewardPublisher } from "../rewards/publisher.js";
@@ -167,6 +168,7 @@ function showAccount(learning) {
   const dialog = dialogShell(user ? "My account" : "Sign in to Ayah"),
     area = dialog.querySelector("[data-content]"),
     status = dialog.querySelector("[data-account-status]");
+  mountAccountPhoto(dialog,{client,user});
   const run = async (action) => {
     const buttons = [...dialog.querySelectorAll("button")];
     buttons.forEach((b) => (b.disabled = true));

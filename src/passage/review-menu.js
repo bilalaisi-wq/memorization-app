@@ -1,4 +1,4 @@
-import { isDeveloper } from "../developer/access.js";
+import { isDeveloper, isDeveloperMode } from "../developer/access.js";
 const roleRequests = new Map();
 export function mountSegmentReview(nav, ctx) {
   if (!ctx.user || !ctx.client) return;
@@ -10,7 +10,8 @@ export function mountSegmentReview(nav, ctx) {
     b.className = "text-button";
     b.dataset.segmentReviewMenu = "true";
     b.textContent = "Teacher segment review";
-    b.onclick = () =>
+    b.dataset.developerOnly="true";b.hidden=!isDeveloperMode();b.disabled=!isDeveloperMode();
+    b.onclick = () => isDeveloperMode() &&
       import("./review-ui.js").then((m) => m.openReview(ctx, role));
     nav.append(b);
   };

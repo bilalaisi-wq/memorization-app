@@ -1,7 +1,9 @@
+import {enableDeveloperLab} from "./developer-lab-helper.js";
 import { expect, test } from "@playwright/test";
 import { menu } from "./menu-helper.js";
 import { mockBilling } from "./billing-fixtures.js";
 const open = async (page, name) => {
+  await enableDeveloperLab(page);
   await menu(page);
   await page.getByRole("button", { name, exact: true }).click();
 };
@@ -56,6 +58,7 @@ test("checkout failures are retryable and only a plan/cadence goes to the authen
 test("billing cancellation/expiry preserve free access, ignore forged local plans and never grant from return URL", async ({ page }) => {
   const state = await mockBilling(page, { plan: "explorer", cancel: true });
   await page.goto("/?billing=success");
+  await enableDeveloperLab(page);
   await expect(page.locator("[data-billing-return]")).toContainText(
     "only after payment is confirmed",
   );

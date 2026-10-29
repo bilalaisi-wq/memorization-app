@@ -32,3 +32,13 @@ test('developer mode is owner-provisioned, reversible and publishes only menu or
  await expect(db.query(`update site_layout set menu_order='[]'`)).rejects.toThrow();
  } finally {await db.close();}
 });
+
+test('complete developer library SQL installs all dependencies and 206 Al-Araf review heads idempotently without approvals',async()=>{
+ const db=new PGlite();try{
+ await db.exec(`create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz);create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to anon,authenticated,service_role;`);
+ const sql=readFileSync('supabase/SETUP_DEVELOPER_LIBRARY.sql','utf8');await db.exec(sql);await db.exec(sql);
+ expect((await db.query("select count(*) n from quran_review_heads where verse_key like '7:%'")).rows[0].n).toBe(206);
+ expect((await db.query('select count(*) n from quran_review_versions')).rows[0].n).toBe(0);
+ await db.exec('set role authenticated');await expect(db.query("insert into site_developers values('00000000-0000-0000-0000-000000000002',true)")).rejects.toThrow();
+ }finally{await db.close();}
+});
