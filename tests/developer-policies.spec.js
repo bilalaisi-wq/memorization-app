@@ -42,3 +42,19 @@ test('complete developer library SQL installs all dependencies and 206 Al-Araf r
  await db.exec('set role authenticated');await expect(db.query("insert into site_developers values('00000000-0000-0000-0000-000000000002',true)")).rejects.toThrow();
  }finally{await db.close();}
 });
+
+test('Al-Araf repair rejects missing schema and every individual row is valid standalone SQL',async()=>{
+ const db=new PGlite();try{
+  const repair=readFileSync('supabase/REPAIR_AL_ARAF_SOURCES.sql','utf8');
+  await expect(db.exec(repair)).rejects.toThrow('Run the entire SETUP_DEVELOPER_LIBRARY.sql first');
+  expect((await db.query("select to_regclass('public.quran_review_heads') name")).rows[0].name).toBeNull();
+  await db.exec(`create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz);create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to anon,authenticated,service_role;`);
+  await db.exec(readFileSync('supabase/SETUP_JUZ29.sql','utf8'));
+  const row=repair.split('\n').find(line=>line.includes("values ('7:91',"));expect(row).toBeTruthy();
+  await db.exec(row);expect((await db.query("select count(*) n from quran_review_heads where verse_key like '7:%'")).rows[0].n).toBe(1);
+  await db.exec(repair);expect((await db.query("select count(*) n from quran_review_heads where verse_key like '7:%'")).rows[0].n).toBe(206);
+  await db.exec("update quran_review_heads set revision=1 where verse_key='7:91'");await db.exec(repair);
+  expect((await db.query("select revision from quran_review_heads where verse_key='7:91'")).rows[0].revision).toBe(1);
+  expect((await db.query('select count(*) n from quran_review_versions')).rows[0].n).toBe(0);
+ }finally{await db.close();}
+});

@@ -40,3 +40,11 @@ Local automated checks do not establish that the hosted Supabase project has bee
 - Live provider check: all 637 requested ayahs matched canonical fingerprints. All 206 Al-A‘raf MP3s decoded during preparation; all 431 Juz 29 text/audio files matched their existing release digests.
 - Sample long private verses were absent from static JavaScript output.
 - An unauthenticated probe of the hosted Supabase `quran-content` endpoint returned **404 NOT_FOUND**: the function was not deployed at the time of this check. No hosted migration or function deployment was performed in this workspace.
+
+## SQL syntax error at a row such as `('7:91',...)`
+
+That fragment is a data row, not a complete SQL statement. It means the editor executed an excerpt or selected text without the preceding `INSERT INTO ... VALUES` statement. In Supabase, selected text runs instead of the entire editor contents.
+
+Open a new query, copy the **entire raw file**, clear any text selection and click Run. Use `supabase/SETUP_DEVELOPER_LIBRARY.sql` for the complete setup. If prerequisites are already installed, `supabase/REPAIR_AL_ARAF_SOURCES.sql` registers all 206 Al-A‘raf sources and reports a count of 206. The repair refuses to create an incomplete schema when prerequisites are missing.
+
+Al-A‘raf source files now give every row its own complete `INSERT` statement. Re-running them preserves existing heads and approvals through `ON CONFLICT DO NOTHING`; no memorization progress is reset.
