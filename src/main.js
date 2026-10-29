@@ -1,3 +1,4 @@
+import "./puzzles/arcade/maze/maze.css";
 import { awardStudy, rewardSummary } from "./rewards/store.js";
 import { mountSiteMenu } from "./ui/site-menu.js";
 import { initializeAppearance } from "./themes/appearance.js";

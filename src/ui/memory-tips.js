@@ -1,4 +1,5 @@
 export const labMemoryTips = {
+  maze: 'At each doorway, say the continuation aloud before opening it. Replay the full ayah at listening stations, then recall the next phrase before reading the signs. A maze win is recognition practice, not independent memorization.',
   falling: 'Say each word aloud as you move its tetromino. Use Hear this word to echo the reciter, build in recitation order, and park words from other ayahs in the side lanes. Silent Stack leaves audio under your control.',
   vanishing: 'Say the missing word before choosing a piece. Listen to its pronunciation, repeat it, then recite the complete phrase aloud.',
   jigsaw: 'Read each word group aloud, then practice the join between neighboring groups. Listen and repeat the full phrase after connecting them.',

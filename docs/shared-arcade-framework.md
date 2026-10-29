@@ -104,7 +104,7 @@ The audio manager owns one `Audio` instance, replaces/stops previous playback, c
 
 `tests/arcade-framework.spec.js` covers source provenance, deterministic solvability, phrase coverage and separate stop approval, three strikes, Classic/Practice checkpoints, lifecycle disposal, defensive snapshots, storage/reward retries, historic data, account isolation, FSRS non-interference, audio cleanup, reduced motion and keyboard/touch utilities. Legacy-mode UI regression tests explicitly enter developer preview; public tests verify learner exclusion and revocation cleanup. Existing Falling tests remain in the full suite.
 
-Run `npm test` and `npm run build` before registering the first real game. Then implement one distinct game at a time, with its own engine tests, real pointer/mobile interactions, accessible equivalents and verified phrase review integration where needed. Ayah Space and Ayah Serpent are registered real games; the other four remain planned.
+Run `npm test` and `npm run build` before registering the first real game. Then implement one distinct game at a time, with its own engine tests, real pointer/mobile interactions, accessible equivalents and verified phrase review integration where needed. Ayah Space, Ayah Serpent and Memory Maze are registered real games; the other three remain planned. See `memory-maze.md` for the maze engine and verified phrase door rules.
 
 ### Existing review-record conversion
 
