@@ -39,7 +39,7 @@ const steps = [
   ],
   [
     "Puzzle Lab",
-    "Seven games offer different ways to practice. Each includes authentic distractors with audio. Falling Words uses arrows and Space to place words, and D/Delete to discard extras. Games practice recognition and order; they do not certify memorization.",
+    "Ayah Blocks, Ayah Space and Ayah Serpent offer different ways to practise with verified words and recitation. Adjust Recitation volume in Puzzle Lab. In Ayah Blocks, use arrows to move, B/N to rotate and Space to drop, or use the large touch pad. Park extra words in the side lanes. Games practise recognition and order; they do not certify memorization.",
   ],
   [
     "Mastery Gallery · Memory Gate",

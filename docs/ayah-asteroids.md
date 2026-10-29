@@ -1,6 +1,6 @@
-# Ayah Asteroids
+# Ayah Space
 
-Puzzle Lab → **Ayah Asteroids** → choose a journey and difficulty → **Prepare flight** → **Start flight**.
+Puzzle Lab → **Ayah Space** → choose a journey and difficulty → **Prepare flight** → **Start flight**.
 
 This is a spatial 2D game, not a word-choice quiz. The ship has a position and heading; objects have independently moving trajectories. A tractor beam reaches only a bounded cone in front of the ship. Clicking or tapping an object aims/tracks it, but does not capture it or teleport the ship. A shield pulse redirects nearby objects intact.
 
@@ -46,7 +46,7 @@ Listen & Build loops verified full-ayah audio. Echo holds the sector while its r
 
 Audio/reference cues and navigation assistance are recorded separately from motor errors and sequence mistakes. The shared result recorder stores completed-run checkpoint receipts through the existing `ayah-puzzle-lab-v1` and learning stores. It retains per-ayah/game/day XP caps, account identity checks and duplicate receipt prevention; retries after a storage failure cannot award twice. No new SQL or storage-key migration is needed.
 
-Game success is recognition/order practice. It never grades independent recitation, awards memorization mastery or changes FSRS cards/due dates. Existing Falling Words and developer-only legacy games remain intact.
+Game success is recognition/order practice. It never grades independent recitation, awards memorization mastery or changes FSRS cards/due dates. Existing Ayah Blocks and developer-only legacy games remain intact.
 
 ## Implementation and verification
 
@@ -58,7 +58,7 @@ Game success is recognition/order practice. It never grades independent recitati
 
 [Desktop preview](asteroids-previews/desktop.png) · [Mobile preview](asteroids-previews/mobile.png). These are real local UI captures with verified source text, not mock learner progress. Reproduce with a local Vite server on port 5182 and `node scripts/asteroids-screenshots.mjs`.
 
-Validation: the complete Playwright suite passed **230 tests**, including all existing Falling Words tests and **14 new Asteroids tests**. Production Vite build passed. No hosted provider configuration, database migration or Qur'anic source data was changed.
+Validation: the complete Playwright suite passed **230 tests**, including all existing Ayah Blocks tests and **14 new Asteroids tests**. Production Vite build passed. No hosted provider configuration, database migration or Qur'anic source data was changed.
 
 ## After a completed flight
 

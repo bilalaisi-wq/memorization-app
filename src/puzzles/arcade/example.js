@@ -4,8 +4,8 @@ import {esc} from '../../ui/dom.js';
 // Contract illustration only. Not one of the six planned games; developer-only.
 export const registrationExample = {
   id:'arcade-example',title:'Arcade contract preview',developerOnly:true,
-  create({root,adapter,config,id,muted=()=>false,onComplete=()=>{}}) {
-    const audio=createAudioManager(),motion=motionSettings();
+  create({root,adapter,config,id,muted=()=>false,volume=()=>1,onComplete=()=>{}}) {
+    const audio=createAudioManager({initialVolume:volume()}),motion=motionSettings();
     let cursor=0,receiptPending=false;
     root.classList.add('arcade-preview');
     root.dataset.reducedMotion=String(motion.reducedMotion);
@@ -44,6 +44,6 @@ export const registrationExample = {
     const unbind=bindArcadeInput(root,send);
     root.addEventListener('click',choice);
     draw(controller.getSnapshot());
-    return {...controller,listen:()=>send({type:"listen"}),mute:()=>audio.mute(muted()),pause:()=>send({type:"pause"}),resume:()=>send({type:"resume"}),dispatch:send};
+    return {...controller,listen:()=>send({type:"listen"}),mute:()=>audio.mute(muted()),setVolume:value=>audio.setVolume(value),pause:()=>send({type:"pause"}),resume:()=>send({type:"resume"}),dispatch:send};
   },
 };

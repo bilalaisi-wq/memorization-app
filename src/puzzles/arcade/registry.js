@@ -1,8 +1,8 @@
 // Metadata is also used by persistence; keep retired identifiers forever.
 export const arcadeGames = Object.freeze([
-  ['asteroids', 'Ayah Asteroids'], ['sirat', 'Sirat Quest'],
+  ['asteroids', 'Ayah Space'], ['sirat', 'Sirat Quest'],
   ['maze', 'Memory Maze'], ['bubble', 'Ayah Bubble Burst'],
-  ['snake', 'Ayah Snake'], ['bridge', 'Bridge Builder'],
+  ['snake', 'Ayah Serpent'], ['bridge', 'Bridge Builder'],
 ].map(([id, title]) => Object.freeze({id, title, category: 'order', status: ['asteroids','snake'].includes(id)?'available':'planned'})));
 export const arcadeIds = [...arcadeGames.map(g => g.id), 'arcade-example'];
 export function createRegistry() {

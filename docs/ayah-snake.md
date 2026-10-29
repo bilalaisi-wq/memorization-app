@@ -1,6 +1,6 @@
-# Ayah Snake
+# Ayah Serpent
 
-Puzzle Lab → **Ayah Snake** → Single Ayah or Ayah Chain → **Prepare trail** → **Start trail**.
+Puzzle Lab → **Ayah Serpent** → Single Ayah or Ayah Chain → **Prepare trail** → **Start trail**.
 
 Snake is a distinct, continuously moving 10 × 12 grid game. The learner steers a growing snake into the next canonical Arabic word, while avoiding the walls, tail and incorrect word choices. Collectibles are not clickable answers. Each readable word occupies a three-by-two-cell area; entering any of those cells collects it. A separately readable RTL line assembles the exact source words.
 
@@ -55,4 +55,4 @@ The tests cover deterministic source provenance, queued controls, growth, walls/
 
 [Desktop preview](snake-previews/desktop.png) · [Mobile preview](snake-previews/mobile.png). The screenshots show real local play with the first Al-Fatihah word collected, not fabricated account progress. Reproduce with Vite on port 5183 and `node scripts/snake-screenshots.mjs`.
 
-Validation: the full Playwright suite passed **247 tests**, including the existing Falling Words and Asteroids suites. After refining held-direction handling, all **14 focused Snake tests** passed again. The final production Vite build passed. No hosted configuration, database migration or canonical Qur'anic data changed.
+Validation: the full Playwright suite passed **247 tests**, including the existing Ayah Blocks and Asteroids suites. After refining held-direction handling, all **14 focused Snake tests** passed again. The final production Vite build passed. No hosted configuration, database migration or canonical Qur'anic data changed.

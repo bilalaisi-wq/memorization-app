@@ -2,17 +2,17 @@
 
 ## Scope and audit
 
-Ayah Asteroids and Ayah Snake are now implemented; the other four future games remain **not implemented or advertised as playable**. See [the Asteroids guide](ayah-asteroids.md) and [the Snake guide](ayah-snake.md). `src/puzzles/arcade/registry.js` reserves Ayah Asteroids, Sirat Quest, Memory Maze, Ayah Bubble Burst, Ayah Snake and Bridge Builder identifiers. A developer-only contract preview demonstrates registration, shared configuration and persistence, without claiming to implement any of them.
+Ayah Space and Ayah Serpent are now implemented; the other four future games remain **not implemented or advertised as playable**. See [the Asteroids guide](ayah-asteroids.md) and [the Snake guide](ayah-snake.md). `src/puzzles/arcade/registry.js` reserves Ayah Space, Sirat Quest, Memory Maze, Ayah Bubble Burst, Ayah Serpent and Bridge Builder identifiers. A developer-only contract preview demonstrates registration, shared configuration and persistence, without claiming to implement any of them.
 
 Audit of the existing application:
 
 - `src/data.js` supplies the existing verified library, exact word arrays and occurrence-specific audio helpers. No source Arabic, translation, word boundary, font or recording was changed.
-- `src/puzzles/puzzle-lab.js` owns legacy mounts and disposes each game on navigation. Falling Words retains its own established engine/UI and behavior: visible words, speed-only difficulty, automatic descent, safe side lanes and explicit repeat/next choices.
+- `src/puzzles/puzzle-lab.js` owns legacy mounts and disposes each game on navigation. Ayah Blocks retains its own established engine/UI and behavior: visible words, speed-only difficulty, automatic descent, safe side lanes and explicit repeat/next choices.
 - `src/puzzles/puzzle-store.js` uses `ayah-puzzle-lab-v1`, schema 1, history receipts and per-reference weaknesses. Old receipts (including Falling's optional schema-2 `arcade` metadata) remain valid. Unknown/future or malformed data blocks writes and displays a warning; it is not overwritten.
 - `src/learning-store.js` owns `ayah-learning-v1`, wallet XP, idempotent session receipts and FSRS. `recordLabPuzzle` grants at most 8 XP per ayah/game/local calendar day (assisted attempts request 2); repeated requests cannot exceed the existing cap. This path never grades recall, updates memory cards or awards mastery.
 - Account profile storage already scopes these keys to the signed-in user and includes them in cloud backups. Guest keys and authenticated key names remain unchanged.
 
-Vanishing Ayah, Jigsaw, Memory Match, Broken Chain, Continue the Ayah and Similar Ayah Detective are retained, including historical results and regression tests. Their cards are hidden and disabled for learners, and the launch handler also checks access. They appear only while developer preview is enabled for the confirmed owner account. Losing developer mode immediately disposes the restricted mount and restores Falling Words. This is a presentation gate for bundled free-content experiments, **not** a substitute for server-side premium-content authorization.
+Vanishing Ayah, Jigsaw, Memory Match, Broken Chain, Continue the Ayah and Similar Ayah Detective are retained, including historical results and regression tests. Their cards are hidden and disabled for learners, and the launch handler also checks access. They appear only while developer preview is enabled for the confirmed owner account. Losing developer mode immediately disposes the restricted mount and restores Ayah Blocks. This is a presentation gate for bundled free-content experiments, **not** a substitute for server-side premium-content authorization.
 
 To preview: sign in as the existing verified owner, choose **Developer mode → Enable developer access**, then open Puzzle Lab. The existing backend developer migration/RPC must already be configured. This task needs no new SQL.
 
@@ -104,7 +104,7 @@ The audio manager owns one `Audio` instance, replaces/stops previous playback, c
 
 `tests/arcade-framework.spec.js` covers source provenance, deterministic solvability, phrase coverage and separate stop approval, three strikes, Classic/Practice checkpoints, lifecycle disposal, defensive snapshots, storage/reward retries, historic data, account isolation, FSRS non-interference, audio cleanup, reduced motion and keyboard/touch utilities. Legacy-mode UI regression tests explicitly enter developer preview; public tests verify learner exclusion and revocation cleanup. Existing Falling tests remain in the full suite.
 
-Run `npm test` and `npm run build` before registering the first real game. Then implement one distinct game at a time, with its own engine tests, real pointer/mobile interactions, accessible equivalents and verified phrase review integration where needed. Ayah Asteroids and Ayah Snake are registered real games; the other four remain planned.
+Run `npm test` and `npm run build` before registering the first real game. Then implement one distinct game at a time, with its own engine tests, real pointer/mobile interactions, accessible equivalents and verified phrase review integration where needed. Ayah Space and Ayah Serpent are registered real games; the other four remain planned.
 
 ### Existing review-record conversion
 

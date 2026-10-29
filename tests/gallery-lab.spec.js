@@ -269,7 +269,7 @@ test("reduced motion disables reveal animations and reviews preserve FSRS dates"
   ).toBe(before);
 });
 
-test("Falling Words supports RTL keyboard placement, retry feedback and daily XP cap", async ({
+test("Ayah Blocks supports RTL keyboard placement, retry feedback and daily XP cap", async ({
   page,
 }) => {
   await openLab(page);

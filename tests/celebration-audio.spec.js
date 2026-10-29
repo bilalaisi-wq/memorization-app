@@ -83,7 +83,7 @@ test('rapid piece choices finish their recordings in order rather than interrupt
   });
   await expect.poll(()=>page.evaluate(()=>window.finishedClips.length)).toBeGreaterThanOrEqual(4);
   const clips=await page.evaluate(()=>({played:window.playedClips,finished:window.finishedClips}));
-  // The initial Falling Words clip is canceled when changing games; both selected groups finish.
+  // The initial Ayah Blocks clip is canceled when changing games; both selected groups finish.
   expect(clips.finished).toEqual(clips.played.slice(-clips.finished.length));
   expect(new Set(clips.finished).size).toBeGreaterThanOrEqual(2);
 });

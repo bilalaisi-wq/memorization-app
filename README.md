@@ -80,13 +80,13 @@ Use the **Mastery Gallery** and **Puzzle Lab** buttons above the learning area. 
 
 Artwork sections unlock after correct independent self-assessed recall on **two distinct scheduled review days**. Text/audio assistance, early successful practice, visible puzzles, and old game achievements do not unlock them. Unlocks survive lapses. A separate **Maintained** award requires the existing retained stage for every ayah. The Gallery shows review dates without changing FSRS scheduling. Reveal animations last 1.2 seconds, support reduced motion, and can be skipped.
 
-The Lab contains Falling Words, Vanishing Ayah, Ayah Jigsaw, Memory Match (meaning/audio/continuations), Broken Chain, Continue the Ayah, and Similar Ayah Detective. Falling Words supports right-to-left slots, keyboard arrows/Space, touch buttons or dragging, pause, untimed play, optional gentle timed descent, and audio. Recitation pauses timed play; resuming stops that audio. Other games use graduated cues and verified word/ayah data. Detective currently uses three manually checked comparisons from Al-Fatihah, Al-Kafirun, and Al-Falaq, and attributes practice to the actual target ayah.
+The Lab contains Ayah Blocks, Vanishing Ayah, Ayah Jigsaw, Memory Match (meaning/audio/continuations), Broken Chain, Continue the Ayah, and Similar Ayah Detective. Ayah Blocks supports right-to-left slots, keyboard arrows/Space, touch buttons or dragging, pause, untimed play, optional gentle timed descent, and audio. Recitation pauses timed play; resuming stops that audio. Other games use graduated cues and verified word/ayah data. Detective currently uses three manually checked comparisons from Al-Fatihah, Al-Kafirun, and Al-Falaq, and attributes practice to the actual target ayah.
 
 Lab completion awards at most 8 XP per ayah/game/day (2 XP for study-assisted completion, with only the difference available after an unassisted completion). Games remain replayable and do not certify spoken recall or advance Puzzle Quest levels. Recommendations use practice mistakes, with independent recall recommended first when an ayah is overdue.
 
 **Editorial work remains:** the referenced artwork table was missing, and both supplied tafsir sources returned HTTP 403. Thirteen story/asset contracts and source links exist, but final images and tafsir narratives are not published or labeled verified. Missing images show a clearly labeled local geometric placeholder. See [implementation details and remaining work](docs/gallery-puzzle-lab.md) and [artwork publishing contract](public/mastery-art/README.md).
 
-Every playable Puzzle Lab round now includes shuffled distractors. Falling Words mixes in foreign words and provides **Discard word** (D/Delete on the keyboard); correct words must be placed and extra words discarded. Vanishing Ayah and Continue the Ayah include extra words; Jigsaw includes authentic foreign word groups; Broken Chain includes ayahs outside the requested passage. Memory Match includes foreign pairs that must remain unmatched, across its meaning, audio and continuation variants. Detective adds more authentic wrong continuations. Continue the Ayah now requires a correctly built remainder before completion can award game XP.
+Every playable Puzzle Lab round now includes shuffled distractors. Ayah Blocks mixes in foreign words and provides **Discard word** (D/Delete on the keyboard); correct words must be placed and extra words discarded. Vanishing Ayah and Continue the Ayah include extra words; Jigsaw includes authentic foreign word groups; Broken Chain includes ayahs outside the requested passage. Memory Match includes foreign pairs that must remain unmatched, across its meaning, audio and continuation variants. Detective adds more authentic wrong continuations. Continue the Ayah now requires a correctly built remainder before completion can award game XP.
 
 All options have listen controls, including incorrect pieces in the building zone and face-down cards. Word groups play their exact word recordings in sequence; whole-ayah choices use full recitations. Correct and incorrect choices share the same presentation. Distractors are drawn from the existing Quran library, exclude target-equivalent text, and vary across fresh rounds. No Quran text or recorded audio was fabricated, and game results still do not qualify as independent memorization.
 
@@ -102,7 +102,7 @@ New learners receive an optional welcome invitation. **Tutorial** opens ten skip
 
 Correct answers cycle through three animated achievement styles alongside the configured success sound. Add or replace artwork through [the celebration image manifest](public/celebrations/README.md); three emoji placeholders are used until image files are supplied. Motion preferences apply to these animations too. Study audio takes priority over the success sound, while a correct-answer visual can still appear during piece playback.
 
-Puzzle Lab automatically pronounces selected word, group, card, and ayah pieces (including distractors). Falling Words pronounces each arriving block. Rapid selections queue their recordings. **Mute audio** silences current and future Lab playback and persists in that browser; **Unmute audio** restores it. Explicit replay remains available. Changing games or leaving the Lab clears queued playback. The Falling Words **Pause** button pauses the game board, not an audio track.
+Puzzle Lab automatically pronounces selected word, group, card, and ayah pieces (including distractors). Ayah Blocks pronounces each arriving block. Rapid selections queue their recordings. **Mute audio** silences current and future Lab playback and persists in that browser; **Unmute audio** restores it. Explicit replay remains available. Changing games or leaving the Lab clears queued playback. The Ayah Blocks **Pause** button pauses the game board, not an audio track.
 
 All learning areas offer spoken-practice guidance, and study text and controls use larger fonts. Listen, repeat after the reciter, and say each word as you place it; quiz success remains separate from independent memorization assessment.
 
@@ -165,18 +165,22 @@ Learning XP now covers practice interactions, Quest, recall, every Lab game, cha
 
 [Juz 29 private deployment and developer preview](docs/juz-29-setup.md) covers all 11 surahs / 431 ayahs, server-authorized preview, and saved menu ordering. [Stripe quick start](docs/stripe-quick-start.md) provides the dashboard and deployment steps for test purchases. Private content must be uploaded before live playback is available.
 
-## Falling Words 2.0
+## Ayah Blocks
 
 [Hybrid Stack + Tower gameplay and implementation notes](docs/falling-words.md): seven tetrominoes, single-ayah and chain journeys, Classic/Practice strikes, Hold, audio choices and bounded rewards. No Supabase migration is required.
 
 ## Shared arcade foundation
 
-[Framework contract, source adapters, checkpoints and reward rules](docs/shared-arcade-framework.md) provides shared services for the arcade games; Ayah Asteroids and Ayah Snake are playable; four other games remain planned. Falling Words remains available. The six legacy experimental Lab games and the contract preview are visible only in enabled developer mode; existing progress remains intact. No new Supabase migration is required.
+[Framework contract, source adapters, checkpoints and reward rules](docs/shared-arcade-framework.md) provides shared services for the arcade games; Ayah Space and Ayah Serpent are playable; four other games remain planned. Ayah Blocks remains available. The six legacy experimental Lab games and the contract preview are visible only in enabled developer mode; existing progress remains intact. No new Supabase migration is required.
 
-## Ayah Asteroids
+## Ayah Space
 
-Puzzle Lab → **Ayah Asteroids** offers ship navigation, aimed range-limited tractor capture, shield deflection, Single Ayah / Chain sectors, Classic / Practice checkpoints and verified recitation. [Gameplay, phrase-review requirements and tests](docs/ayah-asteroids.md) · [Desktop/mobile previews](docs/asteroids-previews/README.md). No new Supabase migration is needed.
+Puzzle Lab → **Ayah Space** offers ship navigation, aimed range-limited tractor capture, shield deflection, Single Ayah / Chain sectors, Classic / Practice checkpoints and verified recitation. [Gameplay, phrase-review requirements and tests](docs/ayah-asteroids.md) · [Desktop/mobile previews](docs/asteroids-previews/README.md). No new Supabase migration is needed.
 
-## Ayah Snake
+## Ayah Serpent
 
-Puzzle Lab → **Ayah Snake** offers continuous grid movement, a growing tail, verified word collectibles, physical chain portals and separate motor/memory events. [Gameplay, fairness and tests](docs/ayah-snake.md) · [Desktop/mobile previews](docs/snake-previews/README.md). No new Supabase migration is needed.
+Puzzle Lab → **Ayah Serpent** offers continuous grid movement, a growing tail, verified word collectibles, physical chain portals and separate motor/memory events. [Gameplay, fairness and tests](docs/ayah-snake.md) · [Desktop/mobile previews](docs/snake-previews/README.md). No new Supabase migration is needed.
+
+## Arcade volume and mobile controls
+
+**Ayah Blocks**, **Ayah Space** and **Ayah Serpent** share a persistent recitation-volume slider. Blocks adds B/N rotation and a large mobile movement/rotation/drop pad. [Controls, audio behavior and mobile-app reuse](docs/arcade-audio-controls.md). Existing game IDs and progress remain unchanged; no SQL is needed.

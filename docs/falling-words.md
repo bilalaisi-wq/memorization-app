@@ -1,6 +1,6 @@
-# Falling Words 2.0 — Hybrid Stack + Tower
+# Ayah Blocks — Hybrid Stack + Tower
 
-Open **Your Space → Puzzle Lab → Falling Words**. Existing records and other Lab games remain available. No database migration, new service, image upload, or paid dependency is required.
+Open **Your Space → Puzzle Lab → Ayah Blocks**. Existing records and other Lab games remain available. No database migration, new service, image upload, or paid dependency is required.
 
 ## Play
 
@@ -8,7 +8,7 @@ Open **Your Space → Puzzle Lab → Falling Words**. Existing records and other
 - Build the correct words in recitation order in the marked emerald middle lane (columns 4–7). Park extra words in either side lane (columns 1–3 or 8–10). All four cells must fit in a side lane for safe parking; rotate the I piece when necessary. A wrong word in the middle sequence costs a strike. Side parking never does. Required words parked to the side return so the ayah stays completable.
 - There is no Discard button or D/Delete shortcut. Arrow keys move, ↑/X rotates, ↓ lowers, Space drops, C holds, and P pauses. Keyboard commands work while the game is active without requiring a click on the board; form inputs, dialogs, navigation and completion choices keep their own keyboard behavior.
 - Blocks fall and lock automatically on landing. Slow, Normal and Fast are the only speed choices; there is no Relaxed mode or timed-descent checkbox. A paused game does not allow untimed movement or placement.
-- **All words remain visible.** Falling and held words retain their original Uthmanic text. Settled blocks keep labels, accepted words remain in the RTL ayah line, and parked words remain in a full-size side ledger. Falling Words has no concealed-word levels or additional difficulty-based distractors. Other Puzzle Lab games retain their existing hint-removal levels.
+- **All words remain visible.** Falling and held words retain their original Uthmanic text. Settled blocks keep labels, accepted words remain in the RTL ayah line, and parked words remain in a full-size side ledger. Ayah Blocks has no concealed-word levels or additional difficulty-based distractors. Other Puzzle Lab games retain their existing hint-removal levels.
 - Every completed ayah pauses for a choice: repeat this ayah at the next faster speed, or continue to the next ayah. Speed increases cap at Fast; learners can lower speed without clearing the active puzzle. Advancing is always explicit, including inside a configured chain.
 - Three red Xs end an attempt. Retry, Listen & Review, and Exit remain available. Classic carries strikes across a chain; Practice restarts the current ayah while preserving completed floors.
 - Required occurrences are delivered in a solvable order with varied, source-backed extra words interleaved. Hold parks/swaps one word. A full physical workspace refreshes without erasing the readable ayah line or side ledger. Stack height is not a memory assessment.
@@ -45,3 +45,5 @@ This is a word-order memorization game, not independent recitation verification.
 The production build passed. The revised full Playwright suite passed **207 tests**; final keyboard/audio checks were also verified with **41 targeted engine, browser and Lab regression tests**, followed by **8 UI checks** for the final Hold/side-ledger layout. All **20 existing backend tests** passed (billing 6, content 4, recitation 5, coach 5). Two earlier browser tests now explicitly wait for application readiness before invoking internal UI functions, eliminating startup races rather than relying on module timing.
 
 [Desktop and mobile UI previews](falling-previews/README.md) and `scripts/falling-screenshots.mjs` provide reviewable captures. Existing verified Qur'anic data, audio files and the FSRS learning store were not modified. Word positions use the existing zero-based source/audio indexing; learner-facing positions are numbered from one.
+
+See [recitation volume and mobile controls](arcade-audio-controls.md) for the shared volume slider, B/N rotation and new large touch pad.

@@ -105,11 +105,11 @@ export function openCoach(ctx) {
           : "Keep the session short and speak each word as you practice."
       }</p><h3>Suggested Puzzle Lab</h3><p>${
         !isDeveloperMode()
-          ? "Falling Words for visible word-order practice."
+          ? "Ayah Blocks for visible word-order practice."
           : s.transitions
           ? "Broken Chain for recorded transition difficulties."
           : s.recentMistakes
-          ? "Falling Words for recent puzzle mistakes."
+          ? "Ayah Blocks for recent puzzle mistakes."
           : "Vanishing Ayah can support recall practice; it is not evidence of retention."
       } After practice, return to independent spoken recall and compare with the reciter.</p>${
         snapshot.warnings.map((w) => `<p role="status">${esc(w)}</p>`).join("")

@@ -96,7 +96,7 @@ test("foreign word groups and ayahs are unchanged contiguous verified passages w
   }
 });
 
-test("Falling Words parks foreign words safely and still plays their verified audio",async({page})=>{
+test("Ayah Blocks parks foreign words safely and still plays their verified audio",async({page})=>{
  await open(page);await startFalling(page);
  for(let i=0;i<20&&Number(await page.locator('.falling-block').getAttribute('data-index'))<4;i++){await page.locator('#lab-restart').click();await startFalling(page);}
  expect(Number(await page.locator('.falling-block').getAttribute('data-index'))).toBeGreaterThanOrEqual(4);

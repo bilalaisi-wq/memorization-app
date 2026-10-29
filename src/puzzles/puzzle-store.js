@@ -2,11 +2,11 @@ import { arcadeGames } from "./arcade/registry.js";
 import { versionedStore } from "../ui/versioned-store.js";
 export const LAB_KEY = "ayah-puzzle-lab-v1";
 export const gameTypes = [
-  ["snake","Ayah Snake","Grow a memory trail by steering into verified words in order.","order"],
-  ["asteroids","Ayah Asteroids","Fly, aim and capture verified words with a tractor beam.","order"],
+  ["snake","Ayah Serpent","Grow a memory trail by steering into verified words in order.","order"],
+  ["asteroids","Ayah Space","Fly, aim and capture verified words with a tractor beam.","order"],
   [
     "falling",
-    "Falling Words",
+    "Ayah Blocks",
     "Stack word tetrominoes and build an ayah tower.",
     "order",
   ],

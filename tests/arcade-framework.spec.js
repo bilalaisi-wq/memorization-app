@@ -133,7 +133,7 @@ test('developer recommendations become learner-safe immediately when preview end
  await expect(page.locator('#lab-recommended')).toHaveText('Vanishing Ayah');
  await page.locator('[data-game=vanishing]').click();
  await page.evaluate(async()=>{(await import('/src/developer/access.js')).setDeveloperPreview(false);});
- await expect(page.locator('#lab-recommended')).toHaveText('Falling Words');
+ await expect(page.locator('#lab-recommended')).toHaveText('Ayah Blocks');
  await expect(page.locator('.falling-stage')).toBeVisible();
  await expect(page.locator('[data-game=vanishing]')).toBeHidden();
 });
