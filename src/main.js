@@ -34,6 +34,7 @@ import {
 import { mountSequence, stopSequence } from "./sequence.js";
 import "./style.css";
 import "./puzzles/falling.css";
+import "./puzzles/arcade/snake/snake.css";
 import "./puzzles/arcade/asteroids/asteroids.css";
 import "./themes/night-sky.css";
 import {

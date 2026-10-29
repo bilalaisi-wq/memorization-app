@@ -15,7 +15,8 @@ export function createResultRecorder({learning,lab,accountId,getAccountId}) {
       lab.record({key,sessionId,game:snapshot.game,mistakes,hinted:assistance.length>0,xp:reward.xp,
         arcade:{schemaVersion:3,success:true,mode:snapshot.config.mode,chainMode:snapshot.config.chainMode,seed:snapshot.config.seed,
           mistakes:snapshot.mistakes.filter(e=>e.key===key),motorErrors:snapshot.motorErrors.filter(e=>e.key===key),assistance,
-          completedCheckpoints:[...snapshot.completed]}});
+          completedCheckpoints:[...snapshot.completed],
+          ...(snapshot.game==='snake'?{score:Number.isSafeInteger(snapshot.arcadeStats?.score)&&snapshot.arcadeStats.score>=0?snapshot.arcadeStats.score:0,steps:Number.isSafeInteger(snapshot.arcadeStats?.steps)&&snapshot.arcadeStats.steps>=0?snapshot.arcadeStats.steps:0,speed:['slow','steady','brisk'].includes(snapshot.arcadeStats?.speed)?snapshot.arcadeStats.speed:'slow'}:{})}});
       receipts.push(reward);
     }
     return receipts;

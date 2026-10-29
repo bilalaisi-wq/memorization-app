@@ -2,7 +2,7 @@
 
 ## Scope and audit
 
-Ayah Asteroids is now implemented; the other five future games remain **not implemented or advertised as playable**. See [the Asteroids guide](ayah-asteroids.md). `src/puzzles/arcade/registry.js` reserves Ayah Asteroids, Sirat Quest, Memory Maze, Ayah Bubble Burst, Ayah Snake and Bridge Builder identifiers. A developer-only contract preview demonstrates registration, shared configuration and persistence, without claiming to implement any of them.
+Ayah Asteroids and Ayah Snake are now implemented; the other four future games remain **not implemented or advertised as playable**. See [the Asteroids guide](ayah-asteroids.md) and [the Snake guide](ayah-snake.md). `src/puzzles/arcade/registry.js` reserves Ayah Asteroids, Sirat Quest, Memory Maze, Ayah Bubble Burst, Ayah Snake and Bridge Builder identifiers. A developer-only contract preview demonstrates registration, shared configuration and persistence, without claiming to implement any of them.
 
 Audit of the existing application:
 
@@ -104,7 +104,7 @@ The audio manager owns one `Audio` instance, replaces/stops previous playback, c
 
 `tests/arcade-framework.spec.js` covers source provenance, deterministic solvability, phrase coverage and separate stop approval, three strikes, Classic/Practice checkpoints, lifecycle disposal, defensive snapshots, storage/reward retries, historic data, account isolation, FSRS non-interference, audio cleanup, reduced motion and keyboard/touch utilities. Legacy-mode UI regression tests explicitly enter developer preview; public tests verify learner exclusion and revocation cleanup. Existing Falling tests remain in the full suite.
 
-Run `npm test` and `npm run build` before registering the first real game. Then implement one distinct game at a time, with its own engine tests, real pointer/mobile interactions, accessible equivalents and verified phrase review integration where needed. Ayah Asteroids is the first registered real game; the other five remain planned.
+Run `npm test` and `npm run build` before registering the first real game. Then implement one distinct game at a time, with its own engine tests, real pointer/mobile interactions, accessible equivalents and verified phrase review integration where needed. Ayah Asteroids and Ayah Snake are registered real games; the other four remain planned.
 
 ### Existing review-record conversion
 

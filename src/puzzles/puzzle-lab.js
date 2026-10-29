@@ -1,3 +1,5 @@
+import {snakeRegistration} from "./arcade/snake/ui.js";
+import {arcadeNextSteps} from "./arcade/next-steps.js";
 import {flightNextSteps} from "./arcade/asteroids/next-steps.js";
 import {readGoals} from "../learner/insights.js";
 import {profileStorage} from "../learner/profile-storage.js";
@@ -62,8 +64,8 @@ export function mountPuzzleLab(
   main.append(root);
   const key = `${surah.id}:${verse.id}`,
     recommendation = lab.recommend(key, learning);
-  if (!isDeveloperMode() && !["falling","asteroids","recall"].includes(recommendation.game)) { recommendation.game="falling"; recommendation.reason="Practice visible word order with Falling Words."; }
-  root.innerHTML = `<div class="lab-intro"><span class="eyebrow">TRY ANOTHER WAY</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>These games practice recognition, word order, and recall cues. Game XP is separate from independent spoken memorization and artwork checkpoints.</p><div class="lab-recommendation"><strong>Suggested next step</strong><p>${esc(recommendation.reason)}</p><button class="primary small" id="lab-recommended">${recommendation.game === "recall" ? "Independent recall assessment" : gameTypes.find((g) => g[0] === recommendation.game)[1]}</button></div></div><div class="lab-menu">${[...gameTypes,["arcade-example","Arcade contract preview","Developer-only shared framework example"]].map(([id, title, description]) => `<button ${!["falling","asteroids"].includes(id) && !isDeveloperMode()?"hidden disabled":""} data-game="${id}" class="lab-game-card"><strong>${title}</strong><span>${description}</span></button>`).join("")}</div><div class="lab-settings"><label>Difficulty<select id="lab-level"><option value="1">1 · Visible words</option><option value="2">2 · Fewer cues</option><option value="3">3 · Concealed words</option><option value="4">4 · Minimal hints</option></select></label><button class="text-button" id="lab-restart">Fresh round</button><button class="text-button" id="lab-replay">♫ Replay ayah</button><button class="text-button" id="lab-mute" aria-pressed="false">Mute audio</button></div><section class="lab-game" aria-label="Puzzle play area"></section><p data-status role="status" aria-live="polite"></p><div class="lab-after"><button class="text-button" id="lab-retry-save" hidden>Retry saving this result</button><button class="primary small" id="lab-next-level" hidden>Try fewer hints →</button><button class="text-button" id="lab-recall">Try independent self-assessment →</button></div>${lab.warning ? `<p role="alert">${esc(lab.warning)}</p>` : ""}`;
+  if (!isDeveloperMode() && !["falling","asteroids","snake","recall"].includes(recommendation.game)) { recommendation.game="falling"; recommendation.reason="Practice visible word order with Falling Words."; }
+  root.innerHTML = `<div class="lab-intro"><span class="eyebrow">TRY ANOTHER WAY</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>These games practice recognition, word order, and recall cues. Game XP is separate from independent spoken memorization and artwork checkpoints.</p><div class="lab-recommendation"><strong>Suggested next step</strong><p>${esc(recommendation.reason)}</p><button class="primary small" id="lab-recommended">${recommendation.game === "recall" ? "Independent recall assessment" : gameTypes.find((g) => g[0] === recommendation.game)[1]}</button></div></div><div class="lab-menu">${[...gameTypes,["arcade-example","Arcade contract preview","Developer-only shared framework example"]].map(([id, title, description]) => `<button ${!["falling","asteroids","snake"].includes(id) && !isDeveloperMode()?"hidden disabled":""} data-game="${id}" class="lab-game-card"><strong>${title}</strong><span>${description}</span></button>`).join("")}</div><div class="lab-settings"><label>Difficulty<select id="lab-level"><option value="1">1 · Visible words</option><option value="2">2 · Fewer cues</option><option value="3">3 · Concealed words</option><option value="4">4 · Minimal hints</option></select></label><button class="text-button" id="lab-restart">Fresh round</button><button class="text-button" id="lab-replay">♫ Replay ayah</button><button class="text-button" id="lab-mute" aria-pressed="false">Mute audio</button></div><section class="lab-game" aria-label="Puzzle play area"></section><p data-status role="status" aria-live="polite"></p><div class="lab-after"><button class="text-button" id="lab-retry-save" hidden>Retry saving this result</button><button class="primary small" id="lab-next-level" hidden>Try fewer hints →</button><button class="text-button" id="lab-recall">Try independent self-assessment →</button></div>${lab.warning ? `<p role="alert">${esc(lab.warning)}</p>` : ""}`;
   const area = root.querySelector(".lab-game"),
     status = root.querySelector("[data-status]");
   let resultKey = key,
@@ -203,7 +205,7 @@ export function mountPuzzleLab(
     });
   };
   function start(next = game) {
-    if (!["falling","asteroids"].includes(next) && !isDeveloperMode()) return;
+    if (!["falling","asteroids","snake"].includes(next) && !isDeveloperMode()) return;
     const changedMode = next !== game;
     stopEncouragement();
     gameCleanup?.();
@@ -230,7 +232,7 @@ export function mountPuzzleLab(
     root.querySelector("#lab-next-level").hidden = true;
     root.querySelector("#lab-retry-save").hidden = true;
     const levelControl = root.querySelector("#lab-level");
-    levelControl.closest("label").hidden = ["falling", "asteroids", "arcade-example", "match", "detective"].includes(
+    levelControl.closest("label").hidden = ["falling", "asteroids", "snake", "arcade-example", "match", "detective"].includes(
       game,
     );
     const labels = {
@@ -258,7 +260,8 @@ export function mountPuzzleLab(
       [...levelControl.options].forEach(
         (option, i) => (option.textContent = `${i + 1} · ${labels[i]}`),
       );
-    if (game === "asteroids") asteroids();
+    if (game === "snake") snake();
+    else if (game === "asteroids") asteroids();
     else if (game === "arcade-example") arcadePreview();
     else if (game === "falling") falling();
     else if (game === "vanishing") vanishing();
@@ -268,6 +271,36 @@ export function mountPuzzleLab(
     else if (game === "continue") continuation();
     else detective();
     if (changedMode) transitionCue();
+  }
+  function snake() {
+    const registry=createRegistry();registry.register(snakeRegistration);
+    const launcher=createLauncher(registry),adapter=createContentAdapter(surahs);
+    const record=createResultRecorder({learning,lab,accountId:activeProfileId(),getAccountId:activeProfileId});
+    area.innerHTML=`<form class="snake-config"><h3>Choose your memory trail</h3><p>Steer a growing snake through the next correct words. Walls and tail bumps never cost a memory strike.</p><div class="snake-config-fields"><label>Journey<select name="journey"><option value="single">Single Ayah</option><option value="chain">Ayah Chain · portals</option></select></label><label>Starting ayah<input name="first" type="number" min="1" max="${surah.verses.at(-1).id}" value="${verse.id}"></label><label>Through ayah<input name="last" type="number" min="1" max="${surah.verses.at(-1).id}" value="${verse.id}" disabled></label><label>Checkpoints<select name="rules"><option value="classic">Classic · three strikes per run</option><option value="practice">Practice · three per ayah</option></select></label></div><button class="primary" type="submit">Prepare trail</button><p data-snake-preparation role="status"></p></form><div data-snake-host></div>`;
+    const form=area.querySelector('form'),host=area.querySelector('[data-snake-host]'),status=area.querySelector('[data-snake-preparation]');
+    const through=form.elements.last;form.elements.journey.onchange=()=>through.disabled=form.elements.journey.value==='single';
+    let nextAudio='listen',nextSpeed='slow';
+    function launch(autoStart=false){
+      const first=Number(form.elements.first.value);
+      const config=adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first:Number(through.value),mode:form.elements.journey.value,chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]});
+      // Validate before disposing a completed trail, preserving safe error recovery.
+      config.keys.forEach(k=>adapter.choices(k,{count:6}));
+      fallingControl=launcher.launch('snake',{root:host,adapter,config,id:uid(),speed:nextSpeed,initialAudio:nextAudio,muted:()=>muted,
+        onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
+        getNextSteps:s=>arcadeNextSteps({session:s.session,elapsed:s.elapsed,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'round'}),
+        onJourney:choice=>{
+          nextAudio=choice.audioMode;nextSpeed=choice.speed;
+          if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
+          const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
+          if(!range)throw Error('This surah is complete. Choose another surah in study.');
+          form.elements.first.value=String(range.first);through.value=String(range.last);form.elements.rules.value=choice.config.chainMode;
+          form.elements.journey.value=range.first===range.last?'single':'chain';through.disabled=range.first===range.last;launch(true);
+        }});
+      if(autoStart)fallingControl.start();
+      status.textContent=autoStart?'Your next trail has started.':'Ready. Press Start trail below.';host.scrollIntoView({block:'start'});
+    }
+    form.onsubmit=e=>{e.preventDefault();try{launch();}catch(e){status.textContent=e.message;}};
+    pauseGame=()=>fallingControl?.pause();gameCleanup=()=>launcher.dispose();
   }
   function asteroids() {
     const registry=createRegistry();registry.register(asteroidsRegistration);
@@ -895,14 +928,14 @@ export function mountPuzzleLab(
       ? callbacks.onRecall(key)
       : start(isDeveloperMode() ? recommendation.game : "falling");
   const refreshAccess=()=>{
-    if(!isDeveloperMode() && !["falling","asteroids","recall"].includes(recommendation.game)) {
+    if(!isDeveloperMode() && !["falling","asteroids","snake","recall"].includes(recommendation.game)) {
       recommendation.game="falling";
       recommendation.reason="Practice visible word order with Falling Words.";
       root.querySelector('.lab-recommendation p').textContent=recommendation.reason;
       root.querySelector('#lab-recommended').textContent="Falling Words";
     }
-    root.querySelectorAll('[data-game]').forEach(b=>{const restricted=!['falling','asteroids'].includes(b.dataset.game)&&!isDeveloperMode();b.hidden=restricted;b.disabled=restricted;});
-    if(!['falling','asteroids'].includes(game)&&!isDeveloperMode())start('falling');
+    root.querySelectorAll('[data-game]').forEach(b=>{const restricted=!['falling','asteroids','snake'].includes(b.dataset.game)&&!isDeveloperMode();b.hidden=restricted;b.disabled=restricted;});
+    if(!['falling','asteroids','snake'].includes(game)&&!isDeveloperMode())start('falling');
   };
   globalThis.addEventListener('ayah-developer-mode',refreshAccess);
   start();

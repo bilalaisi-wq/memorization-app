@@ -171,8 +171,12 @@ Learning XP now covers practice interactions, Quest, recall, every Lab game, cha
 
 ## Shared arcade foundation
 
-[Framework contract, source adapters, checkpoints and reward rules](docs/shared-arcade-framework.md) provides shared services for the arcade games; Ayah Asteroids is now playable and five other games remain planned. Falling Words remains available. The six legacy experimental Lab games and the contract preview are visible only in enabled developer mode; existing progress remains intact. No new Supabase migration is required.
+[Framework contract, source adapters, checkpoints and reward rules](docs/shared-arcade-framework.md) provides shared services for the arcade games; Ayah Asteroids and Ayah Snake are playable; four other games remain planned. Falling Words remains available. The six legacy experimental Lab games and the contract preview are visible only in enabled developer mode; existing progress remains intact. No new Supabase migration is required.
 
 ## Ayah Asteroids
 
 Puzzle Lab → **Ayah Asteroids** offers ship navigation, aimed range-limited tractor capture, shield deflection, Single Ayah / Chain sectors, Classic / Practice checkpoints and verified recitation. [Gameplay, phrase-review requirements and tests](docs/ayah-asteroids.md) · [Desktop/mobile previews](docs/asteroids-previews/README.md). No new Supabase migration is needed.
+
+## Ayah Snake
+
+Puzzle Lab → **Ayah Snake** offers continuous grid movement, a growing tail, verified word collectibles, physical chain portals and separate motor/memory events. [Gameplay, fairness and tests](docs/ayah-snake.md) · [Desktop/mobile previews](docs/snake-previews/README.md). No new Supabase migration is needed.
