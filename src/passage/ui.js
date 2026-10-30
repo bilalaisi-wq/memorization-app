@@ -35,6 +35,7 @@ import "./passage.css";
 export function openPassageStudio(ctx) {
   const d = document.createElement("dialog");
   d.className = "account-dialog passage-studio";
+  let closed=false;
   const storage = ctx.user ? scopedStorage(ctx.user.id) : localStorage,
     memory = createPassageMemory(storage);
   const options = referenceOptions();
@@ -107,7 +108,7 @@ export function openPassageStudio(ctx) {
   }
 
   d.innerHTML =
-    '<button class="text-button" data-close>Close ×</button><h2>Passage Builder · memorization studio</h2><button class="primary" data-open-expedition>✦ Explore Passage Expedition</button><div data-studio></div><p data-studio-status role="status" aria-live="polite"></p>';
+    '<button class="text-button" data-close>Close ×</button><h2>Passage Builder · memorization studio</h2><button class="primary" data-open-expedition>✦ Explore Passage Expedition</button><button class="text-button" data-open-rescue>✧ Constellation Rescue</button><div data-studio></div><p data-studio-status role="status" aria-live="polite"></p>';
   const root = d.querySelector("[data-studio]"),
     status = d.querySelector("[data-studio-status]");
   const note = (text, error = false) => {
@@ -124,15 +125,19 @@ export function openPassageStudio(ctx) {
     studyAudioStop("passage");
   }
   const close = () => {
+    if(closed)return;
+    closed=true;
     navigation++;
     assessmentView++;
     cache.clear();
     stop();
     d.close();
     d.remove();
+    ctx.onClose?.();
   };
   d.querySelector("[data-close]").onclick = close;
   d.oncancel = close;
+  d.querySelector('[data-open-rescue]').onclick=async()=>{const {openRescue}=await import('../quest/rescue/ui.js');close();openRescue(ctx);};
   d.querySelector('[data-open-expedition]').onclick=async()=>{const {openExpedition}=await import('../quest/expedition/ui.js');close();openExpedition({...ctx,initialReference:bundle?.key||ctx.initialReference});};
   const get = async (key) => {
     if (cache.has(key)) return cache.get(key);
@@ -820,6 +825,7 @@ export function openPassageStudio(ctx) {
     } catch (e) { if (d.isConnected && request === navigation) note(e.message, true); }
   })();
 
+  return {close};
 }
 
 // Phase-2 integration seam; callers opt in, no campaign screen is mounted here.

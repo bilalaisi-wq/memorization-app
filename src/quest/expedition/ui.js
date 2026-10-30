@@ -43,6 +43,7 @@ export function openExpedition(ctx = {}) {
     paused = false;
   if (getOwner() !== owner)
     throw Error("Account changed. Reopen Passage Expedition.");
+  window.dispatchEvent(new CustomEvent("ayah-quest-surface",{detail:{name:"expedition"}}));
   const storage = {
     getItem: (k) => {
       guard();
@@ -191,6 +192,7 @@ export function openExpedition(ctx = {}) {
     signal: scope.signal,
   });
   window.addEventListener("pagehide", close, { signal: scope.signal });
+  window.addEventListener("ayah-quest-surface",e=>{if(e.detail?.name!=="expedition")close();},{signal:scope.signal});
   document.addEventListener(
     "visibilitychange",
     () => {
@@ -813,9 +815,9 @@ export function openExpedition(ctx = {}) {
         (c) => c.evidence === "self-assessed",
       ).length;
     view.querySelector("[data-ex-activity]").innerHTML =
-      `<section class="ex-reveal"><div class="ex-reveal-star" aria-hidden="true">✦</div><p class="ex-kicker">CONSTELLATION REVEALED</p><h1>You connected<br>this passage.</h1><p>${Object.keys(r.completed).length} real checkpoints · ${independent} successful independent self-assessments</p>${bundles.map((b) => `<section><h3>${b.key}</h3><p class="arabic" dir="rtl" lang="ar">${esc(b.textUthmani)}</p></section>`).join("")}<p>Your self-assessment records what you recalled today. Lasting retention grows through scheduled revision; the existing FSRS schedule stays in charge.</p><div class="ex-actions"><button class="ex-primary" data-ex-more>Chart another expedition →</button><button data-ex-revision>Return to classic revision</button></div></section>`;
+      `<section class="ex-reveal"><div class="ex-reveal-star" aria-hidden="true">✦</div><p class="ex-kicker">CONSTELLATION REVEALED</p><h1>You connected<br>this passage.</h1><p>${Object.keys(r.completed).length} real checkpoints · ${independent} successful independent self-assessments</p>${bundles.map((b) => `<section><h3>${b.key}</h3><p class="arabic" dir="rtl" lang="ar">${esc(b.textUthmani)}</p></section>`).join("")}<p>Your self-assessment records what you recalled today. Lasting retention grows through scheduled revision; the existing FSRS schedule stays in charge.</p><div class="ex-actions"><button class="ex-primary" data-ex-more>Chart another expedition →</button><button data-ex-revision>Open Constellation Rescue</button></div></section>`;
     view.querySelector("[data-ex-more]").onclick = selection;
-    view.querySelector("[data-ex-revision]").onclick = classic;
+    view.querySelector("[data-ex-revision]").onclick = async()=>{const {openRescue}=await import("../rescue/ui.js");if(disposed)return;close();openRescue(ctx);};
     view.querySelector("[data-ex-footer]").innerHTML = "";
     drawMap();
     note("Expedition complete. Return for your scheduled reviews.");

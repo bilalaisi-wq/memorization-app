@@ -1,6 +1,6 @@
 # Shared Quest framework (Phase 2)
 
-**Phase 3 update:** Passage Expedition now has a playable [edition-2 constellation UI](passage-expedition.md). This document records the original Phase 2 contracts; legacy routes remain compatible. The other four campaigns still have framework definitions only.
+**Phase 3 update:** Passage Expedition now has a playable [edition-2 constellation UI](passage-expedition.md). This document records the original Phase 2 contracts; legacy routes remain compatible. Constellation Rescue now has its [Phase 4 revision dashboard](constellation-rescue.md). The remaining three campaigns still have framework definitions only.
 
 
 This is a reusable adventure foundation, **not the complete campaign UI**. There

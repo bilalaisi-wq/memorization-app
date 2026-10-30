@@ -180,3 +180,7 @@ is not automatic speech or tajweed verification.
   uses the existing authorized test fixture, not a live deployment claim.
 - `git diff --check` passed. Qur'anic source datasets, research draft boundaries,
   approved recitation stops, Supabase RLS and existing FSRS settings are unchanged.
+
+## Constellation Rescue revision
+
+After the constellation reveal, **Open Constellation Rescue** shows the existing passage review cards and due queue. See [the revision dashboard guide](constellation-rescue.md). Opening it does not recalculate FSRS or add recall history.
