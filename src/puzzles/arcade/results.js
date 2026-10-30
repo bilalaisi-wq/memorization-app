@@ -16,6 +16,7 @@ export function createResultRecorder({learning,lab,accountId,getAccountId}) {
         arcade:{schemaVersion:3,success:true,mode:snapshot.config.mode,chainMode:snapshot.config.chainMode,seed:snapshot.config.seed,
           mistakes:snapshot.mistakes.filter(e=>e.key===key),motorErrors:snapshot.motorErrors.filter(e=>e.key===key),assistance,
           completedCheckpoints:[...snapshot.completed],
+          ...(Number.isInteger(snapshot.studyScope?.firstWord)&&Number.isInteger(snapshot.studyScope?.lastWord)&&snapshot.studyScope.firstWord>=1&&snapshot.studyScope.lastWord>=snapshot.studyScope.firstWord?{studyScope:{kind:'visual-study',reference:key,firstWord:snapshot.studyScope.firstWord,lastWord:snapshot.studyScope.lastWord}}:{}),
           ...(snapshot.game==='snake'?{score:Number.isSafeInteger(snapshot.arcadeStats?.score)&&snapshot.arcadeStats.score>=0?snapshot.arcadeStats.score:0,steps:Number.isSafeInteger(snapshot.arcadeStats?.steps)&&snapshot.arcadeStats.steps>=0?snapshot.arcadeStats.steps:0,speed:['slow','steady','brisk'].includes(snapshot.arcadeStats?.speed)?snapshot.arcadeStats.speed:'slow'}:{})}});
       receipts.push(reward);
     }

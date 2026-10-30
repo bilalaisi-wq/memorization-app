@@ -45,12 +45,17 @@ export async function resumeCampaignMap({
   const old = store.snapshot().runs[runId];
   if (!old) throw Error("Unknown saved campaign");
   const bundles = await Promise.all(old.refs.map(bundleLoader));
-  const map = await createCampaignMap({
-    campaignId: old.campaignId,
-    bundles,
-    game: old.game,
-    units: old.units || {},
-  });
+  const map =
+    old.routeVersion === 2
+      ? await (
+          await import("./expedition/model.js")
+        ).createExpeditionMap({ bundles, game: old.game })
+      : await createCampaignMap({
+          campaignId: old.campaignId,
+          bundles,
+          game: old.game,
+          units: old.units || {},
+        });
   const run = store.open(map);
   return {
     map,

@@ -13,7 +13,11 @@ function valid(data, owner) {
       return false;
     return Object.entries(data.runs).every(([id, r]) => {
       campaign(r.campaignId);
-      if (r.game !== null && !arcadeGames.some((g) => g.id === r.game))
+      if (
+        r.game !== null &&
+        r.game !== "falling" &&
+        !arcadeGames.some((g) => g.id === r.game)
+      )
         return false;
       if (
         r.units !== undefined &&
@@ -23,6 +27,38 @@ function valid(data, owner) {
               canonicalRef(k) !== k ||
               typeof v !== "string" ||
               !/^[a-zA-Z0-9:_-]{1,128}$/.test(v),
+          ))
+      )
+        return false;
+      if (r.routeVersion !== undefined && ![1, 2].includes(r.routeVersion))
+        return false;
+      if (
+        r.drafts !== undefined &&
+        (!object(r.drafts) ||
+          Object.entries(r.drafts).some(
+            ([id, d]) =>
+              !r.checkpointIds.includes(id) ||
+              !object(d) ||
+              Object.keys(d).some(
+                (k) =>
+                  ![
+                    "round",
+                    "order",
+                    "mistakes",
+                    "assistance",
+                    "revealed",
+                  ].includes(k),
+              ) ||
+              !Array.isArray(d.order) ||
+              !d.order.every(Number.isInteger) ||
+              !Number.isInteger(d.round) ||
+              d.round < 0 ||
+              d.round > 2 ||
+              !Number.isInteger(d.mistakes) ||
+              d.mistakes < 0 ||
+              !Number.isInteger(d.assistance) ||
+              d.assistance < 0 ||
+              typeof d.revealed !== "boolean",
           ))
       )
         return false;
@@ -127,6 +163,48 @@ export function createQuestStore({
       guard();
       return storage.getItem(QUEST_KEY);
     },
+    restoreRaw(raw) {
+      guard();
+      const parsed = JSON.parse(raw);
+      if (
+        !valid(parsed, owner) ||
+        Object.keys(parsed).some(
+          (k) => !["version", "owner", "runs"].includes(k),
+        ) ||
+        Object.values(parsed.runs).some((r) =>
+          Object.keys(r).some(
+            (k) =>
+              ![
+                "id",
+                "campaignId",
+                "game",
+                "routeVersion",
+                "drafts",
+                "units",
+                "checkpointIds",
+                "refs",
+                "revisions",
+                "started",
+                "completed",
+                "unlocks",
+              ].includes(k),
+          ),
+        )
+      )
+        throw Error(
+          "Invalid or incompatible expedition backup. Original records are unchanged.",
+        );
+      const previous = storage.getItem(QUEST_KEY);
+      if (previous !== null)
+        storage.setItem("ayah-quest-recovery-backup-v1", previous);
+      storage.setItem(QUEST_KEY, raw);
+      if (storage.getItem(QUEST_KEY) !== raw)
+        throw Error(
+          "Restore could not be saved. The recovery backup is preserved.",
+        );
+      warning = "";
+      return structuredClone(parsed);
+    },
     open(map) {
       return transact((d) => {
         campaign(map.campaignId);
@@ -134,6 +212,8 @@ export function createQuestStore({
           id: map.id,
           campaignId: map.campaignId,
           game: map.game,
+          routeVersion: map.routeVersion || 1,
+          drafts: {},
           units: map.units || {},
           checkpointIds: map.checkpoints.map((c) => c.id),
           refs: [...new Set(map.checkpoints.map((c) => canonicalRef(c.key)))],
@@ -159,6 +239,17 @@ export function createQuestStore({
           throw Error("Checkpoint is locked or already complete");
         r.started[checkpoint.id] ??= new Date(clock()).toISOString();
         return r.started[checkpoint.id];
+      });
+    },
+    saveDraft(map, checkpoint, draft) {
+      return transact((d) => {
+        const r = d.runs[map.id];
+        checkMap(map, r);
+        if (nextCheckpoint(map, r)?.id !== checkpoint.id)
+          throw Error("Only the current workspace can be saved.");
+        r.drafts ??= {};
+        r.drafts[checkpoint.id] = structuredClone(draft);
+        return draft;
       });
     },
     complete(

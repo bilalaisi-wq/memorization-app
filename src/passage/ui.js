@@ -107,7 +107,7 @@ export function openPassageStudio(ctx) {
   }
 
   d.innerHTML =
-    '<button class="text-button" data-close>Close ×</button><h2>Passage Builder · memorization studio</h2><div data-studio></div><p data-studio-status role="status" aria-live="polite"></p>';
+    '<button class="text-button" data-close>Close ×</button><h2>Passage Builder · memorization studio</h2><button class="primary" data-open-expedition>✦ Explore Passage Expedition</button><div data-studio></div><p data-studio-status role="status" aria-live="polite"></p>';
   const root = d.querySelector("[data-studio]"),
     status = d.querySelector("[data-studio-status]");
   const note = (text, error = false) => {
@@ -133,6 +133,7 @@ export function openPassageStudio(ctx) {
   };
   d.querySelector("[data-close]").onclick = close;
   d.oncancel = close;
+  d.querySelector('[data-open-expedition]').onclick=async()=>{const {openExpedition}=await import('../quest/expedition/ui.js');close();openExpedition({...ctx,initialReference:bundle?.key||ctx.initialReference});};
   const get = async (key) => {
     if (cache.has(key)) return cache.get(key);
     const b = await loadBundle(key, ctx.client);
@@ -778,6 +779,7 @@ export function openPassageStudio(ctx) {
                 : "Independent recall was not scheduled."
             }`,
           );
+          ctx.onAssessmentSaved?.(result);
         } catch (e) {
           note(e.message, true);
         }

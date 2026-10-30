@@ -11,7 +11,7 @@ export const campaigns = Object.freeze(
       id,
       title,
       activities: Object.freeze(activities),
-      status: "framework",
+      status: id === "passage-expedition" ? "available" : "framework",
     }),
   ),
 );

@@ -112,3 +112,13 @@ export async function generateCheckpoints({
   }
   return checkpoints;
 }
+
+export function chooseRegisteredGame(entries, requested, extras = []) {
+  const available = entries.filter(
+    (g) =>
+      g.status !== "planned" && (playableGame(g.id) || extras.includes(g.id)),
+  );
+  return (
+    available.find((g) => g.id === requested)?.id || available[0]?.id || null
+  );
+}

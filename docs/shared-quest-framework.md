@@ -1,5 +1,8 @@
 # Shared Quest framework (Phase 2)
 
+**Phase 3 update:** Passage Expedition now has a playable [edition-2 constellation UI](passage-expedition.md). This document records the original Phase 2 contracts; legacy routes remain compatible. The other four campaigns still have framework definitions only.
+
+
 This is a reusable adventure foundation, **not the complete campaign UI**. There
 are no new learner menu entries or advertised finished campaigns. Vanilla JS and
 Vite remain in place. `loadQuestFramework()` in `src/passage/ui.js` is a lazy

@@ -126,3 +126,7 @@ These previews use mocked test-account entitlements and the source-validated 2:2
 ## Stabilization audit
 
 See [Phase 1 defect audit, regression coverage, screenshots and remaining limitations](passage-stabilization.md). The existing learning workflow and server authorization are retained; no Quest redesign or recitation-stop approval is introduced.
+
+## Passage Expedition 2.0
+
+The classic studio is preserved. The new constellation campaign is available through **Explore Passage Expedition** or the existing advanced developer menu. See [the complete expedition guide, pilot validation and screenshots](passage-expedition.md). Visual workspaces still confer no recitation-stop approval or automatic memorization mastery.

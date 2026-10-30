@@ -12,6 +12,7 @@ import {
   contentRevision,
   segmentationRevision,
   playableGame,
+  chooseRegisteredGame,
 } from "./checkpoints.js";
 import { createActivityScope } from "./accessibility.js";
 import { createTransitions } from "./transitions.js";
@@ -41,7 +42,8 @@ export function createQuestHost({
   lab,
   client = null,
   onRecall,
-  volume = () => readLabVolume(),
+  onProgress = () => {},
+  volume = () => readLabVolume(localStorage),
   muted = () => false,
   // Dependency injection is for evaluated fixtures; production uses authenticated library loaders.
   bundleLoader = (key) => loadBundle(key, client),
@@ -118,13 +120,18 @@ export function createQuestHost({
         data.config.keys.join("|") !== checkpoint.key
       )
         throw Error("Unexpected arcade result");
-      xp = rewards.arcade(data);
+      xp = rewards.arcade({
+        ...data,
+        ...(checkpoint.edition === 2
+          ? { studyScope: checkpoint.workspace }
+          : {}),
+      });
       evidence = "arcade";
     } else {
       if (data.status !== "won") throw Error("Complete practice first");
       xp = rewards.practice(checkpoint);
     }
-    return store.complete(map, checkpoint, {
+    const saved = store.complete(map, checkpoint, {
       xp,
       evidence,
       mistakes: Array.isArray(data.mistakes)
@@ -135,12 +142,21 @@ export function createQuestHost({
         : data.assistance || 0,
       motorErrors: data.motorErrors?.length || 0,
     });
+    onProgress(saved, checkpoint);
+    return saved;
   }
   async function launch(checkpointId) {
     guard();
     clear();
     const token = generation;
-    const checkpoint = map.checkpoints.find((c) => c.id === checkpointId);
+    let checkpoint = map.checkpoints.find((c) => c.id === checkpointId);
+    if (checkpoint?.edition === 2 && checkpoint.type === "arcade")
+      checkpoint = {
+        ...checkpoint,
+        game: chooseRegisteredGame(registry.list(), checkpoint.game, [
+          "falling",
+        ]),
+      };
     if (!checkpoint) throw Error("Unknown checkpoint");
     if (!store.snapshot().runs[map.id]?.completed[checkpoint.id])
       store.start(map, checkpoint);
@@ -158,6 +174,21 @@ export function createQuestHost({
         );
       if (disposed || token !== generation) return null;
       guard();
+      if (checkpoint.passagePins) {
+        for (const pin of checkpoint.passagePins) {
+          const item =
+            pin.key === bundle.key ? bundle : await bundleLoader(pin.key);
+          if (
+            (await contentRevision(item)) !== pin.sourceHash ||
+            (await segmentationRevision(item)) !== pin.segmentHash
+          )
+            throw Error(
+              "Passage source or review changed. Previous progress is preserved.",
+            );
+        }
+        if (disposed || token !== generation) return null;
+        guard();
+      }
       active = checkpoint;
       if (checkpoint.type === "recall") {
         root.innerHTML =
@@ -176,6 +207,13 @@ export function createQuestHost({
                     unit: checkpoint.recall,
                   },
                   coachAction: "review",
+                  onAssessmentSaved: () => {
+                    if (!disposed && token === generation) {
+                      try {
+                        confirmRecall();
+                      } catch {}
+                    }
+                  },
                 });
             });
         };
@@ -220,7 +258,8 @@ export function createQuestHost({
       const registered = registry.list().some((g) => g.id === checkpoint.game);
       if (
         checkpoint.type === "arcade" &&
-        playableGame(checkpoint.game) &&
+        (playableGame(checkpoint.game) ||
+          (checkpoint.edition === 2 && checkpoint.game === "falling")) &&
         registered
       ) {
         const library = surahs.map((s) => ({
@@ -237,8 +276,29 @@ export function createQuestHost({
           words: bundle.words.map((w) => w.text),
         });
         const base = createContentAdapter(library);
+        const trialWords =
+          checkpoint.edition === 2 && checkpoint.workspace
+            ? base
+                .words(bundle.key)
+                .filter(
+                  (w) =>
+                    w.index >= checkpoint.workspace.firstWord - 1 &&
+                    w.index < checkpoint.workspace.lastWord,
+                )
+            : null;
         const adapter = {
           ...base,
+          words: (key) =>
+            key === bundle.key && trialWords ? trialWords : base.words(key),
+          choices: (key, options) =>
+            base
+              .choices(key, options)
+              .filter(
+                (w) =>
+                  !w.target ||
+                  !trialWords ||
+                  trialWords.some((t) => t.id === w.id),
+              ),
           audio: (key) =>
             key === bundle.key ? resource?.url || "" : base.audio(key),
         };
@@ -341,6 +401,7 @@ export function createQuestHost({
     const saved = store.complete(map, checkpoint, {
       evidence: "self-assessed",
     });
+    onProgress(saved, checkpoint);
     scope.announce(
       "Self-assessed recall checkpoint saved. Your existing scheduler remains authoritative.",
     );
@@ -349,6 +410,10 @@ export function createQuestHost({
   return {
     launch,
     confirmRecall,
+    setVolume(value) {
+      guard();
+      current?.setVolume?.(value);
+    },
     pause() {
       guard();
       current?.pause();

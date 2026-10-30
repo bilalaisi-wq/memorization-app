@@ -87,6 +87,7 @@ export function mountBillingControls(nav, context) {
       ["Subscription & billing", () => account(context, api)],
       ["Passage Builder", () => passages(context, api)],
       ["Passage memorization", () => openPassageStudio(context)],
+      ["Passage Expedition", () => import("../quest/expedition/ui.js").then(m=>m.openExpedition(context))],
       ["Advanced revision & analytics", () => insights(context, api)],
     ]
   ) {
