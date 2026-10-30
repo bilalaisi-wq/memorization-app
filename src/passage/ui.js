@@ -22,6 +22,7 @@ import {
   shuffled,
   WINDOW_SIZE,
   wordWindow,
+  restoreWorkspace,
 } from "./model.js";
 import { createPassageMemory, PASSAGE_MEMORY_KEY } from "./memory.js";
 import { scopedStorage } from "../learner/profile-storage.js";
@@ -49,6 +50,8 @@ export function openPassageStudio(ctx) {
     audio = null,
     audioResource = null,
     generation = 0,
+    navigation = 0,
+    assessmentView = 0,
     assessmentBundles = null;
   const cache = new Map();
   let loading = false,
@@ -58,11 +61,17 @@ export function openPassageStudio(ctx) {
     const saved = JSON.parse(storage.getItem("ayah-passage-workspaces-v1"));
     if (saved) {
       if (
-        saved.version !== 1 || !saved.records || !Array.isArray(saved.refs) ||
+        saved.version !== 1 || !saved.records || typeof saved.records !== "object" || Array.isArray(saved.records) || !Array.isArray(saved.refs) || !saved.refs.length ||
         saved.refs.length > 10
       ) throw Error();
+      const refs = saved.refs.map((k) => reference(k).key);
+      if (new Set(refs).size !== refs.length) throw Error();
+      if (saved.current) {
+        reference(saved.current.key);
+        if (typeof saved.current.segmentId !== "string") throw Error();
+      }
       work = saved;
-      selectedRefs = saved.refs.map((k) => reference(k).key);
+      selectedRefs = refs;
     }
   } catch {
     workWarning =
@@ -76,6 +85,7 @@ export function openPassageStudio(ctx) {
     if (workWarning || !bundle) return;
     work.records[workKey()] = { page, orders, windowSequence, level };
     work.refs = selectedRefs;
+    work.current = { key: bundle.key, segmentId };
     try {
       storage.setItem("ayah-passage-workspaces-v1", JSON.stringify(work));
     } catch {
@@ -87,15 +97,12 @@ export function openPassageStudio(ctx) {
   }
   function restoreWork() {
     const previous = work.records[workKey()];
-    if (
-      previous && Number.isInteger(previous.page) &&
-      Array.isArray(previous.windowSequence) && previous.orders &&
-      [0, 1, 2].includes(previous.level)
-    ) {
-      page = previous.page;
-      orders = previous.orders;
-      windowSequence = previous.windowSequence;
-      level = previous.level;
+    if (previous === undefined) return;
+    try {
+      const restored = restoreWorkspace(bundle, segmentId === "full" ? null : currentSegment(), previous);
+      ({ page, orders, windowSequence, level } = restored);
+    } catch (e) {
+      workWarning = e.message;
     }
   }
 
@@ -117,6 +124,9 @@ export function openPassageStudio(ctx) {
     studyAudioStop("passage");
   }
   const close = () => {
+    navigation++;
+    assessmentView++;
+    cache.clear();
     stop();
     d.close();
     d.remove();
@@ -126,6 +136,7 @@ export function openPassageStudio(ctx) {
   const get = async (key) => {
     if (cache.has(key)) return cache.get(key);
     const b = await loadBundle(key, ctx.client);
+    if (!d.isConnected) return b;
     cache.set(key, b);
     if (cache.size > 12) cache.delete(cache.keys().next().value);
     return b;
@@ -134,26 +145,29 @@ export function openPassageStudio(ctx) {
     stop();
     loading = true;
     note("Loading validated content…");
-    const request = generation;
+    const request = ++navigation;
+    assessmentView++;
     try {
       const b = await get(key);
-      if (!d.isConnected || request !== generation) return;
+      if (!d.isConnected || request !== navigation) return;
       bundle = b;
-      segmentId = "full";
+      segmentId = work.current?.key === key && reviewedSegments(b).some(s => s.id === work.current.segmentId) ? work.current.segmentId : "full";
       page = 0;
+      level = 0;
       orders = {};
       windowSequence = [];
       assessmentBundles = null;
       restoreWork();
       draw();
       note(
-        "Repeat aloud after the reciter. Visual workspace boundaries are not recitation stops.",
+        workWarning || "Repeat aloud after the reciter. Visual workspace boundaries are not recitation stops.",
       );
     } catch (e) {
+      if (!d.isConnected || request !== navigation) return;
       draw();
       note(e.message, true);
     } finally {
-      loading = false;
+      if (request === navigation) loading = false;
     }
   }
   async function play(b = bundle, seg = null) {
@@ -177,21 +191,25 @@ export function openPassageStudio(ctx) {
       }
       audioResource = resource;
       audio = new Audio(resource.url);
+      const player = audio;
       if (seg?.kind === "reviewed") {
         audio.currentTime = seg.startMs / 1000;
         audio.ontimeupdate = () => {
-          if (audio && audio.currentTime >= seg.endMs / 1000) stop();
+          if (request === generation && player.currentTime >= seg.endMs / 1000) stop();
         };
       }
-      audio.onended = () => stop();
+      audio.onended = () => { if (request === generation) stop(); };
       audio.onerror = () => {
+        if (request !== generation) return;
         stop();
         note("Recitation could not play. Try again.", true);
       };
       await audio.play();
     } catch (e) {
-      stop();
-      note(e.message, true);
+      if (request === generation && d.isConnected) {
+        stop();
+        note(e.message, true);
+      }
     }
   }
   const currentSegment = () =>
@@ -216,6 +234,7 @@ export function openPassageStudio(ctx) {
     }
   }
   function draw() {
+    assessmentView++;
     d.dataset.recallActive = "false";
     const active = memory.snapshot().active;
     if (active && !active.graded) {
@@ -224,10 +243,14 @@ export function openPassageStudio(ctx) {
     }
     if (!bundle) {
       root.innerHTML =
-        '<p>Build a passage from the verified library. Free ayahs work without an account.</p><button class="primary" data-start>Start with Al-Fatihah</button>';
-      root.querySelector("[data-start]").onclick = () => select("1:1");
+        `<p>Build a passage from the verified library. Free ayahs work without an account.${work.current ? ' Resume saved ayah ' + esc(work.current.key) + '.' : ''}</p><button class="primary" data-start>${work.current ? "Resume saved workspace" : "Start with Al-Fatihah"}</button>${work.current ? '<button class="text-button" data-free-start>Practice free Al-Fatihah</button>' : ""}`;
+      root.querySelector("[data-free-start]")?.addEventListener("click", () => select("1:1"));
+      root.querySelector("[data-start]").onclick = () => select(work.current?.key || "1:1");
       return;
     }
+    const focused = document.activeElement;
+    const focusWord = focused?.dataset.word;
+    const focusMove = focused?.dataset.move;
     resetWindow();
     persistWork();
     const w = currentWindow(),
@@ -294,7 +317,7 @@ export function openPassageStudio(ctx) {
             hiddenWord(id, level)
               ? '<span aria-hidden="true">✧</span>'
               : `<span lang="ar">${esc(textAt(id))}</span>`
-          }</button><button class="text-button" data-move="${id}:-1" aria-label="Move piece earlier">←</button><button class="text-button" data-move="${id}:1" aria-label="Move piece later">→</button></span>`
+          }</button><button class="text-button" data-move="${id}:-1" aria-label="Move piece earlier">→</button><button class="text-button" data-move="${id}:1" aria-label="Move piece later">←</button></span>`
         ).join("") || "<p>Move words here in order.</p>"
       }</div><div class="passage-piece-zone passage-word-bank" data-place="bank" dir="rtl">${
         bank.map((id) =>
@@ -333,6 +356,8 @@ export function openPassageStudio(ctx) {
         ).join("") ||
         "<p>No passage reviews yet. Reconstruction alone does not schedule recall.</p>"
       }<button class="text-button" data-sync>Sync private passage reviews</button><button class="text-button" data-export>Export passage review data</button></section>`;
+    if (focusWord) root.querySelector(`[data-word="${Number(focusWord)}"]`)?.focus({preventScroll:true});
+    if (focusMove && /^\d+:-?1$/.test(focusMove)) root.querySelector(`[data-move="${focusMove}"]`)?.focus({preventScroll:true});
     root.querySelector("[data-reference]").onchange = (e) =>
       select(e.target.value);
     root.querySelector("[data-add-ref]").onclick = () => {
@@ -357,8 +382,11 @@ export function openPassageStudio(ctx) {
       () => play(bundle, currentSegment()),
     );
     root.querySelector("[data-segment]").onchange = (e) => {
+      navigation++;
+      loading = false;
       stop();
       segmentId = e.target.value;
+      level = 0;
       page = 0;
       orders = {};
       windowSequence = [];
@@ -398,6 +426,12 @@ export function openPassageStudio(ctx) {
         e.stopPropagation();
         const id = Number(e.dataTransfer.getData("text/plain"));
         if (!w.words.some((x) => x.position === id)) return;
+        if (zoneIsBank(b)) {
+          orders[page] = selected.filter(x => x !== id);
+          draw();
+          return;
+        }
+        if (id === Number(b.dataset.word)) return;
         const next = selected.filter((x) => x !== id);
         next.splice(Math.max(0, next.indexOf(Number(b.dataset.word))), 0, id);
         orders[page] = next;
@@ -482,17 +516,24 @@ export function openPassageStudio(ctx) {
     root.querySelector("[data-recall]").onclick = () =>
       beginRecall([bundle], segmentId === "full" ? null : currentSegment());
     root.querySelector("[data-passage-recall]").onclick = async () => {
+      const request = ++navigation;
+      loading = false;
+      stop();
       try {
         note("Loading the selected passage…");
         const all = await Promise.all(selectedRefs.map(get));
+        if (!d.isConnected || request !== navigation) return;
         beginRecall(all);
       } catch (e) {
         note(e.message, true);
       }
     };
     root.querySelector("[data-chain]").onclick = async () => {
+      const request = ++navigation;
+      loading = false;
       try {
         const all = await Promise.all(selectedRefs.map(get));
+        if (!d.isConnected || request !== navigation) return;
         chain = shuffled(all.map((b) => b.key));
         drawChain(all);
       } catch (e) {
@@ -520,6 +561,7 @@ export function openPassageStudio(ctx) {
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     };
   }
+  const zoneIsBank = b => !!b.closest('[data-place="bank"]');
   function drawChain(all) {
     const area = root.querySelector("[data-chain-cards]");
     area.innerHTML =
@@ -554,9 +596,12 @@ export function openPassageStudio(ctx) {
   }
   async function beginRecall(all, segment = null) {
     try {
+      loading = false;
       stop();
       assessmentBundles = all;
+      const request = ++navigation;
       const unit = await recallUnit(all, segment);
+      if (!d.isConnected || request !== navigation) return;
       memory.begin(unit);
       drawAssessment();
       note(
@@ -567,6 +612,8 @@ export function openPassageStudio(ctx) {
     }
   }
   async function drawAssessment() {
+    const view = ++assessmentView;
+    const currentView = () => d.isConnected && view === assessmentView;
     d.dataset.recallActive = "true";
     stop();
     const a = memory.snapshot().active;
@@ -595,8 +642,10 @@ export function openPassageStudio(ctx) {
     };
     root.querySelector("[data-compare]").onclick = async () => {
       try {
-        assessmentBundles = assessmentBundles ||
-          await Promise.all(unit.refs.map(get));
+        memory.update("assisted");
+        const loaded = assessmentBundles || await Promise.all(unit.refs.map(get));
+        if (!currentView()) return;
+        assessmentBundles = loaded;
         if (unit.type === "segment") {
           const s = assessmentBundles[0].segments.find((s) =>
             s.id === unit.segment
@@ -607,21 +656,25 @@ export function openPassageStudio(ctx) {
             );
           }
         }
+        if (!currentView()) return;
         memory.update("compared");
-        showComparison();
+        if (currentView()) showComparison();
       } catch (e) {
-        note(e.message, true);
+        if (currentView()) note(e.message, true);
       }
     };
     root.querySelector("[data-recall-listen]").onclick = async () => {
       try {
+        memory.update("assisted");
         const b = await get(unit.refs[0]);
+        if (!currentView()) return;
         await play(
           b,
           unit.type === "segment"
             ? b.segments.find((s) => s.id === unit.segment)
             : null,
         );
+        if (!currentView()) return;
         note(
           "Listening before declaring recall makes this assessment assisted. For a multi-ayah passage, compare each complete ayah after revealing.",
         );
@@ -631,6 +684,9 @@ export function openPassageStudio(ctx) {
     };
     root.querySelector("[data-abandon]").onclick = () => {
       try {
+        assessmentView++;
+        navigation++;
+        stop();
         memory.update("abandon");
         memory.update("compared");
         const current = memory.snapshot().active;
@@ -646,8 +702,9 @@ export function openPassageStudio(ctx) {
     };
     if (a.compared) {
       try {
-        assessmentBundles = assessmentBundles ||
-          await Promise.all(unit.refs.map(get));
+        const loaded = assessmentBundles || await Promise.all(unit.refs.map(get));
+        if (!currentView()) return;
+        assessmentBundles = loaded;
         if (unit.type === "segment") {
           const s = assessmentBundles[0].segments.find((s) =>
             s.id === unit.segment
@@ -658,7 +715,7 @@ export function openPassageStudio(ctx) {
             );
           }
         }
-        showComparison();
+        if (currentView()) showComparison();
       } catch (e) {
         note(e.message, true);
       }
@@ -707,6 +764,7 @@ export function openPassageStudio(ctx) {
           stop();
           const result = memory.grade(a.id, b.dataset.grade);
           awardStudy({mode:"passage-recall",unit:a.unitId,action:"assessment",xp:result.independent?10:3});
+          assessmentView++;
           assessmentBundles = null;
           draw();
           note(
@@ -731,11 +789,14 @@ export function openPassageStudio(ctx) {
   draw();
   if (memory.warning || workWarning) note(memory.warning || workWarning, true);
   if (ctx.initialReference) select(ctx.initialReference);
+
   if (ctx.coachTarget) (async () => {
+    const request = ++navigation;
     try {
       const target = ctx.coachTarget;
       const all = await Promise.all(target.refs.map(get));
-      if (!d.isConnected) return;
+      if (!d.isConnected || request !== navigation) return;
+      loading = false;
       if (ctx.coachAction === "review") {
         const active = memory.snapshot().active;
         if (active && !active.graded) {
@@ -746,6 +807,7 @@ export function openPassageStudio(ctx) {
         const saved = target.unit;
         const segment = saved?.type === "segment" ? all[0].segments.find(s => s.id === saved.segment) : null;
         if (!saved || saved.type === "segment" && !segment || (await recallUnit(all, segment)).id !== saved.id) throw Error("The reviewed recall unit changed. Check current boundaries before starting a new assessment.");
+        if (!d.isConnected || request !== navigation) return;
         await beginRecall(all, segment);
       } else {
         selectedRefs = target.refs.slice(0, 10);
@@ -753,7 +815,7 @@ export function openPassageStudio(ctx) {
         restoreWork(); draw();
         note("Coach practice suggestion opened. Review dates and mastery are unchanged.");
       }
-    } catch (e) { note(e.message, true); }
+    } catch (e) { if (d.isConnected && request === navigation) note(e.message, true); }
   })();
 
 }

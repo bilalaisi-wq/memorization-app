@@ -168,3 +168,20 @@ test("corrupt passage reviews are preserved; segment revision IDs cannot inherit
   expect(u.id).not.toBe(v.id);
   expect(u.id).not.toBe((await recallUnit([long])).id);
 });
+
+test("workspace recovery validates every page permutation and exact source position without mutating drafts", async () => {
+  const {restoreWorkspace} = await import('../src/passage/model.js');
+  const count = wordWindow(long, 0).count;
+  const saved = {page: 1, level: 2, orders: {0: [2, 1]}, windowSequence: Array.from({length:count}, (_, i) => i)};
+  expect(restoreWorkspace(long, null, saved)).toEqual(saved);
+  const restored = restoreWorkspace(long, null, saved);
+  restored.orders[0].push(3);
+  expect(saved.orders[0]).toEqual([2, 1]);
+  for (const bad of [
+    {...saved,page:count}, {...saved, orders:{0:[1,1]}},
+    {...saved, orders:{0:[128]}}, {...saved, orders:{99:[]}},
+    {...saved, windowSequence:Array(count).fill(0)}, {...saved,level:3},
+  ]) expect(() => restoreWorkspace(long, null, bad)).toThrow('recovery');
+  const segment = {firstWord:11,lastWord:14};
+  expect(restoreWorkspace(long, segment, {page:0,level:1,orders:{0:[14,11]},windowSequence:[0]}).orders[0]).toEqual([14,11]);
+});

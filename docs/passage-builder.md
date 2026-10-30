@@ -9,13 +9,14 @@ The application does **not** claim that the entire Qur’an content library has 
 | Material | Validation / readiness |
 |---|---|
 | Existing Al-Fatihah + Juz Amma | 38 complete surahs / 571 ayahs. Existing text, translations, audio, puzzles and FSRS remain unchanged and free. |
+| Al-A‘raf (7:1–206) | All 206 source-validated ayahs prepared for developer-only preview. See [developer library setup](developer-library-preview.md). |
 | Juz 29 (67:1–77:50) | All 11 surahs / 431 source-validated ayahs prepared for private deployment and owner review. See [Juz 29 setup](juz-29-setup.md). |
 | Al-Baqarah 2:255 and 2:282, Juz 3 | Two source-validated long-ayah pilots: 50 and 128 words. Not a complete Al-Baqarah or Juz 3 release. |
 | All other surahs/juz | Reference metadata verified; additional content unavailable until separately imported, validated and privately deployed. |
 | Internal recitation stops / restart positions | **No production approvals seeded.** Qualified teacher/scholar decisions are required. |
 | New per-word audio | Original source references are retained, but alignment discrepancies were found. Not offered as verified word audio. New passage practice uses full-ayah audio. Existing free per-word recordings are unchanged. |
 
-**Juz 29 and 30** have complete source coverage; only Juz 30 is bundled freely. There are 49 complete source-validated surahs including the prepared private Juz 29, plus two isolated Al-Baqarah references: 1,004 prepared/current ayahs in total. Private assets have been prepared locally, not uploaded to hosted Supabase by this task. Neither payment setup nor metadata alone makes unpublished content available. The UI lists only existing free references and prepared private references; other references are not advertised as usable.
+**Juz 29 and 30** have complete source coverage; only Juz 30 is bundled freely. There are 50 complete source-validated surahs including the prepared private Al-A‘raf and Juz 29, plus two isolated Al-Baqarah references: 1,210 prepared/current ayahs in total. Al-A‘raf and Juz 29 currently require active server-verified developer access; a paid plan alone does not unlock that preview. Private assets have been prepared locally, not uploaded to hosted Supabase by this task. Neither payment setup nor metadata alone makes unpublished content available. The UI lists only existing free references and prepared private references; other references are not advertised as usable.
 
 ## Authoritative text and draft handling
 
@@ -31,7 +32,7 @@ For other long ayahs, initial **unapproved visual proposals** use the verified s
 
 ## Learner workflow
 
-Open **Menu → Passage memorization**, or **Passage Builder → Open memorization studio**. Guest access to existing free ayahs needs no subscription or backend. Additional private references are checked on the server.
+In active developer mode, open **Menu → Passage memorization**, or **Passage Builder → Open memorization studio**. Guest access to existing free ayahs needs no subscription or backend. Additional private references are checked on the server.
 
 - Choose an ayah; no more than 12 movable word pieces are rendered in the current viewport.
 - Reduce word hints progressively, reveal as needed, and say the words aloud as you work.
@@ -40,9 +41,9 @@ Open **Menu → Passage memorization**, or **Passage Builder → Open memorizati
 - Add up to ten chosen references. Passage Chain challenges their canonical surah/ayah order; selected gaps remain explicit.
 - Use independent ayah, passage or **approved** recitation-portion recall. The word bank/reference is removed and the modal backdrop obscures the underlying app. Declare recitation, reveal/compare, and self-grade Again/Hard/Good/Easy. No automatic speech verification is claimed.
 
-Draft visual phrase completion never becomes independent recall, FSRS mastery or a teacher-certified stop. Whole-ayah reconstruction and Passage Chain celebrate progress but grant no additional XP, stars or retained-memory credit. Existing short-ayah modes work exactly as before.
+Draft visual phrase completion never becomes independent recall, FSRS mastery or a teacher-certified stop. Whole-ayah reconstruction and Passage Chain use existing capped study rewards; they do not establish independent recall or retained-memory credit. Existing short-ayah modes work exactly as before.
 
-Workspace state stores only reference IDs, word positions, hint state and order—not premium text/audio. Private bundles/audio are held in memory and cleared when the studio is closed. The browser receives audio as an authenticated response/temporary object URL, not a public or signed storage link. Previously delivered content cannot be retroactively removed from a user-controlled browser; future downloads always re-check entitlements.
+Workspace state stores only reference IDs, word positions, hint state and order—not premium text/audio. The optional current-reference/unit field in the existing schema restores the last selected ayah and reviewed unit through **Resume saved workspace**. Invalid saved arrangements are preserved for recovery instead of overwritten. A free Al-Fatihah fallback remains available when a saved private reference is unavailable. Private bundles/audio are held in memory and cleared when the studio is closed. The browser receives audio as an authenticated response/temporary object URL, not a public or signed storage link. Previously delivered content cannot be retroactively removed from a user-controlled browser; future downloads always re-check entitlements.
 
 ## FSRS and persistence
 
@@ -121,3 +122,7 @@ These previews use mocked test-account entitlements and the source-validated 2:2
 
 - [Simple desktop](passage-previews/simple-desktop.jpg) · [mobile](passage-previews/simple-mobile.jpg) · [word workspace](passage-previews/simple-workspace.jpg)
 - [Night Sky desktop](passage-previews/night-desktop.jpg) · [mobile](passage-previews/night-mobile.jpg) · [word workspace](passage-previews/night-workspace.jpg)
+
+## Stabilization audit
+
+See [Phase 1 defect audit, regression coverage, screenshots and remaining limitations](passage-stabilization.md). The existing learning workflow and server authorization are retained; no Quest redesign or recitation-stop approval is introduced.

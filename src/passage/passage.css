@@ -179,3 +179,53 @@ dialog.passage-studio[data-recall-active="true"]::backdrop {
 :root[data-theme="night-sky"] dialog.passage-studio[data-recall-active="true"]::backdrop {
   background: #090d23;
 }
+
+/* Keep long references and RTL tokens inside narrow dialog viewports. */
+.passage-studio {
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+.passage-studio [data-close] {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--paper, #faf9f1);
+  min-height: 44px;
+}
+.passage-studio [data-studio-status] {
+  position: sticky;
+  bottom: 0;
+  background: var(--paper, #faf9f1);
+  padding: 12px;
+  border-radius: 12px;
+  z-index: 2;
+}
+.passage-studio :is([data-move], [data-window-move], [data-chain-move]) {
+  min-width: 44px;
+  min-height: 44px;
+}
+.passage-studio .passage-token { flex-wrap: wrap; }
+.passage-studio .passage-token > [data-word] { overflow-wrap: anywhere; }
+.passage-studio .workspace-chain .arabic { min-width: 0; }
+.passage-studio button:focus-visible,
+.passage-studio select:focus-visible { outline: 3px solid #8b6ec8; outline-offset: 3px; }
+:root[data-theme="night-sky"] .passage-studio :is([data-close], [data-studio-status]) {
+  background: #141c34;
+  color: #f0eaff;
+}
+@media (max-width: 480px) {
+  .passage-studio .passage-toolbar > button { flex: 1 1 130px; }
+  .passage-studio .passage-piece-zone { min-width: 0; }
+  .passage-studio .workspace-chain > div { padding: 8px; gap: 4px; }
+}
+@media (max-width: 480px) {
+  .passage-studio [data-place="built"] > .passage-token {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(44px, 1fr));
+    gap: 3px;
+  }
+  .passage-studio [data-place="built"] > .passage-token > [data-word] {
+    grid-column: 1 / -1;
+  }
+  .passage-studio [data-move] { font-size: 20px; }
+}

@@ -85,3 +85,24 @@ export async function recallUnit(bundles, segment = null) {
     refs,
   };
 }
+
+// Validate saved positions against the current source/review without repairing or
+// discarding the original record. Older schema-1 records remain supported.
+export function restoreWorkspace(bundle, segment, saved) {
+  const count = wordWindow(bundle, 0, segment).count;
+  if (!saved || !Number.isInteger(saved.page) || saved.page < 0 || saved.page >= count ||
+      ![0, 1, 2].includes(saved.level) || !saved.orders || typeof saved.orders !== "object" || Array.isArray(saved.orders) ||
+      !Array.isArray(saved.windowSequence) || saved.windowSequence.length !== count ||
+      new Set(saved.windowSequence).size !== count ||
+      saved.windowSequence.some(p => !Number.isInteger(p) || p < 0 || p >= count)) {
+    throw Error("Saved workspace needs recovery; it has not been overwritten.");
+  }
+  for (const [page, ids] of Object.entries(saved.orders)) {
+    if (!/^\d+$/.test(page) || Number(page) >= count || !Array.isArray(ids) ||
+        new Set(ids).size !== ids.length || ids.some(id =>
+          !wordWindow(bundle, Number(page), segment).words.some(w => w.position === id))) {
+      throw Error("Saved workspace needs recovery; it has not been overwritten.");
+    }
+  }
+  return structuredClone(saved);
+}
