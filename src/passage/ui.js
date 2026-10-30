@@ -819,3 +819,6 @@ export function openPassageStudio(ctx) {
   })();
 
 }
+
+// Phase-2 integration seam; callers opt in, no campaign screen is mounted here.
+export const loadQuestFramework = () => import('../quest/index.js');

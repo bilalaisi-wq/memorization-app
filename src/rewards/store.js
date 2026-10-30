@@ -29,14 +29,18 @@ export function createRewardStore(storage = profileStorage) {
   );
   return {
     ...store,
-    award({ mode, unit, action = "study", xp = 1, now = new Date() }) {
+    award({ mode, unit, action = "study", xp = 1, now = new Date(), receiptId = null }) {
       if (
-        !rewardModes.includes(mode) || !unit || !Number.isInteger(xp) ||
+        !rewardModes.includes(mode) || !unit || (receiptId !== null && !/^quest:[a-f0-9]{64}$/.test(receiptId)) || !Number.isInteger(xp) ||
         xp < 1 || xp > 20
       ) throw Error("Invalid study reward");
       const day = new Date(now).toISOString().slice(0, 10),
         bucket = `${day}:${mode}:${unit}:${action}`;
       const result = store.transact((v) => {
+        if (receiptId) {
+          const previous = v.events.find(e => e.id === receiptId);
+          if (previous) return { xp: previous.xp, duplicate: true };
+        }
         const old = v.buckets[bucket] || { count: 0, last: 0 },
           daily = v.events.filter((e) => e.at.slice(0, 10) === day).reduce(
             (n, e) => n + e.xp,
@@ -51,7 +55,7 @@ export function createRewardStore(storage = profileStorage) {
         ) return { xp: 0, capped: true };
         const earned = Math.min(xp, 600 - daily, 200 - modeDaily);
         const event = {
-          id: crypto.randomUUID(),
+          id: receiptId || crypto.randomUUID(),
           at: new Date(now).toISOString(),
           mode,
           xp: earned,
@@ -62,7 +66,7 @@ export function createRewardStore(storage = profileStorage) {
         v.buckets[bucket] = { count: old.count + 1, last: +new Date(now) };
         return { xp: earned, event };
       });
-      if (result.xp && typeof window !== "undefined") {
+      if (result.xp && !result.duplicate && typeof window !== "undefined") {
         window.dispatchEvent(
           new CustomEvent("ayahrewardschanged", { detail: result }),
         );

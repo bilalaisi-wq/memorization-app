@@ -1,0 +1,35 @@
+.quest-practice {
+  padding: 16px;
+  overflow-wrap: anywhere;
+}
+.quest-practice [dir="rtl"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 56px;
+  margin: 12px 0;
+}
+.quest-practice button {
+  min-height: 48px;
+  min-width: 48px;
+  margin: 4px;
+  padding: 10px;
+  border-radius: 12px;
+}
+.quest-practice [data-quest-word] {
+  font-family: Uthmanic, serif;
+  font-size: 30px;
+}
+.quest-practice .arabic {
+  font-family: Uthmanic, serif;
+  font-size: 30px;
+  line-height: 2;
+}
+.quest-practice button:focus-visible {
+  outline: 3px solid #a797e6;
+  outline-offset: 3px;
+}
+.quest-practice button {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
