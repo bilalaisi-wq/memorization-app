@@ -11,7 +11,7 @@ export const campaigns = Object.freeze(
       id,
       title,
       activities: Object.freeze(activities),
-      status: ["passage-expedition", "constellation-rescue", "memory-repair"].includes(id)
+      status: ["passage-expedition", "constellation-rescue", "memory-repair", "murajaah-boss-rush", "hifz-survival"].includes(id)
         ? "available"
         : "framework",
     }),

@@ -59,7 +59,7 @@ export function createPassageMemory(
       return warning;
     },
     snapshot: () => clone(data),
-    begin(unit) {
+    begin(unit, { assisted = false } = {}) {
       return save((d) => {
         d.records[unit.id] ??= {
           unit: clone(unit),
@@ -71,7 +71,7 @@ export function createPassageMemory(
           id: crypto.randomUUID(),
           unitId: unit.id,
           declared: false,
-          assisted: false,
+          assisted: assisted === true,
           compared: false,
         };
         return d.active;

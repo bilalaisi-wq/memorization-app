@@ -1,0 +1,392 @@
+.advanced-revision {
+  position: fixed;
+  inset: 0;
+  z-index: 6100;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: clamp(16px, 4vw, 48px);
+  color: #f1f6ff;
+  background:
+    radial-gradient(ellipse at 85% 8%, #63356b66, transparent 50%),
+    linear-gradient(145deg, #101a32, #231a36);
+  color-scheme: dark;
+  font-family: inherit;
+}
+.advanced-revision.revision-survival {
+  background:
+    radial-gradient(ellipse at 12% 10%, #41766a66, transparent 50%),
+    linear-gradient(140deg, #0d252e, #172c40 65%, #182d25);
+}
+.advanced-revision > .rv-header,
+.advanced-revision > .rv-nav,
+.advanced-revision > main,
+.advanced-revision > [role="status"] {
+  max-width: 1160px;
+  margin: 0 auto 24px;
+}
+.advanced-revision .rv-header {
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+.advanced-revision > main {
+  padding: 0;
+}
+.advanced-revision h2 {
+  font-size: clamp(1.8rem, 5vw, 2.7rem);
+  margin: 0.3em 0;
+}
+.advanced-revision p,
+.advanced-revision li {
+  line-height: 1.65;
+}
+.rv-eyebrow {
+  font-size: 0.8rem;
+  color: #f3c888;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+.revision-survival .rv-eyebrow {
+  color: #9ce3d0;
+}
+.advanced-revision button,
+.advanced-revision select,
+.advanced-revision input[type="number"] {
+  min-height: 48px;
+  border: 1px solid #8eaed166;
+  border-radius: 13px;
+  background: #2a3652;
+  color: #f4f8ff;
+  padding: 12px 18px;
+  font: inherit;
+}
+.advanced-revision button {
+  cursor: pointer;
+}
+.advanced-revision button:hover {
+  background: #425372;
+}
+.advanced-revision button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.advanced-revision :is(button, input, select):focus-visible {
+  outline: 3px solid #ffe4a3;
+  outline-offset: 3px;
+}
+.advanced-revision button.rv-primary {
+  background: #476d73;
+  color: white;
+  border-color: #91ddcf;
+}
+.advanced-revision .rv-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.rv-nav label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+}
+.rv-intro,
+.rv-challenge,
+.rv-station,
+.rv-summary,
+.rv-support {
+  padding: clamp(16px, 3vw, 28px);
+  border: 1px solid #99acd244;
+  border-radius: 24px;
+  background: #172840bb;
+  margin: 20px 0;
+}
+.rv-emblem {
+  display: block;
+  font-size: 3rem;
+  color: #f3d18d;
+}
+.advanced-revision form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: end;
+  padding: 22px;
+  background: #28324a88;
+  border-radius: 20px;
+  margin: 20px 0;
+}
+.advanced-revision form > label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.advanced-revision form > p {
+  flex-basis: 100%;
+}
+.advanced-revision form :is(select, input[type="number"]) {
+  width: 100%;
+}
+.rv-saved {
+  margin: 8px 10px 8px 0;
+}
+.rv-hud {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid #d3bb8055;
+  border-radius: 18px;
+  background: #182138;
+}
+.rv-lanterns {
+  font-size: 2rem;
+  display: flex;
+  gap: 10px;
+}
+.rv-lanterns .lit {
+  color: #f8d294;
+  text-shadow: 0 0 14px #f6ba5977;
+}
+.rv-lanterns .spent {
+  color: #5e6b7e;
+}
+.rv-tower {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin: 28px 0;
+}
+.rv-tower li {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+  min-height: 155px;
+  background: #28273e;
+  border: 1px solid #80728c;
+  border-radius: 30px 30px 12px 12px;
+  padding: 16px;
+}
+.rv-tower li > span {
+  font-size: 2.2rem;
+  color: #bba9ce;
+}
+.rv-tower .current {
+  border: 2px solid #efce91;
+  box-shadow: 0 0 25px #dba24322;
+}
+.rv-tower .cleared {
+  border-color: #9bd8c5;
+  background: #244641;
+}
+.rv-tower small {
+  color: #bdcddd;
+  line-height: 1.5;
+}
+.rv-trail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 32px 0;
+  padding: 20px;
+  border-radius: 20px;
+  background: #112d28;
+  border: 1px solid #58978a;
+}
+.rv-trail > span {
+  display: grid;
+  place-items: center;
+  position: relative;
+  min-width: 75px;
+  flex: 1;
+  padding: 12px;
+  border-bottom: 3px dashed #58978a;
+}
+.rv-trail b {
+  font-size: 2.4rem;
+  font-weight: 400;
+  color: #97b4ad;
+}
+.rv-trail .visited b {
+  color: #e8ca91;
+}
+.rv-trail .current {
+  border-bottom-color: #f4d9a3;
+  background: #275248;
+  border-radius: 15px;
+}
+.rv-trail em {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-style: normal;
+  font-size: 1.3rem;
+}
+.rv-unit-list {
+  flex-basis: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.rv-unit-list label {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px;
+  background: #1c383c;
+  border: 1px solid #719892;
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+.rv-unit-list input {
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+.rv-unit-list small {
+  display: block;
+  color: #bdcfd5;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+.rv-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 20px 0;
+}
+.rv-choices button {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+.rv-choices .arabic,
+.rv-support .arabic {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  line-height: 2.3;
+  color: #f6f5ec;
+}
+.rv-choices small {
+  font-size: 0.8rem;
+  color: #b4cad7;
+}
+.rv-actions,
+.rv-challenge > button,
+.rv-station > button {
+  margin: 12px 8px 12px 0;
+}
+.rv-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  border-top: 1px solid #738ba455;
+  padding-top: 18px;
+}
+.rv-assistance {
+  font-size: 0.9rem;
+  color: #c3d9e7;
+}
+.rv-summary-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+.rv-summary-stats span {
+  padding: 20px;
+  background: #284147;
+  border-radius: 16px;
+  line-height: 1.5;
+}
+.rv-summary li {
+  overflow-wrap: anywhere;
+}
+.rv-victory > .rv-emblem {
+  animation: rv-reveal 0.7s ease-out;
+}
+.advanced-revision [role="status"] {
+  color: #f3ce96;
+  overflow-wrap: anywhere;
+}
+.rv-support > button {
+  margin: 8px;
+}
+.advanced-revision details {
+  margin: 20px 0;
+  line-height: 1.6;
+}
+@keyframes rv-reveal {
+  from {
+    opacity: 0.2;
+    transform: scale(0.6) rotate(-20deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+@media (max-width: 700px) {
+  .rv-tower {
+    grid-template-columns: 1fr;
+  }
+  .rv-tower li {
+    min-height: 90px;
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    border-radius: 16px;
+    padding: 12px;
+  }
+  .rv-tower small {
+    grid-column: 2;
+  }
+  .rv-tower li > span {
+    grid-row: span 2;
+  }
+  .rv-header {
+    flex-wrap: wrap;
+  }
+  .rv-unit-list,
+  .rv-choices {
+    grid-template-columns: 1fr;
+  }
+  .rv-summary-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .advanced-revision form {
+    padding: 16px;
+  }
+  .rv-trail > span {
+    min-width: 65px;
+  }
+  .rv-hud {
+    font-size: 0.9rem;
+  }
+  .advanced-revision input[type="range"] {
+    max-width: 150px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .advanced-revision * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

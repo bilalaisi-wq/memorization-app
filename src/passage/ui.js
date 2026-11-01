@@ -608,7 +608,8 @@ export function openPassageStudio(ctx) {
       const request = ++navigation;
       const unit = await recallUnit(all, segment);
       if (!d.isConnected || request !== navigation) return;
-      memory.begin(unit);
+      // Persist externally observed quest support with the actual attempt in one write.
+      memory.begin(unit, {assisted: ctx.assessmentAssisted === true});
       drawAssessment();
       note(
         "Self-assessed recitation. No automatic speech verification is performed.",
@@ -793,7 +794,11 @@ export function openPassageStudio(ctx) {
   }
   document.body.append(d);
   d.showModal();
-  draw();
+  // A coach review must initialize once: an early resumed view could accept a
+  // reveal click and then be replaced by the later verified-source handoff.
+  if (ctx.coachTarget && ctx.coachAction === "review") {
+    root.innerHTML = '<p role="status">Preparing verified self-assessment…</p>';
+  } else draw();
   if (memory.warning || workWarning) note(memory.warning || workWarning, true);
   if (ctx.initialReference) select(ctx.initialReference);
 
@@ -807,6 +812,7 @@ export function openPassageStudio(ctx) {
       if (ctx.coachAction === "review") {
         const active = memory.snapshot().active;
         if (active && !active.graded) {
+          if (ctx.assessmentAssisted === true) memory.update("abandon");
           await drawAssessment();
           note("Resuming your unfinished passage assessment before starting another.");
           return;
