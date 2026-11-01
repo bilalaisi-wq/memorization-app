@@ -1,3 +1,4 @@
+import {selectionEvidence} from '../evidence.js';
 import {createSession,reduceSession} from '../session.js';
 import {seededShuffle} from '../content.js';
 import {wordIdentity} from '../../../distractors.js';
@@ -86,7 +87,7 @@ export function stepMaze(previous,action){
    reduce(s,'checkpoint');s.score+=200;s.cursor=0;s.captured=[];s.portal=false;s.mapRevealed=false;wing(s);s.message='A new chamber, a new ayah. Listen, then explore.';return s;
   }
   const choice=s.choices[door.index],target=s.chambers[s.session.checkpoint].targets[s.cursor];
-  if(choice.id!==target.id){reduce(s,'mistake');s.deadEnd=door.x;s.player={x:door.x,y:door.y+1};reveal(s);s.message='Not the next continuation. One memory strike. Step back out of this dead end and try another door.';return s;}
+  if(choice.id!==target.id){reduce(s,'mistake',selectionEvidence(choice,target));s.deadEnd=door.x;s.player={x:door.x,y:door.y+1};reveal(s);s.message='Not the next continuation. One memory strike. Step back out of this dead end and try another door.';return s;}
   s.captured.push(...target.words);s.cursor++;s.score+=100;s.message='The path opens! Say the continuation aloud.';
   if(s.cursor===s.chambers[s.session.checkpoint].targets.length){
    if(s.session.checkpoint===s.chambers.length-1){reduce(s,'checkpoint');s.score+=200;s.message='Maze complete! Recognition practice is separate from independent recitation.';}

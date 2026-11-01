@@ -1,4 +1,4 @@
-// Campaign identities are permanent. These are route policies, not shipped campaign UIs.
+// Permanent identities and legacy route policies stay stable as campaign UIs become available.
 export const campaigns = Object.freeze(
   [
     ["passage-expedition", "Passage Expedition", ["study", "arcade", "recall"]],
@@ -11,7 +11,7 @@ export const campaigns = Object.freeze(
       id,
       title,
       activities: Object.freeze(activities),
-      status: ["passage-expedition", "constellation-rescue"].includes(id)
+      status: ["passage-expedition", "constellation-rescue", "memory-repair"].includes(id)
         ? "available"
         : "framework",
     }),

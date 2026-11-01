@@ -1,0 +1,214 @@
+.memory-repair {
+  position: fixed;
+  inset: 0;
+  z-index: 6100;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background:
+    radial-gradient(ellipse at 85% 12%, #49306888, transparent 48%),
+    linear-gradient(145deg, #09172c, #111a39 60%, #183743);
+  color: #eef6ff;
+  padding: clamp(16px, 4vw, 48px);
+  font-family: inherit;
+  color-scheme: dark;
+}
+.memory-repair > header,
+.memory-repair > nav,
+.memory-repair > main,
+.memory-repair > [role="status"] {
+  max-width: 1180px;
+  margin: 0 auto 20px;
+}
+.memory-repair > header {
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  position: static;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.memory-repair > main {
+  padding: 0;
+}
+.memory-repair h2 {
+  font-size: clamp(1.7rem, 5vw, 2.6rem);
+  margin: 0.3em 0;
+}
+.memory-repair p,
+.memory-repair li {
+  line-height: 1.65;
+}
+.memory-repair .eyebrow {
+  color: #9be1dc;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+}
+.memory-repair button {
+  min-height: 48px;
+  padding: 12px 18px;
+  border: 1px solid #8de7db55;
+  border-radius: 14px;
+  background: #203c55;
+  color: #f3f8ff;
+  cursor: pointer;
+  font: inherit;
+}
+.memory-repair button:hover {
+  background: #315878;
+}
+.memory-repair button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.memory-repair button:focus-visible {
+  outline: 3px solid #ffd78b;
+  outline-offset: 3px;
+}
+.memory-repair .repair-note,
+.repair-stats,
+.repair-detail,
+.repair-summary,
+.memory-repair details {
+  background: #182b48bb;
+  border: 1px solid #78c3d433;
+  border-radius: 22px;
+  padding: 20px;
+}
+.repair-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin: 18px 0;
+}
+.repair-map {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin: 24px 0;
+}
+.memory-repair .repair-node {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: start;
+  background: linear-gradient(145deg, #243958, #302b50);
+  min-height: 190px;
+}
+.repair-link {
+  display: block;
+  color: #e5b77e;
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+}
+.repair-node small,
+.memory-repair small {
+  color: #bed0e7;
+  overflow-wrap: anywhere;
+}
+.repair-pages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 25px 0;
+}
+.repair-detail li {
+  border-top: 1px solid #6883a544;
+  padding: 16px 0;
+  overflow-wrap: anywhere;
+}
+.repair-detail button,
+.repair-summary button {
+  margin: 8px;
+}
+.repair-summary {
+  text-align: center;
+}
+.repair-mended {
+  display: block;
+  color: #f8d88b;
+  font-size: 3rem;
+  animation: repair-glow 0.9s ease-out;
+}
+.memory-repair [data-repair-game] {
+  min-width: 0;
+}
+.memory-repair [data-repair-status] {
+  overflow-wrap: anywhere;
+  color: #f6d59d;
+}
+.memory-repair .quest-practice button {
+  font-size: 1.3rem;
+  margin: 5px;
+}
+.memory-repair .quest-practice .arabic {
+  font-size: 2rem;
+  line-height: 2.3;
+}
+.memory-repair [data-quest-bank],
+.memory-repair [data-quest-built] {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 60px;
+  padding: 12px;
+  border: 1px dashed #8caccd;
+  margin: 10px 0;
+}
+.memory-repair [data-repair-game] .arabic {
+  color: inherit;
+}
+@keyframes repair-glow {
+  from {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@media (max-width: 700px) {
+  .repair-map {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .memory-repair > header {
+    height: auto;
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    position: static;
+    flex-wrap: wrap;
+  }
+  .memory-repair {
+    padding: 16px;
+  }
+  .memory-repair .repair-node {
+    padding: 14px;
+    min-height: 175px;
+  }
+  .repair-stats {
+    gap: 12px;
+  }
+  .repair-detail,
+  .repair-summary {
+    padding: 16px;
+  }
+}
+@media (max-width: 390px) {
+  .repair-map {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .memory-repair * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

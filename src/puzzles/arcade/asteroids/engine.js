@@ -1,3 +1,4 @@
+import {selectionEvidence} from '../evidence.js';
 import {createSession,reduceSession} from '../session.js';
 import {asteroidProfiles} from './content.js';
 export const WORLD={width:1000,height:600,range:260,cone:0.65};
@@ -61,7 +62,7 @@ export function stepAsteroids(previous,action) {
       else fillWave(s);
     }else{
       object.redirected=true;object.vx=object.x<500?-260:260;object.vy=-80;
-      reduce(s,'mistake');s.message='That is not the next piece. It has been redirected. Try again.';
+      reduce(s,'mistake',selectionEvidence(object.piece,expected));s.message='That is not the next piece. It has been redirected. Try again.';
     }
     s.aimId=null;
   }else if(action.type==='shield'){

@@ -1,3 +1,4 @@
+import {selectionEvidence} from '../evidence.js';
 import {createSession,reduceSession} from '../session.js';
 import {seededShuffle} from '../content.js';
 export const GRID={columns:10,rows:12};
@@ -101,7 +102,7 @@ export function stepSnake(previous,action){
     if(!populate(s)){s.motorPause=true;reduce(s,'motor-error');s.message='Let’s open a safe route. Your words and strikes are unchanged.';}
     if(s.portal)s.message='Ayah assembled! Steer into the glowing portal to continue.';
   }else if(food){
-    reduce(s,'mistake');s.message='That was not the next word. The correct word returns; keep looking.';
+    reduce(s,'mistake',selectionEvidence(food.word,sector.words[s.cursor]));s.message='That was not the next word. The correct word returns; keep looking.';
     if(s.session.status==='playing'&&!populate(s)){s.motorPause=true;reduce(s,'motor-error');}
   }
   // A tail can close a route even without a collision. Pause and re-home instead of trapping play.

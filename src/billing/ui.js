@@ -88,6 +88,7 @@ export function mountBillingControls(nav, context) {
       ["Passage Builder", () => passages(context, api)],
       ["Passage memorization", () => openPassageStudio(context)],
       ["Passage Expedition", () => import("../quest/expedition/ui.js").then(m=>m.openExpedition(context))],
+      ["Memory Repair Workshop", () => import("../quest/repair/ui.js").then(m=>m.openRepairWorkshop(context))],
       ["Constellation Rescue", () => import("../quest/rescue/ui.js").then(m=>m.openRescue(context))],
       ["Advanced revision & analytics", () => insights(context, api)],
     ]

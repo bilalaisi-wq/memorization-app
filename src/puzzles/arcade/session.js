@@ -16,7 +16,11 @@ export function reduceSession(previous, action) {
     s.strikes=0;s.status='playing';
   } else if (s.status==='playing') {
     if (action.type==='mistake') {
-      s.mistakes.push({key,kind:'sequence',event:s.events});
+      const detail = ['word-selection','word-order','phrase-transition'].includes(action.category)
+        && Array.isArray(action.expected) && Array.isArray(action.selected)
+        && [action.expected,action.selected].every(xs=>xs.length>0&&xs.length<=12&&xs.every(x=>typeof x==='string'&&/^\d+:\d+:\d+$/.test(x)))
+        ? {category:action.category,expected:[...action.expected],selected:[...action.selected]} : {};
+      s.mistakes.push({key,kind:'sequence',event:s.events,...detail});
       s.strikes++;
       if(s.strikes===3) s.status='lost';
     } else if(action.type==='motor-error') s.motorErrors.push({key,event:s.events});
