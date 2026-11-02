@@ -38,9 +38,16 @@ export const progressKeys = [
   "ayah-activity-v1",
   "ayah-achievements-v1",
 ];
+// Export scope is deliberately larger than the server's legacy cloud whitelist.
+export const exportKeys = Object.freeze([...progressKeys,
+  'ayah-passage-recall-v1','ayah-passage-sync-v1','ayah-passage-workspaces-v1',
+  'ayah-quest-campaigns-v1','ayah-quest-revision-v1','ayah-quest-recovery-backup-v1',
+  'ayah-cloud-sync-v1','ayah-cloud-restore-backup-v1','ayah-rewards-v1','ayah-reward-remote-v1',
+  'ayah-nature-profile-v1','ayah-appearance-v1','ayah-sky-celebrations-v1','ayah-coach-settings-v1',
+]);
 export function profileBackup() {
   return Object.fromEntries(
-    progressKeys
+    exportKeys
       .map((key) => [key, profileStorage.getItem(key)])
       .filter(([, value]) => value !== null),
   );

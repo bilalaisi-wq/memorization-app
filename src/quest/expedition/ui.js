@@ -1,3 +1,4 @@
+import { reportStudyExposure } from "../../study-exposure.js";
 import { esc } from "../../ui/dom.js";
 import { surahs } from "../../data.js";
 import {
@@ -233,16 +234,7 @@ export function openExpedition(ctx = {}) {
     { signal: scope.signal },
   );
   function assistanceFor(keys) {
-    const memory = createPassageMemory(storage),
-      data = memory.snapshot(),
-      active = data.active;
-    if (
-      active &&
-      !active.graded &&
-      !active.declared &&
-      data.records[active.unitId]?.unit.refs.some((key) => keys.includes(key))
-    )
-      memory.update("assisted");
+    reportStudyExposure(keys, storage);
   }
   async function listen(bundle) {
     guard();

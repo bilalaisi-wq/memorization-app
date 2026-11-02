@@ -6,13 +6,15 @@ import { mountBillingControls } from "../billing/ui.js";
 import { leaderboardMarkup } from "./leaderboard.js";
 import { setDeveloperUser, configureDeveloperClient } from "../developer/access.js";
 import { accountDefaults } from "./account-config.js";
-import { CloudProgress } from "./cloud-progress.js";
+import { RESTORE_KEY, CloudProgress } from "./cloud-progress.js";
 import {
   profileStorage,
   selectProfile,
   profileBackup,
   progressKeys,
   scopedStorage,
+  activeProfileId,
+  exportKeys,
   onProfileChange,
 } from "./profile-storage.js";
 import { esc } from "../ui/dom.js";
@@ -110,6 +112,13 @@ export async function initializeAccounts(config = {}) {
       if (event === "INITIAL_SESSION") return;
       if ((session?.user?.id || null) !== (user?.id || null)) {
         cloud?.dispose();
+        rewardPublisher?.dispose();
+        setDeveloperUser(null);
+        selectProfile(null);
+        user=null;natureProfile=null;
+        document.querySelector('.avatar')?.replaceChildren(document.createTextNode('✦'));
+        document.querySelectorAll('dialog[open]').forEach(d=>{d.querySelector('[data-close]')?.click();if(d.isConnected){d.close();d.remove();}});
+        const message=document.createElement('p');message.setAttribute('role','status');message.textContent='Changing account safely…';document.querySelector('#app')?.replaceChildren(message);
         location.reload();
       }
     });
@@ -124,10 +133,10 @@ export async function initializeAccounts(config = {}) {
 export function mountAccountControls(main, learning, callbacks = {}) {
   const nav = main.querySelector(".explore-nav");
   if (!nav) return;
-  if(!natureLoaded){natureLoaded=true;if(client&&user)client.rpc("my_nature_profile",{expected_user:user.id}).then(({data})=>{if(data){natureProfile=data;receiveRemoteRewards(data);drawAccountAvatar();}}).catch(()=>{});else try{natureProfile=JSON.parse(profileStorage.getItem("ayah-nature-profile-v1"));}catch{}}
+  if(!natureLoaded){natureLoaded=true;if(client&&user)client.rpc("my_nature_profile",{expected_user:user.id}).then(({data})=>{if(data&&activeProfileId()===user?.id){natureProfile=data;receiveRemoteRewards(data);drawAccountAvatar();}}).catch(()=>{});else try{natureProfile=JSON.parse(profileStorage.getItem("ayah-nature-profile-v1"));}catch{}}
   drawAccountAvatar();
   if(client&&user&&!rewardPublisher){
-    rewardPublisher=new RewardPublisher(client,learning,profileStorage,user.id);
+    rewardPublisher=new RewardPublisher(client,learning,scopedStorage(user.id),user.id,{getUserId:activeProfileId});
     rewardReady=client.from("leaderboard_preferences").select("enabled").eq("user_id",user.id).maybeSingle().then(({data})=>{rewardPublisher.enabled=data?.enabled===true;rewardPublisher.schedule();}).catch(()=>{});
     onProfileChange(id=>{if(id===user?.id)rewardPublisher.schedule();});
     window.addEventListener("ayahrewardschanged",()=>rewardPublisher.schedule());
@@ -182,6 +191,9 @@ function showAccount(learning) {
       buttons.forEach((b) => (b.disabled = false));
     }
   };
+  if(!user){
+    const exportButton=document.createElement('button');exportButton.className='text-button';exportButton.textContent='Download device progress';exportButton.dataset.exportDevice='';exportButton.onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(profileBackup(),null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='ayah-device-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};dialog.insertBefore(exportButton,area);
+  }
   if (!client) {
     area.innerHTML = `<p>Keep learning as a guest. Your goals and progress stay in this browser.</p><p>Online accounts and shared rankings are not activated yet. A secure account service must be configured by the site owner first.</p><p>${esc(accountError)}</p><p>Microphone recordings stay in your current tab and are never uploaded.</p><button class="text-button" data-privacy>Privacy information</button>`;
     area.querySelector("[data-privacy]").onclick = showPrivacy;
@@ -268,7 +280,10 @@ function showAccount(learning) {
     area.querySelector("[data-privacy]").onclick = showPrivacy;
     return;
   }
-  area.innerHTML = `<p>You’re signed in. Your progress is separate from guest and other accounts on this browser. You stay signed in on each device until you sign out. Saved private progress loads on a new device; enable automatic sync below to keep future changes backed up.</p><label><input type="checkbox" data-sync-enabled> Automatically sync my learning progress across devices</label><p data-sync-status role="status"></p><div class="account-actions"><button class="primary" data-save>Save private cloud backup</button><button class="text-button" data-restore>Restore cloud backup</button><button class="text-button" data-copy>Copy guest progress into empty account</button><button class="text-button" data-export>Download my account data</button><button class="text-button" data-signout>Sign out on this device</button><button class="text-button" data-signout-all>Sign out on all devices</button></div><h3>Optional weekly leaderboard</h3><p>Share only a made-up alias and weekly learning totals. No email, ayah details, goals, or recordings are public. Rankings are self-reported practice, not verified recitation. Opting in automatically syncs dated XP receipts without Quran references to keep totals up to date; profile photos remain private.</p><label>Public alias <input data-alias maxlength="24" placeholder="e.g. Cedar42" pattern="[A-Za-z0-9 _-]{3,24}"></label><label><input data-opt-in type="checkbox"> Share my alias, companion and this week’s totals publicly</label><button class="primary small" data-publish>Update leaderboard preference</button><button class="text-button" data-privacy>Privacy information</button><hr><p>Deleting your account removes server backups, public rankings, and this account’s progress on this browser. Download a copy first if wanted.</p><button class="text-button" data-delete>Delete my account and data</button>`;
+  area.innerHTML = `<p>You’re signed in. Your progress is separate from guest and other accounts on this browser. You stay signed in on each device until you sign out. Core learning progress can load on a new device. Passage reviews use the separate Sync button in Passage Builder. Quest journeys and workspace drafts stay on this device; the account download includes them for backup.</p><label><input type="checkbox" data-sync-enabled> Automatically sync my learning progress across devices</label><p data-sync-status role="status"></p><div class="account-actions"><button class="primary" data-save>Save private cloud backup</button><button class="text-button" data-restore>Restore cloud backup</button><button class="text-button" data-copy>Copy guest core progress into empty account</button><button class="text-button" data-export>Download my account data</button><button class="text-button" data-signout>Sign out on this device</button><button class="text-button" data-signout-all>Sign out on all devices</button></div><h3>Optional weekly leaderboard</h3><p>Share only a made-up alias and weekly learning totals. No email, ayah details, goals, or recordings are public. Rankings are self-reported practice, not verified recitation. Opting in automatically syncs dated XP receipts without Quran references to keep totals up to date; profile photos remain private.</p><label>Public alias <input data-alias maxlength="24" placeholder="e.g. Cedar42" pattern="[A-Za-z0-9 _-]{3,24}"></label><label><input data-opt-in type="checkbox"> Share my alias, companion and this week’s totals publicly</label><button class="primary small" data-publish>Update leaderboard preference</button><button class="text-button" data-privacy>Privacy information</button><hr><p>Deleting your account removes server backups, public rankings, and this account’s progress on this browser. Download a copy first if wanted.</p><button class="text-button" data-delete>Delete my account and data</button>`;
+  if(profileStorage.getItem(RESTORE_KEY)){
+    const recover=document.createElement('button');recover.className='text-button';recover.textContent='Recover pre-restore device copy';recover.dataset.cloudRecover='';recover.onclick=()=>run(async()=>{cloud.recover();location.reload();});area.querySelector('.account-actions').append(recover);
+  }
   const syncToggle = area.querySelector("[data-sync-enabled]");
   syncToggle.checked = cloud?.enabled || false;
   area.querySelector("[data-sync-status]").textContent =
@@ -312,7 +327,7 @@ function showAccount(learning) {
         );
       if (
         !confirm(
-          "Copy guest goals and progress into this empty account? Guest data stays unchanged.",
+          "Copy guest goals and core learning progress into this empty account? Quest journeys and passage drafts stay in the original guest profile. Guest data stays unchanged.",
         )
       )
         return;
@@ -382,7 +397,7 @@ function showAccount(learning) {
         return;
       const { error } = await client.rpc("delete_my_account");
       if (error) throw error;
-      for (const key of [...progressKeys,"ayah-coach-settings-v1","ayah-rewards-v1","ayah-reward-remote-v1","ayah-nature-profile-v1","ayah-appearance-v1","ayah-sky-celebrations-v1"]) profileStorage.removeItem(key);
+      for (const key of exportKeys) profileStorage.removeItem(key);
       await client.auth.signOut({ scope: "local" });
       location.reload();
     });
@@ -408,6 +423,9 @@ async function showLeaderboard(learning) {
   const dialog = dialogShell("Weekly practice leaderboard"),
     area = dialog.querySelector("[data-content]");
   dialog.classList.add("leaderboard-dialog");
+  if(!user){
+    const exportButton=document.createElement('button');exportButton.className='text-button';exportButton.textContent='Download device progress';exportButton.dataset.exportDevice='';exportButton.onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(profileBackup(),null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='ayah-device-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};dialog.insertBefore(exportButton,area);
+  }
   if (!client) {
     area.innerHTML =
       "<p>The shared leaderboard is not activated yet. No sample users or invented scores are shown. You can track your personal progress in Daily Quests.</p>";

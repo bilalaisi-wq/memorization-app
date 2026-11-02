@@ -396,6 +396,7 @@ export function mountFalling(
   function key(event) {
     if (
       !area.isConnected ||
+      area.closest("[inert]") ||
       !started ||
       event.target.closest(
         "input,select,textarea,[contenteditable=true],dialog,a",
@@ -512,6 +513,7 @@ export function mountFalling(
         paint();
       }
     },
+    suspend() { stopAudio(); this.pause(); },
     listen() {
       play(questOptions?.audioSource ?? verseAudio(selected[floor].id, surah.id));
     },

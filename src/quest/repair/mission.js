@@ -1,3 +1,4 @@
+import { reportStudyExposure } from "../../study-exposure.js";
 import { surahs } from "../../data.js";
 import { loadBundle, loadAudio, sha256 } from "../../content/library.js";
 import { contentRevision, segmentationRevision } from "../checkpoints.js";
@@ -60,6 +61,7 @@ export async function launchRepairMission({
   };
   guard();
   const { bundle, workspace, id, registry } = prepared;
+  reportStudyExposure([bundle.key], storage);
   let resource = null,
     activity = null,
     disposed = false;

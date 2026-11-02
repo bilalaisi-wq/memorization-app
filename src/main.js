@@ -27,7 +27,7 @@ import { createMasteryStore } from "./mastery/mastery-store.js";
 import { gallerySurahIds } from "./mastery/masteryStories.js";
 import { mountGallery, stopMasteryUI } from "./mastery/gallery-ui.js";
 import { createPuzzleStore } from "./puzzles/puzzle-store.js";
-import { mountPuzzleLab, stopPuzzleLab } from "./puzzles/puzzle-lab.js";
+import { mountPuzzleLab, stopPuzzleLab, pausePuzzleLab } from "./puzzles/puzzle-lab.js";
 import { disposeRecallRecording } from "./recall-recording.js";
 import { createDistractorPicker } from "./distractors.js";
 import { createLearningStore } from "./learning-store.js";
@@ -311,11 +311,11 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
   });
   mountSiteMenu(document.querySelector("main"));
 }
-function stop() {
+function stop({preserveLab = false} = {}) {
   stopPieceDrag();
   stopEncouragement();
   studyAudioStop("practice");
-  stopPuzzleLab();
+  if(preserveLab)pausePuzzleLab();else stopPuzzleLab();
   stopMasteryUI();
   disposeRecallRecording();
   stopLearningAudio();
@@ -772,4 +772,14 @@ window.addEventListener('ayah-developer-mode',()=>{
   chapter=Math.max(0,surahs.findIndex(s=>s.id===current));verses=surahs[chapter].verses;ayah=Math.min(ayah,verses.length-1);if(!surahs.some(s=>s.id===current))mode='practice';
  }
  reset();
+});
+
+// Overlay ownership suspends the underlying study/game without clearing its draft.
+for (const event of ["ayah-quest-surface", "ayah-study-overlay"]) window.addEventListener(event,()=>stop({preserveLab:true}));
+
+window.addEventListener("ayah-study-exposure", event => {
+ const a=learning.snapshot().activeReview;
+ if(a&&!a.graded&&!a.declaredRecited&&!a.usedHint&&event.detail.keys.includes(a.key)) {
+  try { learning.updateRecall(a.id,"assisted"); } catch { event.preventDefault(); }
+ }
 });

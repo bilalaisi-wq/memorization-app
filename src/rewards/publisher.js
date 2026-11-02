@@ -4,12 +4,22 @@ const digest = async (value) =>
     ...new Uint8Array(
       await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value)),
     ),
-  ].map((x) => x.toString(16).padStart(2, "0")).join("");
+  ]
+    .map((x) => x.toString(16).padStart(2, "0"))
+    .join("");
 // Only opt-in leaderboard users automatically publish. Shop sync is an explicit action.
 export class RewardPublisher {
-  constructor(client, learning, storage, userId = null) {
+  constructor(
+    client,
+    learning,
+    storage,
+    userId = null,
+    { getUserId = null } = {},
+  ) {
     Object.assign(this, {
       client,
+      getUserId,
+      disposed: false,
       learning,
       storage,
       userId,
@@ -22,12 +32,18 @@ export class RewardPublisher {
       lastError: null,
     });
   }
+  validIdentity() {
+    return (
+      !this.disposed && (!this.getUserId || this.getUserId() === this.userId)
+    );
+  }
   schedule() {
-    if (!this.enabled) return;
+    if (!this.validIdentity() || !this.enabled) return;
     clearTimeout(this.timer);
     this.timer = setTimeout(() => this.flush().catch(() => {}), 1200);
   }
   async flush() {
+    if (!this.validIdentity()) return;
     if (this.pending) {
       this.again = true;
       return this.pending;
@@ -44,15 +60,19 @@ export class RewardPublisher {
     }
   }
   async send() {
+    if (!this.validIdentity()) return;
     try {
       const summary = rewardSummary(this.learning, this.storage),
         events = await Promise.all(
-          summary.events.filter((e) => !this.sent.has(e.id)).map(async (e) => ({
-            ...e,
-            at: e.at.slice(0, 10) + "T00:00:00.000Z",
-            id: await digest(e.id),
-          })),
+          summary.events
+            .filter((e) => !this.sent.has(e.id))
+            .map(async (e) => ({
+              ...e,
+              at: e.at.slice(0, 10) + "T00:00:00.000Z",
+              id: await digest(e.id),
+            })),
         );
+      if (!this.validIdentity()) return;
       let data;
       for (let offset = 0; offset < Math.max(events.length, 1); offset += 500) {
         const batch = events.slice(offset, offset + 500),
@@ -66,6 +86,7 @@ export class RewardPublisher {
             legacy_xp: summary.legacyXP,
             legacy_stars: summary.legacyStars,
           });
+        if (!this.validIdentity()) return;
         if (response.error) {
           if (
             response.status === 404 ||
@@ -76,19 +97,21 @@ export class RewardPublisher {
             start.setUTCDate(
               start.getUTCDate() - ((start.getUTCDay() + 6) % 7),
             );
-            const weekly = summary.events.filter((e) =>
-              Date.parse(e.at) >= +start
+            const weekly = summary.events.filter(
+              (e) => Date.parse(e.at) >= +start,
             );
             const history = weekly.map((e) => ({
               at: e.at,
               xp: e.xp,
               stars: e.stars,
             }));
-            const memory = weekly.filter((e) => e.recalls).map((e) => ({
-              at: e.at,
-              independent: true,
-              reward: { xp: 0, stars: 0 },
-            }));
+            const memory = weekly
+              .filter((e) => e.recalls)
+              .map((e) => ({
+                at: e.at,
+                independent: true,
+                reward: { xp: 0, stars: 0 },
+              }));
             const fallback = await this.client.rpc("publish_weekly_activity", {
               learning: {
                 records: {
@@ -99,6 +122,7 @@ export class RewardPublisher {
                 },
               },
             });
+            if (!this.validIdentity()) return;
             if (fallback.error) {
               throw Error(
                 "Leaderboard updates could not sync. Earned XP is saved locally; retry when connected.",
@@ -115,6 +139,7 @@ export class RewardPublisher {
         }
         data = response.data;
       }
+      if (!this.validIdentity()) return;
       summary.events.forEach((e) => this.sent.add(e.id));
       this.lastError = null;
       this.status = "Learning XP is up to date across modes.";
@@ -127,6 +152,7 @@ export class RewardPublisher {
     }
   }
   dispose() {
+    this.disposed = true;
     clearTimeout(this.timer);
     this.enabled = false;
   }

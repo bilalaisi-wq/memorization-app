@@ -17,7 +17,7 @@ export function createAudioManager({AudioClass=globalThis.Audio,owner='arcade',i
       studyAudioStart(owner);
       try{await audio.play();return token===run && !disposed;}catch{if(token===run)stop();return false;}
     },
-    stop, pause(){paused=true;audio?.pause();},
+    stop, pause(){paused=true;audio?.pause();studyAudioStop(owner);},
     async resume(){paused=false;level.resume();try{if(audio){studyAudioStart(owner);await audio.play();const complete=deferred;deferred=null;complete?.(true);}}catch{stop();}},
     mute(value){desiredMuted=!!value;if(audio)audio.muted=desiredMuted;},
     setVolume:value=>level.setVolume(value),
@@ -27,6 +27,7 @@ export function createAudioManager({AudioClass=globalThis.Audio,owner='arcade',i
 export function bindArcadeInput(root,dispatch,{target=globalThis.document}={}) {
   const keys={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'rotate',KeyB:'rotate',KeyN:'rotate',ArrowDown:'soft',Space:'drop',KeyP:'pause',KeyC:'hold'};
   const key=e=>{
+    if(root.closest?.("[inert]"))return;
     if(e.altKey||e.ctrlKey||e.metaKey||e.target?.closest?.('input,select,textarea,button,a,[contenteditable="true"],dialog'))return;
     if(keys[e.code]){e.preventDefault();dispatch({type:keys[e.code],input:'keyboard'});}
   };

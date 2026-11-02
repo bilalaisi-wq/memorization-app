@@ -1,3 +1,4 @@
+import { reportStudyExposure } from "../study-exposure.js";
 import { awardStudy } from "../rewards/store.js";
 import {
   canonicalSlice,
@@ -25,19 +26,25 @@ import {
   restoreWorkspace,
 } from "./model.js";
 import { createPassageMemory, PASSAGE_MEMORY_KEY } from "./memory.js";
-import { scopedStorage } from "../learner/profile-storage.js";
+import { activeProfileId, scopedStorage } from "../learner/profile-storage.js";
 import {
   studyAudioStart,
   studyAudioStop,
   successCue,
 } from "../ui/encouragement.js";
 import "./passage.css";
-export function openPassageStudio(ctx) {
+export function openPassageStudio(ctx = {}) {
   const d = document.createElement("dialog");
   d.className = "account-dialog passage-studio";
   let closed=false;
-  const storage = ctx.user ? scopedStorage(ctx.user.id) : localStorage,
-    memory = createPassageMemory(storage);
+  const owner = ctx.user?.id || null;
+  const guard=()=>{if(closed||activeProfileId()!==owner)throw Error('Account changed or passage studio closed.');};
+  guard();
+  window.dispatchEvent(new Event('ayah-study-overlay'));
+  const baseStorage=owner?scopedStorage(owner):localStorage;
+  const storage={getItem:k=>{guard();return baseStorage.getItem(k);},setItem:(k,v)=>{guard();baseStorage.setItem(k,v);},removeItem:k=>{guard();baseStorage.removeItem(k);}};
+  const memory = createPassageMemory(storage);
+  const lifecycle=new AbortController();
   const options = referenceOptions();
   let bundle = null,
     page = 0,
@@ -108,7 +115,7 @@ export function openPassageStudio(ctx) {
   }
 
   d.innerHTML =
-    '<button class="text-button" data-close>Close ×</button><h2>Passage Builder · memorization studio</h2><button class="primary" data-open-expedition>✦ Explore Passage Expedition</button><button class="text-button" data-open-rescue>✧ Constellation Rescue</button><div data-studio></div><p data-studio-status role="status" aria-live="polite"></p>';
+    '<button class="text-button" data-close>Close ×</button><h2>Passage Builder · memorization studio</h2><button class="primary" data-open-expedition>✦ Explore Passage Expedition</button><button class="text-button" data-open-rescue>✧ Constellation Rescue</button><button class="text-button" data-set-aside hidden>Set aside unfinished recall · no grade</button><div data-studio></div><p data-studio-status role="status" aria-live="polite"></p>';
   const root = d.querySelector("[data-studio]"),
     status = d.querySelector("[data-studio-status]");
   const note = (text, error = false) => {
@@ -127,6 +134,7 @@ export function openPassageStudio(ctx) {
   const close = () => {
     if(closed)return;
     closed=true;
+    lifecycle.abort();
     navigation++;
     assessmentView++;
     cache.clear();
@@ -135,6 +143,10 @@ export function openPassageStudio(ctx) {
     d.remove();
     ctx.onClose?.();
   };
+  window.addEventListener('ayahprofilechange',()=>{if(activeProfileId()!==owner)close();},{signal:lifecycle.signal});
+  window.addEventListener('pagehide',close,{signal:lifecycle.signal});
+  function pendingControl(){const a=memory.snapshot().active;d.querySelector('[data-set-aside]').hidden=!!memory.warning||!a||a.graded;}
+  d.querySelector('[data-set-aside]').onclick=()=>{try{const a=memory.snapshot().active;memory.cancel(a.id);navigation++;assessmentView++;stop();assessmentBundles=null;bundle=null;selectedRefs=['1:1'];draw();note('Unfinished attempt set aside. No grade or review date changed. Start free study or choose another available passage.');}catch(e){note(e.message,true);}};
   d.querySelector("[data-close]").onclick = close;
   d.oncancel = close;
   d.querySelector('[data-open-rescue]').onclick=async()=>{const {openRescue}=await import('../quest/rescue/ui.js');close();openRescue(ctx);};
@@ -177,6 +189,7 @@ export function openPassageStudio(ctx) {
     }
   }
   async function play(b = bundle, seg = null) {
+    if (!allowStudy([b.key])) return;
     if (!b || loading) return;
     if (seg?.kind === "reviewed" && !segmentAudioReviewed(seg, b)) {
       return note(
@@ -239,7 +252,12 @@ export function openPassageStudio(ctx) {
       windowSequence = shuffled(Array.from({ length: w.count }, (_, i) => i));
     }
   }
+  function allowStudy(keys) {
+    try { reportStudyExposure(keys); return true; }
+    catch(e) { root.replaceChildren(); const p=document.createElement("p");p.setAttribute("role","alert");p.textContent=e.message;root.append(p);return false; }
+  }
   function draw() {
+    pendingControl();
     assessmentView++;
     d.dataset.recallActive = "false";
     const active = memory.snapshot().active;
@@ -254,6 +272,7 @@ export function openPassageStudio(ctx) {
       root.querySelector("[data-start]").onclick = () => select(work.current?.key || "1:1");
       return;
     }
+    if (!allowStudy([bundle.key])) return;
     const focused = document.activeElement;
     const focusWord = focused?.dataset.word;
     const focusMove = focused?.dataset.move;
@@ -361,7 +380,7 @@ export function openPassageStudio(ctx) {
           }</p>`
         ).join("") ||
         "<p>No passage reviews yet. Reconstruction alone does not schedule recall.</p>"
-      }<button class="text-button" data-sync>Sync private passage reviews</button><button class="text-button" data-export>Export passage review data</button></section>`;
+      }<button class="text-button" data-sync>Sync private passage reviews</button><button class="text-button" data-export>Export passage review data</button><button class="text-button" data-export-work>Export workspace data</button></section>`;
     if (focusWord) root.querySelector(`[data-word="${Number(focusWord)}"]`)?.focus({preventScroll:true});
     if (focusMove && /^\d+:-?1$/.test(focusMove)) root.querySelector(`[data-move="${focusMove}"]`)?.focus({preventScroll:true});
     root.querySelector("[data-reference]").onchange = (e) =>
@@ -554,9 +573,12 @@ export function openPassageStudio(ctx) {
         note(e.message, true);
       }
     };
+    root.querySelector('[data-export-work]').onclick=()=>{
+      const raw=storage.getItem('ayah-passage-workspaces-v1')??JSON.stringify(work),url=URL.createObjectURL(new Blob([raw],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='ayah-passage-workspaces.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    };
     root.querySelector("[data-export]").onclick = () => {
       const url = URL.createObjectURL(
-          new Blob([JSON.stringify(memory.snapshot(), null, 2)], {
+          new Blob([memory.exportRaw() ?? JSON.stringify(memory.snapshot(), null, 2)], {
             type: "application/json",
           }),
         ),
@@ -569,6 +591,7 @@ export function openPassageStudio(ctx) {
   }
   const zoneIsBank = b => !!b.closest('[data-place="bank"]');
   function drawChain(all) {
+    if (!allowStudy(all.map(b=>b.key))) return;
     const area = root.querySelector("[data-chain-cards]");
     area.innerHTML =
       chain.map((key, i) =>
@@ -619,6 +642,7 @@ export function openPassageStudio(ctx) {
     }
   }
   async function drawAssessment() {
+    pendingControl();
     const view = ++assessmentView;
     const currentView = () => d.isConnected && view === assessmentView;
     d.dataset.recallActive = "true";
@@ -694,14 +718,12 @@ export function openPassageStudio(ctx) {
         assessmentView++;
         navigation++;
         stop();
-        memory.update("abandon");
-        memory.update("compared");
         const current = memory.snapshot().active;
-        memory.grade(current.id, "Again");
+        memory.cancel(current.id);
         assessmentBundles = null;
         draw();
         note(
-          "Returned to practice. Assisted attempts do not schedule independent recall.",
+          "Returned to practice. The unfinished attempt was set aside without a grade or schedule change.",
         );
       } catch (e) {
         note(e.message, true);
@@ -729,6 +751,7 @@ export function openPassageStudio(ctx) {
     }
   }
   function showComparison() {
+    if (!allowStudy(assessmentBundles.map(b=>b.key))) return;
     const a = memory.snapshot().active,
       unit = memory.snapshot().records[a.unitId].unit,
       area = root.querySelector("[data-comparison]");
@@ -769,7 +792,7 @@ export function openPassageStudio(ctx) {
       b.onclick = () => {
         try {
           stop();
-          const result = memory.grade(a.id, b.dataset.grade);
+          const result = memory.grade(a.id, b.dataset.grade, {assessmentSource:"self-assessed"});
           awardStudy({mode:"passage-recall",unit:a.unitId,action:"assessment",xp:result.independent?10:3});
           assessmentView++;
           assessmentBundles = null;

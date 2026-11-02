@@ -29,7 +29,7 @@ export const repairCategories = Object.freeze({
     tip: "Assistance is welcome. Practise with support, then try an independent attempt when ready.",
   },
   "review-difficulty": {
-    title: "Self-reported review difficulty",
+    title: "Recall difficulty records",
     game: "snake",
     tip: "Listen and rebuild at a comfortable pace, then try a fresh self-assessment.",
   },
@@ -143,8 +143,14 @@ export function repairAnalysis({ lab = {}, memory = {} } = {}) {
         if (["Again", "Hard"].includes(h.grade))
           add(key, "review-difficulty", {
             ...base,
-            source: "self-reported-recall",
-            detail: `Learner graded ${h.grade}; ${h.independent ? "independent attempt" : "assisted/undeclared attempt"}. Not teacher-verified.`,
+            source:
+              h.independent === true || h.assessmentSource === "self-assessed"
+                ? "self-reported-recall"
+                : "legacy-recall-record",
+            detail:
+              h.independent === true || h.assessmentSource === "self-assessed"
+                ? `Learner graded ${h.grade}; ${h.independent ? "independent attempt" : "assisted/undeclared attempt"}. Not teacher-verified.`
+                : `Stored ${h.grade} from a non-independent attempt. Older records cannot establish whether this was an explicit self-grade or returning to practice.`,
             grade: h.grade,
           });
         if (h.independent === false)

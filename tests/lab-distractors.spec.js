@@ -186,8 +186,13 @@ for (const subtype of ["meaning", "audio", "continuation"])
       .filter({ has: page.locator("span.arabic") })
       .first();
     const spoken = await spokenCard.textContent();
-    await page.evaluate(() => (window.played = []));
-    await spokenCard.locator("..").locator("[data-lab-audio]").click();
+    const replay = spokenCard.locator("..").locator("[data-lab-audio]");
+    // Automatic selection audio can finish between separate Playwright actions.
+    // Reset at the replay event boundary, before its playback handler executes.
+    await replay.evaluate(button => button.addEventListener("click", () => {
+      window.played = [];
+    }, { capture: true, once: true }));
+    await replay.click();
     await expect
       .poll(async () => {
         const urls = await page.evaluate(() => window.played);

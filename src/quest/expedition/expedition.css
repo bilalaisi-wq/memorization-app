@@ -793,3 +793,6 @@
 .passage-expedition .blocks-touch-pad button {
   min-height: 72px;
 }
+
+/* The track can stay slim while its interactive hit area is touch-sized. */
+.passage-expedition input[type="range"] { min-height: 44px; }

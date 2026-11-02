@@ -1,3 +1,4 @@
+import { reportStudyExposure } from "../../study-exposure.js";
 import { canonicalSlice } from "../../../supabase/functions/_shared/segmentation.js";
 import { esc } from "../../ui/dom.js";
 import { catalog, availability, loadAudio } from "../../content/library.js";
@@ -158,8 +159,9 @@ export function openAdvancedRevision(ctx = {}) {
     if (el) el.textContent = text;
   }
   function shell() {
-    root.innerHTML = `<header class="rv-header"><div><p class="rv-eyebrow">${mode === "boss" ? "FIVE GATES · A RISING CHALLENGE" : "REVISION TRAILS · COVERAGE & ENDURANCE"}</p><h2>${title}</h2><p>${mode === "boss" ? "Build from one opening to a complete independent passage." : "Carry your memorized passages through a steady, self-paced expedition."}</p></div><button data-rv-close>Close ✕</button></header><nav class="rv-nav"><button data-rv-lobby>← Choose a journey</button><label>Recitation volume <input type="range" min="0" max="1" step="0.05" value="${readLabVolume(localStorage)}" aria-label="Revision recitation volume" data-rv-volume></label><button data-rv-stop>Stop audio</button></nav><main data-rv-body></main><p role="status" data-rv-status></p>`;
+    root.innerHTML = `<header class="rv-header"><div><p class="rv-eyebrow">${mode === "boss" ? "FIVE GATES · A RISING CHALLENGE" : "REVISION TRAILS · COVERAGE & ENDURANCE"}</p><h2>${title}</h2><p>${mode === "boss" ? "Build from one opening to a complete independent passage." : "Carry your memorized passages through a steady, self-paced expedition."}</p></div><button data-rv-close>Close ✕</button></header><nav class="rv-nav"><button data-rv-lobby>← Choose a journey</button>${memory().snapshot().active&&!memory().snapshot().active.graded?'<button data-rv-manage>Manage unfinished recall</button>':''}<label>Recitation volume <input type="range" min="0" max="1" step="0.05" value="${readLabVolume(localStorage)}" aria-label="Revision recitation volume" data-rv-volume></label><button data-rv-stop>Stop audio</button></nav><main data-rv-body></main><p role="status" data-rv-status></p>`;
     root.querySelector("[data-rv-close]").onclick = close;
+    root.querySelector("[data-rv-manage]")?.addEventListener("click",()=>{clear();studio=openPassageStudio({...ctx,onClose:afterStudio});});
     root.querySelector("[data-rv-lobby]").onclick = () => {
       runId = null;
       render();
@@ -460,6 +462,7 @@ export function openAdvancedRevision(ctx = {}) {
     try {
       const v = await verified();
       if (!v) return;
+      reportStudyExposure(v.all.map(b => b.key));
       const task = root.querySelector("[data-rv-task]");
       task.innerHTML = `<p>${esc(v.c.similarity)}. These are exact canonical opening previews, not approved recitation stops.</p><div class="rv-choices">${discriminationOrder(
         v.r.plan,
@@ -529,6 +532,7 @@ export function openAdvancedRevision(ctx = {}) {
   }
   function drawSupport() {
     if (!support || !bundles.length) return;
+    reportStudyExposure([bundles[supportPage].key]);
     const panel = root.querySelector("[data-rv-support-panel]"),
       b = bundles[supportPage];
     panel.innerHTML = `<section class="rv-support"><h4>Supported study · ${esc(b.key)}</h4><p class="arabic" dir="rtl" lang="ar">${esc(b.textUthmani)}</p><p>Complete verified ayah. Visual workspaces are not guidance about recitation stops.</p><button data-rv-listen>Listen to full ayah</button><button data-rv-support-prev ${supportPage === 0 ? "disabled" : ""}>Previous ayah</button><button data-rv-support-next ${supportPage === bundles.length - 1 ? "disabled" : ""}>Next ayah</button><button data-rv-hide>Hide study panel</button></section>`;

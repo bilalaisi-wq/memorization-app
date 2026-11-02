@@ -1,3 +1,4 @@
+import {activeProfileId} from "../learner/profile-storage.js";
 import {isDeveloperMode} from "../developer/access.js";
 import { mountSegmentReview } from "../passage/review-menu.js";
 const openPassageStudio = (ctx) =>
@@ -41,12 +42,16 @@ function dialog(title, extra = "") {
   d.innerHTML = `<button class="text-button" data-close>Close ×</button><h2>${
     esc(title)
   }</h2><div data-billing-content></div><p data-billing-status role="status" aria-live="polite"></p>`;
+  const owner=activeProfileId(), lifecycle=new AbortController();
   const close = () => {
+    lifecycle.abort();
     d.close();
     d.remove();
   };
   d.querySelector("[data-close]").onclick = close;
-  d.oncancel = () => d.remove();
+  d.oncancel = close;
+  window.addEventListener("ayahprofilechange",()=>{if(activeProfileId()!==owner)close();},{signal:lifecycle.signal});
+  window.addEventListener("pagehide",close,{signal:lifecycle.signal});
   document.body.append(d);
   d.showModal();
   return d;
@@ -184,6 +189,7 @@ async function pricing(ctx, api) {
             plan: b.dataset.plan,
             cadence: annual ? "annual" : "monthly",
           });
+          if(!d.isConnected||activeProfileId()!==(ctx.user?.id||null))return;
           location.assign(stripeRedirect(result.url, "checkout"));
         });
       }
@@ -236,6 +242,7 @@ async function account(ctx, api) {
     root.querySelector("[data-portal]").onclick = () =>
       action(d, async () => {
         const result = await api.invoke("portal");
+        if(!d.isConnected||activeProfileId()!==(ctx.user?.id||null))return;
         location.assign(stripeRedirect(result.url, "portal"));
       });
     root.querySelector("[data-refresh]").onclick = () =>

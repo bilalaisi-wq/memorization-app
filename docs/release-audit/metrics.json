@@ -1,0 +1,708 @@
+{
+  "environment": {
+    "browser": "154.0.8037.57",
+    "source": "local Vite; mocked account endpoints; QA records only",
+    "mobileCpuSlowdown": 4,
+    "network": "loopback, no network throttling",
+    "budgets": {
+      "modalSceneMs": 2500,
+      "maxHorizontalOverflowPx": 2,
+      "minTouchPx": 44
+    }
+  },
+  "cases": [
+    {
+      "width": 320,
+      "height": 780,
+      "theme": "simple",
+      "mode": "expedition",
+      "samplesMs": [
+        2073,
+        1584
+      ],
+      "warmSceneMs": 1584,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 1,
+      "minArabicFontPx": 29,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 375
+    },
+    {
+      "width": 320,
+      "height": 780,
+      "theme": "simple",
+      "mode": "rescue",
+      "samplesMs": [
+        456,
+        514
+      ],
+      "warmSceneMs": 514,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 320,
+      "height": 780,
+      "theme": "simple",
+      "mode": "repair",
+      "samplesMs": [
+        833,
+        735
+      ],
+      "warmSceneMs": 735,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 345
+    },
+    {
+      "width": 320,
+      "height": 780,
+      "theme": "simple",
+      "mode": "boss",
+      "samplesMs": [
+        968,
+        441
+      ],
+      "warmSceneMs": 441,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 3,
+      "minArabicFontPx": 25.6,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 320,
+      "height": 780,
+      "theme": "simple",
+      "mode": "survival",
+      "samplesMs": [
+        840,
+        613
+      ],
+      "warmSceneMs": 613,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 53
+    },
+    {
+      "width": 320,
+      "height": 780,
+      "theme": "night-sky",
+      "mode": "expedition",
+      "samplesMs": [
+        1741,
+        1091
+      ],
+      "warmSceneMs": 1091,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 1,
+      "minArabicFontPx": 29,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 503
+    },
+    {
+      "width": 320,
+      "height": 780,
+      "theme": "night-sky",
+      "mode": "rescue",
+      "samplesMs": [
+        578,
+        582
+      ],
+      "warmSceneMs": 582,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 137
+    },
+    {
+      "width": 320,
+      "height": 780,
+      "theme": "night-sky",
+      "mode": "repair",
+      "samplesMs": [
+        956,
+        731
+      ],
+      "warmSceneMs": 731,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 263
+    },
+    {
+      "width": 320,
+      "height": 780,
+      "theme": "night-sky",
+      "mode": "boss",
+      "samplesMs": [
+        870,
+        774
+      ],
+      "warmSceneMs": 774,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 3,
+      "minArabicFontPx": 25.6,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 151
+    },
+    {
+      "width": 320,
+      "height": 780,
+      "theme": "night-sky",
+      "mode": "survival",
+      "samplesMs": [
+        562,
+        512
+      ],
+      "warmSceneMs": 512,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 100
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "simple",
+      "mode": "expedition",
+      "samplesMs": [
+        1815,
+        873
+      ],
+      "warmSceneMs": 873,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 1,
+      "minArabicFontPx": 29,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 328
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "simple",
+      "mode": "rescue",
+      "samplesMs": [
+        494,
+        492
+      ],
+      "warmSceneMs": 492,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 86
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "simple",
+      "mode": "repair",
+      "samplesMs": [
+        672,
+        507
+      ],
+      "warmSceneMs": 507,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 230
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "simple",
+      "mode": "boss",
+      "samplesMs": [
+        790,
+        526
+      ],
+      "warmSceneMs": 526,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 3,
+      "minArabicFontPx": 25.6,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "simple",
+      "mode": "survival",
+      "samplesMs": [
+        512,
+        613
+      ],
+      "warmSceneMs": 613,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "night-sky",
+      "mode": "expedition",
+      "samplesMs": [
+        1705,
+        1103
+      ],
+      "warmSceneMs": 1103,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 1,
+      "minArabicFontPx": 29,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 335
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "night-sky",
+      "mode": "rescue",
+      "samplesMs": [
+        418,
+        378
+      ],
+      "warmSceneMs": 378,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 51
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "night-sky",
+      "mode": "repair",
+      "samplesMs": [
+        678,
+        563
+      ],
+      "warmSceneMs": 563,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 280
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "night-sky",
+      "mode": "boss",
+      "samplesMs": [
+        822,
+        613
+      ],
+      "warmSceneMs": 613,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 3,
+      "minArabicFontPx": 25.6,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 79
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "night-sky",
+      "mode": "survival",
+      "samplesMs": [
+        480,
+        459
+      ],
+      "warmSceneMs": 459,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 50
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "simple",
+      "mode": "expedition",
+      "samplesMs": [
+        802,
+        387
+      ],
+      "warmSceneMs": 387,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 1,
+      "minArabicFontPx": 29,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 124
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "simple",
+      "mode": "rescue",
+      "samplesMs": [
+        390,
+        200
+      ],
+      "warmSceneMs": 200,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "simple",
+      "mode": "repair",
+      "samplesMs": [
+        288,
+        193
+      ],
+      "warmSceneMs": 193,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 79
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "simple",
+      "mode": "boss",
+      "samplesMs": [
+        377,
+        336
+      ],
+      "warmSceneMs": 336,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 3,
+      "minArabicFontPx": 30.72,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "simple",
+      "mode": "survival",
+      "samplesMs": [
+        209,
+        237
+      ],
+      "warmSceneMs": 237,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "night-sky",
+      "mode": "expedition",
+      "samplesMs": [
+        801,
+        509
+      ],
+      "warmSceneMs": 509,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 1,
+      "minArabicFontPx": 29,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 138
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "night-sky",
+      "mode": "rescue",
+      "samplesMs": [
+        402,
+        314
+      ],
+      "warmSceneMs": 314,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 55
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "night-sky",
+      "mode": "repair",
+      "samplesMs": [
+        392,
+        360
+      ],
+      "warmSceneMs": 360,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 97
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "night-sky",
+      "mode": "boss",
+      "samplesMs": [
+        446,
+        451
+      ],
+      "warmSceneMs": 451,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 3,
+      "minArabicFontPx": 30.72,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "theme": "night-sky",
+      "mode": "survival",
+      "samplesMs": [
+        407,
+        336
+      ],
+      "warmSceneMs": 336,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 1440,
+      "height": 1100,
+      "theme": "simple",
+      "mode": "expedition",
+      "samplesMs": [
+        868,
+        555
+      ],
+      "warmSceneMs": 555,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 1,
+      "minArabicFontPx": 37,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 123
+    },
+    {
+      "width": 1440,
+      "height": 1100,
+      "theme": "simple",
+      "mode": "rescue",
+      "samplesMs": [
+        387,
+        288
+      ],
+      "warmSceneMs": 288,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 1440,
+      "height": 1100,
+      "theme": "simple",
+      "mode": "repair",
+      "samplesMs": [
+        391,
+        401
+      ],
+      "warmSceneMs": 401,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 122
+    },
+    {
+      "width": 1440,
+      "height": 1100,
+      "theme": "simple",
+      "mode": "boss",
+      "samplesMs": [
+        454,
+        393
+      ],
+      "warmSceneMs": 393,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 3,
+      "minArabicFontPx": 35.2,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 1440,
+      "height": 1100,
+      "theme": "simple",
+      "mode": "survival",
+      "samplesMs": [
+        307,
+        320
+      ],
+      "warmSceneMs": 320,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 1440,
+      "height": 1100,
+      "theme": "night-sky",
+      "mode": "expedition",
+      "samplesMs": [
+        903,
+        642
+      ],
+      "warmSceneMs": 642,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 1,
+      "minArabicFontPx": 37,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 162
+    },
+    {
+      "width": 1440,
+      "height": 1100,
+      "theme": "night-sky",
+      "mode": "rescue",
+      "samplesMs": [
+        481,
+        433
+      ],
+      "warmSceneMs": 433,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 85
+    },
+    {
+      "width": 1440,
+      "height": 1100,
+      "theme": "night-sky",
+      "mode": "repair",
+      "samplesMs": [
+        563,
+        486
+      ],
+      "warmSceneMs": 486,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 181
+    },
+    {
+      "width": 1440,
+      "height": 1100,
+      "theme": "night-sky",
+      "mode": "boss",
+      "samplesMs": [
+        708,
+        643
+      ],
+      "warmSceneMs": 643,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 3,
+      "minArabicFontPx": 35.2,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    },
+    {
+      "width": 1440,
+      "height": 1100,
+      "theme": "night-sky",
+      "mode": "survival",
+      "samplesMs": [
+        572,
+        534
+      ],
+      "warmSceneMs": 534,
+      "overflowPx": 0,
+      "smallControls": [],
+      "arabicElements": 0,
+      "minArabicFontPx": null,
+      "clippedArabic": 0,
+      "maxLongTaskMs": 0
+    }
+  ],
+  "inventory": {
+    "freeSurahs": 38,
+    "freeAyahs": 571,
+    "privateAyahs": 639
+  },
+  "summary": {
+    "cases": 40,
+    "overflowCases": 0,
+    "clippedArabicCases": 0,
+    "smallControlCases": 0,
+    "slowWarmCases": 0,
+    "maxWarmMs": 1584
+  }
+}

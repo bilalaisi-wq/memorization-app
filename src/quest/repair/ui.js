@@ -128,8 +128,9 @@ export function openRepairWorkshop(ctx = {}) {
     if (node) node.textContent = text;
   }
   function shell() {
-    root.innerHTML = `<header><div><p class="eyebrow">SUPPORTED PRACTICE · HONEST EVIDENCE</p><h2>Memory Repair Workshop</h2><p>Reconnect your study pathways, one calm practice session at a time.</p></div><button data-repair-close aria-label="Close Memory Repair Workshop">Close ✕</button></header><nav><button data-repair-back>← Workshop map</button></nav><main data-repair-body></main><p role="status" data-repair-status></p>`;
+    root.innerHTML = `<header><div><p class="eyebrow">SUPPORTED PRACTICE · HONEST EVIDENCE</p><h2>Memory Repair Workshop</h2><p>Reconnect your study pathways, one calm practice session at a time.</p></div><button data-repair-close aria-label="Close Memory Repair Workshop">Close ✕</button></header><nav><button data-repair-back>← Workshop map</button>${memory().snapshot().active&&!memory().snapshot().active.graded?'<button data-repair-manage>Manage unfinished recall</button>':''}</nav><main data-repair-body></main><p role="status" data-repair-status></p>`;
     root.querySelector("[data-repair-close]").onclick = close;
+    root.querySelector("[data-repair-manage]")?.addEventListener("click",()=>study());
     root.querySelector("[data-repair-back]").onclick = () => {
       clear();
       render();

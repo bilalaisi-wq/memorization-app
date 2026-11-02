@@ -26,10 +26,12 @@ import { shuffled, verseAudio, wordAudio } from "../data.js";
 import { outline } from "../illustrations.js";
 import { esc, clearLearningView, uid } from "../ui/dom.js";
 import { gameTypes } from "./puzzle-store.js";
-let cleanup = null;
+let cleanup = null, suspend = null;
+export function pausePuzzleLab(){suspend?.();}
 export function stopPuzzleLab() {
   cleanup?.();
   cleanup = null;
+  suspend = null;
 }
 export const detectivePairs = [
   [113, 4, 5, 2],
@@ -1009,6 +1011,7 @@ export function mountPuzzleLab(
   };
   globalThis.addEventListener('ayah-developer-mode',refreshAccess);
   start();
+  suspend = () => { fallingControl?.suspend?.(); pauseGame(); stopAudio(); };
   cleanup = () => {
     globalThis.removeEventListener('ayah-developer-mode',refreshAccess);
     audioLevel.dispose();

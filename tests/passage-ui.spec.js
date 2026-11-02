@@ -305,6 +305,7 @@ test("account workspace drafts remain isolated and resume only for their owner",
   await mockBilling(page,{signed:false}); await page.goto('/');
   const launch=async id=>page.evaluate(async id=>{
     const {openPassageStudio}=await import('/src/passage/ui.js');
+    (await import('/src/learner/profile-storage.js')).selectProfile(id);
     openPassageStudio({user:{id},client:null});
   },id);
   await launch('fixture-a'); await page.locator('[data-start]').click();

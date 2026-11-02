@@ -10,7 +10,8 @@ async function open(page,{end=1,rules='classic',difficulty='beginner',audio='sil
 }
 async function captureWord(page,text){
  const object=page.locator('.astro-rock:not(.astro-redirected)').filter({has:page.locator('.arabic', {hasText:text})}).first();
- await object.click({force:true});
+ // Select the tracked object directly: a forced coordinate click can hit a different moving rock.
+ await object.dispatchEvent("click");
  await expect(object).toHaveClass(/astro-locked/,{timeout:15000});
  await page.locator('.astro-stage').focus();await page.keyboard.press('Space');
 }

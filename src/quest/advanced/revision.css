@@ -390,3 +390,6 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Keep native range controls usable by touch as well as keyboard. */
+.advanced-revision input[type="range"] { min-height: 44px; }

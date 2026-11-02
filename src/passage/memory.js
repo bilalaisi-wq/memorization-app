@@ -59,6 +59,7 @@ export function createPassageMemory(
       return warning;
     },
     snapshot: () => clone(data),
+    exportRaw: () => storage.getItem(PASSAGE_MEMORY_KEY),
     begin(unit, { assisted = false } = {}) {
       return save((d) => {
         d.records[unit.id] ??= {
@@ -91,7 +92,10 @@ export function createPassageMemory(
         return d.active;
       });
     },
-    grade(attemptId, grade) {
+    cancel(attemptId) {
+      return save(d=>{if(!d.active||d.active.id!==attemptId||d.active.graded)throw Error("No matching unfinished assessment.");const unitId=d.active.unitId;d.active=null;return {attemptId,unitId,cancelled:true};});
+    },
+    grade(attemptId, grade, {assessmentSource} = {}) {
       return save((d) => {
         const a = d.active;
         if (!a || a.id !== attemptId || !a.compared) {
@@ -125,6 +129,7 @@ export function createPassageMemory(
         }
         const result = {
           grade,
+          ...(assessmentSource === "self-assessed" ? {assessmentSource} : {}),
           independent,
           scheduled: eligible,
           nextReview: r.card?.due || null,
