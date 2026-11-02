@@ -171,7 +171,7 @@ Learning XP now covers practice interactions, Quest, recall, every Lab game, cha
 
 ## Shared arcade foundation
 
-[Framework contract, source adapters, checkpoints and reward rules](docs/shared-arcade-framework.md) provides shared services for the arcade games; Ayah Space and Ayah Serpent are playable; four other games remain planned. Ayah Blocks remains available. The six legacy experimental Lab games and the contract preview are visible only in enabled developer mode; existing progress remains intact. No new Supabase migration is required.
+[Framework contract, source adapters, checkpoints and reward rules](docs/shared-arcade-framework.md) provides shared services for the arcade games; Ayah Space, Ayah Serpent, Memory Maze and Ayah Bubble Burst are playable; Sirat Quest and Bridge Builder remain planned. Ayah Blocks remains available. The six legacy experimental Lab games and the contract preview are visible only in enabled developer mode; existing progress remains intact. No new Supabase migration is required.
 
 ## Ayah Space
 
@@ -188,3 +188,7 @@ Puzzle Lab → **Ayah Serpent** offers continuous grid movement, a growing tail,
 Memory Maze: [gameplay, content integrity and tests](docs/memory-maze.md).
 
 Developer-only Al-A‘raf/Juz 29: [activation, boundaries and validation](docs/developer-library-preview.md).
+
+## Ayah Bubble Burst
+
+Puzzle Lab → **Ayah Bubble Burst** offers an aimable connector launcher, wall ricochets, circle collisions, connected-word clusters, Single Ayah / Chain formations and Classic / Practice checkpoints. Wrong committed continuations cost memory charges; empty shots are motor events only. [Controls, source restrictions, screenshots and tests](docs/bubble-burst.md). Existing XP caps, accounts and FSRS behavior remain unchanged; no SQL migration is needed.

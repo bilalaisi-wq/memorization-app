@@ -271,7 +271,7 @@ test.describe("touch and reduced motion", () => {
     await page.goto("/");
     await prepare(page, {
       campaignId: "constellation-rescue",
-      game: "bubble",
+      game: "bridge",
       key: "98:5",
     });
     let count = 0;
