@@ -303,6 +303,8 @@ test("superseded audio errors cannot interrupt a newer recitation", async ({page
 
 test("account workspace drafts remain isolated and resume only for their owner", async ({page})=>{
   await mockBilling(page,{signed:false}); await page.goto('/');
+  // Wait for account initialization before manually assigning fixture identities.
+  await expect(page.locator('#nav-puzzle-lab')).toBeVisible();
   const launch=async id=>page.evaluate(async id=>{
     const {openPassageStudio}=await import('/src/passage/ui.js');
     (await import('/src/learner/profile-storage.js')).selectProfile(id);

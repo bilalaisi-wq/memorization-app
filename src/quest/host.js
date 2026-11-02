@@ -1,3 +1,5 @@
+import { bridgeRegistration } from "../puzzles/arcade/bridge/ui.js";
+import "../puzzles/arcade/bridge/bridge.css";
 import { siratRegistration } from "../puzzles/arcade/sirat/ui.js";
 import "../puzzles/arcade/sirat/sirat.css";
 import "../puzzles/arcade/bubble/bubble.css";
@@ -30,7 +32,7 @@ import "../puzzles/arcade/asteroids/asteroids.css";
 import "./quest.css";
 export function questArcadeRegistry() {
   const registry = createRegistry();
-  [mazeRegistration, snakeRegistration, asteroidsRegistration, bubbleRegistration, siratRegistration].forEach((g) =>
+  [mazeRegistration, snakeRegistration, asteroidsRegistration, bubbleRegistration, siratRegistration, bridgeRegistration].forEach((g) =>
     registry.register(g),
   );
   return registry;

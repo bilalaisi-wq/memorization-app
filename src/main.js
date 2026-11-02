@@ -1,3 +1,4 @@
+import "./puzzles/arcade/bridge/bridge.css";
 import "./puzzles/arcade/sirat/sirat.css";
 import "./puzzles/arcade/bubble/bubble.css";
 import {isDeveloperMode} from "./developer/access.js";

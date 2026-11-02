@@ -130,7 +130,7 @@ test("reload resumes next checkpoint, blocked games use practice, keyboard contr
 }) => {
   await mockBilling(page, { signed: false });
   await page.goto("/");
-  await prepare(page, { game: "bridge" });
+  await prepare(page, { game: "unknown" });
   await fill(page);
   await page.reload();
   await prepare(page, { restore: true });
@@ -271,7 +271,7 @@ test.describe("touch and reduced motion", () => {
     await page.goto("/");
     await prepare(page, {
       campaignId: "constellation-rescue",
-      game: "bridge",
+      game: "unknown",
       key: "98:5",
     });
     let count = 0;

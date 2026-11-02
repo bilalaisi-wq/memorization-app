@@ -14,6 +14,8 @@ export async function reachGateway(page){
  await page.locator('.sirat-stage').focus();await page.keyboard.down('ArrowRight');let s;
  for(let n=0;n<220;n++){
   s=await siratDOM(page);if(s.near)break;
+  // A safe landing stops motion; renew actual keyboard input like a continuing player.
+  await page.keyboard.down('ArrowRight');
   if(s.grounded){const p=s.platforms.find(p=>Math.abs(p.y-s.y-46)<1&&s.x+30>p.x&&s.x<p.x+p.w);if(p&&p.id!=='gateway'&&p.x+p.w-s.x-30<25)await page.keyboard.press('Space');}
   await page.clock.runFor(100);
  }

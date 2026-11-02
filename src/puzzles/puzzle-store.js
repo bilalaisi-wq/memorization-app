@@ -2,6 +2,7 @@ import { arcadeGames } from "./arcade/registry.js";
 import { versionedStore } from "../ui/versioned-store.js";
 export const LAB_KEY = "ayah-puzzle-lab-v1";
 export const gameTypes = [
+  ["bridge","Bridge Builder","Construct connected word beams, add supports and test a moving load.","order"],
   ["sirat","Sirat Quest","Explore garden terraces and connect verified continuation gateways.","order"],
   ["bubble","Ayah Bubble Burst","Aim, ricochet and connect verified Arabic bubble clusters.","order"],
   ["maze","Memory Maze","Explore corridors and open verified Arabic continuation doors.","order"],
@@ -119,7 +120,7 @@ export function createPuzzleStore(storage, surahs) {
         .sort((a, b) => b[1] - a[1])[0]?.[0];
       if (category)
         return {
-          game: gameTypes.find((g) => g[3] === category && !["asteroids","snake","maze","bubble","sirat"].includes(g[0]))[0],
+          game: gameTypes.find((g) => g[3] === category && !["asteroids","snake","maze","bubble","sirat","bridge"].includes(g[0]))[0],
           reason: `Based on your recorded ${category} practice mistakes.`,
         };
       if (r.game.mistakes)
