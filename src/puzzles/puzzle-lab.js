@@ -1,3 +1,5 @@
+import {siratRegistration} from "./arcade/sirat/ui.js";
+import {buildSiratSections} from "./arcade/sirat/engine.js";
 import {bubbleRegistration} from "./arcade/bubble/ui.js";
 import {buildFormations} from "./arcade/bubble/engine.js";
 import {resolvePlaybackSource} from "../content/private-audio.js";
@@ -72,8 +74,8 @@ export function mountPuzzleLab(
   main.append(root);
   const key = `${surah.id}:${verse.id}`,
     recommendation = lab.recommend(key, learning);
-  if (!isDeveloperMode() && !["falling","asteroids","snake","maze","bubble","recall"].includes(recommendation.game)) { recommendation.game="falling"; recommendation.reason="Practice visible word order with Ayah Blocks."; }
-  root.innerHTML = `<div class="lab-intro"><span class="eyebrow">TRY ANOTHER WAY</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>These games practice recognition, word order, and recall cues. Game XP is separate from independent spoken memorization and artwork checkpoints.</p><div class="lab-recommendation"><strong>Suggested next step</strong><p>${esc(recommendation.reason)}</p><button class="primary small" id="lab-recommended">${recommendation.game === "recall" ? "Independent recall assessment" : gameTypes.find((g) => g[0] === recommendation.game)[1]}</button></div></div><div class="lab-menu">${[...gameTypes,["arcade-example","Arcade contract preview","Developer-only shared framework example"]].map(([id, title, description]) => `<button ${!["falling","asteroids","snake","maze","bubble"].includes(id) && !isDeveloperMode()?"hidden disabled":""} data-game="${id}" class="lab-game-card"><strong>${title}</strong><span>${description}</span></button>`).join("")}</div><div class="lab-settings"><label>Difficulty<select id="lab-level"><option value="1">1 · Visible words</option><option value="2">2 · Fewer cues</option><option value="3">3 · Concealed words</option><option value="4">4 · Minimal hints</option></select></label><button class="text-button" id="lab-restart">Fresh round</button><button class="text-button" id="lab-replay">♫ Replay ayah</button><label class="lab-volume-control" for="lab-volume">Recitation volume <input id="lab-volume" type="range" min="0" max="100" step="1"><output for="lab-volume" id="lab-volume-value"></output></label><button class="text-button" id="lab-mute" aria-pressed="false">Mute audio</button></div><section class="lab-game" aria-label="Puzzle play area"></section><p data-status role="status" aria-live="polite"></p><div class="lab-after"><button class="text-button" id="lab-retry-save" hidden>Retry saving this result</button><button class="primary small" id="lab-next-level" hidden>Try fewer hints →</button><button class="text-button" id="lab-recall">Try independent self-assessment →</button></div>${lab.warning ? `<p role="alert">${esc(lab.warning)}</p>` : ""}`;
+  if (!isDeveloperMode() && !["falling","asteroids","snake","maze","bubble","sirat","recall"].includes(recommendation.game)) { recommendation.game="falling"; recommendation.reason="Practice visible word order with Ayah Blocks."; }
+  root.innerHTML = `<div class="lab-intro"><span class="eyebrow">TRY ANOTHER WAY</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>These games practice recognition, word order, and recall cues. Game XP is separate from independent spoken memorization and artwork checkpoints.</p><div class="lab-recommendation"><strong>Suggested next step</strong><p>${esc(recommendation.reason)}</p><button class="primary small" id="lab-recommended">${recommendation.game === "recall" ? "Independent recall assessment" : gameTypes.find((g) => g[0] === recommendation.game)[1]}</button></div></div><div class="lab-menu">${[...gameTypes,["arcade-example","Arcade contract preview","Developer-only shared framework example"]].map(([id, title, description]) => `<button ${!["falling","asteroids","snake","maze","bubble","sirat"].includes(id) && !isDeveloperMode()?"hidden disabled":""} data-game="${id}" class="lab-game-card"><strong>${title}</strong><span>${description}</span></button>`).join("")}</div><div class="lab-settings"><label>Difficulty<select id="lab-level"><option value="1">1 · Visible words</option><option value="2">2 · Fewer cues</option><option value="3">3 · Concealed words</option><option value="4">4 · Minimal hints</option></select></label><button class="text-button" id="lab-restart">Fresh round</button><button class="text-button" id="lab-replay">♫ Replay ayah</button><label class="lab-volume-control" for="lab-volume">Recitation volume <input id="lab-volume" type="range" min="0" max="100" step="1"><output for="lab-volume" id="lab-volume-value"></output></label><button class="text-button" id="lab-mute" aria-pressed="false">Mute audio</button></div><section class="lab-game" aria-label="Puzzle play area"></section><p data-status role="status" aria-live="polite"></p><div class="lab-after"><button class="text-button" id="lab-retry-save" hidden>Retry saving this result</button><button class="primary small" id="lab-next-level" hidden>Try fewer hints →</button><button class="text-button" id="lab-recall">Try independent self-assessment →</button></div>${lab.warning ? `<p role="alert">${esc(lab.warning)}</p>` : ""}`;
   const area = root.querySelector(".lab-game"),
     status = root.querySelector("[data-status]");
   let resultKey = key,
@@ -226,7 +228,7 @@ export function mountPuzzleLab(
     });
   };
   function start(next = game) {
-    if (!["falling","asteroids","snake","maze","bubble"].includes(next) && !isDeveloperMode()) return;
+    if (!["falling","asteroids","snake","maze","bubble","sirat"].includes(next) && !isDeveloperMode()) return;
     const changedMode = next !== game;
     stopEncouragement();
     gameCleanup?.();
@@ -253,7 +255,7 @@ export function mountPuzzleLab(
     root.querySelector("#lab-next-level").hidden = true;
     root.querySelector("#lab-retry-save").hidden = true;
     const levelControl = root.querySelector("#lab-level");
-    levelControl.closest("label").hidden = ["falling", "asteroids", "snake", "maze", "bubble", "arcade-example", "match", "detective"].includes(
+    levelControl.closest("label").hidden = ["falling", "asteroids", "snake", "maze", "bubble", "sirat", "arcade-example", "match", "detective"].includes(
       game,
     );
     const labels = {
@@ -281,10 +283,11 @@ export function mountPuzzleLab(
       [...levelControl.options].forEach(
         (option, i) => (option.textContent = `${i + 1} · ${labels[i]}`),
       );
-    if(surah.developerOnly&&verse.words.length>24&&!['falling','asteroids','snake','maze','bubble'].includes(game)){
+    if(surah.developerOnly&&verse.words.length>24&&!['falling','asteroids','snake','maze','bubble','sirat'].includes(game)){
       area.innerHTML='<h3>Long-ayah study workspace</h3><p>This developer prototype uses short-ayah layouts. Use the bounded Passage Studio for this long ayah; no partial puzzle will be recorded as a completed ayah. The arcade games above support sequential long-ayah words.</p><button class="primary" data-long-study>Open Passage Studio for this ayah</button>';
       area.querySelector('[data-long-study]').onclick=()=>callbacks.onLongStudy?.(key);
-    }else if (game === "bubble") bubble();
+    }else if (game === "sirat") sirat();
+    else if (game === "bubble") bubble();
     else if (game === "maze") maze();
     else if (game === "snake") snake();
     else if (game === "asteroids") asteroids();
@@ -297,6 +300,47 @@ export function mountPuzzleLab(
     else if (game === "continue") continuation();
     else detective();
     if (changedMode) transitionCue();
+  }
+  function sirat() {
+    const registry=createRegistry();registry.register(siratRegistration);
+    const launcher=createLauncher(registry),adapter=createContentAdapter(surahs);
+    const record=createResultRecorder({learning,lab,accountId:activeProfileId(),getAccountId:activeProfileId});
+    let cancelled=false,launchToken=0,nextAudio='listen';
+    area.innerHTML=`<form class="sirat-config"><h3>Choose your garden journey</h3><p>Explore fictional hilltop gardens. Movement errors return you to safe landings without memory strikes.</p><div class="sirat-config-fields"><label>Journey<select name="journey"><option value="single">Single Ayah</option><option value="chain">Ayah Chain · connected gardens</option></select></label><label>Starting ayah<input name="first" type="number" min="1" max="${surah.verses.at(-1).id}" value="${verse.id}"></label><label>Through ayah<input name="last" type="number" min="1" max="${surah.verses.at(-1).id}" value="${verse.id}" disabled></label><label>Checkpoints<select name="rules"><option value="classic">Classic · three strikes per run</option><option value="practice">Practice · three per ayah</option></select></label><label>Sirat difficulty<select name="difficulty"><option value="beginner">Beginner · wide platforms, two gateways</option><option value="standard">Standard · more branches and platforms</option><option value="expert">Expert · similar phrases, optional ledges</option></select></label></div><p>Expert uses approved study phrases or short whole ayahs. Phrase signs do not authorize recitation stops.</p><button class="primary" type="submit">Prepare journey</button><p data-sirat-preparation role="status"></p></form><div data-sirat-host></div>`;
+    const form=area.querySelector('form'),host=area.querySelector('[data-sirat-host]'),status=area.querySelector('[data-sirat-preparation]'),through=form.elements.last;
+    form.elements.journey.onchange=()=>through.disabled=form.elements.journey.value==='single';
+    async function launch(autoStart=false){
+      const token=++launchToken,button=form.querySelector('[type=submit]');button.disabled=true;status.textContent='Preparing verified sirat signs…';
+      try{
+        const first=Number(form.elements.first.value),difficulty=form.elements.difficulty.value;
+        const config=adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first:Number(through.value),mode:form.elements.journey.value,chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]});
+        const reviews={};
+        for(const key of config.keys){
+          const canonical=adapter.words(key);
+          if((difficulty==='expert'&&canonical.length>8)||canonical.length>40&&!config.visualWindows){
+            const bundle=await callbacks.getArcadeBundle?.(key);if(cancelled||token!==launchToken)return;
+            const review=bundle?.segmentationReview;
+            if(!review||review.verseKey!==key||review.sourceHash!==bundle.contentRevision||!review.version||bundle.words.length!==canonical.length||bundle.words.some((w,i)=>w.text!==canonical[i].text))throw Error(`${key}: published teacher-approved phrase boundaries are unavailable. Choose Beginner/Standard for short ayahs.`);
+            reviews[key]=review.segments.map(s=>({key,startWord:s.startWord-1,endWord:s.endWord,status:s.displayStatus,reviewId:`${key}:v${review.version}`,stopStatus:s.stopStatus,recitationStop:s.recitationStop}));
+          }
+        }
+        if(cancelled||token!==launchToken)return;
+        buildSiratSections(adapter,config,surahs,{difficulty,reviews}); // Preserve the old result if preparation fails.
+        fallingControl=launcher.launch('sirat',{root:host,adapter,config,library:surahs,id:uid(),difficulty,reviews,initialAudio:nextAudio,muted:()=>muted,volume:()=>recitationVolume,
+          onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
+          getNextSteps:s=>arcadeNextSteps({session:s.session,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'journey'}),
+          onJourney:async choice=>{
+            nextAudio=choice.audioMode;
+            if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
+            const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
+            if(!range)throw Error('This surah is complete. Choose another surah from study.');
+            form.elements.first.value=String(range.first);through.value=String(range.last);form.elements.rules.value=choice.config.chainMode;form.elements.difficulty.value=choice.difficulty;
+            form.elements.journey.value=range.first===range.last?'single':'chain';through.disabled=range.first===range.last;await launch(true);
+          }});
+        if(autoStart)fallingControl.start();status.textContent=autoStart?'Your next sirat has started.':'Ready. Press Start exploring below.';host.scrollIntoView({block:'start'});
+      }catch(e){if(!cancelled){status.textContent=e.message;if(autoStart)throw e;}}finally{if(!cancelled&&token===launchToken)button.disabled=false;}
+    }
+    form.onsubmit=e=>{e.preventDefault();launch();};pauseGame=()=>fallingControl?.pause();gameCleanup=()=>{cancelled=true;launchToken++;launcher.dispose();};
   }
   function bubble() {
     const registry=createRegistry();registry.register(bubbleRegistration);
@@ -1044,14 +1088,14 @@ export function mountPuzzleLab(
       ? callbacks.onRecall(key)
       : start(isDeveloperMode() ? recommendation.game : "falling");
   const refreshAccess=()=>{
-    if(!isDeveloperMode() && !["falling","asteroids","snake","maze","bubble","recall"].includes(recommendation.game)) {
+    if(!isDeveloperMode() && !["falling","asteroids","snake","maze","bubble","sirat","recall"].includes(recommendation.game)) {
       recommendation.game="falling";
       recommendation.reason="Practice visible word order with Ayah Blocks.";
       root.querySelector('.lab-recommendation p').textContent=recommendation.reason;
       root.querySelector('#lab-recommended').textContent="Ayah Blocks";
     }
-    root.querySelectorAll('[data-game]').forEach(b=>{const restricted=!['falling','asteroids','snake','maze','bubble'].includes(b.dataset.game)&&!isDeveloperMode();b.hidden=restricted;b.disabled=restricted;});
-    if(!['falling','asteroids','snake','maze','bubble'].includes(game)&&!isDeveloperMode())start('falling');
+    root.querySelectorAll('[data-game]').forEach(b=>{const restricted=!['falling','asteroids','snake','maze','bubble','sirat'].includes(b.dataset.game)&&!isDeveloperMode();b.hidden=restricted;b.disabled=restricted;});
+    if(!['falling','asteroids','snake','maze','bubble','sirat'].includes(game)&&!isDeveloperMode())start('falling');
   };
   globalThis.addEventListener('ayah-developer-mode',refreshAccess);
   start();

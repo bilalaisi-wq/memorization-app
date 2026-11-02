@@ -1,3 +1,5 @@
+import { siratRegistration } from "../puzzles/arcade/sirat/ui.js";
+import "../puzzles/arcade/sirat/sirat.css";
 import "../puzzles/arcade/bubble/bubble.css";
 import { bubbleRegistration } from "../puzzles/arcade/bubble/ui.js";
 import { scopedStorage } from "../learner/profile-storage.js";
@@ -28,7 +30,7 @@ import "../puzzles/arcade/asteroids/asteroids.css";
 import "./quest.css";
 export function questArcadeRegistry() {
   const registry = createRegistry();
-  [mazeRegistration, snakeRegistration, asteroidsRegistration, bubbleRegistration].forEach((g) =>
+  [mazeRegistration, snakeRegistration, asteroidsRegistration, bubbleRegistration, siratRegistration].forEach((g) =>
     registry.register(g),
   );
   return registry;

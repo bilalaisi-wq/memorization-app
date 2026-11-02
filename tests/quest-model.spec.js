@@ -176,7 +176,7 @@ test("future/corrupt data, failed writes and account changes cannot reset or ack
 });
 
 test("planned arcade games are normalized to fallback practice and never become launch targets", async () => {
-  for (const game of ["bridge", "sirat", "unknown"]) {
+  for (const game of ["bridge", "unknown"]) {
     const map = await createCampaignMap({ ...options(), game });
     expect(map.game).toBe(null);
     expect(map.checkpoints.find((c) => c.type === "arcade").game).toBe(null);

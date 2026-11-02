@@ -3,7 +3,7 @@ export const arcadeGames = Object.freeze([
   ['asteroids', 'Ayah Space'], ['sirat', 'Sirat Quest'],
   ['maze', 'Memory Maze'], ['bubble', 'Ayah Bubble Burst'],
   ['snake', 'Ayah Serpent'], ['bridge', 'Bridge Builder'],
-].map(([id, title]) => Object.freeze({id, title, category: 'order', status: ['asteroids','snake','maze','bubble'].includes(id)?'available':'planned'})));
+].map(([id, title]) => Object.freeze({id, title, category: 'order', status: ['asteroids','snake','maze','bubble','sirat'].includes(id)?'available':'planned'})));
 export const arcadeIds = [...arcadeGames.map(g => g.id), 'arcade-example', 'falling'];
 export function createRegistry() {
   const entries = new Map();

@@ -1,3 +1,4 @@
+import "./puzzles/arcade/sirat/sirat.css";
 import "./puzzles/arcade/bubble/bubble.css";
 import {isDeveloperMode} from "./developer/access.js";
 import {previewSurahs,loadDeveloperChapter,authorizeChapterAudio,clearPrivateAudio} from "./content/developer-library.js";
