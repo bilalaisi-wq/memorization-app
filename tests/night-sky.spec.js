@@ -16,9 +16,6 @@ const night = (page) =>
     appearance,
   );
 async function chooser(page) {
-  await (await menu(page))
-    .getByRole("button", { name: "Encouragement settings", exact: true })
-    .click();
   await page.getByRole("button", { name: "Choose theme", exact: true }).click();
 }
 function retainedFixture() {
@@ -63,23 +60,23 @@ test("Simple remains default and preview/cancel/apply/reload preserve games and 
   await page.locator('[data-theme-choice="night-sky"]').click();
   await expect(page.locator(".sky-view")).toBeVisible();
   await page.keyboard.press("Escape");
-  await page.locator(".experience-dialog [data-close]").click();
+  await page.locator("[data-header-theme]").evaluate(n=>n.blur());
   await expect(page.locator("html")).toHaveAttribute("data-theme", "simple");
   expect((await page.screenshot({ fullPage: true })).equals(before)).toBe(true);
   await chooser(page);
   await page.locator('[data-theme-choice="night-sky"]').click();
   await page.locator("[data-appearance-apply]").click();
-  await page.locator(".experience-dialog [data-close]").click();
+  await page.locator("[data-header-theme]").evaluate(n=>n.blur());
   await chooser(page);
   await page.locator('[data-theme-choice="simple"]').click();
   await page.locator("[data-appearance-apply]").click();
-  await page.locator(".experience-dialog [data-close]").click();
+  await page.locator("[data-header-theme]").evaluate(n=>n.blur());
   await expect(page.locator(".sky-view")).toHaveCount(0);
   expect((await page.screenshot({ fullPage: true })).equals(before)).toBe(true);
   await chooser(page);
   await page.locator('[data-theme-choice="night-sky"]').click();
   await page.locator("[data-appearance-apply]").click();
-  await page.locator(".experience-dialog [data-close]").click();
+  await page.locator("[data-header-theme]").evaluate(n=>n.blur());
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "night-sky");
   expect(

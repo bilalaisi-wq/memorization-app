@@ -13,7 +13,7 @@ export async function createFlightController(manifest, { onEvent=()=>{}, slow=fa
   let index=0, roundIndex=0, engine, disposed=false;
   const gateway=memoryGateways?createGatewaySession(canonical,{onEvent:e=>onEvent({...e,missionId:canonical.id,sourceHash:canonical.sourceHash})}):null;
   let stageGates=0;
-  const checkpoints=new Set();
+  const checkpoints=new Set(),scoreReceipts=new Set();let arcadeScore=0;
   function mount() {
     stageGates=0;
     const factory=pickupMode?createFlowRunner:createRunner;
@@ -24,8 +24,11 @@ export async function createFlightController(manifest, { onEvent=()=>{}, slow=fa
           if(checkpoints.has(event.checkpointId))return;
           checkpoints.add(event.checkpointId);
         }
+        const receipt=event.scoreReceipt?`${index}:${roundIndex}:${event.scoreReceipt}`:null;
+        const awardedPoints=receipt&&!scoreReceipts.has(receipt)&&Number.isSafeInteger(event.points)&&event.points>0?event.points:0;
+        if(awardedPoints){scoreReceipts.add(receipt);arcadeScore+=awardedPoints;}
         const targetIndex=event.targetRef?canonical.refs.indexOf(event.targetRef):-1;
-        onEvent({...event,...(targetIndex>=0?{fromRef:event.kind!=='ayah'&&(event.kind==='chunk'?event.unitId.split(':').at(-1).split('-')[0]!=='0':!event.unitId.endsWith(':0'))?event.targetRef:targetIndex?canonical.refs[targetIndex-1]:null}:{}),missionId:canonical.id,stageIndex:index,roundIndex,roundCount,completedCheckpoints:[...checkpoints]});
+        onEvent({...event,awardedPoints,...(targetIndex>=0?{fromRef:['word','chunk'].includes(event.kind)&&(event.kind==='chunk'?event.unitId.split(':').at(-1).split('-')[0]!=='0':!event.unitId.endsWith(':0'))?event.targetRef:targetIndex?canonical.refs[targetIndex-1]:null}:{}),missionId:canonical.id,stageIndex:index,roundIndex,roundCount,completedCheckpoints:[...checkpoints]});
       }});
   }
   mount();
@@ -50,7 +53,7 @@ export async function createFlightController(manifest, { onEvent=()=>{}, slow=fa
         if(snap.elapsed>=wave.arrival+1){engine.pause('Safe orbit — memory gateway');gateway.enter(index);}
       }
     },
-    getSnapshot:()=>({...engine.getSnapshot(),status:gateway&&gateway.getSnapshot().state!=='idle'&&gateway.getSnapshot().state!=='disposed'?'gateway':engine.getSnapshot().status,gateway:gateway?.getSnapshot()||null,stageIndex:index,stageCount:canonical.stages.length,roundIndex,roundCount,completedCheckpoints:[...checkpoints],routeComplete:roundIndex===roundCount-1&&index===canonical.stages.length-1&&engine.getSnapshot().status==='checkpoint'&&(!gateway||gateway.getSnapshot().completed.length===canonical.refs.length)}),
+    getSnapshot:()=>({...engine.getSnapshot(),status:gateway&&gateway.getSnapshot().state!=='idle'&&gateway.getSnapshot().state!=='disposed'?'gateway':engine.getSnapshot().status,gateway:gateway?.getSnapshot()||null,arcadeScore,stageIndex:index,stageCount:canonical.stages.length,roundIndex,roundCount,completedCheckpoints:[...checkpoints],routeComplete:roundIndex===roundCount-1&&index===canonical.stages.length-1&&engine.getSnapshot().status==='checkpoint'&&(!gateway||gateway.getSnapshot().completed.length===canonical.refs.length)}),
     nextStage(){
       if(disposed||engine.getSnapshot().status!=='checkpoint'||gateway?.remaining(index)>0||index>=canonical.stages.length-1&&roundIndex>=roundCount-1)return false;
       engine.dispose();if(roundIndex<roundCount-1)roundIndex++;else{index++;roundIndex=0;}mount();engine.start();return true;

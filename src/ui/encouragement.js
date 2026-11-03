@@ -1,4 +1,3 @@
-import { mountAppearanceSettings } from "../themes/appearance.js";
 import { esc } from "./dom.js";
 export const EXPERIENCE_KEY = "ayah-experience-v1";
 let prefs = { sound: true, motion: true, volume: 0.25 },
@@ -199,7 +198,6 @@ export function showFeedbackSettings() {
   const dialog = document.createElement("dialog");
   dialog.className = "experience-dialog";
   dialog.innerHTML = `<button class="text-button" data-close>Close ×</button><h2>Encouragement settings</h2><p>Choose your success sound and animations. These settings never change your learning progress.</p><label><input id="success-sound" type="checkbox" ${prefs.sound ? "checked" : ""}> Play a gentle success sound</label><label>Volume<input id="success-volume" type="range" min="0" max="1" step=".05" value="${prefs.volume}"></label><label><input id="experience-motion" type="checkbox" ${prefs.motion ? "checked" : ""}> Gentle celebrations and transitions</label><p>Reduced-motion preferences are always respected. Sounds and celebrations stop when recitation or recording begins.</p><label>Your encouragement sound<input id="success-upload" type="file" accept="audio/*"></label><p id="success-file">${custom ? esc(custom.name) : "Built-in chime"}</p><p>Upload an audio clip up to 5 MB and 10 seconds. It stays in this browser and is not uploaded to a server.</p><button class="text-button" id="reset-success-sound">Restore default sound</button><button class="primary small" id="preview-success">Preview encouragement</button><p data-settings-status role="status"></p>`;
-  mountAppearanceSettings(dialog);
   document.body.append(dialog);
   dialog.showModal();
   const status = dialog.querySelector("[data-settings-status]");

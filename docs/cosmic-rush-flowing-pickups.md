@@ -12,7 +12,7 @@ Revision Lab → Cosmic Rush → mission briefing → choose **Pickup style**:
 | Word by word | Every canonical word of every selected ayah, in order. |
 | Whole ayahs | Complete, original ayah texts on wider staggered ribbons. |
 
-Steer with arrows, A/D, swipe or the on-screen lane buttons. If already in the desired lane, press **Space** or **Stay / collect** to commit to it. Each wave requires active lane input; an unattended animation cannot clear the route.
+Steer with arrows, A/D, swipe or the on-screen lane buttons. Flying through a pickup collects it immediately, including when the ship is already in the correct lane. No per-wave confirmation or second pass is required. Missed pickups still return. Start flight is an explicit learner action; running is supported recognition practice, never independent recall certification.
 
 Word and chunk waves have three simultaneous pickups, one per lane. Whole-ayah ribbons are staggered and explicitly label their physical lane so the complete Arabic can wrap at readable size on phones. Their reading time and spacing increase with text length. Ordinary unlabeled asteroids arrive separately and independently of the correct lane; the answer cannot be inferred from asteroid placement or pickup color.
 
@@ -49,8 +49,22 @@ Full Arabic remains DOM text with `lang="ar"`, RTL layout, the existing Quran fo
 ## Validation
 
 - Every free surah: canonical word reconstruction, exact whole-ayah text, complete coverage and authentic distinct distractors.
-- Real collision choices, retained progress, separate motor/selection errors, repeated required pieces, idle-input prevention and pause/disposal.
+- Real collision choices, retained progress, separate motor/selection errors, repeated required pieces, first-pass automatic contact and pause/disposal.
 - Browser keyboard steering, moving Quran capsules, no star pickups, no default quiz interruptions, mobile ribbons, full-ayah audio pause/cleanup and fail-closed assistance protection.
 - Optional untimed review, cross-stage progression and old memory/gateway records remain covered by the existing tests.
 
 All 55 selected Cosmic Rush, shared arcade framework, Snake and Falling Words regression cases passed across the completed runs and focused reruns. The four-round UI assertion was corrected to count distinct rounds, since word-only phases can record multiple pickups per round; its focused rerun passed. The mix-phase model test also passed. Production build and `git diff --check` passed. This is a focused regression verification, not the full application suite.
+
+## Blaster, boost and points
+
+**J / Blaster** fires a real upward projectile from the ship, with a 250 ms cooldown and at most eight active bolts. Bolts collide only with ordinary unlabeled asteroids. Quran pickups are never shot, fragmented or rewritten. Asteroids have a brief ring effect when hit. A shot is not a memory assessment.
+
+Hold **Shift / B / the Boost button** for 1.65× environmental travel speed. Boost fuel lasts two seconds and recharges at 0.45 seconds of fuel per second of normal flight. Release to stop boosting. Pause, recovery, stage completion and disposal release boost; pausing does not consume fuel. On touch devices, a second finger can steer while the primary finger holds boost. Listening and opening the separate theme dialog pause the flight.
+
+Correct normal pickups earn 20 arcade points; correct boosted words, chunks or ayahs earn 40 and a brief eight-star burst around the ship. Wrong pickups receive neither bonus nor star burst. Destroyed asteroids earn 10 arcade points. Point receipts are limited to one per canonical unit or per asteroid slot for the current target and revision round. Repeating a missed wave or restarting a round cannot farm mission points. The mission HUD retains the total across rounds and stages; the existing practice ledger stores the awarded point metadata, boost flag and motor-defense evidence separately from memory errors.
+
+A destroyed asteroid can also award **2 supplementary XP**, and a correct boosted pickup **4 supplementary XP**, through the existing lab reward store. Stable day/mission/stage/round/action receipts deduplicate replay and reload. Existing per-ayah/action, mode/day, cooldown and overall daily caps remain in force. XP goes through the existing opt-in leaderboard publisher; participation/privacy settings are unchanged. Arcade score remains separate from XP, stars, mastery and FSRS. Account checks before and after asynchronous receipt hashing prevent awarding another signed-in profile. Raw audio and private profile content are not involved.
+
+Reduced-motion settings replace star expansion with a stationary, brief fade. Burst effects have no Quran text and do not add sounds over recitation. The Theme button now lives in the top-right header beside XP and ayahs practiced. It opens the existing profile-aware preview/cancel/apply dialog; Encouragement settings retains sound and celebration preferences only.
+
+Validation for this addition includes first contact in all pickup kinds, consecutive same-lane collection, blaster motion/cooldown and text safety, boost fuel and acceleration, wrong boosted selections, visible mobile star bursts, capped/idempotent XP, account isolation, mission point deduplication, existing round progression, header appearance persistence, and keyboard/touch lifecycle cleanup. Final verification covered 75 distinct focused cases across the completed runs and reruns: combat/boost/first-pass collection, browser touch/keyboard controls, existing flow and gateway models, shared arcade/Snake/Falling Words, appearance, encouragement, rewards and opt-in publishing. The production build and `git diff --check` passed. This does not represent a run of the full application test suite.

@@ -37,8 +37,7 @@ test('active collisions collect words in order, wrong choices repeat without era
   const result=pilot(g);expect(result.collected).toEqual(units.map(u=>u.id));expect(result.completedAyahs).toEqual(['1:3']);
   expect(events.find(e=>e.type==='runner:pickup-mistake').category).toBe('observed-flow-selection');
 });
-test('idle animation cannot win, all pickup styles remain solvable and pause/retry preserve earned sequence',()=>{
-  const idle=createFlowRunner({units:createFlowUnits(['1:3']),seed:5,stageId:'idle'});idle.start();tick(idle,30);expect(idle.getSnapshot().cursor).toBe(0);
+test('all pickup styles remain solvable and pause/retry preserve earned sequence',()=>{
   for(const mode of ['words','ayahs','mixed']){
     const game=createFlowRunner({units:createFlowUnits(['112:1','112:2'],mode),seed:31,stageId:mode,slow:true});game.start();
     const first=game.getSnapshot();game.pause();tick(game,4);expect(game.getSnapshot().elapsed).toBe(first.elapsed);game.resume();

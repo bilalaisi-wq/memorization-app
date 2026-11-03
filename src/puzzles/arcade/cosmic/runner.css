@@ -43,3 +43,23 @@
 .cosmic-rush .flow-review-option {display:flex;align-items:center;gap:12px;}
 .cosmic-rush .flow-review-option input {width:24px;min-height:24px;}
 @media(max-width:480px){.cosmic-rush .runner-field.runner-flow:not(.runner-orbit){min-height:600px;}.cosmic-rush .star-runner .runner-controls{position:sticky;bottom:4px;z-index:6;background:#131d38;padding:8px;border-radius:12px;}}
+.cosmic-rush .runner-bolt {height:22px;min-width:5px;background:#8cfff5;border-radius:6px;box-shadow:0 0 12px #52f5e1;}
+.cosmic-rush .runner-burst {aspect-ratio:1;border:3px solid #ffc96d;border-radius:50%;background:#ffc75a33;box-shadow:0 0 20px #ffcb6266;}
+.cosmic-rush .runner-boosting .runner-thruster {transform:scaleY(1.8);background:linear-gradient(#abfaff,#8674ff,transparent);}
+.cosmic-rush .runner-boosting .runner-ship {filter:drop-shadow(0 0 12px #75deff);}
+.cosmic-rush .runner-boost-meter {display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:10px 0;color:#c7d9ed;font-size:13px;}
+.cosmic-rush .runner-boost-meter label {display:flex;gap:8px;align-items:center;}
+.cosmic-rush .runner-boost-meter progress {width:100px;accent-color:#8bdeee;}
+.cosmic-rush [data-flight-boost] {touch-action:none;user-select:none;}
+.cosmic-rush [data-flight-boost][aria-pressed=true] {background:#dfc16c;}
+@media(prefers-reduced-motion:reduce){.cosmic-rush .runner-boosting .runner-thruster{transform:none;}}
+
+.cosmic-rush .runner-starburst {aspect-ratio:1;pointer-events:none;z-index:4;animation:runner-starburst .8s ease-out forwards;}
+.cosmic-rush .runner-starburst i {position:absolute;left:50%;top:50%;font-style:normal;font-size:28px;color:#ffe28c;text-shadow:0 0 10px #ffd96d;transform:rotate(var(--ray)) translateY(-65px) rotate(calc(-1 * var(--ray)));}
+@keyframes runner-starburst {from{opacity:1;scale:.3;}to{opacity:0;scale:1.3;}}
+@media(prefers-reduced-motion:reduce){.cosmic-rush .runner-starburst{animation:runner-starburst-still .8s linear forwards;}.cosmic-rush .runner-starburst i{transform:rotate(var(--ray)) translateY(-50px);}}
+.cosmic-rush .runner-reduced .runner-starburst {animation:runner-starburst-still .8s linear forwards;}
+@keyframes runner-starburst-still {0%,70%{opacity:1;}100%{opacity:0;}}
+
+:root[data-celestial-motion="reduced"] .cosmic-rush .runner-starburst {animation:runner-starburst-still .8s linear forwards;}
+.cosmic-rush .runner-boosting .runner-thruster {height:90%;}

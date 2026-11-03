@@ -156,6 +156,8 @@ export async function saveAppearance(value) {
   return "Appearance saved on this device.";
 }
 export function openAppearance() {
+  if(document.querySelector(".appearance-dialog"))return;
+  window.dispatchEvent(new Event("ayah-study-overlay"));
   const original = appearance(),
     dialog = document.createElement("dialog");
   dialog.className = "appearance-dialog";
