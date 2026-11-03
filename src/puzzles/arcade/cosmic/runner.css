@@ -1,0 +1,32 @@
+.cosmic-rush .runner-heading,.cosmic-rush .runner-hud { display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center; }
+.cosmic-rush .runner-hud { font-size:15px;color:#e0edff;padding:15px 0; }
+.cosmic-rush .star-runner>progress { width:100%;height:8px;accent-color:#84eee0;margin-bottom:16px; }
+.cosmic-rush .runner-field { position:relative;width:100%;max-width:600px;aspect-ratio:5/6;margin:auto;isolation:isolate;overflow:hidden;border:1px solid #a1a7e977;border-radius:20px;background:#080e24;touch-action:none; }
+.cosmic-rush .runner-nebula { position:absolute;inset:-60%;background:radial-gradient(ellipse at 30% 40%,#6b36a063,transparent 40%),radial-gradient(ellipse at 70% 55%,#126e8544,transparent 45%);transform:translate(var(--flight-camera,0px),calc(var(--flight-scroll,0px)*.08)); }
+.cosmic-rush .runner-spark-field { position:absolute;inset:0;background-image:radial-gradient(circle,#c3d4ff 1px,transparent 1.6px),radial-gradient(circle,#7987da 1px,transparent 1.5px);background-size:97px 113px,63px 89px;background-position:20px var(--flight-scroll,0px),45px calc(var(--flight-scroll,0px)*.4);opacity:.75; }
+.cosmic-rush .runner-lanes { position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);margin:0 5%; }
+.cosmic-rush .runner-lanes i { border-right:1px dashed #718acc33; }
+.cosmic-rush .runner-lanes i:first-child { border-left:1px dashed #718acc33; }
+.cosmic-rush .runner-ship { position:absolute;left:50%;top:82.6389%;width:8%;height:10%;transform:translate(-50%,-50%) rotate(var(--flight-bank,0deg));z-index:3; }
+.cosmic-rush .runner-ship svg { position:relative;width:100%;height:100%;filter:drop-shadow(0 0 5px #70d9ed); }
+.cosmic-rush .runner-thruster { position:absolute;top:80%;left:31%;width:38%;height:55%;border-radius:20% 20% 70% 70%;background:linear-gradient(#fff6b8,#64dbff 40%,#6c58ff00);transform-origin:top;animation:runner-thrust .15s alternate infinite; }
+.cosmic-rush .runner-shield { position:absolute;inset:-30% -45%;border:2px solid #73eade66;border-radius:50%;box-shadow:inset 0 0 15px #57dfed22; }
+.cosmic-rush .runner-invulnerable .runner-shield { border-color:#ffc978;box-shadow:0 0 25px #ffd89399,inset 0 0 15px #ffa93388; }
+.cosmic-rush .runner-hit { box-shadow:inset 0 0 50px #ffbc5e66; }
+.cosmic-rush .runner-object { position:absolute;aspect-ratio:1;transform:translate(-50%,-50%); }
+.cosmic-rush .runner-asteroid { border-radius:42% 58% 38% 55%;background:radial-gradient(circle at 35% 30%,#4c5176 0 13%,transparent 14%),radial-gradient(circle at 67% 60%,#4a4b6d 0 18%,transparent 19%),linear-gradient(135deg,#b0a5bb,#696580 60%,#383854);border:2px solid #bcb1c677;box-shadow:3px 5px 12px #0007; }
+.cosmic-rush .runner-star { display:grid;place-items:center;color:#ffe5a5;font-size:clamp(20px,5vw,40px);filter:drop-shadow(0 0 10px #ffd57388); }
+.cosmic-rush .runner-overlay { position:absolute;z-index:5;inset:20% 6%;align-content:center;text-align:center;border-radius:20px;padding:22px;background:#111831f2;border:1px solid #a2a4e0; }
+.cosmic-rush .runner-overlay h4 { font-size:clamp(22px,4vw,32px);color:#f3f2ff;margin:0; }
+.cosmic-rush .runner-controls { display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:20px; }
+.cosmic-rush .runner-controls button { min-width:100px;min-height:52px; }
+.cosmic-rush .runner-help { font-size:14px; }
+.cosmic-rush .runner-reduced .runner-nebula { transform:none; }
+.cosmic-rush .runner-reduced .runner-spark-field { background-position:20px 0,45px 0; }
+.cosmic-rush .runner-reduced .runner-thruster { animation:none; }
+@keyframes runner-thrust { to {transform:scaleY(.7);opacity:.8;} }
+@media(prefers-reduced-motion:reduce){.cosmic-rush .runner-thruster {animation:none;}}
+@media(max-width:480px){.cosmic-rush .runner-overlay {inset:8% 3%;padding:16px;} .cosmic-rush .runner-overlay p {font-size:14px;line-height:1.4;} .cosmic-rush .runner-controls {gap:8px;} .cosmic-rush .runner-controls button{flex:1;min-width:90px;padding:10px;} .cosmic-rush .runner-hud {font-size:13px;} }
+
+.cosmic-rush .star-runner button.cosmic-primary { color:#082e34; }
+.cosmic-rush .star-runner:not([data-flight-state="running"]) .runner-thruster { animation-play-state:paused; opacity:.3; }

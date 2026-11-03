@@ -1,0 +1,26 @@
+.cosmic-rush .cosmic-memory-gateway { border:1px solid #8d9edd;border-radius:18px;padding:clamp(16px,3vw,28px);margin:20px 0;background:#131c39;color:#f1f0ff; }
+.cosmic-rush .cosmic-memory-gateway h4 { color:#fff2c2;font-size:24px;line-height:1.4; }
+.cosmic-rush .gateway-arabic { display:block;font-family:Uthmanic,serif;font-size:clamp(26px,4vw,34px);line-height:2.05;white-space:normal;overflow-wrap:normal;word-break:normal;text-align:right;color:#fff; }
+.cosmic-rush .gateway-choices { display:grid;gap:14px;margin:20px 0; }
+.cosmic-rush .gateway-choice { border:2px solid transparent;padding:10px;border-radius:16px; }
+.cosmic-rush .gateway-choice>button:first-child { display:block;width:100%;text-align:left; }
+.cosmic-rush .gateway-selected { border-color:#92f1df;box-shadow:0 0 16px #92f1df22; }
+.cosmic-rush .gateway-preceding,.cosmic-rush .gateway-hint { padding:16px;border-radius:14px;background:#253257;margin:18px 0; }
+.cosmic-rush .gateway-repair { border-left:4px solid #ffe19b;padding:14px;background:#3d3042;margin:20px 0; }
+.cosmic-rush .cosmic-memory-gateway button { margin:6px 8px 6px 0;min-height:48px;max-width:100%;white-space:normal; }
+.cosmic-rush .cosmic-memory-gateway button.cosmic-primary { color:#082e34; }
+.cosmic-rush .gateway-audio-controls { display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:20px; }
+.cosmic-rush .gateway-constellation { color:#ffe19b;font-size:32px;animation:gateway-glow .7s ease-out; }
+.cosmic-rush .runner-portals { position:absolute;inset:12% 5% auto;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;z-index:2;pointer-events:none; }
+.cosmic-rush .runner-portal { text-align:center;aspect-ratio:1;border:2px solid #889de4;border-radius:50%;display:grid;place-items:center;color:#d6e1ff;font-size:24px;background:#28346399; }
+.cosmic-rush .runner-portal.is-selected { border-color:#95f4e3;box-shadow:0 0 18px #95f4e355; }
+.cosmic-rush .runner-orbit .runner-ship { transition:left .18s ease,top .3s ease; }
+.cosmic-rush .runner-orbit .runner-asteroid { opacity:.12; }
+.cosmic-rush .runner-orbit .runner-spark-field { opacity:.35; }
+.cosmic-rush .runner-route-open .runner-portal.is-selected { border-color:#ffe19b;box-shadow:0 0 25px #ffe19b88; }
+@keyframes gateway-glow { from{opacity:.3;transform:scale(.9)}to{opacity:1;transform:scale(1)} }
+@media(prefers-reduced-motion:reduce){.cosmic-rush .gateway-constellation {animation:none}.cosmic-rush .runner-orbit .runner-ship {transition:none;}}
+@media(max-width:480px){.cosmic-rush .runner-portals{gap:12px}.cosmic-rush .gateway-choice{padding:3px}.cosmic-rush .gateway-audio-controls{display:block}.cosmic-rush .gateway-arabic {font-size:28px}}
+
+.cosmic-rush .gateway-steering {position:sticky;bottom:8px;z-index:4;background:#17213e;padding:8px;border-radius:12px;display:flex;flex-wrap:wrap;justify-content:center;gap:6px;box-shadow:0 0 16px #080e24;}
+.cosmic-rush .runner-field.runner-orbit {aspect-ratio:5/2;max-width:600px;}
