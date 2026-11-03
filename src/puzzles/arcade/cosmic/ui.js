@@ -10,18 +10,18 @@ import { createFlightController } from '../../../quest/cosmic/controller.js';
 import { activeProfileId } from '../../../learner/profile-storage.js';
 import './runner.css';
 
-export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>{},slow=false,pickupMode='mixed',memoryGateways=false,isCurrent=()=>true}={}) {
+export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>{},slow=false,pickupMode='mixed',rounds=3,memoryGateways=false,isCurrent=()=>true}={}) {
   const owner=activeProfileId();
   let saveWarning='',exposureWarning='';const assistedRefs=new Set();
   const recorder=createGatewayRecorder(mission);
-  const game=await createFlightController(mission,{slow,pickupMode,memoryGateways,onEvent(event){
+  const game=await createFlightController(mission,{slow,pickupMode,rounds,memoryGateways,onEvent(event){
     try{recorder.record({...event,assisted:!!event.assisted||assistedRefs.has(event.targetRef)});}catch(error){saveWarning=error.message;}
     onEvent(event);
   }});
   if(!root.isConnected||activeProfileId()!==owner||!isCurrent()){game.dispose();return null;}
   const abort=new AbortController();
   let disposed=false,raf=0,last=0,lastStatus='',pointer=null,warmup=0;
-  root.innerHTML=`<section class="star-runner" aria-label="Star Runner flight"><div class="runner-heading"><div><span class="cosmic-eyebrow">COSMIC RUSH · STAR RUNNER</span><h3>Fly your constellation</h3></div><button class="cosmic-secondary" data-flight-exit>Return to mission</button></div><p>Steer into the next correct ayah or word piece. Avoid other authentic Quran pickups and ordinary asteroids. If already in the right lane, press Space or Stay / collect. Every required piece returns until collected.</p><div class="runner-hud"><span data-flight-stage></span><span data-shield></span><span data-stars></span></div><section class="runner-learning" aria-label="Your ayah sequence"><p data-flow-prompt></p><p data-flow-feedback role="status" aria-live="polite"></p><div data-flow-built class="flow-built" lang="ar" dir="rtl"></div><button class="cosmic-secondary" data-flow-listen>Listen to current ayah · pauses flight</button><button class="cosmic-secondary" data-flow-stop>Stop recitation</button><label>Recitation volume<input data-flow-volume type="range" min="0" max="100" value="50"></label></section><progress data-flight-progress max="1" value="0" aria-label="Flight stage progress"></progress><div class="runner-field" tabindex="0" role="group" aria-label="Three lane Quran flight. Left and Right arrows or A and D to steer. Space chooses your current lane. P or Escape pauses."><div class="runner-nebula" aria-hidden="true"></div><div class="runner-spark-field" aria-hidden="true"></div><div class="runner-lanes" aria-hidden="true"><i></i><i></i><i></i></div><div data-flight-objects aria-hidden="true"></div><div class="runner-ship" data-ship aria-hidden="true"><div class="runner-shield"></div><div class="runner-thruster"></div><svg viewBox="0 0 60 80"><path d="M30 4 48 49 58 67 38 61 30 72 22 61 2 67 12 49Z" fill="#c9f4ff" stroke="#80efe5" stroke-width="2"/><path d="M30 12 38 45 30 52 22 45Z" fill="#7478ef"/><path d="M12 49 22 55 16 63 4 66Z M48 49 38 55 44 63 56 66Z" fill="#7c80df"/></svg></div><div class="runner-portals" data-runner-portals hidden aria-hidden="true"><div class="runner-portal">1</div><div class="runner-portal">2</div><div class="runner-portal">3</div></div><div class="runner-overlay" data-flight-overlay></div></div><div class="runner-controls"><button class="cosmic-primary" data-steer="-1" aria-label="Steer left">← Left lane</button><button class="cosmic-secondary" data-flow-stay>Stay / collect</button><button class="cosmic-secondary" data-flight-pause>Pause</button><button class="cosmic-primary" data-steer="1" aria-label="Steer right">Right lane →</button><button class="cosmic-secondary" data-flight-restart>Restart stage</button></div><p data-gateway-save-warning role="status"></p><p data-flight-status role="status" aria-live="polite"></p><p class="runner-help">Arrow keys / A D · swipe left or right · P / Escape: pause. Collect the words or ayahs in canonical order. Wrong text repeats the same target and never costs shields. Asteroid collisions are motor errors. Word pieces are visual study units, not approved recitation stops. Flight checkpoints last until you leave this flight.</p></section>`;
+  root.innerHTML=`<section class="star-runner" aria-label="Star Runner flight"><div class="runner-heading"><div><span class="cosmic-eyebrow">COSMIC RUSH · STAR RUNNER</span><h3>Fly your constellation</h3></div><button class="cosmic-secondary" data-flight-exit>Return to mission</button></div><p>Steer into the next correct ayah, 2–3-word chunk or single word. Avoid other authentic Quran pickups and ordinary asteroids. If already in the right lane, press Space or Stay / collect. Every required piece returns until collected.</p><div class="runner-hud"><span data-flight-stage></span><span data-flight-round></span><span data-shield></span><span data-stars></span></div><section class="runner-learning" aria-label="Your ayah sequence"><p data-flow-prompt></p><p data-flow-feedback role="status" aria-live="polite"></p><div data-flow-built class="flow-built" lang="ar" dir="rtl"></div><button class="cosmic-secondary" data-flow-listen>Listen to current ayah · pauses flight</button><button class="cosmic-secondary" data-flow-stop>Stop recitation</button><label>Recitation volume<input data-flow-volume type="range" min="0" max="100" value="50"></label></section><progress data-flight-progress max="1" value="0" aria-label="Flight stage progress"></progress><div class="runner-field" tabindex="0" role="group" aria-label="Three lane Quran flight. Left and Right arrows or A and D to steer. Space chooses your current lane. P or Escape pauses."><div class="runner-nebula" aria-hidden="true"></div><div class="runner-spark-field" aria-hidden="true"></div><div class="runner-lanes" aria-hidden="true"><i></i><i></i><i></i></div><div data-flight-objects aria-hidden="true"></div><div class="runner-ship" data-ship aria-hidden="true"><div class="runner-shield"></div><div class="runner-thruster"></div><svg viewBox="0 0 60 80"><path d="M30 4 48 49 58 67 38 61 30 72 22 61 2 67 12 49Z" fill="#c9f4ff" stroke="#80efe5" stroke-width="2"/><path d="M30 12 38 45 30 52 22 45Z" fill="#7478ef"/><path d="M12 49 22 55 16 63 4 66Z M48 49 38 55 44 63 56 66Z" fill="#7c80df"/></svg></div><div class="runner-portals" data-runner-portals hidden aria-hidden="true"><div class="runner-portal">1</div><div class="runner-portal">2</div><div class="runner-portal">3</div></div><div class="runner-overlay" data-flight-overlay></div></div><div class="runner-controls"><button class="cosmic-primary" data-steer="-1" aria-label="Steer left">← Left lane</button><button class="cosmic-secondary" data-flow-stay>Stay / collect</button><button class="cosmic-secondary" data-flight-pause>Pause</button><button class="cosmic-primary" data-steer="1" aria-label="Steer right">Right lane →</button><button class="cosmic-secondary" data-flight-restart>Restart stage</button></div><p data-gateway-save-warning role="status"></p><p data-flight-status role="status" aria-live="polite"></p><p class="runner-help">Arrow keys / A D · swipe left or right · P / Escape: pause. Collect the words or ayahs in canonical order. Wrong text repeats the same target and never costs shields. Asteroid collisions are motor errors. Words and chunks are visual study units, not approved recitation stops. Flight checkpoints last until you leave this flight.</p></section>`;
   const view=root.querySelector('.star-runner'), field=root.querySelector('.runner-field'), ship=root.querySelector('[data-ship]'), layer=root.querySelector('[data-flight-objects]'), overlay=root.querySelector('[data-flight-overlay]');
   const flowAudio=createAudioManager({owner:'cosmic-flow',initialVolume:readLabVolume(profileStorage)});
   let exposureWave='',builtKey='',flowAudioToken=0;
@@ -32,7 +32,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
     let s=game.getSnapshot(),exposureBlocked=false;
     field.classList.toggle('runner-flow',!!s.flow);
     if(s.flow){
-      view.dataset.expectedUnit=s.unit?.id||'';view.dataset.waveId=s.waveId||'';
+      view.dataset.round=String(s.roundIndex);view.dataset.expectedUnit=s.unit?.id||'';view.dataset.waveId=s.waveId||'';
       const builtRef=s.completedAyahs.at(-1);
       const exposed=[...s.objects.filter(o=>o.kind==='pickup').map(o=>o.unit.key),...(builtRef?[builtRef]:[])];
       const exposureKey=`${s.waveId}:${[...new Set(exposed)].join('|')}`;
@@ -41,11 +41,11 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
         catch(error){exposureBlocked=true;builtKey='';game.pause('Study assistance could not be saved. Export or recover progress, then resume.');s=game.getSnapshot();exposureWarning=error.message;}
       }
       if(exposureBlocked)root.querySelector('[data-flow-built]').textContent='';
-      root.querySelector('[data-flow-prompt]').textContent=s.unit?`${freeAyah(s.unit.key).name} · Ayah ${s.unit.key.split(':')[1]} · ${s.unit.kind==='word'?'Next word '+(s.unit.index+1):'Next ayah'} · ${s.cursor} / ${s.totalUnits} pieces collected`:'Stage sequence complete';
-      if(!exposureBlocked&&builtKey!==`${s.cursor}:${s.unit?.key}`){
-        builtKey=`${s.cursor}:${s.unit?.key}`;
+      root.querySelector('[data-flow-prompt]').textContent=s.unit?`${freeAyah(s.unit.key).name} · Ayah ${s.unit.key.split(':')[1]} · ${s.unit.kind==='ayah'?'Next ayah':s.unit.kind==='chunk'?'Next chunk · words '+(s.unit.index+1)+'–'+s.unit.endIndex:'Next word '+(s.unit.index+1)} · ${s.cursor} / ${s.totalUnits} pieces collected`:'Stage sequence complete';
+      if(!exposureBlocked&&builtKey!==`${s.stageIndex}:${s.roundIndex}:${s.cursor}:${s.unit?.key}`){
+        builtKey=`${s.stageIndex}:${s.roundIndex}:${s.cursor}:${s.unit?.key}`;
         const a=s.unit?freeAyah(s.unit.key):null;
-        root.querySelector('[data-flow-built]').textContent=a&&s.unit.kind==='word'?(s.unit.index?createFlowUnits([a.ref],'words').slice(0,s.unit.index).map(w=>w.text).join(' '):builtRef?freeAyah(builtRef).text:''):builtRef?freeAyah(builtRef).text:'';
+        root.querySelector('[data-flow-built]').textContent=a&&s.unit.kind!=='ayah'?(s.unit.index?createFlowUnits([a.ref],'words').slice(0,s.unit.index).map(w=>w.text).join(' '):builtRef?freeAyah(builtRef).text:''):builtRef?freeAyah(builtRef).text:'';
       }
     }
     root.querySelector('[data-flow-feedback]').textContent=s.flow?s.reason:'';
@@ -68,6 +68,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
     field.style.setProperty('--flight-camera',`${(300-s.x)*.025}px`);
     field.style.setProperty('--flight-bank',reduced.matches?'0deg':`${Math.max(-10,Math.min(10,( [120,300,480][s.lane]-s.x)*.08))}deg`);
     root.querySelector('[data-flight-stage]').textContent=`Stage ${s.stageIndex+1} / ${s.stageCount}`;
+    root.querySelector('[data-flight-round]').textContent=`Round ${s.roundIndex+1} / ${s.roundCount} · ${Math.round((s.speedMultiplier||1)*100)}% speed · ${s.asteroidCount||1} asteroid${s.asteroidCount===1?'':'s'} / wave`;
     root.querySelector('[data-shield]').textContent=`Shield ${'◈'.repeat(s.shield)}${'◇'.repeat(3-s.shield)} · ${s.shield}/3`;
     root.querySelector('[data-stars]').textContent=s.flow?`${s.completedAyahs.length} ayahs connected · ${s.memoryMistakes} word/ayah selections to practise`:`★ ${s.stars} / 3 navigation stars`;
     root.querySelector('[data-flight-progress]').value=s.progress;
@@ -97,15 +98,15 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
       overlay.replaceChildren();
       const heading=document.createElement('h4'), message=document.createElement('p');heading.tabIndex=-1;
       heading.textContent=({ready:'Ready for launch?',running:'Flight active',gateway:'Safe orbit — memory gateway',paused:'Flight paused',checkpoint:'Safe checkpoint reached',recovery:'Let’s try that stage again'})[s.status]||'Flight ended';
-      message.textContent=s.reason||'Steer into the stars and out of the rocks. You control the ship.';
+      message.textContent=s.reason||'Steer into the correct Quran pieces and out of the rocks. You control the ship.';
       overlay.append(heading,message);
       const button=document.createElement('button');button.className='cosmic-primary';
       if(s.status==='ready'){button.textContent='Start flight';button.onclick=()=>send({type:'start'});}
       if(s.status==='paused'){button.textContent='Resume flight';button.onclick=()=>send({type:'resume'});}
       if(s.status==='recovery'){button.textContent='Retry · keep collected pieces';button.onclick=()=>send({type:s.flow?'retry':'restart'});}
       if(s.status==='checkpoint'){
-        message.textContent=s.routeComplete?'Ayah sequence collected. Your selected ayahs were covered. This is supported practice, not independent memorization mastery.':'Shield restored. Continue to the next flight stage when ready.';
-        button.textContent=s.routeComplete?'Fly this stage again':'Continue to next flight stage';button.onclick=()=>{if(s.routeComplete)send({type:'restart'});else{game.nextStage();last=0;warmup=3;paint();schedule();field.focus({preventScroll:true});}};
+        message.textContent=s.routeComplete?'Revision rounds complete. Your selected ayahs were covered. This is supported practice, not independent memorization mastery.':s.roundIndex<s.roundCount-1?`Round ${s.roundIndex+1} complete. Shield restored. Repeat this ayah set with slightly faster flight and one more asteroid per wave.`:'All rounds for this set complete. Shield restored. Continue to the next flight stage when ready.';
+        button.dataset.flightContinue='';button.textContent=s.routeComplete?'Fly this stage again':s.roundIndex<s.roundCount-1?`Continue to round ${s.roundIndex+2} / ${s.roundCount}`:'Continue to next flight stage';button.onclick=()=>{if(s.routeComplete)send({type:'restart'});else{game.nextStage();last=0;warmup=3;paint();schedule();field.focus({preventScroll:true});}};
       }
       if(s.status!=='disposed')overlay.append(button);
       root.querySelector('[data-flight-status]').textContent=heading.textContent;

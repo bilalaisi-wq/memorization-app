@@ -25,3 +25,13 @@ export async function flyTo(page,stop='checkpoint') {
   }
   await expect(page.locator('.star-runner')).toHaveAttribute('data-flight-state',stop);
 }
+
+export async function flyStageRounds(page){
+  for(let i=0;i<10;i++){
+    await flyTo(page);
+    const next=page.getByRole('button',{name:/^Continue to round/});
+    if(!await next.count())return;
+    await next.click();
+  }
+  throw Error('Round limit exceeded');
+}

@@ -2,21 +2,23 @@ import {WORLD} from './runner.js';
 import {flowChoices} from '../../../quest/cosmic/flow-content.js';
 const clone=x=>structuredClone(x);
 // Arabic pickups are intact capsules, separate from unlabeled environmental rocks.
-export function createFlowRunner({units,seed=1,stageId,difficulty=0,slow=false,onEvent=()=>{}}) {
+export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0,slow=false,onEvent=()=>{}}) {
   if(!units?.length)throw Error('Verified flow units required.');
+  if(!Number.isInteger(roundIndex)||roundIndex<0||roundIndex>9)throw Error('Invalid revision round.');
+  const speedMultiplier=1+roundIndex*.07,asteroidCount=1+roundIndex;
   let state,wave,round=0;
   function emit(type,detail={}){onEvent({type:`runner:${type}`,stageId,elapsed:state.elapsed,...detail});}
   function spawn(){
     const target=units[state.cursor],choices=flowChoices(target,(seed+round*7919+state.cursor*101)>>>0);
-    const ribbon=target.kind==='ayah',level=Math.min(6,difficulty),speed=(ribbon?(slow?32:42):(slow?65:85))+level*2;
+    const ribbon=target.kind==='ayah',level=Math.min(6,difficulty),speed=((ribbon?(slow?32:42):(slow?65:85))+level*2)*speedMultiplier;
     const longest=Math.max(...choices.map(c=>c.text.split(/\s+/).length));
-    const readTime=ribbon?Math.max(slow?8:6,longest*.65):slow?7:5.8;
+    const readTime=Math.max((ribbon?Math.max(slow?8:6,longest*.65):slow?7:5.8)/speedMultiplier,2.5+(asteroidCount-1)*1.1+1.8);
     const spacing=ribbon?Math.max(5,longest*.5):0;
     const start=state.elapsed;
-    wave={id:`flow:${round++}`,start,ribbon,choices,armed:false,objects:choices.map((c,lane)=>({id:`flow:${round-1}:${lane}`,kind:'pickup',unit:c,lane,x:WORLD.lanes[lane],radius:25,arrival:start+readTime+lane*spacing})),resolved:false};
+    wave={id:`${stageId}:${roundIndex}:${seed}:flow:${round++}`,start,ribbon,choices,armed:false,objects:choices.map((c,lane)=>({id:`${stageId}:${roundIndex}:${seed}:flow:${round-1}:${lane}`,kind:'pickup',unit:c,lane,x:WORLD.lanes[lane],radius:25,arrival:start+readTime+lane*spacing})),resolved:false};
     // Rock positions are independent of the correct lane and clear well before text arrives.
     const rockLane=(seed+round*7+state.cursor)%3;
-    wave.objects.push({id:`flow:${round-1}:rock`,kind:'asteroid',lane:rockLane,x:WORLD.lanes[rockLane],radius:29,arrival:start+2.5,drift:round%2?24:0});
+    for(let i=0;i<asteroidCount;i++){const lane=(rockLane+i)%3;wave.objects.push({id:`${stageId}:${roundIndex}:${seed}:flow:${round-1}:rock:${i}`,kind:'asteroid',lane,x:WORLD.lanes[lane],radius:29,arrival:start+2.5+i*1.1,drift:(round+i)%2?24:0});}
     wave.speed=speed;wave.end=Math.max(...wave.objects.map(o=>o.arrival))+1.2;
   }
   function reset(){state={status:'ready',stageId,elapsed:0,lane:1,x:300,shield:3,impact:0,invulnerable:0,motorErrors:0,memoryMistakes:0,cursor:0,collected:[],completedAyahs:[],laneChanges:0,reason:'',checkpointId:null};round=0;spawn();}
@@ -26,7 +28,7 @@ export function createFlowRunner({units,seed=1,stageId,difficulty=0,slow=false,o
     return wave.objects.map(o=>({...o,x:WORLD.lanes[o.lane]+(o.drift?Math.sin(state.elapsed*1.7)*o.drift:0),y:WORLD.shipY+(state.elapsed-o.arrival)*wave.speed,ribbon:wave.ribbon&&o.kind==='pickup'}))
       .filter(o=>!o.consumed&&o.y>=-300&&o.y<=WORLD.height+240);
   }
-  function snapshot(){return clone({...state,flow:true,unit:units[state.cursor]||null,totalUnits:units.length,objects:objects(),waveId:wave?.id,waves:[],nextSafeLane:null,progress:state.cursor/units.length,slow});}
+  function snapshot(){return clone({...state,flow:true,roundIndex,speedMultiplier,asteroidCount,unit:units[state.cursor]||null,totalUnits:units.length,objects:objects(),waveId:wave?.id,waves:[],nextSafeLane:null,progress:state.cursor/units.length,slow});}
   function finishWave(selected){
     const target=units[state.cursor];wave.resolved=true;
     wave.objects.forEach(o=>{o.consumed=true;});
@@ -35,7 +37,7 @@ export function createFlowRunner({units,seed=1,stageId,difficulty=0,slow=false,o
       if(target.last&&!state.completedAyahs.includes(target.key))state.completedAyahs.push(target.key);
       state.reason='Connection collected. Keep building the sequence.';
       emit('pickup-correct',{unitId:target.id,targetRef:target.key,selectedRef:selected.unit.key,selectedUnitId:selected.unit.id,kind:target.kind,ayahComplete:target.last,recognitionOnly:true});
-      if(state.cursor===units.length){state.status='checkpoint';state.shield=3;state.checkpointId=`${stageId}:flow-clear`;emit('checkpoint',{checkpointId:state.checkpointId,completedAyahs:[...state.completedAyahs],category:'supported-sequence-practice'});return;}
+      if(state.cursor===units.length){state.status='checkpoint';state.shield=3;state.checkpointId=`${stageId}:round:${roundIndex}:flow-clear`;emit('checkpoint',{checkpointId:state.checkpointId,completedAyahs:[...state.completedAyahs],category:'supported-sequence-practice'});return;}
     }else if(selected){
       state.memoryMistakes++;state.reason='That piece does not continue the sequence. The same target is returning.';
       emit('pickup-mistake',{unitId:target.id,targetRef:target.key,selectedRef:selected.unit.key,selectedUnitId:selected.unit.id,kind:target.kind,category:'observed-flow-selection'});

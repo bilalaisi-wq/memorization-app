@@ -48,7 +48,7 @@ test('idle animation cannot win, all pickup styles remain solvable and pause/ret
 });
 test('continuous controller needs every pickup before advancing and optionally reviews at stage end',async()=>{
   const m=await createMission({surahId:1,selection:'entire'}),g=await createFlightController(m,{pickupMode:'ayahs'});g.start();
-  expect(g.nextStage()).toBe(false);pilot(g);expect(g.nextStage()).toBe(true);pilot(g);expect(g.getSnapshot().routeComplete).toBe(true);
+  expect(g.nextStage()).toBe(false);for(let i=0;i<6;i++){pilot(g);expect(g.getSnapshot().routeComplete).toBe(i===5);expect(g.nextStage()).toBe(i<5);}
 });
 
 
@@ -57,10 +57,58 @@ test('word flow plus optional reviews preserve exact boundary evidence across st
   const data=new Map(),storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
   const m=await createMission({surahId:1,selection:'entire'}),recorder=createGatewayRecorder(m,{storage,getOwner:()=>null,runId:'boundaries'});
   const game=await createFlightController(m,{pickupMode:'words',memoryGateways:true,onEvent:e=>recorder.record(e)});
-  game.start();pilot(game);expect(game.nextStage()).toBe(true);pilot(game);expect(game.getSnapshot().routeComplete).toBe(true);
+  game.start();for(let i=0;i<6;i++){pilot(game);expect(game.nextStage()).toBe(i<5);}expect(game.getSnapshot().routeComplete).toBe(true);
   const run=JSON.parse(data.get(GATEWAY_KEY)).runs.boundaries;
   expect(run.completed).toEqual(m.refs);
   const words=run.events.filter(e=>e.type==='runner:pickup-correct'&&e.targetRef==='1:6');
   expect(words[0]).toMatchObject({unitId:'1:6:0',fromRef:'1:5',crossStage:true});
   expect(words[1]).toMatchObject({unitId:'1:6:1',fromRef:'1:6',crossStage:false});
+});
+
+test('mixed pickups target 5 chunks : 1 ayah : 4 words with lossless canonical coverage',()=>{
+  const refs=cosmicSurahs.flatMap(s=>s.verses.map(v=>`${s.id}:${v.id}`)),units=createFlowUnits(refs);
+  expect(createFlowUnits(refs)).toEqual(units);
+  const kinds=new Set(Array.from({length:10},(_,i)=>createFlowUnits(['1:1'],'mixed',i)[0].kind));
+  expect(kinds).toEqual(new Set(['chunk','word','ayah']));
+  const counts={chunk:0,ayah:0,word:0};
+  for(const unit of units){
+    counts[unit.kind]++;
+    if(unit.kind==='chunk'){
+      const words=createFlowUnits([unit.key],'words');
+      expect([2,3]).toContain(unit.endIndex-unit.index);
+      expect(unit.text).toBe(words.slice(unit.index,unit.endIndex).map(w=>w.text).join(' '));
+      expect(flowChoices(unit,17).filter(c=>c.id===unit.id)).toHaveLength(1);
+    }
+  }
+  const total=units.length;
+  for(const [kind,weight] of Object.entries({chunk:5,ayah:1,word:4}))expect(Math.abs(counts[kind]/total-weight/10)).toBeLessThan(.01);
+  for(const ref of refs){
+    const selected=units.filter(u=>u.key===ref);
+    expect(selected.map(u=>u.text).join(' ')).toBe(selected[0].kind==='ayah'?freeAyah(ref).text:createFlowUnits([ref],'words').map(w=>w.text).join(' '));
+    expect(selected.filter(u=>u.last)).toHaveLength(1);
+  }
+  const target=units.find(u=>u.kind==='chunk');
+  expect(()=>flowChoices({...target,endIndex:target.index+4},1)).toThrow();
+  expect(()=>flowChoices({...target,text:'invented'},1)).toThrow();
+});
+test('revision rounds enforce minimum, escalate safely and retain round evidence without duplicate receipts',async()=>{
+  const {createGatewayRecorder,GATEWAY_KEY}=await import('../src/quest/cosmic/gateway-store.js');
+  const mission=await createMission({surahId:112,selection:'custom',start:2,end:2});
+  for(const rounds of [1,2,11,3.5,NaN])await expect(createFlightController(mission,{pickupMode:'mixed',rounds})).rejects.toThrow();
+  const data=new Map(),storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
+  const recorder=createGatewayRecorder(mission,{storage,getOwner:()=>null,runId:'rounds'}),events=[];
+  const game=await createFlightController(mission,{pickupMode:'words',rounds:4,onEvent:e=>{events.push(e);recorder.record(e);}});
+  game.start();
+  for(let i=0;i<4;i++){
+    const snapshot=game.getSnapshot();expect(snapshot.roundIndex).toBe(i);expect(snapshot.roundCount).toBe(4);
+    expect(snapshot.asteroidCount).toBe(i+1);expect(snapshot.speedMultiplier).toBeCloseTo(1+i*.07);
+    const checkpoint=pilot(game);expect(checkpoint.routeComplete).toBe(i===3);
+    expect(game.nextStage()).toBe(i<3);
+  }
+  const run=JSON.parse(data.get(GATEWAY_KEY)).runs.rounds;
+  expect(new Set(run.events.map(e=>e.roundIndex))).toEqual(new Set([0,1,2,3]));
+  const count=run.events.length;events.filter(e=>e.type==='runner:pickup-correct').forEach(e=>recorder.record(e));
+  expect(JSON.parse(data.get(GATEWAY_KEY)).runs.rounds.events).toHaveLength(count);
+  expect(new Set(game.getSnapshot().completedCheckpoints).size).toBe(4);
+  game.dispose();expect(game.nextStage()).toBe(false);
 });

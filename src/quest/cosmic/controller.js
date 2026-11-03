@@ -5,17 +5,19 @@ import { createMission } from './mission.js';
 import { createRunner } from '../../puzzles/arcade/cosmic/runner.js';
 
 // Mission adapter: supported recognition checkpoints never imply independent recall or mastery.
-export async function createFlightController(manifest, { onEvent=()=>{}, slow=false, memoryGateways=false, pickupMode=null }={}) {
+export async function createFlightController(manifest, { onEvent=()=>{}, slow=false, memoryGateways=false, pickupMode=null, rounds=3 }={}) {
   const canonical=await createMission({surahId:manifest.surah,selection:'custom',start:manifest.first,end:manifest.last});
   if(JSON.stringify(manifest)!==JSON.stringify(canonical))throw Error('Mission configuration changed. Rebuild the briefing.');
-  let index=0, engine, disposed=false;
+  if(!Number.isInteger(rounds)||rounds<3||rounds>10)throw Error('Choose between 3 and 10 revision rounds.');
+  const roundCount=pickupMode?rounds:1;
+  let index=0, roundIndex=0, engine, disposed=false;
   const gateway=memoryGateways?createGatewaySession(canonical,{onEvent:e=>onEvent({...e,missionId:canonical.id,sourceHash:canonical.sourceHash})}):null;
   let stageGates=0;
   const checkpoints=new Set();
   function mount() {
     stageGates=0;
     const factory=pickupMode?createFlowRunner:createRunner;
-    engine=factory({...(pickupMode?{units:createFlowUnits(canonical.stages[index].refs,pickupMode)}:{}),stageId:canonical.stages[index].id,seed:parseInt(canonical.sourceHash.slice(0,8),16)+index,
+    engine=factory({...(pickupMode?{units:createFlowUnits(canonical.stages[index].refs,pickupMode,roundIndex),roundIndex}:{}),stageId:canonical.stages[index].id,seed:parseInt(canonical.sourceHash.slice(0,8),16)+index+roundIndex*3571,
       difficulty:index,slow,onEvent(event){
         if(disposed)return;
         if(event.type==='runner:checkpoint') {
@@ -23,7 +25,7 @@ export async function createFlightController(manifest, { onEvent=()=>{}, slow=fa
           checkpoints.add(event.checkpointId);
         }
         const targetIndex=event.targetRef?canonical.refs.indexOf(event.targetRef):-1;
-        onEvent({...event,...(targetIndex>=0?{fromRef:event.kind==='word'&&!event.unitId.endsWith(':0')?event.targetRef:targetIndex?canonical.refs[targetIndex-1]:null}:{}),missionId:canonical.id,stageIndex:index,completedCheckpoints:[...checkpoints]});
+        onEvent({...event,...(targetIndex>=0?{fromRef:event.kind!=='ayah'&&(event.kind==='chunk'?event.unitId.split(':').at(-1).split('-')[0]!=='0':!event.unitId.endsWith(':0'))?event.targetRef:targetIndex?canonical.refs[targetIndex-1]:null}:{}),missionId:canonical.id,stageIndex:index,roundIndex,roundCount,completedCheckpoints:[...checkpoints]});
       }});
   }
   mount();
@@ -48,10 +50,10 @@ export async function createFlightController(manifest, { onEvent=()=>{}, slow=fa
         if(snap.elapsed>=wave.arrival+1){engine.pause('Safe orbit — memory gateway');gateway.enter(index);}
       }
     },
-    getSnapshot:()=>({...engine.getSnapshot(),status:gateway&&gateway.getSnapshot().state!=='idle'&&gateway.getSnapshot().state!=='disposed'?'gateway':engine.getSnapshot().status,gateway:gateway?.getSnapshot()||null,stageIndex:index,stageCount:canonical.stages.length,completedCheckpoints:[...checkpoints],routeComplete:index===canonical.stages.length-1&&engine.getSnapshot().status==='checkpoint'&&(!gateway||gateway.getSnapshot().completed.length===canonical.refs.length)}),
+    getSnapshot:()=>({...engine.getSnapshot(),status:gateway&&gateway.getSnapshot().state!=='idle'&&gateway.getSnapshot().state!=='disposed'?'gateway':engine.getSnapshot().status,gateway:gateway?.getSnapshot()||null,stageIndex:index,stageCount:canonical.stages.length,roundIndex,roundCount,completedCheckpoints:[...checkpoints],routeComplete:roundIndex===roundCount-1&&index===canonical.stages.length-1&&engine.getSnapshot().status==='checkpoint'&&(!gateway||gateway.getSnapshot().completed.length===canonical.refs.length)}),
     nextStage(){
-      if(disposed||engine.getSnapshot().status!=='checkpoint'||gateway?.remaining(index)>0||index>=canonical.stages.length-1)return false;
-      engine.dispose();index++;mount();engine.start();return true;
+      if(disposed||engine.getSnapshot().status!=='checkpoint'||gateway?.remaining(index)>0||index>=canonical.stages.length-1&&roundIndex>=roundCount-1)return false;
+      engine.dispose();if(roundIndex<roundCount-1)roundIndex++;else{index++;roundIndex=0;}mount();engine.start();return true;
     },
     dispose(){if(!disposed){engine.dispose();gateway?.dispose();disposed=true;}},
   };

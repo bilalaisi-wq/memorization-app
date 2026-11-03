@@ -1,10 +1,11 @@
-import {flyTo} from './cosmic-flow-helper.js';
+import {flyTo,flyStageRounds} from './cosmic-flow-helper.js';
 import {test,expect} from '@playwright/test';
 async function open(page,{mobile=false,freeze=false}={}){
   if(mobile)await page.setViewportSize({width:390,height:844});
   await page.goto('/');await page.locator('#nav-revision-lab').click();
   await page.getByRole('button',{name:/Cosmic Rush/}).click();
   await page.locator('[name=surah]').selectOption('108');
+  await page.locator('[name=selection]').selectOption('custom');await page.locator('[name=start]').fill('1');await page.locator('[name=end]').fill('1');
 
   await page.getByRole('button',{name:'View mission briefing →'}).click();
   await page.locator('[data-pickup-mode]').selectOption('ayahs');
@@ -21,9 +22,9 @@ async function steer(page,lane){
     await page.locator('.runner-field').focus();await page.keyboard.press(lane<current?'ArrowLeft':'ArrowRight');
   }
 }
-async function pilot(page){await flyTo(page);}
+async function pilot(page){await flyStageRounds(page);}
 test('real keyboard flight steers, dodges, gathers Quran pickups and reaches a stable safe checkpoint without learning writes',async({page})=>{
-  test.setTimeout(180000);
+  test.setTimeout(300000);
   await open(page);
   const before=await page.evaluate(()=>Object.fromEntries(Object.entries(localStorage).filter(([k])=>/learning|puzzle-lab|rewards/.test(k))));
   await expect(page.locator('[data-flight-status]')).toHaveText('Flight active');
@@ -34,7 +35,7 @@ test('real keyboard flight steers, dodges, gathers Quran pickups and reaches a s
   await pilot(page);
   await expect(page.locator('.star-runner')).toHaveAttribute('data-flight-state','checkpoint');
   await expect(page.locator('[data-shield]')).toContainText('3/3');
-  await expect(page.locator('[data-stars]')).toContainText('3 ayahs connected');
+  await expect(page.locator('[data-stars]')).toContainText('1 ayahs connected');
   const progress=await page.locator('[data-flight-progress]').evaluate(n=>n.value);await page.clock.runFor(3000);expect(await page.locator('[data-flight-progress]').evaluate(n=>n.value)).toBe(progress);
   const after=await page.evaluate(()=>Object.fromEntries(Object.entries(localStorage).filter(([k])=>/learning|puzzle-lab|rewards/.test(k))));expect(after).toEqual(before);
   await page.getByRole('button',{name:'Fly this stage again',exact:true}).click();
@@ -82,7 +83,7 @@ test('mobile swipe, touch-sized controls and reduced motion work; profile change
 });
 
 test('mission stages advance only from safe checkpoints and restart retains the current stage',async({page})=>{
-  test.setTimeout(180000);
+  test.setTimeout(300000);
   await page.goto('/');await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Cosmic Rush/}).click();
   await page.locator('[name=surah]').selectOption('114');
   await page.locator('[name=selection]').selectOption('entire');
