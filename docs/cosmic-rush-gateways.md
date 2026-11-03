@@ -1,5 +1,6 @@
 # Cosmic Rush Phase 3 — Quran memory gateways
 
+Current public flight: [flowing Quran pickups](cosmic-rush-flowing-pickups.md) supersede navigation stars; untimed gateway review is optional at stage checkpoints. Earlier phase descriptions below are historical snapshots.
 ## Availability repair
 
 The earlier Revision Lab/Star Runner files were present only in the working tree. GitHub `main` and the public Railway JavaScript bundle were still at the Bridge Builder version; the live bundle contained neither `nav-revision-lab` nor `Launch Star Runner`. This release includes the missing Phase 1/2 files with Phase 3 so a deployment can actually expose **Your Space → Revision Lab → Cosmic Rush** to ordinary learners on desktop and mobile. No developer flag or paid account is required for this free-content surface.

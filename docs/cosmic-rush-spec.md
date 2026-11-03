@@ -1,5 +1,6 @@
 # Cosmic Rush — Ayah Relay 2.0 specification
 
+Current public flight: [flowing Quran pickups](cosmic-rush-flowing-pickups.md) supersede navigation stars; untimed gateway review is optional at stage checkpoints. Earlier phase descriptions below are historical snapshots.
 ## Status and scope
 
 Subsequent implementation: [Phase 3 Quran memory gateways](cosmic-rush-gateways.md). The inventory and baseline below remain the Phase 0 audit snapshot, not a claim that later phases were implemented by that audit.

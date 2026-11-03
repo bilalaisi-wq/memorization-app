@@ -30,3 +30,16 @@
 
 .cosmic-rush .star-runner button.cosmic-primary { color:#082e34; }
 .cosmic-rush .star-runner:not([data-flight-state="running"]) .runner-thruster { animation-play-state:paused; opacity:.3; }
+
+.cosmic-rush .runner-pickup { aspect-ratio:auto;min-height:52px;padding:8px 5px;border:1px solid #aebfea;background:#172443ef;border-radius:14px;display:grid;place-items:center;text-align:center;font-family:Uthmanic,serif;font-size:clamp(23px,4vw,32px);line-height:1.8;color:#fff;white-space:normal;overflow-wrap:normal;word-break:normal;box-shadow:0 3px 14px #03081977; }
+.cosmic-rush .runner-ribbon { padding:10px 12px 30px; }
+.cosmic-rush .runner-ribbon::after { content:'← Left lane';position:absolute;bottom:4px;left:8px;font:600 12px/1.4 sans-serif;color:#c4e6f0; }
+.cosmic-rush .runner-ribbon[data-pickup-lane="1"]::after {content:'Middle lane';left:40%;}
+.cosmic-rush .runner-ribbon[data-pickup-lane="2"]::after {content:'Right lane →';left:auto;right:8px;}
+.cosmic-rush .runner-learning {margin:16px 0;padding:14px;border-radius:14px;background:#16213c;}
+.cosmic-rush .flow-built {font-family:Uthmanic,serif;font-size:30px;line-height:1.9;min-height:40px;}
+.cosmic-rush .runner-learning button {margin:6px;}
+.cosmic-rush .runner-learning label {max-width:260px;}
+.cosmic-rush .flow-review-option {display:flex;align-items:center;gap:12px;}
+.cosmic-rush .flow-review-option input {width:24px;min-height:24px;}
+@media(max-width:480px){.cosmic-rush .runner-field.runner-flow:not(.runner-orbit){min-height:600px;}.cosmic-rush .star-runner .runner-controls{position:sticky;bottom:4px;z-index:6;background:#131d38;padding:8px;border-radius:12px;}}

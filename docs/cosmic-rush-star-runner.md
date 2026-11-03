@@ -1,5 +1,6 @@
 # Cosmic Rush Phase 2 — Star Runner
 
+Current public flight: [flowing Quran pickups](cosmic-rush-flowing-pickups.md) supersede navigation stars; untimed gateway review is optional at stage checkpoints. Earlier phase descriptions below are historical snapshots.
 Historical milestone: the current public launch now includes [Phase 3 Quran memory gateways](cosmic-rush-gateways.md). Availability statements below describe this earlier milestone.
 ## Play
 
