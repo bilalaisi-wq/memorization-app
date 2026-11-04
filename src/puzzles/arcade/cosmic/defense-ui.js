@@ -11,7 +11,7 @@ import {DEFENSE_ABILITIES} from './defense.js';
 import './runner.css';
 import './defense.css';
 const NS='http://www.w3.org/2000/svg';
-export async function mountMeteorDefense(root,mission,{controller=null,onExit=()=>{},onRunner=null,isCurrent=()=>true,configuration='balanced',slow=false}={}){
+export async function mountMeteorDefense(root,mission,{controller=null,onExit=()=>{},onRunner=null,onLink=null,isCurrent=()=>true,configuration='balanced',slow=false}={}){
   const owner=activeProfileId(),game=controller||await createFlightController(mission,{activity:'defense',defenseConfig:configuration,slow});
   if(!root.isConnected||owner!==activeProfileId()||!isCurrent()){if(!controller)game.dispose();return null;}
   const recorder=createGatewayRecorder(mission,{runId:game.getSnapshot().runId}),bonuses=createFlightBonuses(mission);let bonusXP=0,warning='',disposed=false,raf=0,last=0,warmup=0,lastState='',audioToken=0;
@@ -56,6 +56,7 @@ export async function mountMeteorDefense(root,mission,{controller=null,onExit=()
         message.textContent=s.routeComplete?'Defense route covered. This is supported practice, not independent recitation certification.':s.atRouteEnd?'Defense checkpoint secured. Earlier Defense checkpoints were not all played in this mixed route. Return to mission to select them.':'Defense set secured. Continue the mission or return to Star Runner.';
         const summary=document.createElement('p');summary.textContent=`Core impacts: ${s.motorErrors} · Quran choice repairs: ${s.memoryMistakes}`;overlay.append(summary);
         if(onRunner)button('Continue in Star Runner',onRunner);
+        if(onLink)button('Continue in Ayah Link',onLink);
         if(!s.atRouteEnd)button('Continue defense · next round or set',()=>{stopAudio();game.nextStage();last=0;warmup=3;paint();schedule();field.focus({preventScroll:true});});
         button('Replay this defense set',()=>send({type:'restart'}));
       }

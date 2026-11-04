@@ -3,7 +3,7 @@ import { freeReference, sha256 } from '../../../supabase/functions/_shared/conte
 
 export const MISSION_LENGTHS = Object.freeze([5, 10, 15, 20]);
 export const cosmicSurahs = Object.freeze(surahs.filter(s => s.id === 1 || s.id >= 78 && s.id <= 114));
-// Full hybrid mission is not available; only Star Runner can be launched.
+// Runner, Meteor Defense and Ayah Link are available; the full hybrid mission is unfinished.
 export const COSMIC_GAMEPLAY_AVAILABLE = false;
 export const STAR_RUNNER_AVAILABLE = true;
 export const objectives = Object.freeze([

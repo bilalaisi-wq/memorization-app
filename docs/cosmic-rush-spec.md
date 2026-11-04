@@ -1,5 +1,7 @@
 # Cosmic Rush — Ayah Relay 2.0 specification
 
+Phase 5 implementation: [Ayah Link and Phrase Repair](cosmic-rush-ayah-link.md) adds adjacent-ayah demonstrations, steerable gateways, reviewed visual reactors and source-backed weak-link evidence. Historical inventories below remain audit snapshots.
+
 Phase 4 implementation: [Meteor Defense](cosmic-rush-meteor-defense.md) adds playable core defense and checkpoint handovers through the shared mission director. Historical audit inventories below remain unchanged.
 
 Current public flight: [flowing Quran pickups](cosmic-rush-flowing-pickups.md) supersede navigation stars; untimed gateway review is optional at stage checkpoints. Earlier phase descriptions below are historical snapshots.

@@ -13,7 +13,7 @@ import { createFlightController } from '../../../quest/cosmic/controller.js';
 import { activeProfileId } from '../../../learner/profile-storage.js';
 import './runner.css';
 
-export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>{},slow=false,pickupMode='mixed',rounds=3,memoryGateways=false,guidance=true,controller=null,onDefense=null,isCurrent=()=>true}={}) {
+export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>{},slow=false,pickupMode='mixed',rounds=3,memoryGateways=false,guidance=true,controller=null,onDefense=null,onLink=null,isCurrent=()=>true}={}) {
   const owner=activeProfileId();
   let saveWarning='',exposureWarning='',bonusWarning='',cueWarning='',bonusXP=0;const assistedRefs=new Set();
   let recorder;const bonuses=createFlightBonuses(mission);
@@ -126,6 +126,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
         button.dataset.flightContinue='';button.textContent=s.atRouteEnd?'Fly this stage again':s.roundIndex<s.roundCount-1?`Continue to round ${s.roundIndex+2} / ${s.roundCount}`:'Continue to next flight stage';button.onclick=()=>{if(s.atRouteEnd)send({type:'restart'});else{game.nextStage();last=0;warmup=3;paint();schedule();field.focus({preventScroll:true});}};
       }
       if(s.status!=='disposed')overlay.append(button);
+      if(s.status==='checkpoint'&&onLink){const link=document.createElement('button');link.className='cosmic-secondary';link.dataset.enterLink='';link.textContent='Connect ayahs · Ayah Link';link.onclick=onLink;overlay.append(link);}
       if(s.status==='checkpoint'&&onDefense){const defense=document.createElement('button');defense.className='cosmic-secondary';defense.dataset.enterDefense='';defense.textContent='Defend the core · Meteor Defense';defense.onclick=onDefense;overlay.append(defense);}
       root.querySelector('[data-flight-status]').textContent=heading.textContent;
       if(['checkpoint','recovery','paused'].includes(s.status))heading.focus({preventScroll:true});

@@ -1,0 +1,37 @@
+.cosmic-rush .link-pair-board {position:relative;display:grid;gap:28px;padding:14px 0;}
+.cosmic-rush .link-ayah-card {position:relative;padding:16px;border:1px solid #8eacc866;border-radius:16px;background:#17203c99;}
+.cosmic-rush .link-ayah-card h4{font:600 14px/1.5 sans-serif;color:#adc7db;margin:0 0 8px;}
+.cosmic-rush .link-arabic{font-family:Uthmanic,serif;font-size:clamp(27px,4vw,36px);line-height:2;white-space:pre-wrap;color:#f1f5ff;}
+.cosmic-rush .link-arabic mark{position:relative;z-index:2;background:#245d67;color:#fff3ba;border-radius:8px;padding:0 4px;}
+.cosmic-rush .link-verse-marker{display:block;font-family:Uthmanic,serif;font-size:27px;color:#ebcf82;opacity:1;transition:opacity .7s ease;}
+.cosmic-rush .markers-hidden .link-verse-marker{opacity:0;}
+.cosmic-rush .link-luminous{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible;}
+.cosmic-rush .link-luminous path{fill:none;stroke:#f4ce79;stroke-width:3;stroke-linecap:round;opacity:0;filter:drop-shadow(0 0 5px #e2c778);}
+.cosmic-rush .is-connected .link-luminous path{opacity:.8;stroke-dasharray:12 6;animation:link-flow 1.2s ease-out;}
+@keyframes link-flow{from{stroke-dashoffset:150;opacity:0;}to{stroke-dashoffset:0;opacity:.8;}}
+.cosmic-rush .link-word-blank{display:inline-block;min-width:70px;text-align:center;letter-spacing:6px;background:#38516a;color:#e5eff7;}
+.cosmic-rush .link-hint,.cosmic-rush .link-repair,.cosmic-rush .link-success{padding:16px;margin:14px 0;border-radius:12px;background:#1d3147;border:1px solid #8da898;}
+.cosmic-rush .link-hint [lang=ar]{font-family:Uthmanic,serif;font-size:30px;}
+.cosmic-rush .ayah-link button{min-height:48px;margin:5px;}
+.cosmic-rush .link-gateway-scene{position:relative;display:flex;justify-content:space-around;gap:8px;min-height:240px;padding:10px 0 100px;margin:16px 0;background:radial-gradient(ellipse,#273b59,#0c172c);border-radius:18px;overflow:hidden;}
+.cosmic-rush .link-portal{z-index:1;display:grid;align-content:start;width:28%;min-width:0;padding:12px 5px!important;border:2px solid #7896bd;border-radius:40% 40% 12px 12px;background:#20304d;color:#fff;}
+.cosmic-rush .link-portal.is-selected{border-color:#f6d98a;box-shadow:0 0 14px #f4d67b55;}
+.cosmic-rush .link-portal [lang=ar]{font-family:Uthmanic,serif;font-size:clamp(24px,4vw,32px);line-height:1.8;}
+.cosmic-rush .link-portal small{font-size:11px;color:#bdccdf;}
+.cosmic-rush .link-gateway-ship{position:absolute;transform:translateX(-50%) rotate(-90deg);font-size:40px;color:#9ef9ec;z-index:3;}
+.cosmic-rush .link-gateway-route{position:absolute;left:45%;top:15%;width:10%;height:70%;border:1px dashed #78bdbd66;}
+.cosmic-rush .link-steering,.cosmic-rush .link-audio{display:flex;align-items:center;flex-wrap:wrap;gap:8px;}
+.cosmic-rush [data-link-typed]{font-family:Uthmanic,serif;font-size:28px;width:100%;min-height:54px;}
+.cosmic-rush .reactor-cell{position:relative;margin:16px auto;width:96px;height:120px;border:3px solid #94d4d7;border-radius:18px;overflow:hidden;background:#101a2f;}
+.cosmic-rush .reactor-cell i{position:absolute;bottom:0;width:100%;height:var(--charge,0%);background:linear-gradient(#c4de91,#70e4d0);animation:reactor-charge .6s ease-out;}
+.cosmic-rush .reactor-cell span{position:absolute;inset:0;display:grid;place-items:center;color:#fff5cc;font-size:35px;text-shadow:0 0 10px #1b334c;}
+@keyframes reactor-charge{from{height:0;}to{height:var(--charge,0%);}}
+.cosmic-rush .link-reactor-build,.cosmic-rush .link-reactor-bank{display:flex;flex-wrap:wrap;gap:12px;padding:16px;border-radius:14px;min-height:100px;margin:15px 0;border:1px dashed #86aca7;}
+.cosmic-rush .link-reactor-tile{font-family:Uthmanic,serif;font-size:27px;line-height:1.9;background:#29465d;color:#fff4d7;border:1px solid #98c5bd;border-radius:14px;max-width:100%;white-space:pre-wrap;}
+.cosmic-rush .link-reactor .piece-wrap{max-width:100%;}
+.cosmic-rush .link-reactor .piece-arrange-controls button{min-height:44px;}
+.cosmic-rush .link-audio label{max-width:240px;}
+.cosmic-rush [data-link-warning]{color:#f1cc99;}
+@media(prefers-reduced-motion:reduce){.cosmic-rush .link-verse-marker{transition:none;}.cosmic-rush .is-connected .link-luminous path,.cosmic-rush .reactor-cell i{animation:none;}}
+:root[data-celestial-motion=reduced] .cosmic-rush .link-verse-marker{transition:none;}
+:root[data-celestial-motion=reduced] .cosmic-rush .is-connected .link-luminous path,:root[data-celestial-motion=reduced] .cosmic-rush .reactor-cell i{animation:none;}

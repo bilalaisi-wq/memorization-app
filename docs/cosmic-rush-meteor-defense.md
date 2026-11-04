@@ -62,3 +62,5 @@ Automated tests cover all configurations/wave types, genuine shooting/aiming, fa
 Campaign animation state remains in-session; closing/reloading ends the current flight, as before. Evidence and existing progress remain saved. Cross-device campaign resume, the remaining hybrid activities and certified spoken assessment are outside this phase.
 
 Final verification: 89 distinct focused cases passed across completed runs and targeted reruns. This includes the 86-case Cosmic/shared-arcade/Snake/Falling Words/rewards regression, the original multi-stage Runner browser journey, the quota-recovery edge case and per-activity completion coverage. Targeted Defense/reduced-motion reruns also passed. Production build and `git diff --check` passed. This is focused regression verification, not a run of the full application suite or a live physical-device FPS certification.
+
+Phase 5 adds [Ayah Link](cosmic-rush-ayah-link.md) to the same checkpoint handovers. The director now retains three available pure activity engines; disposal and per-activity completion rules are unchanged.
