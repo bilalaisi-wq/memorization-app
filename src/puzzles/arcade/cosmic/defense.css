@@ -1,0 +1,25 @@
+.cosmic-rush .defense-field {max-width:850px;aspect-ratio:1000/680;background:radial-gradient(ellipse at center,#242c57,#080f25 68%);}
+.cosmic-rush .defense-field svg {display:block;width:100%;height:100%;}
+.cosmic-rush .defense-stars {fill:#d2e6ff;opacity:.6;}
+.cosmic-rush .defense-orbit {fill:none;stroke:#7b98b5;stroke-width:1;stroke-dasharray:8 10;opacity:.5;}
+.cosmic-rush .defense-shield {fill:#7ee7e622;stroke:#9df7ff;stroke-width:4;}
+.cosmic-rush .defense-meteor {fill:#a69db6;stroke:#e0c9aa;stroke-width:3;}
+.cosmic-rush .defense-meteor[data-hp="2"] {fill:#807892;stroke-width:5;}
+.cosmic-rush .defense-energy {fill:#9df9f0;stroke:#d5fffc;stroke-width:2;}
+.cosmic-rush .defense-object:not(.defense-meteor):not(.defense-energy) {fill:none;stroke:#f9d883;stroke-width:4;}
+.cosmic-rush .defense-repair {stroke:#87e9b2!important;}
+.cosmic-rush .defense-pulse {stroke:#b4d9ff!important;}
+.cosmic-rush .defense-impact {box-shadow:inset 0 0 24px #ffa76a88;}
+.cosmic-rush .defense-health {display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:12px 0;color:#d2f0f6;}
+.cosmic-rush .defense-health progress {accent-color:#8be7d0;flex:1;min-width:100px;}
+.cosmic-rush .defense-controls,.cosmic-rush .defense-abilities,.cosmic-rush .defense-audio {display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;}
+.cosmic-rush .defense-controls button,.cosmic-rush .defense-abilities button {min-height:52px;flex:1;min-width:110px;touch-action:none;}
+.cosmic-rush .defense-abilities button {display:grid;gap:6px;min-width:140px;}
+.cosmic-rush .defense-abilities span {font-size:12px;}
+.cosmic-rush .defense-audio label {max-width:260px;}
+.cosmic-rush .defense-overlay button {margin:6px;}
+@media(max-width:500px){.cosmic-rush .defense-field{min-height:340px;aspect-ratio:1;}.cosmic-rush .defense-overlay{inset:8% 3%;padding:12px;}.cosmic-rush .defense-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}.cosmic-rush .defense-controls button{min-width:0;padding:8px 5px;font-size:13px;}.cosmic-rush .defense-abilities{display:grid;grid-template-columns:1fr 1fr;}.cosmic-rush .defense-abilities button{min-width:0;font-size:12px;}}
+.cosmic-rush .defense-reduced .defense-object:not(.defense-meteor):not(.defense-energy),
+:root[data-celestial-motion="reduced"] .cosmic-rush .defense-object:not(.defense-meteor):not(.defense-energy) {r:54px;}
+.cosmic-rush .defense-reduced .defense-pulse,
+:root[data-celestial-motion="reduced"] .cosmic-rush .defense-pulse {r:220px;}

@@ -2,6 +2,7 @@ import {WORLD} from './runner.js';
 import {flowChoices} from '../../../quest/cosmic/flow-content.js';
 const clone=x=>structuredClone(x);
 export const BOOST_CAPACITY=4;
+export const BOOST_MULTIPLIER=2.31;
 // Arabic pickups are intact capsules, separate from unlabeled environmental rocks.
 export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0,slow=false,onEvent=()=>{}}) {
   if(!units?.length)throw Error('Verified flow units required.');
@@ -53,7 +54,7 @@ export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0
     const boosted=state.boosting&&state.boostEnergy>0;
     if(boosted){state.boostEnergy=Math.max(0,state.boostEnergy-dt);if(!state.boostEnergy)state.boosting=false;}
     else state.boostEnergy=Math.min(BOOST_CAPACITY,state.boostEnergy+dt*.6);
-    state.elapsed+=dt*(boosted?1.65:1)*(state.cueSlow ? .25 : 1);state.fireCooldown=Math.max(0,state.fireCooldown-dt);state.invulnerable=Math.max(0,state.invulnerable-dt);state.impact=Math.max(0,state.impact-dt);
+    state.elapsed+=dt*(boosted?BOOST_MULTIPLIER:1)*(state.cueSlow ? .25 : 1);state.fireCooldown=Math.max(0,state.fireCooldown-dt);state.invulnerable=Math.max(0,state.invulnerable-dt);state.impact=Math.max(0,state.impact-dt);
     const delta=WORLD.lanes[state.lane]-state.x;state.x+=Math.sign(delta)*Math.min(Math.abs(delta),1400*dt);
     effects=effects.filter(e=>(e.life-=dt)>0);
     for(const b of shots)b.y-=720*dt;

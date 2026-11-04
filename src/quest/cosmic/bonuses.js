@@ -8,12 +8,13 @@ export function createFlightBonuses(mission,{storage=profileStorage,getOwner=act
   return {record(event){
     const operation=pending.then(async()=>{
       if(getOwner()!==owner)throw Error('Account changed; reopen the flight.');
+      const defense=event.type==='defense:memory-correct';
       const blaster=event.type==='runner:asteroid-destroyed',boost=event.type==='runner:pickup-correct'&&event.boosted===true;
-      if((!blaster&&!boost)||!event.awardedPoints||!event.scoreReceipt||!mission.refs.includes(event.targetRef))return {xp:0};
+      if((!blaster&&!boost&&!defense)||!defense&&!event.awardedPoints||!defense&&!event.scoreReceipt||!mission.refs.includes(event.targetRef))return {xp:0};
       const now=clock(),day=now.toISOString().slice(0,10);
-      const receiptId=`quest:${await sha256(JSON.stringify([day,mission.id,event.stageIndex,event.roundIndex,event.scoreReceipt]))}`;
+      const receiptId=`quest:${await sha256(JSON.stringify([day,mission.id,event.stageIndex,event.roundIndex,defense?`defense:recognition:${event.targetRef}`:event.scoreReceipt]))}`;
       if(getOwner()!==owner)throw Error('Account changed; bonus not saved to another profile.');
-      return rewards.award({mode:'lab',unit:event.targetRef,action:blaster?'cosmic-blaster':'cosmic-boost',xp:blaster?2:4,receiptId,now});
+      return rewards.award({mode:'lab',unit:event.targetRef,action:defense?'cosmic-defense':blaster?'cosmic-blaster':'cosmic-boost',xp:blaster?2:4,receiptId,now});
     });
     pending=operation.catch(()=>{});return operation;
   }};
