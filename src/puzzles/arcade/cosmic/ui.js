@@ -1,3 +1,5 @@
+import {createTargetCuePlayer} from '../../../quest/cosmic/target-cues.js';
+import {BOOST_CAPACITY} from './flow-runner.js';
 import {createFlightBonuses} from '../../../quest/cosmic/bonuses.js';
 import {createFlowUnits} from '../../../quest/cosmic/flow-content.js';
 import {reportStudyExposure} from '../../../study-exposure.js';
@@ -11,9 +13,9 @@ import { createFlightController } from '../../../quest/cosmic/controller.js';
 import { activeProfileId } from '../../../learner/profile-storage.js';
 import './runner.css';
 
-export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>{},slow=false,pickupMode='mixed',rounds=3,memoryGateways=false,isCurrent=()=>true}={}) {
+export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>{},slow=false,pickupMode='mixed',rounds=3,memoryGateways=false,guidance=true,isCurrent=()=>true}={}) {
   const owner=activeProfileId();
-  let saveWarning='',exposureWarning='',bonusWarning='',bonusXP=0;const assistedRefs=new Set();
+  let saveWarning='',exposureWarning='',bonusWarning='',cueWarning='',bonusXP=0;const assistedRefs=new Set();
   const recorder=createGatewayRecorder(mission),bonuses=createFlightBonuses(mission);
   let disposed=false;
   const game=await createFlightController(mission,{slow,pickupMode,rounds,memoryGateways,onEvent(event){
@@ -24,15 +26,18 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
   if(!root.isConnected||activeProfileId()!==owner||!isCurrent()){game.dispose();return null;}
   const abort=new AbortController();
   let raf=0,last=0,lastStatus='',pointer=null,warmup=0;
-  root.innerHTML=`<section class="star-runner" aria-label="Star Runner flight"><div class="runner-heading"><div><span class="cosmic-eyebrow">COSMIC RUSH · STAR RUNNER</span><h3>Fly your constellation</h3></div><button class="cosmic-secondary" data-flight-exit>Return to mission</button></div><p>Steer into the next correct ayah, 2–3-word chunk or single word. Avoid other authentic Quran pickups and ordinary asteroids. Stay in the correct lane to collect on the first pass; no extra confirmation is needed. Every required piece returns until collected.</p><div class="runner-hud"><span data-flight-stage></span><span data-flight-round></span><span data-shield></span><span data-stars></span><span data-arcade-score></span><span data-bonus-xp></span></div><div class="runner-boost-meter"><label>Boost fuel <progress data-boost-energy max="2" value="2"></progress></label><span>Blaster +10 points · correct pickup +20 · boosted correct pickup +40. Bonus XP has daily limits.</span></div><section class="runner-learning" aria-label="Your ayah sequence"><p data-flow-prompt></p><p data-flow-feedback role="status" aria-live="polite"></p><div data-flow-built class="flow-built" lang="ar" dir="rtl"></div><button class="cosmic-secondary" data-flow-listen>Listen to current ayah · pauses flight</button><button class="cosmic-secondary" data-flow-stop>Stop recitation</button><label>Recitation volume<input data-flow-volume type="range" min="0" max="100" value="50"></label></section><progress data-flight-progress max="1" value="0" aria-label="Flight stage progress"></progress><div class="runner-field" tabindex="0" role="group" aria-label="Three lane Quran flight. Left and Right arrows or A and D to steer. Space chooses your current lane. P or Escape pauses."><div class="runner-nebula" aria-hidden="true"></div><div class="runner-spark-field" aria-hidden="true"></div><div class="runner-lanes" aria-hidden="true"><i></i><i></i><i></i></div><div data-flight-objects aria-hidden="true"></div><div class="runner-ship" data-ship aria-hidden="true"><div class="runner-shield"></div><div class="runner-thruster"></div><svg viewBox="0 0 60 80"><path d="M30 4 48 49 58 67 38 61 30 72 22 61 2 67 12 49Z" fill="#c9f4ff" stroke="#80efe5" stroke-width="2"/><path d="M30 12 38 45 30 52 22 45Z" fill="#7478ef"/><path d="M12 49 22 55 16 63 4 66Z M48 49 38 55 44 63 56 66Z" fill="#7c80df"/></svg></div><div class="runner-portals" data-runner-portals hidden aria-hidden="true"><div class="runner-portal">1</div><div class="runner-portal">2</div><div class="runner-portal">3</div></div><div class="runner-overlay" data-flight-overlay></div></div><div class="runner-controls"><button class="cosmic-primary" data-steer="-1" aria-label="Steer left">← Left lane</button><button class="cosmic-secondary" data-flow-stay>Stay / collect</button><button class="cosmic-secondary" data-flight-pause>Pause</button><button class="cosmic-primary" data-steer="1" aria-label="Steer right">Right lane →</button><button class="cosmic-primary" data-flight-fire aria-keyshortcuts="J">Blaster · J</button><button class="cosmic-primary" data-flight-boost aria-keyshortcuts="Shift B" aria-pressed="false">Boost · hold Shift / B</button><button class="cosmic-secondary" data-flight-restart>Restart stage</button></div><p data-gateway-save-warning role="status"></p><p data-flight-status role="status" aria-live="polite"></p><p class="runner-help">Arrow keys / A D · swipe left or right · J: fire blaster · hold Shift / B: boost · P / Escape: pause. Collect the words or ayahs in canonical order. Wrong text repeats the same target and never costs shields. Asteroid collisions are motor errors. Words and chunks are visual study units, not approved recitation stops. Flight checkpoints last until you leave this flight.</p></section>`;
+  root.innerHTML=`<section class="star-runner" aria-label="Star Runner flight"><div class="runner-heading"><div><span class="cosmic-eyebrow">COSMIC RUSH · STAR RUNNER</span><h3>Fly your constellation</h3></div><button class="cosmic-secondary" data-flight-exit>Return to mission</button></div><p>Steer into the next correct ayah, 2–3-word chunk or single word. Avoid other authentic Quran pickups and ordinary asteroids. Stay in the correct lane to collect on the first pass; no extra confirmation is needed. Every required piece returns until collected.</p><div class="runner-hud"><span data-flight-stage></span><span data-flight-round></span><span data-shield></span><span data-stars></span><span data-arcade-score></span><span data-bonus-xp></span></div><div class="runner-boost-meter"><label>Boost fuel <progress data-boost-energy max="4" value="4"></progress></label><span>Blaster +10 points · correct pickup +20 · boosted correct pickup +40. Bonus XP has daily limits.</span></div><section class="runner-learning" aria-label="Your ayah sequence"><p data-flow-prompt></p><p data-flow-feedback role="status" aria-live="polite"></p><div data-flow-built class="flow-built" lang="ar" dir="rtl"></div><button class="cosmic-secondary" data-flow-cue>Replay target cue</button><p data-cue-note role="status"></p><button class="cosmic-secondary" data-flow-listen>Listen to current ayah · pauses flight</button><button class="cosmic-secondary" data-flow-stop>Stop recitation</button><label>Recitation volume<input data-flow-volume type="range" min="0" max="100" value="50"></label></section><progress data-flight-progress max="1" value="0" aria-label="Flight stage progress"></progress><div class="runner-field" tabindex="0" role="group" aria-label="Three lane Quran flight. Left and Right arrows or A and D to steer. Space fires blasters. Hold B to boost. P or Escape pauses."><div class="runner-nebula" aria-hidden="true"></div><div class="runner-spark-field" aria-hidden="true"></div><div class="runner-lanes" aria-hidden="true"><i></i><i></i><i></i></div><div data-flight-objects aria-hidden="true"></div><div class="runner-ship" data-ship aria-hidden="true"><div class="runner-shield"></div><div class="runner-thruster"></div><svg viewBox="0 0 60 80"><path d="M30 4 48 49 58 67 38 61 30 72 22 61 2 67 12 49Z" fill="#c9f4ff" stroke="#80efe5" stroke-width="2"/><path d="M30 12 38 45 30 52 22 45Z" fill="#7478ef"/><path d="M12 49 22 55 16 63 4 66Z M48 49 38 55 44 63 56 66Z" fill="#7c80df"/></svg></div><div class="runner-portals" data-runner-portals hidden aria-hidden="true"><div class="runner-portal">1</div><div class="runner-portal">2</div><div class="runner-portal">3</div></div><div class="runner-overlay" data-flight-overlay></div></div><div class="runner-controls"><button class="cosmic-primary" data-steer="-1" aria-label="Steer left">← Left lane</button><button class="cosmic-secondary" data-flight-pause>Pause</button><button class="cosmic-primary" data-steer="1" aria-label="Steer right">Right lane →</button><button class="cosmic-primary" data-flight-fire aria-keyshortcuts="Space">Blaster</button><button class="cosmic-primary" data-flight-boost aria-keyshortcuts="B" aria-pressed="false">Boost</button><button class="cosmic-secondary" data-flight-restart>Restart stage</button></div><p data-gateway-save-warning role="status"></p><p data-flight-status role="status" aria-live="polite"></p><p class="runner-help">Arrow keys / A D · swipe left or right · Space: fire blaster · hold B: boost · tap Boost to toggle on touch · P / Escape: pause. Collect the words or ayahs in canonical order. Wrong text repeats the same target and never costs shields. Asteroid collisions are motor errors. Words and chunks are visual study units, not approved recitation stops. Flight checkpoints last until you leave this flight.</p></section>`;
   const view=root.querySelector('.star-runner'), field=root.querySelector('.runner-field'), ship=root.querySelector('[data-ship]'), layer=root.querySelector('[data-flight-objects]'), overlay=root.querySelector('[data-flight-overlay]');
   const flowAudio=createAudioManager({owner:'cosmic-flow',initialVolume:readLabVolume(profileStorage)});
-  let exposureWave='',builtKey='',flowAudioToken=0;
+  let exposureWave='',builtKey='',flowAudioToken=0,cue=null,cueEpoch=0;
+  const heard=new Set(),cuePlayer=createTargetCuePlayer(flowAudio);
+  const cueKey=s=>`${s.stageIndex}:${s.roundIndex}:${s.unit?.id}`;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)'), nodes=new Map();
   const gatewayPanel=createGatewayPanel(root,send,{onNavigate:()=>field.focus({preventScroll:true})});
   const listen=(target,name,fn)=>target.addEventListener(name,fn,{signal:abort.signal});
   function paint() {
     let s=game.getSnapshot(),exposureBlocked=false;
+    if(cue&&['checkpoint','recovery','gateway','disposed'].includes(s.status)){stopCue();s=game.getSnapshot();}
     field.classList.toggle('runner-flow',!!s.flow);
     if(s.flow){
       view.dataset.round=String(s.roundIndex);view.dataset.expectedUnit=s.unit?.id||'';view.dataset.waveId=s.waveId||'';
@@ -53,18 +58,18 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
     }
     root.querySelector('[data-flow-feedback]').textContent=s.flow?s.reason:'';
     layer.removeAttribute('aria-hidden');
-    view.dataset.flightState=s.status;view.dataset.lane=String(s.status==='gateway'?s.gateway.lane:s.lane);
+    view.dataset.cueSlow=String(!!s.cueSlow);view.dataset.flightState=s.status;view.dataset.lane=String(s.status==='gateway'?s.gateway.lane:s.lane);
     const inOrbit=s.status==='gateway',choosing=inOrbit&&s.gateway.state==='choices';
     field.classList.toggle('runner-orbit',inOrbit);
     field.classList.toggle('runner-route-open',inOrbit&&s.gateway.state==='open');
     root.querySelector('[data-runner-portals]').hidden=!inOrbit;
     root.querySelectorAll('.runner-portal').forEach((p,i)=>p.classList.toggle('is-selected',inOrbit&&s.gateway.lane===i));
-    root.querySelector('[data-gateway-save-warning]').textContent=saveWarning||exposureWarning||bonusWarning;
+    root.querySelector('[data-gateway-save-warning]').textContent=saveWarning||exposureWarning||bonusWarning||cueWarning;
     gatewayPanel.paint(s);
     view.classList.toggle('runner-reduced',reduced.matches);
     field.classList.toggle('runner-boosting',!!s.boosting);
     root.querySelector('[data-flight-boost]').setAttribute('aria-pressed',String(!!s.boosting));
-    root.querySelector('[data-boost-energy]').value=s.boostEnergy??2;
+    root.querySelector('[data-boost-energy]').value=s.boostEnergy??BOOST_CAPACITY;
     root.querySelector('[data-arcade-score]').textContent=`${s.arcadeScore||0} arcade points`;
     root.querySelector('[data-bonus-xp]').textContent=`${bonusXP} bonus XP`;
     root.querySelectorAll('[data-flight-fire],[data-flight-boost]').forEach(b=>b.disabled=s.status!=='running');
@@ -85,7 +90,6 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
     root.querySelector('[data-flight-pause]').disabled=!['running','paused'].includes(s.status);
     root.querySelectorAll('[data-steer]').forEach(b=>b.disabled=s.status!=='running'&&(!choosing||gatewayPanel.blocked));
     root.querySelector('[data-flight-restart]').disabled=inOrbit;
-    root.querySelector('[data-flow-stay]').disabled=s.status!=='running';
     const ids=new Set();
     for(const o of exposureBlocked?[]:s.objects){
       ids.add(o.id);let el=nodes.get(o.id);
@@ -101,6 +105,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
       el.style.left=`${o.ribbon?50:o.x/600*100}%`;el.style.top=`${o.y/720*100}%`;
     }
     for(const [id,el] of nodes)if(!ids.has(id)){el.remove();nodes.delete(id);}
+    root.querySelector('[data-cue-note]').textContent=cue?(cue.failed?'Target audio unavailable. Use Replay target cue to retry.':'Listen to the target. Flight is moving at a gentle 25% pace.'):(guidance?'A target cue plays once before each new word, chunk or ayah. Chunk cues use the original word recordings in sequence.':'Target cues are off. Replay a cue whenever you need it.');
     if(s.status!==lastStatus){
       lastStatus=s.status;
       overlay.hidden=s.status==='running'||s.status==='gateway';
@@ -121,6 +126,21 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
       root.querySelector('[data-flight-status]').textContent=heading.textContent;
       if(['checkpoint','recovery','paused'].includes(s.status))heading.focus({preventScroll:true});
     }
+    if(!exposureBlocked&&guidance&&s.status==='running'&&s.unit&&!heard.has(cueKey(s))&&(!cue||cue.key!==cueKey(s)))beginCue(s);
+  }
+  function stopCue(){cueEpoch++;cuePlayer.stop();game.dispatch({type:'cue',active:false});cue=null;}
+  function beginCue(snapshot){
+    if(disposed||!snapshot.unit)return;
+    stopCue();cueWarning='';flowAudioToken++;gatewayPanel.stop();
+    const epoch=cueEpoch,key=cueKey(snapshot);
+    cue={key,failed:false};
+    game.dispatch({type:'cue',active:true});
+    try{reportStudyExposure([snapshot.unit.key]);assistedRefs.add(snapshot.unit.key);}catch(error){cue.failed=true;game.dispatch({type:'cue',active:false});game.pause('Study assistance could not be saved. Recover progress, then retry.');exposureWarning=error.message;paint();return;}
+    paint();
+    cuePlayer.play(snapshot.unit,{
+      onComplete(){if(disposed||epoch!==cueEpoch)return;heard.add(key);cue=null;game.dispatch({type:'cue',active:false});paint();schedule();},
+      onFailure(error){if(disposed||epoch!==cueEpoch)return;heard.add(key);cue.failed=true;game.dispatch({type:'cue',active:false});cueWarning=error.message;paint();},
+    });
   }
   function frame(now){
     raf=0;if(disposed||!root.isConnected){dispose();return;}
@@ -136,7 +156,8 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
     if(disposed)return;
     if(gatewayPanel.blocked&&(action.type.startsWith('gateway-')||action.type==='lane')&&action.type!=='gateway-refresh')return;
     if(action.type==='toggle')action={type:game.getSnapshot().status==='paused'?'resume':'pause'};
-    if(action.type.startsWith('gateway-')||['restart','retry','pause','resume'].includes(action.type)){gatewayPanel.stop();flowAudioToken++;flowAudio.stop();}
+    if(action.type.startsWith('gateway-')||['restart','retry','pause','resume'].includes(action.type)){stopCue();gatewayPanel.stop();flowAudioToken++;flowAudio.stop();}
+    if(action.type==='restart'){const s=game.getSnapshot();for(const key of heard)if(key.startsWith(`${s.stageIndex}:${s.roundIndex}:`))heard.delete(key);}
     game.dispatch(action);
     if(action.type==='pause')pointer=null;
     if(['pause','resume'].includes(action.type))exposureWave='';
@@ -150,14 +171,13 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
   listen(view,'keydown',event=>{
     if(event.ctrlKey||event.metaKey||event.altKey||event.target.closest('input,select,textarea,[contenteditable=true]'))return;
     const direction=({ArrowLeft:-1,KeyA:-1,ArrowRight:1,KeyD:1})[event.code];
-    if(event.code==='KeyJ'){event.preventDefault();send({type:'fire'});}
-    else if(['ShiftLeft','ShiftRight','KeyB'].includes(event.code)){event.preventDefault();if(!event.repeat)send({type:'boost',active:true});}
-    else if(direction){event.preventDefault();if(!event.repeat)send({type:'lane',direction});}
+    if(event.code==='Space'&&game.getSnapshot().status==='running'&&!event.target.closest('button,a')){event.preventDefault();send({type:'fire'});}
+    else if(event.code==='KeyB'){event.preventDefault();if(!event.repeat)send({type:'boost',active:true});}
+    else if(direction){event.preventDefault();if(!event.repeat){send({type:'lane',direction});field.focus({preventScroll:true});}}
     else if(['Enter','Space','ArrowUp'].includes(event.code)&&game.getSnapshot().gateway?.state==='choices'&&!event.target.closest('button')){event.preventDefault();if(!event.repeat)send({type:'gateway-choose'});}
-    else if(event.code==='Space'&&game.getSnapshot().flow&&!event.target.closest('button')){event.preventDefault();if(!event.repeat)send({type:'confirm-lane'});}
     else if(['KeyP','Escape'].includes(event.code)){event.preventDefault();if(!event.repeat)send({type:'toggle'});}
   });
-  listen(window,'keyup',event=>{if(['ShiftLeft','ShiftRight','KeyB'].includes(event.code))send({type:'boost',active:false});});
+  listen(window,'keyup',event=>{if(event.code==='KeyB')send({type:'boost',active:false});});
   listen(field,'pointerdown',event=>{if(pointer||!event.isPrimary||event.target.closest('button')||!['running','gateway'].includes(game.getSnapshot().status))return;pointer={id:event.pointerId,x:event.clientX,y:event.clientY};field.setPointerCapture(event.pointerId);});
   listen(field,'pointerup',event=>{if(!pointer||pointer.id!==event.pointerId)return;const dx=event.clientX-pointer.x,dy=event.clientY-pointer.y;pointer=null;if(Math.abs(dx)>25&&Math.abs(dx)>Math.abs(dy))send({type:'lane',direction:Math.sign(dx)});});
   listen(field,'pointercancel',()=>{pointer=null;});
@@ -173,13 +193,11 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
   });
   root.querySelector('[data-flight-fire]').onclick=()=>{send({type:'fire'});field.focus({preventScroll:true});};
   const boostButton=root.querySelector('[data-flight-boost]');
-  listen(boostButton,'pointerdown',event=>{if(!event.isPrimary||event.button!==0)return;boostButton.setPointerCapture(event.pointerId);send({type:'boost',active:true});});
-  for(const type of ['pointerup','pointercancel','lostpointercapture'])listen(boostButton,type,()=>send({type:'boost',active:false}));
-  boostButton.onclick=event=>{if(event.detail===0)send({type:'boost',active:!game.getSnapshot().boosting});};
-  root.querySelector('[data-flow-stay]').onclick=()=>{send({type:'confirm-lane'});field.focus({preventScroll:true});};
+  boostButton.onclick=()=>send({type:'boost',active:!game.getSnapshot().boosting});
+  root.querySelector('[data-flow-cue]').onclick=()=>beginCue(game.getSnapshot());
   root.querySelector('[data-flow-volume]').value=String(Math.round(readLabVolume(profileStorage)*100));
   root.querySelector('[data-flow-volume]').oninput=e=>flowAudio.setVolume(Number(e.target.value)/100);
-  root.querySelector('[data-flow-stop]').onclick=()=>{flowAudioToken++;flowAudio.stop();};
+  root.querySelector('[data-flow-stop]').onclick=()=>{const s=game.getSnapshot();if(s.unit)heard.add(cueKey(s));stopCue();flowAudioToken++;flowAudio.stop();paint();};
   root.querySelector('[data-flow-listen]').onclick=async()=>{
     const s=game.getSnapshot();if(!s.unit)return;assistedRefs.add(s.unit.key);
     send({type:'pause'});const token=++flowAudioToken;
@@ -192,7 +210,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
   // Cleanup also covers DOM replacement by navigation outside the runner.
   const observer=new MutationObserver(()=>{if(!root.isConnected)dispose();});
   observer.observe(document.body,{childList:true,subtree:true});
-  function dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(raf);abort.abort();observer.disconnect();pointer=null;nodes.clear();gatewayPanel.dispose();flowAudioToken++;flowAudio.dispose();game.dispose();}
+  function dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(raf);abort.abort();observer.disconnect();pointer=null;nodes.clear();cuePlayer.dispose();gatewayPanel.dispose();flowAudioToken++;flowAudio.dispose();game.dispose();}
   paint();
   return {start:()=>send({type:'start'}),pause:()=>send({type:'pause'}),resume:()=>send({type:'resume'}),dispatch:send,getSnapshot:()=>game.getSnapshot(),dispose};
 }

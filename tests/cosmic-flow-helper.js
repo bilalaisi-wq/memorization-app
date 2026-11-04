@@ -19,7 +19,7 @@ export async function flyTo(page,stop='checkpoint') {
     });
     if(lane!==null){
       for(let j=0;j<2;j++){const current=Number(await page.locator('.star-runner').getAttribute('data-lane'));if(current===lane)break;await page.locator('.runner-field').focus();await page.keyboard.press(current>lane?'ArrowLeft':'ArrowRight');}
-      await page.locator('.runner-field').focus();await page.keyboard.press('Space');
+
     }
     await page.clock.runFor(500);
   }

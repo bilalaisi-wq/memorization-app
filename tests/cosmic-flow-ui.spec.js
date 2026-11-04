@@ -3,7 +3,7 @@ import {flyTo} from './cosmic-flow-helper.js';
 async function start(page,style='words'){
   await page.goto('/');await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Cosmic Rush/}).click();
   await page.locator('[name=selection]').selectOption('custom');await page.locator('[name=start]').fill('3');await page.locator('[name=end]').fill('3');
-  await page.getByRole('button',{name:'View mission briefing →'}).click();await page.locator('[data-pickup-mode]').selectOption(style);await page.clock.install();
+  await page.getByRole('button',{name:'View mission briefing →'}).click();await page.locator('[data-pickup-mode]').selectOption(style);await page.locator('[data-flow-guidance]').uncheck();await page.clock.install();
   await page.locator('[data-launch-runner]').click();await page.getByRole('button',{name:'Start flight',exact:true}).click();
 }
 test('words flow in three lanes with real collision choices, no stars and no interrupting quiz',async({page})=>{
@@ -46,7 +46,7 @@ test('round selector starts at three and chunk revision advances through four in
   await page.getByRole('button',{name:'View mission briefing →'}).click();
   await expect(page.locator('[data-flight-rounds]')).toHaveValue('3');
   expect(await page.locator('[data-flight-rounds] option').evaluateAll(nodes=>nodes.map(n=>Number(n.value)))).toEqual([3,4,5,6,7,8,9,10]);
-  await page.locator('[data-flight-rounds]').selectOption('4');await page.clock.install();
+  await page.locator('[data-flight-rounds]').selectOption('4');await page.locator('[data-flow-guidance]').uncheck();await page.clock.install();
   await page.locator('[data-launch-runner]').click();await page.getByRole('button',{name:'Start flight',exact:true}).click();
   await expect(page.locator('.star-runner')).toHaveAttribute('data-expected-unit',/^chunk:1:3:/);
   for(let i=0;i<4;i++){

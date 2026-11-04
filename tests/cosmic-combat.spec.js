@@ -50,8 +50,8 @@ test('boost accelerates travel, burns and regenerates fuel, rewards correct pick
     expect(events.find(e=>e.type==='runner:pickup-correct')).toMatchObject({boosted:true,points:40});
   }
   const g=createFlowRunner({units:createFlowUnits(['1:3'],'words'),stageId:'fuel'});g.start();g.dispatch({type:'boost',active:true});
-  for(let i=0;i<120;i++)step(g);expect(g.getSnapshot().boostEnergy).toBeCloseTo(1);
-  g.pause();expect(g.getSnapshot().boosting).toBe(false);g.resume();for(let i=0;i<60;i++)step(g);expect(g.getSnapshot().boostEnergy).toBeGreaterThan(1);
+  for(let i=0;i<120;i++)step(g);expect(g.getSnapshot().boostEnergy).toBeCloseTo(3);
+  g.pause();expect(g.getSnapshot().boosting).toBe(false);g.resume();for(let i=0;i<60;i++)step(g);expect(g.getSnapshot().boostEnergy).toBeGreaterThan(3);
 });
 test('wrong boosted text never receives a boost reward or starburst',()=>{
   const events=[],g=createFlowRunner({units:createFlowUnits(['1:3'],'words'),stageId:'wrong',seed:7,onEvent:e=>events.push(e)});g.start();

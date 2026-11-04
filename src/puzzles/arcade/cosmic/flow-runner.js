@@ -1,6 +1,7 @@
 import {WORLD} from './runner.js';
 import {flowChoices} from '../../../quest/cosmic/flow-content.js';
 const clone=x=>structuredClone(x);
+export const BOOST_CAPACITY=4;
 // Arabic pickups are intact capsules, separate from unlabeled environmental rocks.
 export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0,slow=false,onEvent=()=>{}}) {
   if(!units?.length)throw Error('Verified flow units required.');
@@ -23,7 +24,7 @@ export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0
     for(let i=0;i<asteroidCount;i++){const lane=(rockLane+i)%3;wave.objects.push({id:`${stageId}:${roundIndex}:${seed}:flow:${round-1}:rock:${i}`,kind:'asteroid',lane,x:WORLD.lanes[lane],rockIndex:i,radius:29,arrival:start+2.5+i*1.1,drift:(round+i)%2?24:0});}
     wave.speed=speed;wave.end=Math.max(...wave.objects.map(o=>o.arrival))+1.2;
   }
-  function reset(){shots=[];effects=[];shotId=0;scoreReceipts.clear();state={score:0,destroyed:0,boostedPickups:0,boosting:false,boostEnergy:2,fireCooldown:0,status:'ready',stageId,elapsed:0,lane:1,x:300,shield:3,impact:0,invulnerable:0,motorErrors:0,memoryMistakes:0,cursor:0,collected:[],completedAyahs:[],laneChanges:0,reason:'',checkpointId:null};round=0;spawn();}
+  function reset(){shots=[];effects=[];shotId=0;scoreReceipts.clear();state={cueSlow:false,score:0,destroyed:0,boostedPickups:0,boosting:false,boostEnergy:BOOST_CAPACITY,fireCooldown:0,status:'ready',stageId,elapsed:0,lane:1,x:300,shield:3,impact:0,invulnerable:0,motorErrors:0,memoryMistakes:0,cursor:0,collected:[],completedAyahs:[],laneChanges:0,reason:'',checkpointId:null};round=0;spawn();}
   reset();
   function objects(){
     if(!wave)return [];
@@ -51,8 +52,8 @@ export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0
   function tick(dt){
     const boosted=state.boosting&&state.boostEnergy>0;
     if(boosted){state.boostEnergy=Math.max(0,state.boostEnergy-dt);if(!state.boostEnergy)state.boosting=false;}
-    else state.boostEnergy=Math.min(2,state.boostEnergy+dt*.45);
-    state.elapsed+=dt*(boosted?1.65:1);state.fireCooldown=Math.max(0,state.fireCooldown-dt);state.invulnerable=Math.max(0,state.invulnerable-dt);state.impact=Math.max(0,state.impact-dt);
+    else state.boostEnergy=Math.min(BOOST_CAPACITY,state.boostEnergy+dt*.6);
+    state.elapsed+=dt*(boosted?1.65:1)*(state.cueSlow ? .25 : 1);state.fireCooldown=Math.max(0,state.fireCooldown-dt);state.invulnerable=Math.max(0,state.invulnerable-dt);state.impact=Math.max(0,state.impact-dt);
     const delta=WORLD.lanes[state.lane]-state.x;state.x+=Math.sign(delta)*Math.min(Math.abs(delta),1400*dt);
     effects=effects.filter(e=>(e.life-=dt)>0);
     for(const b of shots)b.y-=720*dt;
@@ -86,6 +87,7 @@ export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0
       if(a.type==='start')return api.start();if(a.type==='pause')return api.pause(a.reason);if(a.type==='resume')return api.resume();
       if(a.type==='restart'){reset();return api.start();}
       if(a.type==='retry'&&state.status==='recovery'){state.shield=3;state.invulnerable=0;shots=[];state.status='running';spawn();return snapshot();}
+      if(a.type==='cue'){state.cueSlow=a.active===true;return snapshot();}
       if(state.status!=='running')return snapshot();
       if(a.type==='boost'){state.boosting=a.active===true&&state.boostEnergy>0;}
       if(a.type==='fire'&&state.fireCooldown===0&&shots.length<8){state.fireCooldown=.25;shots.push({id:`bolt:${shotId++}`,x:state.x,y:WORLD.shipY-35});emit('fire');}

@@ -9,7 +9,7 @@ async function open(page,{mobile=false,freeze=false}={}){
 
   await page.getByRole('button',{name:'View mission briefing →'}).click();
   await page.locator('[data-pickup-mode]').selectOption('ayahs');
-  await page.clock.install();
+  await page.locator('[data-flow-guidance]').uncheck();await page.clock.install();
   await page.getByRole('button',{name:'Launch Star Runner',exact:true}).click();
   await page.getByRole('button',{name:'Start flight',exact:true}).click();
   if(freeze)await page.clock.pauseAt(new Date(Date.now()+100));
@@ -87,7 +87,7 @@ test('mission stages advance only from safe checkpoints and restart retains the 
   await page.goto('/');await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Cosmic Rush/}).click();
   await page.locator('[name=surah]').selectOption('114');
   await page.locator('[name=selection]').selectOption('entire');
-  await page.getByRole('button',{name:'View mission briefing →'}).click();await page.locator('[data-pickup-mode]').selectOption('ayahs');await page.clock.install();
+  await page.getByRole('button',{name:'View mission briefing →'}).click();await page.locator('[data-pickup-mode]').selectOption('ayahs');await page.locator('[data-flow-guidance]').uncheck();await page.clock.install();
   await page.getByRole('button',{name:'Launch Star Runner',exact:true}).click();await page.getByRole('button',{name:'Start flight',exact:true}).click();
   await pilot(page);await expect(page.locator('.star-runner')).toHaveAttribute('data-flight-state','checkpoint');
   await expect(page.locator('[data-flight-stage]')).toHaveText('Stage 1 / 2');
