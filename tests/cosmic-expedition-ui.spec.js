@@ -28,6 +28,7 @@ test('entire surah expedition plays all activities, resumes after leaving and fi
   await expect.poll(()=>page.evaluate(()=>window.expeditionAudio.filter(a=>a.active).length)).toBe(1);await defend(page);await page.getByRole('button',{name:'Continue expedition',exact:true}).click();
   await expect(page.locator('[data-exp-resume]')).toContainText('Ayah Link');await page.locator('[data-exp-resume]').click();await page.getByRole('button',{name:'Start Ayah Link',exact:true}).click();
   for(let ayah=2;ayah<=4;ayah++){
+    if(await page.locator('[data-link-skip]').count())await page.locator('[data-link-skip]').click();
     await page.locator('[data-link-choices]').click();await page.locator(`[data-word-id="112:${ayah}:0"]`).click();await page.clock.runFor(400);await page.locator('[data-link-enter]').click();await page.clock.runFor(900);await page.locator('[data-link-continue]').click();
   }
   await page.getByRole('button',{name:'Continue expedition',exact:true}).click();await page.locator('[data-exp-resume]').click();await page.getByRole('button',{name:'Begin boss encounter',exact:true}).click();

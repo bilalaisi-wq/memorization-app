@@ -1,3 +1,4 @@
+import {createAdaptiveStore,difficultyModels} from '../adaptive.js';
 import {expeditionWeakLinks} from './weakness.js';
 import {createRewardStore} from '../../../rewards/store.js';
 import {sha256} from '../../../../supabase/functions/_shared/content-policy.js';
@@ -24,7 +25,7 @@ import {reportStudyExposure} from '../../../study-exposure.js';
 import './expedition.css';
 const labels={runner:'Star Runner',defense:'Meteor Defense',link:'Ayah Link',boss:'Weak-Link Sentinel'};
 export async function mountExpedition(root,mission,{rounds=3,slow=false,guidance=true,pickupMode='mixed',onExit=()=>{},isCurrent=()=>true}={}){
-  const owner=activeProfileId(),store=createExpeditionStore(),abort=new AbortController();let disposed=false,generation=0,child=null,director=null,unsubscribe=()=>{},recall=null,warning='',recallAudio=null,audioEpoch=0;
+  const owner=activeProfileId(),store=createExpeditionStore(),adaptive=createAdaptiveStore(),abort=new AbortController();let disposed=false,generation=0,child=null,director=null,unsubscribe=()=>{},recall=null,warning='',recallAudio=null,audioEpoch=0;
   const opened=await store.open(mission,rounds,{slow,guidance,pickupMode});
   if(opened.settings)({slow,guidance,pickupMode}=opened.settings);
   if(!root.isConnected||!isCurrent()||owner!==activeProfileId())return null;
@@ -41,28 +42,28 @@ export async function mountExpedition(root,mission,{rounds=3,slow=false,guidance
   async function launch(){
     clear();const epoch=generation,run=saved(),task=expeditionTasks(mission,run.rounds)[run.completed.length];if(!task){await final();return;}const host=shell(),valid=()=>current()&&epoch===generation;
     host.innerHTML='<p role="status">Preparing verified passage and checkpoint…</p>';
+    const evidence=createLinkEvidence(mission);let weak=[];try{weak=await weakLinkCandidates(evidence.snapshot(),{refs:mission.refs});weak=await expeditionWeakLinks(mission,store.snapshot(),weak);}catch(e){note(e);}if(!valid())return;
+    const decision=store.decision(mission,task.id,difficultyModels(mission.stages[task.stageIndex].refs,adaptive.snapshot(),createPassageMemory(profileStorage).snapshot(),weak));
+    const effectiveSlow=slow||decision.arcade.slow;
     const complete=()=>{if(!valid())return;try{store.complete(mission,task.id);overview();}catch(e){note(e);}};
     if(task.activity==='boss'){
       const plans=await prepareLinkPlans(mission.stages[task.stageIndex].refs,appearanceAccount().client);if(!valid())return;
-      const evidence=createLinkEvidence(mission);let weak=[];try{weak=await weakLinkCandidates(evidence.snapshot(),{refs:mission.refs});}catch(e){note(e);}
-      if(!valid())return;weak=await expeditionWeakLinks(mission,store.snapshot(),weak);if(!valid())return;let questions=await bossQuestions(mission,task.stageIndex,plans,weak);if(!valid())return;
-      const old=saved().boss[task.id],data=createPassageMemory(profileStorage).snapshot(),history=Object.values(data.records).filter(r=>r.unit.refs.some(ref=>mission.stages[task.stageIndex].refs.includes(ref))).flatMap(r=>r.history),successes=new Set(history.filter(h=>h.independent&&h.grade!=='Again').map(h=>h.at.slice(0,10))).size;
-      const supported=questions.some(q=>q.label==='Recorded difficulty');
-      // Repeated successful independent days increase retrieval demand, never movement speed.
-      if(successes>=3&&!supported)questions=await bossQuestions(mission,task.stageIndex,plans,weak,{extended:true});if(!valid())return;
-      const ordered=successes>=3&&!supported?[...questions].sort((a,b)=>(b.kind==='opening'||b.kind==='multi')-(a.kind==='opening'||a.kind==='multi')):questions;
+      let questions=await bossQuestions(mission,task.stageIndex,plans,weak,{extended:decision.memory.extended});if(!valid())return;
+      const old=saved().boss[task.id],supported=decision.memory.level==='supported';
+      const ordered=decision.memory.extended?[...questions].sort((a,b)=>(b.kind==='opening'||b.kind==='multi')-(a.kind==='opening'||a.kind==='multi')):questions;
       const blueprint=store.pinBoss(mission,task.id,bossBlueprint(ordered)),pinned=await restoreBossQuestions(mission,task.stageIndex,plans,blueprint);if(!valid())return;
       const bonuses=createFlightBonuses(mission);
-      child=mountWeakBoss(host,{questions:pinned,cleared:old?.cleared||[],save:event=>store.boss(mission,task.id,event),onEvent:event=>{if(event.type==='correct')bonuses.record({type:'boss:memory-correct',targetRef:event.refs.at(-1),stageIndex:task.stageIndex,roundIndex:0,questionId:event.questionId}).catch(note);},onExit:overview,evidenceStrength:supported?'Supported repair · repeated difficulty':successes>=3?'Extended retrieval · 3+ successful independent days':'Guided retrieval · untimed',onComplete:s=>{if(s.status==='checkpoint')complete();}});return;
+      child=mountWeakBoss(host,{questions:pinned,cleared:old?.cleared||[],save:event=>store.boss(mission,task.id,event),onEvent:event=>{try{adaptive.record({...event,type:`boss:${event.type}`,runId:run.runId,stageIndex:task.stageIndex,roundIndex:0});}catch(e){note(e);}if(event.type==='correct')bonuses.record({type:'boss:memory-correct',targetRef:event.refs.at(-1),stageIndex:task.stageIndex,roundIndex:0,questionId:event.questionId}).catch(note);},onExit:overview,evidenceStrength:`${decision.memory.level} memory demand · ${decision.memory.reason}`,onComplete:s=>{if(s.status==='checkpoint')complete();}});return;
     }
-    const next=await createFlightController(mission,{initialStage:task.stageIndex,initialRound:task.roundIndex,activity:task.activity,pickupMode:task.activity==='runner'?pickupMode:null,rounds:run.rounds,slow,linkMode:'recognition',reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
+    root.querySelector('[data-exp-warning]').textContent=`Arcade: ${decision.arcade.reason} Memory: ${decision.memory.reason}`;
+    const next=await createFlightController(mission,{initialStage:task.stageIndex,initialRound:task.roundIndex,activity:task.activity,pickupMode:task.activity==='runner'?pickupMode:null,rounds:run.rounds,slow:effectiveSlow,defenseConfig:decision.arcade.configuration,linkMode:decision.memory.linkMode,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
     if(!valid()){next.dispose();return;}director=next;
     if(task.activity==='link'){await director.prepareLink(appearanceAccount().client);if(!valid())return;}
     // Save immediately on genuine engine completion, before the learner leaves the screen.
-    let completed=false;unsubscribe=director.subscribe(e=>{if(e.type===`${task.activity}:checkpoint`&&!completed){try{store.complete(mission,task.id);completed=true;}catch(error){note(error);}}});
+    let completed=false;unsubscribe=director.subscribe(e=>{try{adaptive.record({...e,targetRef:e.targetRef||mission.stages[task.stageIndex].refs.at(-1)},{...director.getSnapshot(),slow:effectiveSlow});}catch(error){note(error);}if(e.type===`${task.activity}:checkpoint`&&!completed){try{store.complete(mission,task.id);completed=true;}catch(error){note(error);}}});
     const onCheckpoint=()=>{if(director?.getSnapshot().status!=='checkpoint')return;complete();};
-    const options={controller:director,onExit:overview,onCheckpoint,isCurrent:valid};
-    const view=task.activity==='runner'?await mountStarRunner(host,mission,{...options,slow,guidance,pickupMode,rounds:run.rounds}):task.activity==='defense'?await mountMeteorDefense(host,mission,options):await mountAyahLink(host,mission,{...options,client:appearanceAccount().client});
+    const options={controller:director,configuration:decision.arcade.configuration,onExit:overview,onCheckpoint,isCurrent:valid};
+    const view=task.activity==='runner'?await mountStarRunner(host,mission,{...options,slow:effectiveSlow,guidance,pickupMode,rounds:run.rounds}):task.activity==='defense'?await mountMeteorDefense(host,mission,options):await mountAyahLink(host,mission,{...options,client:appearanceAccount().client});
     if(!valid())view?.dispose();else child=view;
   }
   async function final(){

@@ -11,8 +11,10 @@ async function open(page,{mobile=false,freeze=false}={}){
   await page.locator('[data-pickup-mode]').selectOption('ayahs');
   await page.locator('[data-flow-guidance]').uncheck();await page.clock.install();
   await page.getByRole('button',{name:'Launch Star Runner',exact:true}).click();
+  // Freeze from the browser clock before starting, avoiding host/browser drift.
+  if(freeze)await page.clock.pauseAt(new Date(await page.evaluate(()=>Date.now()+1000)));
   await page.getByRole('button',{name:'Start flight',exact:true}).click();
-  if(freeze)await page.clock.pauseAt(new Date(Date.now()+100));
+  if(freeze)await page.clock.runFor(200);
 }
 const state=page=>page.locator('.star-runner').getAttribute('data-flight-state');
 async function steer(page,lane){

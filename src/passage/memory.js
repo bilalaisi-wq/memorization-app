@@ -34,6 +34,7 @@ export function createPassageMemory(
 ) {
   let data = { version: 1, timeZone, records: {}, active: null }, warning = "";
   const raw = storage.getItem(PASSAGE_MEMORY_KEY);
+  let lastRaw=raw;
   if (raw) {
     try {
       const value = JSON.parse(raw);
@@ -46,12 +47,13 @@ export function createPassageMemory(
   }
   const save = (fn) => {
     if (warning) throw Error(warning);
+    if(storage.getItem(PASSAGE_MEMORY_KEY)!==lastRaw)throw Error("Passage reviews changed in another surface. Reopen the assessment before saving; existing history is preserved.");
     const next = clone(data), result = fn(next);
     storage.setItem(PASSAGE_MEMORY_KEY, JSON.stringify(next));
     if (storage.getItem(PASSAGE_MEMORY_KEY) !== JSON.stringify(next)) {
       throw Error("Passage review could not be saved. Retry or export.");
     }
-    data = next;
+    data = next;lastRaw=JSON.stringify(next);
     return clone(result ?? next);
   };
   return {
@@ -152,8 +154,11 @@ export function createPassageMemory(
           "Sign in to sync private passage reviews. Local reviews remain saved.",
         );
       }
+      const originalRaw=storage.getItem(PASSAGE_MEMORY_KEY);
+      if(originalRaw!==lastRaw)throw Error("Passage reviews changed. Reopen before syncing; history was preserved.");
       const { data: remote, error } = await client.from("passage_learning")
         .select("document,revision").eq("user_id", userId).maybeSingle();
+      if(storage.getItem(PASSAGE_MEMORY_KEY)!==originalRaw)throw Error("Passage reviews changed during sync. Local data was preserved; retry.");
       if (error) {
         throw Error(
           "Passage review sync is unavailable; local reviews are unchanged.",
@@ -165,6 +170,11 @@ export function createPassageMemory(
       } catch {}
       const local = JSON.stringify(data),
         empty = !Object.keys(data.records).length && !data.active;
+      const canonical=value=>JSON.stringify((function ordered(v){return Array.isArray(v)?v.map(ordered):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,ordered(v[k])])):v;})(value));
+      if(remote&&validMemory(remote.document)&&canonical(remote.document)===canonical(data)){
+        storage.setItem(BASE,JSON.stringify({revision:remote.revision,json:local}));
+        return "Passage reviews are up to date.";
+      }
       if (remote && remote.revision !== base.revision) {
         if (!empty && local !== base.json) {
           throw Error(
@@ -174,7 +184,8 @@ export function createPassageMemory(
         if (!validMemory(remote.document)) {
           throw Error("Cloud passage data needs recovery.");
         }
-        storage.setItem(PASSAGE_MEMORY_KEY, JSON.stringify(remote.document));
+        if(data.active&&!data.active.graded)throw Error("An unfinished passage attempt is open. Finish or cancel it before restoring another device’s review history.");
+        storage.setItem(PASSAGE_MEMORY_KEY, JSON.stringify(remote.document));lastRaw=JSON.stringify(remote.document);
         data = clone(remote.document);
         storage.setItem(
           BASE,

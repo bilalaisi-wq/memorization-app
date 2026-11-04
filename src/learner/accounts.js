@@ -1,3 +1,4 @@
+import {CosmicCloud} from '../quest/cosmic/cloud.js';
 import {mountAccountPhoto} from "../rewards/account-photo.js";
 import {receiveRemoteRewards} from "../rewards/store.js";
 import { avatarSvg } from "../rewards/catalog.js";
@@ -29,6 +30,7 @@ let client = null,
   user = null,
   accountError = "",
   cloud = null,
+  cosmicCloud = null,
   projectUrl = "",
   projectKey = "";
 export async function initializeAccounts(config = {}) {
@@ -101,6 +103,10 @@ export async function initializeAccounts(config = {}) {
           .forEach((el) => (el.textContent = cloud.status));
       });
       await cloud.initialize();
+      cosmicCloud=new CosmicCloud(client,user.id,{onStatus:message=>{document.querySelectorAll('[data-cosmic-sync-status]').forEach(n=>n.textContent=message);}});
+      void cosmicCloud.initialize();
+      window.addEventListener('ayahcosmicchange',e=>{if(e.detail.owner===user?.id)cosmicCloud?.schedule();});
+      window.addEventListener('online',()=>cosmicCloud?.schedule());
       onProfileChange((id) => {
         if (id === user?.id) cloud?.changed();
       });
@@ -112,6 +118,7 @@ export async function initializeAccounts(config = {}) {
       if (event === "INITIAL_SESSION") return;
       if ((session?.user?.id || null) !== (user?.id || null)) {
         cloud?.dispose();
+        cosmicCloud?.dispose();
         rewardPublisher?.dispose();
         setDeveloperUser(null);
         selectProfile(null);
@@ -125,6 +132,7 @@ export async function initializeAccounts(config = {}) {
   } catch {
     accountError =
       "The account service is unavailable. Guest learning remains available.";
+    cosmicCloud?.dispose();
     user = null;
     setDeveloperUser(null);
     selectProfile(null);
@@ -280,10 +288,18 @@ function showAccount(learning) {
     area.querySelector("[data-privacy]").onclick = showPrivacy;
     return;
   }
-  area.innerHTML = `<p>You’re signed in. Your progress is separate from guest and other accounts on this browser. You stay signed in on each device until you sign out. Core learning progress can load on a new device. Passage reviews use the separate Sync button in Passage Builder. Quest journeys and workspace drafts stay on this device; the account download includes them for backup.</p><label><input type="checkbox" data-sync-enabled> Automatically sync my learning progress across devices</label><p data-sync-status role="status"></p><div class="account-actions"><button class="primary" data-save>Save private cloud backup</button><button class="text-button" data-restore>Restore cloud backup</button><button class="text-button" data-copy>Copy guest core progress into empty account</button><button class="text-button" data-export>Download my account data</button><button class="text-button" data-signout>Sign out on this device</button><button class="text-button" data-signout-all>Sign out on all devices</button></div><h3>Optional weekly leaderboard</h3><p>Share only a made-up alias and weekly learning totals. No email, ayah details, goals, or recordings are public. Rankings are self-reported practice, not verified recitation. Opting in automatically syncs dated XP receipts without Quran references to keep totals up to date; profile photos remain private.</p><label>Public alias <input data-alias maxlength="24" placeholder="e.g. Cedar42" pattern="[A-Za-z0-9 _-]{3,24}"></label><label><input data-opt-in type="checkbox"> Share my alias, companion and this week’s totals publicly</label><button class="primary small" data-publish>Update leaderboard preference</button><button class="text-button" data-privacy>Privacy information</button><hr><p>Deleting your account removes server backups, public rankings, and this account’s progress on this browser. Download a copy first if wanted.</p><button class="text-button" data-delete>Delete my account and data</button>`;
+  area.innerHTML = `<p>You’re signed in. Your progress is separate from guest and other accounts on this browser. You stay signed in on each device until you sign out. Core learning progress can load on a new device. Cosmic Rush checkpoints and passage reviews have separate private sync controls below. Other Quest journeys and workspace drafts remain on this device; account downloads include them for backup.</p><label><input type="checkbox" data-sync-enabled> Automatically sync my learning progress across devices</label><p data-sync-status role="status"></p><div class="account-actions"><button class="primary" data-save>Save private cloud backup</button><button class="text-button" data-restore>Restore cloud backup</button><button class="text-button" data-copy>Copy guest core progress into empty account</button><button class="text-button" data-export>Download my account data</button><button class="text-button" data-signout>Sign out on this device</button><button class="text-button" data-signout-all>Sign out on all devices</button></div><h3>Optional weekly leaderboard</h3><p>Share only a made-up alias and weekly learning totals. No email, ayah details, goals, or recordings are public. Rankings are self-reported practice, not verified recitation. Opting in automatically syncs dated XP receipts without Quran references to keep totals up to date; profile photos remain private.</p><label>Public alias <input data-alias maxlength="24" placeholder="e.g. Cedar42" pattern="[A-Za-z0-9 _-]{3,24}"></label><label><input data-opt-in type="checkbox"> Share my alias, companion and this week’s totals publicly</label><button class="primary small" data-publish>Update leaderboard preference</button><button class="text-button" data-privacy>Privacy information</button><hr><p>Deleting your account removes server backups, public rankings, and this account’s progress on this browser. Download a copy first if wanted.</p><button class="text-button" data-delete>Delete my account and data</button>`;
   if(profileStorage.getItem(RESTORE_KEY)){
     const recover=document.createElement('button');recover.className='text-button';recover.textContent='Recover pre-restore device copy';recover.dataset.cloudRecover='';recover.onclick=()=>run(async()=>{cloud.recover();location.reload();});area.querySelector('.account-actions').append(recover);
   }
+  const cosmicSection=document.createElement('section');cosmicSection.innerHTML='<h3>Cosmic Rush private sync</h3><p>Checkpoints, errors, hints and difficulty evidence sync separately from core progress. Actual passage recall uses the existing private passage review table. No recordings are uploaded.</p><label><input type="checkbox" data-cosmic-auto> Automatically sync Cosmic Rush and passage reviews</label><p data-cosmic-sync-status role="status"></p><button class="primary" data-cosmic-save>Sync Cosmic Rush now</button><button class="text-button" data-cosmic-restore>Restore Cosmic cloud copy</button><button class="text-button" data-cosmic-keep-device>Keep this device Cosmic copy after conflict</button><button class="text-button" data-cosmic-download>Download Cosmic cloud copy</button><button class="text-button" data-cosmic-recover>Recover original device Cosmic copy</button>';
+  area.querySelector('.account-actions').after(cosmicSection);cosmicSection.querySelector('[data-cosmic-sync-status]').textContent=cosmicCloud?.status||'Cosmic sync is unavailable.';cosmicSection.querySelector('[data-cosmic-auto]').checked=cosmicCloud?.meta.enabled||false;
+  cosmicSection.querySelector('[data-cosmic-auto]').onchange=e=>run(async()=>{cosmicCloud.setEnabled(e.target.checked);});
+  cosmicSection.querySelector('[data-cosmic-save]').onclick=()=>run(()=>cosmicCloud.sync());
+  cosmicSection.querySelector('[data-cosmic-restore]').onclick=()=>run(async()=>{if(!confirm('Restore the private Cosmic cloud copy? Your current device copy will remain in the recovery backup. Download both copies first if they differ.'))return;await cosmicCloud.restore();location.reload();});
+  cosmicSection.querySelector('[data-cosmic-recover]').onclick=()=>run(async()=>{cosmicCloud.recover();location.reload();});
+  cosmicSection.querySelector('[data-cosmic-keep-device]').onclick=()=>run(async()=>{if(!confirm('Keep this device Cosmic copy? Download both copies first. The cloud copy will be backed up locally and a fresh revision check will protect concurrent changes. Passage FSRS history will not be forcibly replaced.'))return;await cosmicCloud.replaceRemote();});
+  cosmicSection.querySelector('[data-cosmic-download]').onclick=()=>run(async()=>{const remote=await cosmicCloud.read();if(!remote)throw Error('No Cosmic cloud backup exists.');const a=document.createElement('a'),url=URL.createObjectURL(new Blob([JSON.stringify(remote,null,2)],{type:'application/json'}));a.href=url;a.download='ayah-cosmic-cloud.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
   const syncToggle = area.querySelector("[data-sync-enabled]");
   syncToggle.checked = cloud?.enabled || false;
   area.querySelector("[data-sync-status]").textContent =

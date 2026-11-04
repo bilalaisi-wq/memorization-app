@@ -26,3 +26,4 @@ export function createGatewayRecorder(mission,{storage=profileStorage,getOwner=a
     },
   };
 }
+export {validate as validGatewayStore};

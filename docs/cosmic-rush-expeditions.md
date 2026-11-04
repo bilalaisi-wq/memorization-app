@@ -1,5 +1,7 @@
 # Cosmic Rush Phase 6 — Weak-Link Bosses and Expeditions
 
+Phase 7 update: [Private cloud sync and adaptive revision](cosmic-rush-phase7.md) now extends this local-first route. The original Phase 6 release limits below are historical.
+
 ## Entry and route
 
 Revision Lab → Cosmic Rush → choose a free passage → **Start or resume full expedition**. The existing 5/10/15/20 presets, contiguous custom ranges and entire-surah selections are retained. Al-Fatihah and Juz Amma are the only eligible content, irrespective of developer/subscription status.

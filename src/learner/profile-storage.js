@@ -17,10 +17,12 @@ export const selectProfile = (id) => {
   if(typeof window!=="undefined")window.dispatchEvent(new CustomEvent("ayahprofilechange",{detail:{owner}}));
 };
 export const profileKey = (key) => (owner ? `ayah-user:${owner}:${key}` : key);
+export const cosmicKeys = Object.freeze(['ayah-cosmic-expeditions-v1','ayah-cosmic-links-v1','ayah-cosmic-gateways-v1','ayah-cosmic-adaptive-v1']);
 export const profileStorage = {
   getItem: (key) => localStorage.getItem(profileKey(key)),
   setItem: (key, value) => {
     localStorage.setItem(profileKey(key), value);
+    if(typeof window!=='undefined'&&(cosmicKeys.includes(key)||key==='ayah-passage-recall-v1'))window.dispatchEvent(new CustomEvent('ayahcosmicchange',{detail:{owner,key}}));
     if (progressKeys.includes(key) || key === "ayah-rewards-v1")
       for (const listener of listeners) listener(owner, key);
   },
@@ -42,7 +44,7 @@ export const progressKeys = [
 export const exportKeys = Object.freeze([...progressKeys,
   'ayah-passage-recall-v1','ayah-passage-sync-v1','ayah-passage-workspaces-v1',
   'ayah-quest-campaigns-v1','ayah-quest-revision-v1','ayah-quest-recovery-backup-v1','ayah-cosmic-gateways-v1','ayah-cosmic-links-v1','ayah-cosmic-expeditions-v1',
-  'ayah-cloud-sync-v1','ayah-cloud-restore-backup-v1','ayah-rewards-v1','ayah-reward-remote-v1',
+  'ayah-cosmic-adaptive-v1','ayah-cosmic-cloud-v1','ayah-cosmic-recovery-v1','ayah-cloud-sync-v1','ayah-cloud-restore-backup-v1','ayah-rewards-v1','ayah-reward-remote-v1',
   'ayah-nature-profile-v1','ayah-appearance-v1','ayah-sky-celebrations-v1','ayah-coach-settings-v1',
 ]);
 export function profileBackup() {

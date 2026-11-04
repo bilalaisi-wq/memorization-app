@@ -38,3 +38,4 @@ export async function weakLinkCandidates(data,{limit=10,refs=null}={}){
   const current=[];for(const g of groups.values())if(g.sourceRevision===await pairFingerprint(g.fromRef,g.toRef))current.push({...g,reason:`${g.selectionMistakes} observed choice errors · ${g.typedMismatches} typed mismatches · ${g.selfReportedDifficulty} self-reported difficulties · ${g.hints} hints. No spoken verification.`});
   return current.sort((a,b)=>(b.selectionMistakes+b.typedMismatches+b.selfReportedDifficulty+b.hints)-(a.selectionMistakes+a.typedMismatches+a.selfReportedDifficulty+a.hints)||a.pairKey.localeCompare(b.pairKey)).slice(0,Math.max(0,Math.min(50,limit)));
 }
+export {valid as validLinkEvidence};
