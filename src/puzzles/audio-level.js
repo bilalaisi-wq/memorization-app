@@ -22,6 +22,7 @@ export function createAudioLevel({initialVolume=1,useGain=needsGain(),AudioConte
         }catch{try{source?.disconnect();}catch{}source=null;audio.volume=level;}
       }
     },
+    getVolume:()=>level,
     setVolume(value){level=clampVolume(value);if(gain&&source)gain.gain.value=level;else if(media)media.volume=level;},
     detach,
     resume(){if(context)Promise.resolve(context.resume()).catch(()=>{});},

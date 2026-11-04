@@ -1,3 +1,5 @@
+import {mountCosmicControls} from '../preferences.js';
+import {captureCosmicFocus,restoreCosmicFocus} from '../focus.js';
 import {esc} from '../../../ui/dom.js';
 import {reportStudyExposure} from '../../../study-exposure.js';
 import {freeAyah} from '../gateways.js';
@@ -7,20 +9,20 @@ import {createAudioManager} from '../../../puzzles/arcade/services.js';
 import {readLabVolume} from '../../../puzzles/audio-level.js';
 import {profileStorage,activeProfileId} from '../../../learner/profile-storage.js';
 export function mountWeakBoss(root,{questions,cleared,save,onComplete,onExit,onEvent=()=>{},evidenceStrength='Baseline pace'}){
-  const owner=activeProfileId(),audio=createAudioManager({owner:'cosmic-boss',initialVolume:readLabVolume(profileStorage)}),abort=new AbortController();let disposed=false,token=0,warning='';
+  const owner=activeProfileId(),audio=createAudioManager({owner:'cosmic-boss',initialVolume:readLabVolume(profileStorage)}),abort=new AbortController();let disposed=false,token=0,warning='',controls=null;
   const game=createWeakLinkBoss({questions,cleared,save,onEvent});
   const stop=()=>{token++;audio.stop();};
-  function send(action){if(disposed)return;stop();try{game.dispatch(action);}catch(e){warning=e.message;}paint();}
+  function send(action){if(disposed)return;const focus=captureCosmicFocus(root),before=game.getSnapshot().question.id,draft=root.querySelector('[data-boss-text]')?.value;stop();try{game.dispatch(action);}catch(e){warning=e.message;}paint();if(before===game.getSnapshot().question.id&&draft!==undefined&&root.querySelector('[data-boss-text]'))root.querySelector('[data-boss-text]').value=draft;restoreCosmicFocus(root,focus,{draft:before===game.getSnapshot().question.id});}
   const verse=ref=>`<p class="exp-arabic" lang="ar" dir="rtl">${esc(freeAyah(ref).text)} <small>${esc(ref)}</small></p>`;
   function paint(){
     if(disposed)return;const s=game.getSnapshot(),q=s.question;
     let exposed=[];if(q.previous)exposed.push(q.previous);if(s.status==='choices')exposed.push(...q.choices.flatMap(c=>c.refs));if(s.hints||s.revealed)exposed.push(...q.refs);
     let blocked=false;try{reportStudyExposure(exposed);}catch(e){warning=e.message;blocked=true;stop();}
-    root.innerHTML=`<section class="cosmic-boss" data-boss-state="${s.status}" data-boss-kind="${q.kind}" data-boss-phase="${s.phase}"><div class="runner-heading"><h3>Weak-Link Sentinel</h3><button class="cosmic-secondary" data-boss-exit>Save and return to expedition</button></div><p>${esc(evidenceStrength)} · ${esc(q.label)}</p><p>${esc(q.reason)}</p><div class="boss-celestial" aria-label="${s.cleared.length} of ${s.total} energy shields released"><span class="boss-core" aria-hidden="true">✦</span>${questions.map((x,i)=>`<i class="boss-shield ${s.cleared.includes(x.id)?'is-restored':''}" style="--shield:${i}" aria-hidden="true"></i>`).join('')}</div><progress max="${s.total}" value="${s.cleared.length}" aria-label="Restored boss shields"></progress><p role="status">${esc(warning||s.reason)}</p><div data-boss-body></div><div class="exp-audio"><button class="cosmic-secondary" data-boss-audio>Listen to complete ayah${q.refs.length>1?'s':''} · assistance</button><button class="cosmic-secondary" data-boss-stop>Stop recitation</button><label>Recitation volume<input data-boss-volume type="range" min="0" max="100" value="${Math.round(audio.getVolume?.()*100||readLabVolume(profileStorage)*100)}"></label></div><p>Untimed memory practice. Words are not combat targets. Spoken comparison is self-assessed; boss results do not update FSRS or certify memorization.</p></section>`;
+    controls?.dispose();root.innerHTML=`<section class="cosmic-boss" data-boss-state="${s.status}" data-boss-kind="${q.kind}" data-boss-phase="${s.phase}"><div class="runner-heading"><h3>Weak-Link Sentinel</h3><button class="cosmic-secondary" data-boss-exit>Save and return to expedition</button></div><p>${esc(evidenceStrength)} · ${esc(q.label)}</p><p>${esc(q.reason)}</p><div class="boss-celestial" aria-label="${s.cleared.length} of ${s.total} energy shields released"><span class="boss-core" aria-hidden="true">✦</span>${questions.map((x,i)=>`<i class="boss-shield ${s.cleared.includes(x.id)?'is-restored':''}" style="--shield:${i}" aria-hidden="true"></i>`).join('')}</div><progress max="${s.total}" value="${s.cleared.length}" aria-label="Restored boss shields"></progress><p role="status">${esc(warning||s.reason)}</p><div data-boss-body></div><div class="exp-audio"><button class="cosmic-secondary" data-boss-audio>Listen to complete ayah${q.refs.length>1?'s':''} · assistance</button><button class="cosmic-secondary" data-boss-stop>Stop recitation</button><label>Recitation volume<input data-boss-volume type="range" min="0" max="100" value="${Math.round((audio.getVolume?.()??readLabVolume(profileStorage))*100)}"></label></div><p>Untimed memory practice. Words are not combat targets. Spoken comparison is self-assessed; boss results do not update FSRS or certify memorization.</p></section>`;
     root.querySelector('[data-boss-exit]').onclick=()=>{dispose();onExit();};root.querySelector('[data-boss-stop]').onclick=stop;
     root.querySelector('[data-boss-volume]').oninput=e=>audio.setVolume(Number(e.target.value)/100);
     root.querySelector('[data-boss-audio]').onclick=async()=>{stop();const t=token;try{reportStudyExposure(q.refs);send({type:'audio'});}catch(e){warning=e.message;paint();return;}const play=async i=>{if(disposed||t+1!==token||i>=q.refs.length)return;const ok=await audio.play(freeAyah(q.refs[i]).audio,{onEnded:()=>play(i+1)});if(!ok&&!disposed){warning='Audio unavailable. You can retry without a time limit.';paint();}};play(0);};
-    const body=root.querySelector('[data-boss-body]');
+    controls=mountCosmicControls(root.querySelector('.cosmic-boss'));const body=root.querySelector('[data-boss-body]');
     if(blocked){body.innerHTML='<p>Verified text is hidden until assistance can be recorded.</p><button class="cosmic-secondary" data-boss-refresh>Retry workspace</button>';body.querySelector('button').onclick=paint;return;}
     if(s.status==='ready')body.innerHTML='<h4>Release the celestial shields</h4><button class="cosmic-primary" data-boss-start>Begin boss encounter</button>';
     if(s.status==='paused')body.innerHTML='<button class="cosmic-primary" data-boss-resume>Resume boss encounter</button>';
@@ -47,7 +49,7 @@ export function mountWeakBoss(root,{questions,cleared,save,onComplete,onExit,onE
     body.querySelector('[data-boss-form]')?.addEventListener('submit',e=>{e.preventDefault();send({type:'text',text:body.querySelector('[data-boss-text]').value});});
     body.querySelector('[data-boss-match]')?.addEventListener('click',()=>send({type:'assess',match:true}));body.querySelector('[data-boss-again]')?.addEventListener('click',()=>send({type:'assess',match:false}));body.querySelector('[data-boss-finish]')?.addEventListener('click',()=>onComplete(game.getSnapshot()));
   }
-  function dispose(){if(disposed)return;disposed=true;stop();audio.dispose();game.dispose();abort.abort();}
+  function dispose(){if(disposed)return;disposed=true;controls?.dispose();stop();audio.dispose();game.dispose();abort.abort();}
   window.addEventListener('blur',()=>send({type:'pause'}),{signal:abort.signal});document.addEventListener('visibilitychange',()=>{if(document.hidden)send({type:'pause'});},{signal:abort.signal});window.addEventListener('ayahprofilechange',()=>{if(owner!==activeProfileId()){dispose();root.textContent='Account changed. Reopen Revision Lab.';}},{signal:abort.signal});
   paint();return {dispose,pause:()=>send({type:'pause'}),getSnapshot:()=>game.getSnapshot()};
 }

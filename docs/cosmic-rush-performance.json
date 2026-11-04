@@ -1,0 +1,84 @@
+{
+  "environment": "Headless Chromium on shared Linux; synthetic CPU throttling, not a physical-device certification.",
+  "generatedAt": "2026-11-04T20:45:15.539Z",
+  "runs": [
+    {
+      "cpuThrottle": 1,
+      "simulationSeconds": 3.0664999999999916,
+      "stateAfterSample": "running",
+      "repeatedExit": [
+        {
+          "JSEventListeners": 356,
+          "Nodes": 2698,
+          "JSHeapUsedSize": 11027068
+        },
+        {
+          "JSEventListeners": 131,
+          "Nodes": 782,
+          "JSHeapUsedSize": 11051828
+        }
+      ],
+      "launchMs": 2433,
+      "framePacingMs": {
+        "frames": 179,
+        "p50": 16.699999999999818,
+        "p95": 16.700000000000728,
+        "max": 33.40000000000009
+      },
+      "paused": {
+        "mutations": 0,
+        "state": "paused"
+      },
+      "runningHeap": {
+        "JSEventListeners": 190,
+        "Nodes": 1023,
+        "JSHeapUsedSize": 10887120
+      },
+      "afterExit": {
+        "JSEventListeners": 244,
+        "Nodes": 1748,
+        "JSHeapUsedSize": 10923336
+      },
+      "remainingGameNodes": 0
+    },
+    {
+      "cpuThrottle": 4,
+      "simulationSeconds": 3.283199999999999,
+      "stateAfterSample": "running",
+      "repeatedExit": [
+        {
+          "JSEventListeners": 131,
+          "Nodes": 782,
+          "JSHeapUsedSize": 10999708
+        },
+        {
+          "JSEventListeners": 131,
+          "Nodes": 782,
+          "JSHeapUsedSize": 11089828
+        }
+      ],
+      "launchMs": 8768,
+      "framePacingMs": {
+        "frames": 121,
+        "p50": 16.700000000000728,
+        "p95": 49.899999999999636,
+        "max": 83.30000000000109
+      },
+      "paused": {
+        "mutations": 0,
+        "state": "paused"
+      },
+      "runningHeap": {
+        "JSEventListeners": 130,
+        "Nodes": 638,
+        "JSHeapUsedSize": 10923516
+      },
+      "afterExit": {
+        "JSEventListeners": 131,
+        "Nodes": 782,
+        "JSHeapUsedSize": 10925448
+      },
+      "remainingGameNodes": 0
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # Cosmic Rush — Ayah Relay 2.0 specification
 
+Phase 8 release candidate: [Polish, controls, rollout and validation evidence](cosmic-rush-release.md). Local results and outstanding live-deployment/device checks are distinguished explicitly.
+
 Phase 7 implementation: [Private persistence, FSRS integration and adaptive revision](cosmic-rush-phase7.md) adds account-owned cloud sync, separate motor/memory models and evidence-backed repair routes. Existing scheduler settings and histories are preserved.
 
 Phase 6 implementation: [Weak-Link Bosses and saved expeditions](cosmic-rush-expeditions.md) coordinates the available activities, adds evidence-backed celestial shields and offers native self-assessed passage recall. Historical inventories below remain audit snapshots.

@@ -1,3 +1,5 @@
+import {mountCosmicControls,cosmicReducedMotion} from '../../../quest/cosmic/preferences.js';
+import {captureCosmicFocus,restoreCosmicFocus} from '../../../quest/cosmic/focus.js';
 import {createFlightController} from '../../../quest/cosmic/controller.js';
 import {canonicalLinkAyah,firstGrapheme} from '../../../quest/cosmic/link-content.js';
 import {createLinkEvidence,weakLinkCandidates} from '../../../quest/cosmic/link-evidence.js';
@@ -19,7 +21,7 @@ export function renderLinkAyah(ayah,{end=false,opening=false,hiddenOpening=false
   return `${esc(ayah.text.slice(0,span.start))}<mark data-link-${end?'ending':'opening'}>${inside}</mark>${esc(ayah.text.slice(span.end))}`;
 }
 export async function mountAyahLink(root,mission,{controller=null,client=null,mode='guided',onExit=()=>{},onRunner=null,onDefense=null,onCheckpoint=null,isCurrent=()=>true}={}){
-  const owner=activeProfileId(),game=controller||await createFlightController(mission,{activity:'link',linkMode:mode,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
+  const owner=activeProfileId(),game=controller||await createFlightController(mission,{activity:'link',linkMode:mode,reducedMotion:cosmicReducedMotion()});
   if(!controller)await game.prepareLink(client);
   if(!root.isConnected||owner!==activeProfileId()||!isCurrent()){if(!controller)game.dispose();return null;}
   let disposed=false,raf=0,last=0,key='',warning='',exposureBlocked=false,audioToken=0,pending=false,bonusXP=0,weak=[];
@@ -31,7 +33,7 @@ export async function mountAyahLink(root,mission,{controller=null,client=null,mo
   });
   warning=evidence.warning||'';
   root.innerHTML='<section class="ayah-link" aria-label="Ayah Link and Phrase Repair"><div class="runner-heading"><div><span class="cosmic-eyebrow">COSMIC RUSH · AYAH LINK</span><h3>Connect the ayahs</h3></div><button class="cosmic-secondary" data-link-exit>Return to mission</button></div><p>Connect consecutive ayahs without changing their canonical boundaries. Study grouping does not prescribe waqf or restart rules. Typed matching and learner self-assessment do not verify spoken recitation or update FSRS.</p><p data-link-progress></p><div data-link-body></div><div class="link-audio"><button class="cosmic-secondary" data-link-listen>Listen to both complete ayahs</button><button class="cosmic-secondary" data-link-stop>Stop recitation</button><label>Recitation volume<input data-link-volume type="range" min="0" max="100" value="50"></label></div><button class="cosmic-secondary" data-link-pause>Pause</button><button class="cosmic-secondary" data-link-restart>Restart Link set</button><p data-link-warning role="status"></p><p data-link-status role="status" aria-live="polite"></p><div data-link-weak></div></section>';
-  const view=root.querySelector('.ayah-link'),body=root.querySelector('[data-link-body]');
+  const view=root.querySelector('.ayah-link'),controls=mountCosmicControls(view),body=root.querySelector('[data-link-body]');
   const listen=(target,event,fn)=>target.addEventListener(event,fn,{signal:abort.signal});
   function stopAudio(){audioToken++;audio.stop();}
   async function refreshWeak(){try{weak=await weakLinkCandidates(evidence.snapshot(),{refs:mission.refs,limit:5});if(!disposed)root.querySelector('[data-link-weak]').innerHTML=weak.length?`<details><summary>Transition practice notes</summary>${weak.map(w=>`<p><strong>${esc(w.pairKey)}</strong> · ${esc(w.reason)}</p>`).join('')}</details>`:'';}catch(error){warning=error.message;if(!disposed)root.querySelector('[data-link-warning]').textContent=warning;}}
@@ -53,9 +55,9 @@ export async function mountAyahLink(root,mission,{controller=null,client=null,mo
     root.querySelector('[data-link-progress]').textContent=`Stage ${s.stageIndex+1} / ${s.stageCount} · Round ${s.roundIndex+1} / ${s.roundCount} · Checkpoint ${s.cursor+1} / ${s.pairCount} · ${s.mistakes} corrections · ${s.arcadeScore} arcade points · ${bonusXP} bonus XP`;
     root.querySelector('[data-link-warning]').textContent=warning;
     const phase=['demonstration','linking'].includes(s.status)?'demo':s.status;
-    const nextKey=JSON.stringify([phase,s.cursor,s.mode,s.hints,s.revealed,s.choice,s.order,s.reason,exposureBlocked,p.plan.revision]);
+    let rebuilt=false;const nextKey=JSON.stringify([phase,s.cursor,s.mode,s.hints,s.revealed,s.choice,s.order,s.reason,exposureBlocked,p.plan.revision]);
     if(key!==nextKey){
-      key=nextKey;stopPieceDrag();
+      rebuilt=true;const retainedFocus=captureCosmicFocus(body);key=nextKey;stopPieceDrag();
       if(exposureBlocked){body.innerHTML='<h4>Study assistance needs recovery</h4><p>The verified text is hidden until exposure can be recorded.</p><button class="cosmic-secondary" data-link-recover>Retry showing the workspace</button>';body.querySelector('button').onclick=()=>{key='';paint();};return;}
       if(s.status==='ready')body.innerHTML='<h4>Ready to link?</h4><p>Use a guided demonstration, opening-word recognition, typed recall or self-assessed spoken comparison. No speech verification is implied.</p><button class="cosmic-primary" data-link-start>Start Ayah Link</button>';
       else if(s.status==='paused')body.innerHTML='<h4>Link practice paused</h4><button class="cosmic-primary" data-link-resume>Resume Ayah Link</button>';
@@ -76,10 +78,10 @@ export async function mountAyahLink(root,mission,{controller=null,client=null,mo
         if(s.status==='checkpoint')action=`<h4>Link checkpoint complete</h4><p>${s.routeComplete?'All Link checkpoints in this route were practiced.':'This checkpoint is complete; other activity checkpoints are tracked separately.'} No arcade result certifies long-term memorization.</p>${onCheckpoint?'<button class="cosmic-primary" data-link-expedition>Continue expedition</button>':''}${onRunner?'<button class="cosmic-primary" data-link-runner>Continue in Star Runner</button>':''}${onDefense?'<button class="cosmic-secondary" data-link-defense>Continue in Meteor Defense</button>':''}${!onCheckpoint&&!s.atRouteEnd?'<button class="cosmic-primary" data-link-next>Next Link round or ayah set</button>':''}${!onCheckpoint?'<button class="cosmic-secondary" data-link-replay>Replay this Link set</button>':''}`;
         body.innerHTML=board+action+hints+(['recall','gateway','repair','comparison'].includes(s.status)&&s.hints<3?'<button class="cosmic-secondary" data-link-hint>More help · next hint</button>':'');
       }
-      bind();
+      bind();restoreCosmicFocus(body,retainedFocus,{draft:false});
     }
     const connect=body.querySelector('[data-link-connect]');if(connect)connect.disabled=s.status!=='demonstration';
-    const board=body.querySelector('[data-link-board]');if(board){board.classList.toggle('markers-hidden',!s.markersVisible);board.classList.toggle('is-connected',s.linked);const markers=body.querySelector('[data-link-markers]');markers.textContent=`${s.markersVisible?'Hide':'Restore'} verse markers`;drawConnection();}
+    const board=body.querySelector('[data-link-board]');if(board){board.classList.toggle('markers-hidden',!s.markersVisible);board.classList.toggle('is-connected',s.linked);const markers=body.querySelector('[data-link-markers]');markers.textContent=`${s.markersVisible?'Hide':'Restore'} verse markers`;if(rebuilt)drawConnection();}
     const ship=body.querySelector('[data-link-ship]');if(ship){ship.style.left=`${s.shipX*100}%`;ship.style.bottom=`${s.status==='crossing'?10+s.travel/.7*70:10}%`;}
     const enter=body.querySelector('[data-link-enter]');if(enter)enter.disabled=Math.abs(s.shipX-[.2,.5,.8][s.choice])>=.04;
     const fill=body.querySelector('[data-reactor-fill]');if(fill)fill.style.setProperty('--charge',`${s.charge*100}%`);
@@ -106,7 +108,7 @@ export async function mountAyahLink(root,mission,{controller=null,client=null,mo
   function animated(s){return ['linking','crossing'].includes(s.status)||s.status==='gateway'&&Math.abs(s.shipX-[.2,.5,.8][s.choice])>.001;}
   function frame(now){raf=0;if(disposed||!root.isConnected){dispose();return;}const dt=last?Math.min(.05,(now-last)/1000):0;last=now;if(dt)game.dispatch({type:'tick',dt});paint();schedule();}
   function schedule(){if(!disposed&&!raf&&animated(game.getSnapshot()))raf=requestAnimationFrame(frame);}
-  function send(action){if(disposed||exposureBlocked)return;stopAudio();game.dispatch(action);paint();schedule();}
+  function send(action){if(disposed||exposureBlocked)return;const focus=captureCosmicFocus(body),before=game.getSnapshot().pair.toRef,input=body.querySelector('[data-link-typed]'),draft=input?.value;stopAudio();game.dispatch(action);paint();if(before===game.getSnapshot().pair.toRef&&body.querySelector('[data-link-typed]')&&draft!==undefined)body.querySelector('[data-link-typed]').value=draft;restoreCosmicFocus(body,focus,{draft:before===game.getSnapshot().pair.toRef});schedule();}
   listen(view,'keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||e.target.closest('input,textarea,select'))return;const s=game.getSnapshot();if(s.status==='gateway'){const dir=({ArrowLeft:-1,KeyA:-1,ArrowRight:1,KeyD:1})[e.code];if(dir){e.preventDefault();send({type:'lane',direction:dir});}else if(['Space','Enter'].includes(e.code)&&!e.target.closest('button')){e.preventDefault();send({type:'enter'});}}});
   listen(window,'resize',drawConnection);listen(window,'blur',()=>send({type:'pause'}));listen(document,'visibilitychange',()=>{if(document.hidden)send({type:'pause'});});listen(window,'ayahprofilechange',()=>{if(activeProfileId()!==owner){dispose();root.textContent='Account changed. Reopen Revision Lab.';}});
   root.querySelector('[data-link-exit]').onclick=()=>{dispose();onExit();};root.querySelector('[data-link-pause]').onclick=()=>send({type:game.getSnapshot().status==='paused'?'resume':'pause'});root.querySelector('[data-link-restart]').onclick=()=>send({type:'restart'});
@@ -117,6 +119,6 @@ export async function mountAyahLink(root,mission,{controller=null,client=null,mo
     const next=async i=>{if(disposed||token!==audioToken||i>=refs.length)return;const ok=await audio.play(canonicalLinkAyah(refs[i]).audio,{onEnded:()=>next(i+1)});if(!ok&&!disposed&&token===audioToken){warning='Full-ayah recitation could not play. Retry without a time limit.';paint();}};next(0);
   };
   const observer=new MutationObserver(()=>{if(!root.isConnected)dispose();});observer.observe(document.body,{childList:true,subtree:true});
-  function dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(raf);abort.abort();observer.disconnect();stopPieceDrag();stopAudio();audio.dispose();unsubscribe();if(!controller)game.dispose();}
+  function dispose(){if(disposed)return;disposed=true;controls.dispose();cancelAnimationFrame(raf);abort.abort();observer.disconnect();stopPieceDrag();stopAudio();audio.dispose();unsubscribe();if(!controller)game.dispose();}
   paint();refreshWeak();return {pause:()=>send({type:'pause'}),resume:()=>send({type:'resume'}),dispose,getSnapshot:()=>game.getSnapshot()};
 }

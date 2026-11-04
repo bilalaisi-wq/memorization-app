@@ -1,9 +1,15 @@
+import {profileStorage} from '../../learner/profile-storage.js';
+import {LAB_VOLUME_KEY} from '../audio-level.js';
+import {readCosmicPreferences} from '../../quest/cosmic/preferences.js';
 import {resolvePlaybackSource} from "../../content/private-audio.js";
 import {createAudioLevel} from "../audio-level.js";
 import {studyAudioStart,studyAudioStop} from '../../ui/encouragement.js';
 export function createAudioManager({AudioClass=globalThis.Audio,owner='arcade',initialVolume=1}={}) {
   let audio=null,disposed=false,run=0,paused=false,deferred=null,desiredMuted=false;
   const level=createAudioLevel({initialVolume});
+  const cosmic=/^(cosmic-|meteor-defense)/.test(owner);
+  const applyMute=()=>{if(audio)audio.muted=desiredMuted||(cosmic&&readCosmicPreferences().muted);};
+  if(cosmic&&typeof window!=='undefined')window.addEventListener('ayahcosmicpreferences',applyMute);
   const stop=()=>{run++;paused=false;deferred?.(false);deferred=null;level.detach();if(audio){audio.onended=null;audio.onerror=null;audio.pause();audio.removeAttribute?.('src');audio.load?.();audio=null;}studyAudioStop(owner);};
   return {
     async play(url,{loop=false,muted=false,onEnded=()=>{},onError=()=>{}}={}) {
@@ -11,7 +17,7 @@ export function createAudioManager({AudioClass=globalThis.Audio,owner='arcade',i
       const token=run;desiredMuted=muted;
       let source;try{source=await resolvePlaybackSource(url);}catch{if(token===run){stop();onError();}return false;}
       if(token!==run||disposed)return false;
-      audio=new AudioClass(source);level.attach(audio);audio.loop=loop;audio.muted=desiredMuted;
+      audio=new AudioClass(source);level.attach(audio);audio.loop=loop;audio.muted=desiredMuted||(cosmic&&readCosmicPreferences().muted);
       audio.onended=()=>{if(token===run){stop();onEnded();}};audio.onerror=()=>{if(token===run){stop();onError();}};
       if(paused)return new Promise(resolve=>deferred=resolve);
       studyAudioStart(owner);
@@ -19,9 +25,10 @@ export function createAudioManager({AudioClass=globalThis.Audio,owner='arcade',i
     },
     stop, pause(){paused=true;audio?.pause();studyAudioStop(owner);},
     async resume(){paused=false;level.resume();try{if(audio){studyAudioStart(owner);await audio.play();const complete=deferred;deferred=null;complete?.(true);}}catch{stop();}},
-    mute(value){desiredMuted=!!value;if(audio)audio.muted=desiredMuted;},
-    setVolume:value=>level.setVolume(value),
-    dispose(){disposed=true;stop();level.dispose();},
+    mute(value){desiredMuted=!!value;applyMute();},
+    getVolume:()=>level.getVolume(),
+    setVolume(value){level.setVolume(value);if(cosmic)try{profileStorage.setItem(LAB_VOLUME_KEY,String(level.getVolume()));}catch{/* Playback stays adjustable if device preferences cannot be saved. */}},
+    dispose(){disposed=true;stop();level.dispose();if(cosmic&&typeof window!=='undefined')window.removeEventListener('ayahcosmicpreferences',applyMute);},
   };
 }
 export function bindArcadeInput(root,dispatch,{target=globalThis.document}={}) {

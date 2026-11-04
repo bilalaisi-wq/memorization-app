@@ -1,0 +1,21 @@
+.cosmic-rush{--cosmic-space:#0b1127;--cosmic-surface:#1b2b48;--cosmic-ink:#f1f5ff;--cosmic-muted:#cbd5ef;}
+:root[data-theme=night-sky] .cosmic-rush{background:radial-gradient(ellipse at 85% 0,#48367e80,transparent 50%),radial-gradient(ellipse at 0 80%,#19607855,transparent 55%),#090f26;border-color:#a398e555;box-shadow:0 0 40px #7162ae18;}
+.cosmic-rush .cosmic-settings{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0;margin:0 0 8px;color:#dbe8ff;}.cosmic-rush .cosmic-settings label{display:flex;align-items:center;gap:8px;font-size:14px;}.cosmic-rush .cosmic-settings input{width:24px;height:24px;min-height:24px;accent-color:#89efe3;}.cosmic-rush .cosmic-settings button{min-height:48px;}.cosmic-rush .cosmic-settings span{font-size:13px;}
+.cosmic-rush .runner-ship{will-change:transform,left;}.cosmic-rush .runner-thruster:after{content:'';position:absolute;inset:30% -25% -70%;background:linear-gradient(#80e8ff55,transparent);border-radius:50%;filter:blur(3px);}
+.cosmic-rush [data-flight-state=running] .runner-shield{transition:border-color .15s,box-shadow .15s;}
+.cosmic-rush :is(.link-arabic,.exp-arabic,.gateway-arabic,.runner-pickup){font-synthesis:none;letter-spacing:normal;word-break:normal;overflow-wrap:normal;}
+.cosmic-rush .cosmic-brief-instructions{padding:10px 16px;border:1px solid #91a6cf66;border-radius:12px;background:#18233d;color:#dce7fa;}.cosmic-rush .cosmic-brief-instructions summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:700;}.cosmic-rush .cosmic-brief-instructions p{margin:8px 0;}
+.cosmic-rush .cosmic-reveal{position:relative;padding:24px;border:1px solid #e8cd83;border-radius:20px;overflow:hidden;background:radial-gradient(ellipse,#51426777,transparent 65%),#142239;}.cosmic-rush .cosmic-reveal svg{width:100%;max-height:220px;}.cosmic-rush .cosmic-reveal line{stroke:#e2c581;stroke-width:1.5;stroke-dasharray:8 4;animation:cosmic-path-reveal 1s ease-out;}.cosmic-rush .cosmic-reveal circle{fill:#fce4a2;stroke:#fff2d5;stroke-width:2;}.cosmic-rush .cosmic-reveal .halo{fill:#efd28d22;stroke:none;}.cosmic-rush .cosmic-reveal h4{color:#ffe4aa;}.cosmic-rush .cosmic-reveal [data-skip-celebration]{min-height:48px;}
+@keyframes cosmic-path-reveal{from{stroke-dashoffset:100;opacity:.3;}to{stroke-dashoffset:0;opacity:1;}}
+.cosmic-rush [data-boss-state=paused] .boss-core{animation-play-state:paused!important;}
+.cosmic-rush [data-boss-phase=inner-core] .boss-shield:not(.is-restored){border-color:#75d9d0;box-shadow:0 0 12px #73d9d029;}.cosmic-rush [data-boss-phase=restored] .boss-celestial{background:radial-gradient(circle,#d4bd7522,transparent 65%);}
+:root[data-celestial-motion=reduced] .cosmic-rush :is(.runner-nebula,.runner-spark-field){transform:none!important;background-position:20px 0,45px 0!important;}
+:root[data-celestial-motion=reduced] .cosmic-rush :is(.runner-thruster,.runner-starburst,.cosmic-reveal line){animation:none!important;}
+:root[data-celestial-motion=reduced] .cosmic-rush .runner-ship{rotate:0deg;}
+.cosmic-rush[data-cosmic-effects=minimal] :is(.runner-nebula,.runner-thruster:after){display:none;}.cosmic-rush[data-cosmic-effects=minimal] :is(.runner-thruster,.cosmic-reveal line,.boss-core){animation:none!important;}.cosmic-rush[data-cosmic-effects=minimal] .runner-spark-field{background-position:20px 0,45px 0!important;opacity:.4;}.cosmic-rush[data-cosmic-effects=minimal] :is(.runner-ship svg,.runner-starburst,.boss-core){filter:none!important;text-shadow:none;}
+@media(prefers-reduced-motion:reduce){.cosmic-rush :is(.runner-nebula,.runner-spark-field){transform:none!important;background-position:20px 0,45px 0!important;}.cosmic-rush :is(.runner-thruster,.cosmic-reveal line){animation:none!important;}}
+@media(max-width:480px){.cosmic-rush .cosmic-reveal{padding:16px;}.cosmic-rush .cosmic-settings{gap:8px;}.cosmic-rush .cosmic-settings>span{width:100%;}}
+.cosmic-rush .cosmic-reveal[data-animation=skipped] line{animation:none!important;}
+.cosmic-rush[data-cosmic-effects=minimal] .runner-thruster::after{display:none;}
+.cosmic-rush[data-cosmic-effects=minimal] :is(.link-luminous path,.gateway-constellation){animation:none!important;}
+.cosmic-rush[data-cosmic-effects=minimal] .link-verse-marker{transition:none!important;}
