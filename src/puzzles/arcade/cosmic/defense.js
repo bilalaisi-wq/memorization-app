@@ -7,12 +7,12 @@ export const DEFENSE_CONFIGS=Object.freeze({
 });
 export const DEFENSE_ABILITIES=Object.freeze({shield:'Star Shield',pulse:'Pulse Wave',repair:'Repair Beam',burst:'Constellation Burst'});
 const clone=x=>structuredClone(x),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
-export function createMeteorDefense({refs,seed=1,stageId,sourceHash='',configuration='balanced',difficulty=0,slow=false,onEvent=()=>{}}){
+export function createMeteorDefense({refs,seed=1,stageId,sourceHash='',configuration='balanced',difficulty=0,slow=false,revisionLoop=false,onEvent=()=>{}}){
   if(!Array.isArray(refs)||!refs.length||refs.length>5||!Object.hasOwn(DEFENSE_CONFIGS,configuration))throw Error('Choose a verified defense set and configuration.');
   refs.forEach((ref,i)=>{const v=freeAyah(ref);if(i){const p=freeAyah(refs[i-1]);if(v.surah!==p.surah||v.ayah!==p.ayah+1)throw Error('Defense references must be consecutive.');}});
   const config=DEFENSE_CONFIGS[configuration],W=DEFENSE_WORLD;
   let state,meteors=[],bolts=[],effects=[],plan=[],memory,spawned=0,shot=0,waveTime=0,turn=0,held=false;
-  const earned=new Set();
+  const earned=new Set(),listened=new Set();
   const emit=(type,detail={})=>onEvent({...detail,type:`defense:${type}`,stageId,elapsed:state.elapsed,targetRef:detail.targetRef||refs[state.waveIndex]});
   const effect=(kind,x=W.cx,y=W.cy)=>{effects.push({id:`fx:${shot++}`,kind,x,y,life:.65});effects=effects.slice(-12);};
   function award(id,points){if(earned.has(id))return;earned.add(id);state.score+=points;emit('points',{scoreReceipt:`defense:${id}`,points});}
@@ -22,7 +22,7 @@ export function createMeteorDefense({refs,seed=1,stageId,sourceHash='',configura
       if(e.type==='gateway:correct'){
         state.recognized=[...new Set([...state.recognized,e.targetRef])];
         for(const name of Object.keys(DEFENSE_ABILITIES))state.charges[name]=Math.min(2,state.charges[name]+1);
-        emit('memory-correct',{...e,recognitionOnly:true});effect('charge');
+        emit('memory-correct',{...e,assisted:e.assisted||listened.has(e.targetRef),recognitionOnly:true});effect('charge');
       }else if(e.type==='gateway:mistake'){state.memoryMistakes++;emit('memory-mistake',e);}
       else if(e.type==='gateway:hint')emit('memory-hint',e);
     }});
@@ -81,20 +81,22 @@ export function createMeteorDefense({refs,seed=1,stageId,sourceHash='',configura
     if(spawned===plan.length&&!meteors.length){
       turn=0;held=false;bolts=[];
       if(state.waveDefended<Math.ceil(plan.length*.4)){state.status='recovery';state.reason='Defend more meteors to secure the sector. Retry this wave; your Quran checkpoint remains completed.';return;}
-      if(state.waveIndex===refs.length-1){state.status='checkpoint';state.checkpointId=`${stageId}:defense:${difficulty}:clear`;state.reason='Core secured. Defense practice is complete, not certified memorization.';emit('checkpoint',{checkpointId:state.checkpointId,motorErrors:state.motorErrors,memoryMistakes:state.memoryMistakes,defended:state.defended,health:state.health});}
+      if(revisionLoop){state.status='gateway';state.reason='Wave secured. Recall the ayah you heard, then enter its gateway.';memory.enter(0);}
+      else if(state.waveIndex===refs.length-1){state.status='checkpoint';state.checkpointId=`${stageId}:defense:${difficulty}:clear`;state.reason='Core secured. Defense practice is complete, not certified memorization.';emit('checkpoint',{checkpointId:state.checkpointId,motorErrors:state.motorErrors,memoryMistakes:state.memoryMistakes,defended:state.defended,health:state.health});}
       else{state.status='wave-clear';state.reason='Wave secured. Take the next untimed Quran checkpoint to recharge your defenses.';}
     }
   }
   const api={
-    start(){if(state.status==='ready'){state.status='gateway';memory.enter(0);}return api.getSnapshot();},
+    start(){if(state.status==='ready'){if(revisionLoop)launchWave();else{state.status='gateway';memory.enter(0);}}return api.getSnapshot();},
     pause(reason='Defense paused.'){if(state.status==='running'){state.status='paused';state.reason=reason;turn=0;held=false;}return api.getSnapshot();},
     resume(){if(state.status==='paused'){state.status='running';turn=0;held=false;}return api.getSnapshot();},
     dispatch(a){
       if(state.status==='disposed')return api.getSnapshot();
       if(a.type==='start')return api.start();if(a.type==='pause')return api.pause(a.reason);if(a.type==='resume')return api.resume();
       if(a.type==='restart'){reset();return api.start();}
+      if(a.type==='audio-assisted'){listened.add(refs[state.waveIndex]);return api.getSnapshot();}
       if(state.status==='gateway'){
-        if(a.type==='gateway-continue'&&memory.getSnapshot().state==='open'){memory.dispatch({type:'continue'});launchWave();}
+        if(a.type==='gateway-continue'&&memory.getSnapshot().state==='open'){memory.dispatch({type:'continue'});if(revisionLoop&&state.waveIndex===refs.length-1){state.status='checkpoint';state.checkpointId=`${stageId}:defense:${difficulty}:clear`;emit('checkpoint',{checkpointId:state.checkpointId,motorErrors:state.motorErrors,memoryMistakes:state.memoryMistakes,defended:state.defended,health:state.health});}else{if(revisionLoop)state.waveIndex++;launchWave();}}
         else if(a.type.startsWith('gateway-'))memory.dispatch({...a,type:a.type.slice(8)});
         else if(a.type==='lane')memory.dispatch(a);
         return api.getSnapshot();
@@ -109,7 +111,7 @@ export function createMeteorDefense({refs,seed=1,stageId,sourceHash='',configura
       if(a.type==='tick'&&Number.isFinite(a.dt)&&a.dt>0){if(a.dt>.25)return api.pause('Defense paused after an interruption; no catch-up damage.');let left=a.dt;while(left>1e-8&&state.status==='running'){const dt=Math.min(left,1/120);tick(dt);left-=dt;}}
       return api.getSnapshot();
     },
-    getSnapshot(){return clone({...state,canRepair:canRepair(),defense:true,configuration,world:W,objects:[...meteors,...bolts,...effects],gateway:memory.getSnapshot(),targetRef:refs[state.waveIndex],progress:state.waveIndex/refs.length,waveCount:refs.length});},
+    getSnapshot(){return clone({...state,canRepair:canRepair(),defense:true,revisionLoop,configuration,world:W,objects:[...meteors,...bolts,...effects],gateway:memory.getSnapshot(),targetRef:refs[state.waveIndex],progress:state.waveIndex/refs.length,waveCount:refs.length});},
     dispose(){state.status='disposed';meteors=[];bolts=[];effects=[];turn=0;held=false;memory.dispose();},
   };
   return api;

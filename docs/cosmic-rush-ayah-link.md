@@ -1,5 +1,7 @@
 # Cosmic Rush Phase 5: Ayah Link and Phrase Repair
 
+Phase 6 update: [Saved expeditions and Weak-Link Bosses](cosmic-rush-expeditions.md) now coordinate these activities and offer final native passage recall. Release details below describe the original standalone implementation.
+
 ## Launch and mission flow
 
 Open **Your Space → Revision Lab → Cosmic Rush**, select Al-Fatihah or Juz Amma and launch **Ayah Link**. Choose guided demonstration, recognition, independent opening-word recall or extended transition recall. Runner, Meteor Defense and Link can hand over at safe checkpoints through the same mission director. Weak-Link Boss and Final Oral Recall remain separate future hybrid stages; this release does not declare the complete hybrid mission finished.

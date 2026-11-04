@@ -23,3 +23,10 @@
 :root[data-celestial-motion="reduced"] .cosmic-rush .defense-object:not(.defense-meteor):not(.defense-energy) {r:54px;}
 .cosmic-rush .defense-reduced .defense-pulse,
 :root[data-celestial-motion="reduced"] .cosmic-rush .defense-pulse {r:220px;}
+.cosmic-rush .defense-field.defense-gateway-open{aspect-ratio:auto;height:min(780px,calc(100dvh - 24px));min-height:360px;max-width:100%;}
+.cosmic-rush .defense-gateway-open>svg{opacity:.12;pointer-events:none;}
+.cosmic-rush .defense-field .gateway-embedded{position:absolute;inset:0;z-index:20;margin:0;padding:14px;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;}
+.cosmic-rush .gateway-embedded[hidden]{display:none;}
+.cosmic-rush .gateway-embedded>h4{font-size:20px;margin:8px 0;}.cosmic-rush .gateway-embedded>p:not(.gateway-coverage){font-size:14px;margin:7px 0;}.cosmic-rush .gateway-embedded .gateway-coverage{display:none;}
+.cosmic-rush .gateway-embedded .gateway-choices{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0;}.cosmic-rush .gateway-embedded .gateway-choice{padding:3px;}.cosmic-rush .gateway-embedded .gateway-choice>button:first-child{max-height:220px;overflow-y:auto;}.cosmic-rush .gateway-embedded .gateway-arabic{font-size:27px;line-height:1.8;}.cosmic-rush .gateway-embedded .gateway-steering{bottom:0;}.cosmic-rush .gateway-embedded .gateway-audio-controls{margin-top:8px;}
+@media(max-width:600px){.cosmic-rush .gateway-embedded .gateway-choices{grid-template-columns:1fr;}.cosmic-rush .gateway-embedded .gateway-choice{display:flex;gap:4px;align-items:center;}.cosmic-rush .gateway-embedded .gateway-choice>button:first-child{max-height:120px;flex:1;min-width:0;}.cosmic-rush .gateway-embedded .gateway-choice>button:nth-child(2){width:74px;font-size:12px;}.cosmic-rush .gateway-embedded>p{display:none;}.cosmic-rush .gateway-embedded .gateway-steering button{margin:3px;}.cosmic-rush .gateway-embedded .gateway-arabic{font-size:26px;}}

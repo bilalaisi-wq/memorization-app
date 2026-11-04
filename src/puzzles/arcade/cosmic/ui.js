@@ -13,7 +13,7 @@ import { createFlightController } from '../../../quest/cosmic/controller.js';
 import { activeProfileId } from '../../../learner/profile-storage.js';
 import './runner.css';
 
-export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>{},slow=false,pickupMode='mixed',rounds=3,memoryGateways=false,guidance=true,controller=null,onDefense=null,onLink=null,isCurrent=()=>true}={}) {
+export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>{},slow=false,pickupMode='mixed',rounds=3,memoryGateways=false,guidance=true,controller=null,onDefense=null,onLink=null,onCheckpoint=null,isCurrent=()=>true}={}) {
   const owner=activeProfileId();
   let saveWarning='',exposureWarning='',bonusWarning='',cueWarning='',bonusXP=0;const assistedRefs=new Set();
   let recorder;const bonuses=createFlightBonuses(mission);
@@ -125,6 +125,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
         message.textContent=s.routeComplete?'Revision rounds complete. Your selected ayahs were covered. This is supported practice, not independent memorization mastery.':s.atRouteEnd?'This Runner checkpoint is complete. Earlier Runner checkpoints were not all played in this mixed route. Return to mission to select them.':s.roundIndex<s.roundCount-1?`Round ${s.roundIndex+1} complete. Shield restored. Repeat this ayah set with slightly faster flight and one more asteroid per wave.`:'All rounds for this set complete. Shield restored. Continue to the next flight stage when ready.';
         button.dataset.flightContinue='';button.textContent=s.atRouteEnd?'Fly this stage again':s.roundIndex<s.roundCount-1?`Continue to round ${s.roundIndex+2} / ${s.roundCount}`:'Continue to next flight stage';button.onclick=()=>{if(s.atRouteEnd)send({type:'restart'});else{game.nextStage();last=0;warmup=3;paint();schedule();field.focus({preventScroll:true});}};
       }
+      if(s.status==='checkpoint'&&onCheckpoint){button.textContent='Continue expedition';button.onclick=()=>onCheckpoint(s);}
       if(s.status!=='disposed')overlay.append(button);
       if(s.status==='checkpoint'&&onLink){const link=document.createElement('button');link.className='cosmic-secondary';link.dataset.enterLink='';link.textContent='Connect ayahs · Ayah Link';link.onclick=onLink;overlay.append(link);}
       if(s.status==='checkpoint'&&onDefense){const defense=document.createElement('button');defense.className='cosmic-secondary';defense.dataset.enterDefense='';defense.textContent='Defend the core · Meteor Defense';defense.onclick=onDefense;overlay.append(defense);}

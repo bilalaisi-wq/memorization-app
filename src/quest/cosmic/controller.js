@@ -8,14 +8,15 @@ import {createMission} from './mission.js';
 import {createRunner} from '../../puzzles/arcade/cosmic/runner.js';
 
 // One mission director. Arcade checkpoints never certify independent recall or mastery.
-export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=3,activity='runner',defenseConfig='balanced',linkMode='guided',reducedMotion=false}={}){
+export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=3,activity='runner',defenseConfig='balanced',linkMode='guided',reducedMotion=false,initialStage=0,initialRound=0}={}){
   const canonical=await createMission({surahId:manifest.surah,selection:'custom',start:manifest.first,end:manifest.last});
   if(JSON.stringify(manifest)!==JSON.stringify(canonical))throw Error('Mission configuration changed. Rebuild the briefing.');
   if(!Number.isInteger(rounds)||rounds<3||rounds>10)throw Error('Choose between 3 and 10 revision rounds.');
   if(!['runner','defense','link'].includes(activity)||!Object.hasOwn(DEFENSE_CONFIGS,defenseConfig)||!Object.hasOwn(LINK_MODES,linkMode))throw Error('Choose an available Cosmic activity and defense configuration.');
+  if(!Number.isInteger(initialStage)||initialStage<0||initialStage>=canonical.stages.length||!Number.isInteger(initialRound)||initialRound<0||initialRound>=(pickupMode?rounds:1))throw Error('Invalid saved flight checkpoint.');
   const runId=crypto.randomUUID();
   const roundCount=pickupMode?rounds:1,listeners=new Set([onEvent]),emit=e=>{for(const fn of [...listeners])fn(e);};
-  let index=0,roundIndex=0,engine,disposed=false,currentActivity=activity,stageGates=0,arcadeScore=0;
+  let index=initialStage,roundIndex=initialRound,engine,disposed=false,currentActivity=activity,stageGates=0,arcadeScore=0;
   const linkPlans={},reviewRequested=new Set();
   if(activity==='link')Object.assign(linkPlans,await prepareLinkPlans(canonical.refs,null));
   const engines=new Map(),checkpoints=new Set(),activityClears=new Set(),scoreReceipts=new Set();
@@ -36,7 +37,7 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
     stageGates=0;
     const stage=canonical.stages[index],seed=parseInt(canonical.sourceHash.slice(0,8),16)+index+roundIndex*3571;
     if(currentActivity==='link')engine=createAyahLink({refs:stage.refs,allRefs:canonical.refs,plans:linkPlans,stageId:stage.id,seed,mode:linkMode,reducedMotion,onEvent:event});
-    else if(currentActivity==='defense')engine=createMeteorDefense({refs:stage.refs,stageId:stage.id,sourceHash:canonical.sourceHash,seed,configuration:defenseConfig,difficulty:index+roundIndex,slow,onEvent:event});
+    else if(currentActivity==='defense')engine=createMeteorDefense({refs:stage.refs,stageId:stage.id,sourceHash:canonical.sourceHash,seed,revisionLoop:true,configuration:defenseConfig,difficulty:index+roundIndex,slow,onEvent:event});
     else engine=(pickupMode?createFlowRunner:createRunner)({...(pickupMode?{units:createFlowUnits(stage.refs,pickupMode,roundIndex),roundIndex}:{}),stageId:stage.id,seed,difficulty:index,slow,onEvent:event});
     engines.set(currentActivity,engine);
   }

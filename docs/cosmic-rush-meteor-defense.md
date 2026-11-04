@@ -1,5 +1,7 @@
 # Cosmic Rush Phase 4 — Meteor Defense
 
+Phase 6 update: [Saved expeditions and Weak-Link Bosses](cosmic-rush-expeditions.md) now coordinate these activities and offer final native passage recall. Release details below describe the original standalone implementation.
+
 Meteor Defense is a playable second activity in the regular Revision Lab. It uses the existing Vite/vanilla JavaScript stack, a bounded SVG battlefield, the same canonical mission manifest and the same mission director as Star Runner. No engine dependency, Quran import or database migration was added. The complete five-part Cosmic Rush campaign remains unfinished; this release does not claim that Weak-Link Boss or final independent oral recall is implemented.
 
 ## Start and transitions

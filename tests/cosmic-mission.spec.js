@@ -3,7 +3,7 @@ import { cosmicSurahs, createMission, selectMissionRange, COSMIC_GAMEPLAY_AVAILA
 
 test('free catalog and every full-surah mission preserve exact contiguous coverage', async () => {
   expect(cosmicSurahs).toHaveLength(38);
-  expect(COSMIC_GAMEPLAY_AVAILABLE).toBe(false);
+  expect(COSMIC_GAMEPLAY_AVAILABLE).toBe(true);
   let count = 0;
   for (const surah of cosmicSurahs) {
     const mission = await createMission({surahId:surah.id, selection:'entire'});

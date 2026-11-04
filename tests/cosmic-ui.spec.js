@@ -22,7 +22,7 @@ test('regular navigation supports all mission selections, briefing stages and ex
       await page.locator('[data-previous]').click();
     }
     await expect(page.getByRole('button',{name:'Launch Star Runner',exact:true})).toBeVisible();
-    await expect(page.getByRole('button',{name:'Launch full mission',exact:true})).toHaveCount(0);
+    await expect(page.locator('[data-launch-expedition]')).toBeVisible();
     await page.locator('[data-change]').click();
     await page.locator('[name=surah]').selectOption('78');
   }

@@ -1,5 +1,7 @@
 # Cosmic Rush — Ayah Relay 2.0 specification
 
+Phase 6 implementation: [Weak-Link Bosses and saved expeditions](cosmic-rush-expeditions.md) coordinates the available activities, adds evidence-backed celestial shields and offers native self-assessed passage recall. Historical inventories below remain audit snapshots.
+
 Phase 5 implementation: [Ayah Link and Phrase Repair](cosmic-rush-ayah-link.md) adds adjacent-ayah demonstrations, steerable gateways, reviewed visual reactors and source-backed weak-link evidence. Historical inventories below remain audit snapshots.
 
 Phase 4 implementation: [Meteor Defense](cosmic-rush-meteor-defense.md) adds playable core defense and checkpoint handovers through the shared mission director. Historical audit inventories below remain unchanged.

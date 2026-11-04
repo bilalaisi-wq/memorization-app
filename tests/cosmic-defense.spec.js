@@ -97,3 +97,8 @@ test('a final-sector handover cannot falsely complete the other activity route',
   expect(g.nextStage()).toBe(false);g.switchActivity('defense');expect(g.getSnapshot().routeComplete).toBe(true);g.dispose();
   expect(()=>createMeteorDefense({refs:['1:1'],stageId:'invalid',configuration:'toString'})).toThrow();
 });
+test('continuous revision launches first, then asks the same ayah gateway and advances only after a correct entry',()=>{
+  const events=[],g=createMeteorDefense({refs:['112:2','112:3'],stageId:'continuous',revisionLoop:true,onEvent:e=>events.push(e)});g.start();expect(g.getSnapshot().status).toBe('running');expect(g.getSnapshot().gateway.state).toBe('idle');g.dispatch({type:'audio-assisted'});
+  for(let i=0;i<10000&&g.getSnapshot().status!=='gateway';i++){const s=g.getSnapshot();if(s.status==='recovery'){g.dispatch({type:'retry'});continue;}const m=s.objects.filter(o=>o.kind==='meteor').sort((a,b)=>Math.hypot(a.x-500,a.y-340)-Math.hypot(b.x-500,b.y-340))[0];if(m)g.dispatch({type:'aim',angle:Math.atan2(m.y-340,m.x-500)});g.dispatch({type:'fire',active:true});tick(g);}
+  expect(g.getSnapshot().status).toBe('gateway');expect(g.getSnapshot().gateway.current.target.ref).toBe('112:2');answer(g,true);expect(g.getSnapshot().status).toBe('gateway');expect(g.getSnapshot().waveIndex).toBe(0);g.dispatch({type:'gateway-retry'});answer(g);expect(events.find(e=>e.type==='defense:memory-correct').assisted).toBe(true);g.dispatch({type:'gateway-continue'});expect(g.getSnapshot()).toMatchObject({status:'running',waveIndex:1,targetRef:'112:3'});pilot(g);expect(g.getSnapshot().recognized).toEqual(['112:2','112:3']);
+});
