@@ -98,7 +98,7 @@ test('victory offers the next short flight, configurable ayahs and an actual rec
  test.setTimeout(60000);await open(page);await solve(page,1);
  await expect(page.locator('[data-action=continue]')).toHaveText('Continue to ayah 2');
  await page.locator('[data-action=continue]').focus();await page.keyboard.press('Space');
- await expect(page.locator('[data-sector]')).toContainText('1:2');await expect(page.locator('.astro-overlay')).toBeHidden();await expect(page.locator('[data-astro-audio]')).toHaveValue('silent');
+ await expect(page.locator('[data-sector]')).toContainText('1:2');await expect(page.locator('.astro-overlay')).toBeHidden();await expect(page.locator('[data-astro-audio]')).toHaveValue('listen');
  await solve(page,2);await page.locator('[data-action=customize]').click();await expect(page.locator('[name=first]')).toBeFocused();
  await page.locator('[data-action=recall]').click();await expect(page.locator('.astro-stage')).toHaveCount(0);await expect(page.locator('main')).toContainText('SELF-ASSESSED RECITATION');
 });

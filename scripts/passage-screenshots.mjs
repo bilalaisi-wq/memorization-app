@@ -16,7 +16,7 @@ try {
     await page.goto(process.env.PASSAGE_PREVIEW_URL || 'http://127.0.0.1:5173/');
     await enableDeveloperLab(page);
     await menu(page);
-    await page.getByRole('button', { name: 'Passage memorization', exact: true }).click();
+    await page.getByRole('button', { name: 'Passage Builder', exact: true }).click();
     await page.getByRole('button', { name: 'Start with Al-Fatihah' }).click();
     await page.locator('[data-reference]').selectOption('2:282');
     await page.getByText('128 words', { exact: false }).first().waitFor();

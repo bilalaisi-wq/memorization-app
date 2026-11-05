@@ -32,8 +32,9 @@ try {
     await enableDeveloperLab(page);
     await menu(page);
     await page
-      .getByRole("button", { name: "Passage Expedition", exact: true })
+      .getByRole("button", { name: "Passage Builder", exact: true })
       .click();
+    await page.locator("[data-open-expedition]").click();
     await page.evaluate(() => document.fonts.ready);
     if (name === "desktop")
       await page.screenshot({ path: "docs/expedition-previews/selection.png" });

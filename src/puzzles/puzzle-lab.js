@@ -76,8 +76,8 @@ export function mountPuzzleLab(
   main.append(root);
   const key = `${surah.id}:${verse.id}`,
     recommendation = lab.recommend(key, learning);
-  if (!isDeveloperMode() && !["falling","asteroids","snake","maze","bubble","sirat","bridge","recall"].includes(recommendation.game)) { recommendation.game="falling"; recommendation.reason="Practice visible word order with Ayah Blocks."; }
-  root.innerHTML = `<div class="lab-intro"><span class="eyebrow">TRY ANOTHER WAY</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>These games practice recognition, word order, and recall cues. Game XP is separate from independent spoken memorization and artwork checkpoints.</p><div class="lab-recommendation"><strong>Suggested next step</strong><p>${esc(recommendation.reason)}</p><button class="primary small" id="lab-recommended">${recommendation.game === "recall" ? "Independent recall assessment" : gameTypes.find((g) => g[0] === recommendation.game)[1]}</button></div></div><div class="lab-menu">${[...gameTypes,["arcade-example","Arcade contract preview","Developer-only shared framework example"]].map(([id, title, description]) => `<button ${!["falling","asteroids","snake","maze","bubble","sirat","bridge"].includes(id) && !isDeveloperMode()?"hidden disabled":""} data-game="${id}" class="lab-game-card"><strong>${title}</strong><span>${description}</span></button>`).join("")}</div><div class="lab-settings"><label>Difficulty<select id="lab-level"><option value="1">1 · Visible words</option><option value="2">2 · Fewer cues</option><option value="3">3 · Concealed words</option><option value="4">4 · Minimal hints</option></select></label><button class="text-button" id="lab-restart">Fresh round</button><button class="text-button" id="lab-replay">♫ Replay ayah</button><label class="lab-volume-control" for="lab-volume">Recitation volume <input id="lab-volume" type="range" min="0" max="100" step="1"><output for="lab-volume" id="lab-volume-value"></output></label><button class="text-button" id="lab-mute" aria-pressed="false">Mute audio</button></div><section class="lab-game" aria-label="Puzzle play area"></section><p data-status role="status" aria-live="polite"></p><div class="lab-after"><button class="text-button" id="lab-retry-save" hidden>Retry saving this result</button><button class="primary small" id="lab-next-level" hidden>Try fewer hints →</button><button class="text-button" id="lab-recall">Try independent self-assessment →</button></div>${lab.warning ? `<p role="alert">${esc(lab.warning)}</p>` : ""}`;
+  if (!isDeveloperMode() && !["falling","asteroids","snake","maze","bubble","sirat","recall"].includes(recommendation.game)) { recommendation.game="falling"; recommendation.reason="Practice visible word order with Ayah Blocks."; }
+  root.innerHTML = `<div class="lab-intro"><span class="eyebrow">TRY ANOTHER WAY</span><h2>${esc(surah.name)} · Ayah ${verse.id}</h2><p>These games practice recognition, word order, and recall cues. Game XP is separate from independent spoken memorization and artwork checkpoints.</p><div class="lab-recommendation"><strong>Suggested next step</strong><p>${esc(recommendation.reason)}</p><button class="primary small" id="lab-recommended">${recommendation.game === "recall" ? "Independent recall assessment" : gameTypes.find((g) => g[0] === recommendation.game)[1]}</button></div></div><div class="lab-menu">${[...gameTypes,["arcade-example","Arcade contract preview","Developer-only shared framework example"]].map(([id, title, description]) => `<button ${!["falling","asteroids","snake","maze","bubble","sirat"].includes(id) && !isDeveloperMode()?"hidden disabled":""} data-game="${id}" class="lab-game-card"><strong>${title}</strong><span>${description}</span></button>`).join("")}</div><div class="lab-settings"><label>Difficulty<select id="lab-level"><option value="1">1 · Visible words</option><option value="2">2 · Fewer cues</option><option value="3">3 · Concealed words</option><option value="4">4 · Minimal hints</option></select></label><button class="text-button" id="lab-restart">Fresh round</button><button class="text-button" id="lab-replay">♫ Replay ayah</button><label class="lab-volume-control" for="lab-volume">Recitation volume <input id="lab-volume" type="range" min="0" max="100" step="1"><output for="lab-volume" id="lab-volume-value"></output></label><button class="text-button" id="lab-mute" aria-pressed="false">Mute audio</button></div><section class="lab-game" aria-label="Puzzle play area"></section><p data-status role="status" aria-live="polite"></p><div class="lab-after"><button class="text-button" id="lab-retry-save" hidden>Retry saving this result</button><button class="primary small" id="lab-next-level" hidden>Try fewer hints →</button><button class="text-button" id="lab-recall">Try independent self-assessment →</button></div>${lab.warning ? `<p role="alert">${esc(lab.warning)}</p>` : ""}`;
   const area = root.querySelector(".lab-game"),
     status = root.querySelector("[data-status]");
   let resultKey = key,
@@ -230,7 +230,7 @@ export function mountPuzzleLab(
     });
   };
   function start(next = game) {
-    if (!["falling","asteroids","snake","maze","bubble","sirat","bridge"].includes(next) && !isDeveloperMode()) return;
+    if (!["falling","asteroids","snake","maze","bubble","sirat"].includes(next) && !isDeveloperMode()) return;
     const changedMode = next !== game;
     stopEncouragement();
     gameCleanup?.();
@@ -333,7 +333,7 @@ export function mountPuzzleLab(
           onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
           getNextSteps:s=>arcadeNextSteps({session:s.session,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'journey'}),
           onJourney:async choice=>{
-            nextAudio=choice.audioMode;
+            nextAudio=choice.audioMode==='echo'?'echo':'listen';
             if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
             const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
             if(!range)throw Error('This surah is complete. Choose another surah from study.');
@@ -374,7 +374,7 @@ export function mountPuzzleLab(
           onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
           getNextSteps:s=>arcadeNextSteps({session:s.session,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'journey'}),
           onJourney:async choice=>{
-            nextAudio=choice.audioMode;
+            nextAudio=choice.audioMode==='echo'?'echo':'listen';
             if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
             const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
             if(!range)throw Error('This surah is complete. Choose another surah from study.');
@@ -415,7 +415,7 @@ export function mountPuzzleLab(
           onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
           getNextSteps:s=>arcadeNextSteps({session:s.session,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'journey'}),
           onJourney:async choice=>{
-            nextAudio=choice.audioMode;
+            nextAudio=choice.audioMode==='echo'?'echo':'listen';
             if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
             const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
             if(!range)throw Error('This surah is complete. Choose another surah from study.');
@@ -456,7 +456,7 @@ export function mountPuzzleLab(
           onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
           getNextSteps:s=>arcadeNextSteps({session:s.session,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'journey'}),
           onJourney:async choice=>{
-            nextAudio=choice.audioMode;
+            nextAudio=choice.audioMode==='echo'?'echo':'listen';
             if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
             const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
             if(!range)throw Error('This surah is complete. Choose another surah from study.');
@@ -485,7 +485,7 @@ export function mountPuzzleLab(
         onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
         getNextSteps:s=>arcadeNextSteps({session:s.session,elapsed:s.elapsed,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'round'}),
         onJourney:choice=>{
-          nextAudio=choice.audioMode;nextSpeed=choice.speed;
+          nextAudio=choice.audioMode==='echo'?'echo':'listen';nextSpeed=choice.speed;
           if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
           const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
           if(!range)throw Error('This surah is complete. Choose another surah in study.');
@@ -527,14 +527,14 @@ export function mountPuzzleLab(
           getNextSteps:s=>flightNextSteps({session:s.session,elapsed:s.elapsed,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id}),
           onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),
           onJourney:async choice=>{
-            nextLaunchAudio=choice.audioMode;
+            nextLaunchAudio=choice.audioMode==='echo'?'echo':'listen';
             if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
             const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
             if(!range)throw Error('This surah is complete. Choose another surah from study.');
             form.elements.rules.value=choice.config.chainMode;form.elements.difficulty.value=difficulty;
             form.elements.first.value=String(range.first);through.value=String(range.last);
             form.elements.journey.value=range.first===range.last?'single':'chain';through.disabled=range.first===range.last;
-            nextLaunchAudio=choice.audioMode;autoStart=true;await launchFlight();
+            nextLaunchAudio=choice.audioMode==='echo'?'echo':'listen';autoStart=true;await launchFlight();
           },onExit:target=>callbacks.onStudy(target)});
         const startedAutomatically=autoStart;
         if(autoStart){autoStart=false;fallingControl.start();}
@@ -1132,14 +1132,14 @@ export function mountPuzzleLab(
       ? callbacks.onRecall(key)
       : start(isDeveloperMode() ? recommendation.game : "falling");
   const refreshAccess=()=>{
-    if(!isDeveloperMode() && !["falling","asteroids","snake","maze","bubble","sirat","bridge","recall"].includes(recommendation.game)) {
+    if(!isDeveloperMode() && !["falling","asteroids","snake","maze","bubble","sirat","recall"].includes(recommendation.game)) {
       recommendation.game="falling";
       recommendation.reason="Practice visible word order with Ayah Blocks.";
       root.querySelector('.lab-recommendation p').textContent=recommendation.reason;
       root.querySelector('#lab-recommended').textContent="Ayah Blocks";
     }
-    root.querySelectorAll('[data-game]').forEach(b=>{const restricted=!['falling','asteroids','snake','maze','bubble','sirat','bridge'].includes(b.dataset.game)&&!isDeveloperMode();b.hidden=restricted;b.disabled=restricted;});
-    if(!['falling','asteroids','snake','maze','bubble','sirat','bridge'].includes(game)&&!isDeveloperMode())start('falling');
+    root.querySelectorAll('[data-game]').forEach(b=>{const restricted=!['falling','asteroids','snake','maze','bubble','sirat'].includes(b.dataset.game)&&!isDeveloperMode();b.hidden=restricted;b.disabled=restricted;});
+    if(!['falling','asteroids','snake','maze','bubble','sirat'].includes(game)&&!isDeveloperMode())start('falling');
   };
   globalThis.addEventListener('ayah-developer-mode',refreshAccess);
   start();

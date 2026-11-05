@@ -10,8 +10,9 @@ export async function openExpedition(page) {
   await enableDeveloperLab(page);
   await menu(page);
   await page
-    .getByRole("button", { name: "Passage Expedition", exact: true })
+    .getByRole("button", { name: "Passage Builder", exact: true })
     .click();
+  await page.locator("[data-open-expedition]").click();
   await expect(page.locator(".ex-selection")).toBeVisible();
 }
 export async function chart(
@@ -297,7 +298,8 @@ test("two-ayah expedition completes cumulative construction and a separate indep
 test("128-word pilot completes every bounded forge/link without losing or repeating canonical source words", async ({
   page,
 }) => {
-  test.setTimeout(150000);
+  // This journey performs all 20 workspaces and hundreds of real UI placements.
+  test.setTimeout(300000);
   const fixture = JSON.parse(
     readFileSync(new URL("./fixtures/2-282.json", import.meta.url)),
   );

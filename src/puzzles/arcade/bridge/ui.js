@@ -3,14 +3,14 @@ import {createAudioManager,motionSettings} from '../services.js';
 import {esc} from '../../../ui/dom.js';
 import {successCue} from '../../../ui/encouragement.js';
 import {reportStudyExposure} from '../../../study-exposure.js';
-export const bridgeRegistration={id:'bridge',title:'Bridge Builder',create:mountBridge};
+export const bridgeRegistration={id:'bridge',title:'Bridge Builder',developerOnly:true,create:mountBridge};
 const phrase=p=>p.words.map(w=>w.text).join(' ');
 export function mountBridge({root,adapter,config,library,id,difficulty='beginner',reviews={},muted=()=>false,volume=()=>1,initialAudio='listen',onComplete=()=>{},onExit=()=>{},onRecall=()=>{}}){
  reportStudyExposure([config.keys[0]]);
  let state=createBridge({id,config,sectors:buildCrossings(adapter,config,library,{difficulty,reviews}),difficulty}),disposed=false,frame=0,last=0,signature='',saved=false,saveError='',audioMode=initialAudio,audioToken=0,pendingAudio=false,chosenId=null,drag=null,lastDrag=-Infinity;
  const audio=createAudioManager({owner:'bridge',initialVolume:volume()}),scope=new AbortController(),motion=motionSettings();
  root.innerHTML=`<section class="bridge-builder ${motion.reducedMotion?'bridge-reduced':''}" aria-label="Bridge Builder"><div class="bridge-heading"><span aria-hidden="true">⌒</span><div><span class="eyebrow">THE RIVER WORKSHOP</span><h3>Bridge Builder</h3><p>Connect the words. Engineer the crossing.</p></div></div>
- <div class="bridge-toolbar"><label>Recitation<select data-bridge-audio><option value="listen">Listen before building</option><option value="silent">Silent construction</option></select></label><button data-bridge-action="listen">♫ Replay ayah</button><button data-bridge-action="pause">Pause / resume</button><button class="primary" data-bridge-action="test">Test crossing</button></div><p class="bridge-hud"></p><div class="bridge-sequence arabic" dir="rtl" lang="ar" aria-label="Accepted ayah sequence"></div>
+ <div class="bridge-toolbar"><label>Recitation<select data-bridge-audio><option value="listen">Continuous ayah recitation</option><option value="echo">Listen before building</option><option value="silent">Pause recitation · this ayah</option></select></label><button data-bridge-action="listen">♫ Replay ayah</button><button data-bridge-action="pause">Pause / resume</button><button class="primary" data-bridge-action="test">Test crossing</button></div><p class="bridge-hud"></p><div class="bridge-sequence arabic" dir="rtl" lang="ar" aria-label="Accepted ayah sequence"></div>
  <p class="bridge-pan-tip">Pan the construction view on small screens. Large joint selectors below provide an alternative to dragging.</p><div class="bridge-stage" tabindex="0" role="region" aria-label="Bridge construction. Connect beams between neighboring deck joints. Keyboard placement controls follow the scene."><div class="bridge-scroll"><svg class="bridge-svg" viewBox="0 0 900 500" role="img" aria-label="Two river banks, numbered bridge joints, beams and supports"></svg></div><div class="bridge-overlay"><div data-bridge-panel tabindex="-1"></div></div></div>
  <div class="bridge-load" role="status"></div><div class="bridge-workshop"><section><h4>Arabic beam yard</h4><p>Select the next continuation or drag it to a deck bay. Then decide where it belongs structurally.</p><div class="bridge-yard"></div></section><section><h4>Accepted beams · move or reinforce</h4><div class="bridge-inventory"></div></section></div>
  <div class="bridge-tools"><fieldset><legend>Connect a beam</legend><label>Accepted beam<select data-bridge-beam></select></label><label>From joint<select data-bridge-from></select></label><label>To joint<select data-bridge-to></select></label><button data-bridge-action="place">Connect chosen beam</button></fieldset><fieldset><legend>Foundations and bracing</legend><p data-bridge-budget></p><label>Deck joint<select data-bridge-support></select></label><button data-bridge-support-kind="pier">Install / remove pier</button><button data-bridge-support-kind="left">Left-bank strut</button><button data-bridge-support-kind="right">Right-bank strut</button><p>Support buttons toggle the selected support. Reinforcement can also be removed and reassigned.</p></fieldset></div>
@@ -48,26 +48,28 @@ export function mountBridge({root,adapter,config,library,id,difficulty='beginner
  function stopAudio(){audioToken++;audio.stop();}
  function save(){if(saved)return true;try{onComplete({...state.session,arcadeStats:{score:state.score,engineeringErrors:state.engineeringErrors,tests:state.tests}});saved=true;saveError='';}catch(e){saveError=e.message;}return saved;}
  function expose(key){try{reportStudyExposure([key]);return true;}catch(e){state.message=e.message;paint();return false;}}
- async function listen(){if(disposed)return;if(state.session.status==='playing')state=stepBridge(state,{type:'pause'});stopAudio();const token=audioToken;last=0;state.message='Listening pause. Resume when ready to construct.';paint();const failed=()=>{if(!disposed&&token===audioToken){state.message='Recitation unavailable. Resume silently; no memory charge was used.';paint();}};const ok=await audio.play(sector().audio,{muted:muted(),onError:failed});if(disposed||token!==audioToken)return;if(ok&&!muted())pendingAudio=true;if(!ok)failed();}
+ async function listen(before=false){if(disposed)return;if((before||audioMode==='echo')&&state.session.status==='playing')state=stepBridge(state,{type:'pause'});stopAudio();const token=audioToken;last=0;state.message='Listening pause. Resume when ready to construct.';paint();const failed=()=>{if(!disposed&&token===audioToken){state.message='Recitation unavailable. Tap Replay ayah to retry. Memory charges are unchanged.';paint();}};const ok=await audio.play(sector().audio,{loop:!before&&audioMode==='listen',muted:muted(),onError:failed});if(disposed||token!==audioToken)return;if(ok&&!muted())pendingAudio=true;if(!ok)failed();}
  function send(action){
   if(disposed)return;
-  if(action.type==='listen'){listen();return;}
+  if(action.type==='listen'){listen(true);return;}
   if(action.type==='exit'){stopAudio();onExit(sector().key);return;}
   if(action.type==='save'){if(state.session.status==='won')save();paint();return;}
   if(action.type==='recall'){if(state.session.status==='won'&&save()){stopAudio();onRecall(sector().key);}paint();return;}
-  if(action.type==='replay'){if(state.session.status!=='won'||!save()||!expose(config.keys[0])){paint();return;}stopAudio();pendingAudio=false;state=createBridge({id:crypto.randomUUID(),config,sectors:state.sectors,difficulty});signature='';saved=false;send({type:'start'});return;}
+  if(action.type==='replay'){if(audioMode==='silent'){audioMode='listen';root.querySelector('[data-bridge-audio]').value=audioMode;}if(state.session.status!=='won'||!save()||!expose(config.keys[0])){paint();return;}stopAudio();pendingAudio=false;state=createBridge({id:crypto.randomUUID(),config,sectors:state.sectors,difficulty});signature='';saved=false;send({type:'start'});return;}
   if(action.type==='pause')action={type:state.session.status==='paused'?'resume':'pause'};
   if(action.type==='next'&&state.awaitingNext&&!expose(sector().key))return;
   if(action.type==='retry'&&state.session.status==='lost'&&!expose(config.chainMode==='classic'?config.keys[0]:sector().key))return;
   const before=state;state=stepBridge(state,action);
   if(action.type==='select'&&state.beams.length>before.beams.length)chosenId=state.selectedBeam;
   if(['pause','resume','next','retry','start'].includes(action.type))last=0;
-  if(['pause','resume','next','retry'].includes(action.type)||state.awaitingNext||state.awaitingWindow||['won','lost'].includes(state.session.status))stopAudio();
+  if(action.type==='pause')audio.pause();
+  if(['next','retry'].includes(action.type)||state.awaitingNext||state.awaitingWindow||['won','lost'].includes(state.session.status))stopAudio();
   if(pendingAudio&&state.session.status==='playing'){state=stepBridge(state,{type:'assist',kind:'audio'});pendingAudio=false;}
   if(state.beams.length>before.beams.length)successCue(`${state.session.id}:${state.session.checkpoint}:${state.windowStart}:${state.beams.length}`,'Correct continuation!');
   if(state.session.status==='won'&&before.session.status!=='won'){save();successCue(`${state.session.id}:won`,'A strong connection!');}
   paint();
-  if(['start','next','retry'].includes(action.type)&&audioMode==='listen'&&state.session.status==='playing')listen();
+  if(['next','retry'].includes(action.type)&&audioMode==='silent'){audioMode='listen';root.querySelector('[data-bridge-audio]').value=audioMode;}
+  if((['start','next','retry'].includes(action.type)&&audioMode!=='silent'||action.type==='resume'&&audioMode==='listen')&&state.session.status==='playing')listen();
   if(['start','resume','next','retry'].includes(action.type))stage.focus({preventScroll:true});
  }
  function placePayload(payload,bay){if(payload.session!==state.session.id||!Number.isInteger(bay))return;let id=payload.beamId;if(payload.choice!==undefined){const before=state.beams.length;send({type:'select',index:payload.choice});if(state.beams.length===before)return;id=state.beams.at(-1).id;}send({type:'place',beamId:id,from:bay,to:bay+1});}
@@ -90,7 +92,7 @@ export function mountBridge({root,adapter,config,library,id,difficulty='beginner
  const blur=()=>{cancel();if(state.session.status==='playing')send({type:'pause'});else stopAudio();};window.addEventListener('blur',blur,{signal:scope.signal});document.addEventListener('visibilitychange',()=>{if(document.hidden)blur();},{signal:scope.signal});
  document.addEventListener('keydown',e=>{if(root.closest('[inert]')||e.repeat||e.altKey||e.ctrlKey||e.metaKey||e.target.closest?.('input,select,textarea,button,a,[contenteditable=true],dialog'))return;if(e.code==='KeyP'){e.preventDefault();send({type:'pause'});}if(e.code==='KeyT'){e.preventDefault();send({type:'test'});}},{signal:scope.signal});
  root.querySelector('[data-bridge-beam]').onchange=e=>chosenId=Number(e.target.value);
- const select=root.querySelector('[data-bridge-audio]');select.value=audioMode;select.onchange=()=>{audioMode=select.value;stopAudio();};
+ const select=root.querySelector('[data-bridge-audio]');select.value=audioMode;select.onchange=()=>{audioMode=select.value;stopAudio();if(audioMode!=='silent'&&state.session.status==='playing')listen();};
  function tick(t){if(disposed)return;if(last&&state.testing&&state.session.status==='playing')send({type:'tick',dt:(t-last)/1000});last=t;frame=requestAnimationFrame(tick);}paint();frame=requestAnimationFrame(tick);
- return {start:()=>send({type:'start'}),pause:()=>{if(state.session.status==='playing')send({type:'pause'});stopAudio();cancel();},resume:()=>send({type:'resume'}),dispatch:send,getSnapshot:()=>structuredClone(state),listen,mute:()=>audio.mute(muted()),setVolume:v=>audio.setVolume(v),dispose(){if(disposed)return;disposed=true;scope.abort();cancelAnimationFrame(frame);stopAudio();audio.dispose();state=stepBridge(state,{type:'dispose'});root.replaceChildren();}};
+ return {start:()=>send({type:'start'}),pause:()=>{if(state.session.status==='playing')send({type:'pause'});stopAudio();cancel();},resume:()=>send({type:'resume'}),dispatch:send,getSnapshot:()=>structuredClone(state),listen:()=>listen(true),mute:()=>audio.mute(muted()),setVolume:v=>audio.setVolume(v),dispose(){if(disposed)return;disposed=true;scope.abort();cancelAnimationFrame(frame);stopAudio();audio.dispose();state=stepBridge(state,{type:'dispose'});root.replaceChildren();}};
 }

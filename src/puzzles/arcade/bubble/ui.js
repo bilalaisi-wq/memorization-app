@@ -7,9 +7,9 @@ export const bubbleRegistration={id:'bubble',title:'Ayah Bubble Burst',create:mo
 const text=p=>p.words.map(w=>w.text).join(' ');
 export function mountBubble({root,adapter,config,library,id,difficulty='beginner',reviews={},muted=()=>false,volume=()=>1,onComplete=()=>{},onExit=()=>{},onRecall=()=>{},initialAudio='listen'}) {
  reportStudyExposure([config.keys[0]]);
- let state=createBubble({id,config,difficulty,sectors:buildFormations(adapter,config,library,{difficulty,reviews})}),disposed=false,frame=0,last=0,saved=false,saveError='',audioMode=initialAudio,mediaToken=0,paintedEffect=0,formationSignature='';
+ let state=createBubble({id,config,difficulty,sectors:buildFormations(adapter,config,library,{difficulty,reviews})}),disposed=false,frame=0,last=0,saved=false,saveError='',audioMode=initialAudio,pendingAudio=false,mediaToken=0,paintedEffect=0,formationSignature='';
  const audio=createAudioManager({owner:'bubble',initialVolume:volume()}),motion=motionSettings();
- root.innerHTML=`<section class="ayah-bubble ${motion.reducedMotion?'bubble-reduced':''}" aria-label="Ayah Bubble Burst"><div class="bubble-heading"><span aria-hidden="true">◌</span><div><span class="eyebrow">CONNECT YOUR CONSTELLATION</span><h3>Ayah Bubble Burst</h3><p>Aim, connect, repeat aloud.</p></div></div><div class="bubble-toolbar"><label>Recitation<select data-bubble-audio><option value="listen">Listen &amp; build</option><option value="silent">Silent</option></select></label><button data-bubble-action="listen">♫ Replay full ayah</button><button data-bubble-action="pause">Pause / resume</button></div><div class="bubble-hud" aria-live="polite"></div><div class="bubble-sequence" dir="rtl" lang="ar" aria-label="Assembled ayah"></div><div class="bubble-arena" tabindex="0" role="region" aria-label="Bubble launcher. Left and right arrows aim. Space or Enter launches. P pauses. Drag to aim and release to launch."><svg class="bubble-guide" viewBox="0 0 900 820" aria-hidden="true"><path></path></svg><div class="bubble-targets"></div><div class="bubble-shot" hidden></div><div class="bubble-launcher" aria-hidden="true">✧</div><div class="bubble-effects" aria-hidden="true"></div><div class="bubble-overlay"><div data-bubble-panel tabindex="-1"></div></div></div><div class="bubble-controls"><button data-bubble-action="left" aria-label="Aim left">↶</button><button class="primary" data-bubble-action="launch">Launch connector</button><button data-bubble-action="right" aria-label="Aim right">↷</button><label>Aim angle<input data-bubble-angle type="range" min="-173" max="-7" step="1" value="-90"></label></div><p class="bubble-status" role="status" aria-live="polite"></p><details><summary>Listen to a phrase · help &amp; tips</summary><p>Drag anywhere in the formation to aim; release to shoot. Shots bounce from side walls. Read the words, not their colors. Each cluster repeats one target; connecting it adds that phrase once. Hit the next continuation to lift its connected cluster. Empty-space shots are motor errors, never memory strikes. Three wrong continuations end a Classic run; Practice restores three charges at each ayah. Say each piece aloud. Game recognition is not independently assessed recitation. Phrase previews do not certify recitation stops.</p></details><p>Phrase audio · study assistance</p><div class="bubble-listen-choices"></div></section>`;
+ root.innerHTML=`<section class="ayah-bubble ${motion.reducedMotion?'bubble-reduced':''}" aria-label="Ayah Bubble Burst"><div class="bubble-heading"><span aria-hidden="true">◌</span><div><span class="eyebrow">CONNECT YOUR CONSTELLATION</span><h3>Ayah Bubble Burst</h3><p>Aim, connect, repeat aloud.</p></div></div><div class="bubble-toolbar"><label>Recitation<select data-bubble-audio><option value="listen">Continuous ayah recitation</option><option value="echo">Listen before launching</option><option value="silent">Pause recitation · this ayah</option></select></label><button data-bubble-action="listen">♫ Replay full ayah</button><button data-bubble-action="pause">Pause / resume</button></div><div class="bubble-hud" aria-live="polite"></div><div class="bubble-sequence" dir="rtl" lang="ar" aria-label="Assembled ayah"></div><div class="bubble-arena" tabindex="0" role="region" aria-label="Bubble launcher. Left and right arrows aim. Space or Enter launches. P pauses. Drag to aim and release to launch."><svg class="bubble-guide" viewBox="0 0 900 820" aria-hidden="true"><path></path></svg><div class="bubble-targets"></div><div class="bubble-shot" hidden></div><div class="bubble-launcher" aria-hidden="true">✧</div><div class="bubble-effects" aria-hidden="true"></div><div class="bubble-overlay"><div data-bubble-panel tabindex="-1"></div></div></div><div class="bubble-controls"><button data-bubble-action="left" aria-label="Aim left">↶</button><button class="primary" data-bubble-action="launch">Launch connector</button><button data-bubble-action="right" aria-label="Aim right">↷</button><label>Aim angle<input data-bubble-angle type="range" min="-173" max="-7" step="1" value="-90"></label></div><p class="bubble-status" role="status" aria-live="polite"></p><details><summary>Listen to a phrase · help &amp; tips</summary><p>Drag anywhere in the formation to aim; release to shoot. Shots bounce from side walls. Read the words, not their colors. Each cluster repeats one target; connecting it adds that phrase once. Hit the next continuation to lift its connected cluster. Empty-space shots are motor errors, never memory strikes. Three wrong continuations end a Classic run; Practice restores three charges at each ayah. Say each piece aloud. Game recognition is not independently assessed recitation. Phrase previews do not certify recitation stops.</p></details><p>Phrase audio · study assistance</p><div class="bubble-listen-choices"></div></section>`;
  const view=root.querySelector('.ayah-bubble'),arena=root.querySelector('.bubble-arena'),targets=root.querySelector('.bubble-targets'),panel=root.querySelector('[data-bubble-panel]'),overlay=root.querySelector('.bubble-overlay'),status=root.querySelector('.bubble-status'),slider=root.querySelector('[data-bubble-angle]');
  view.dataset.difficulty=difficulty;
  const sector=()=>state.sectors[state.session.checkpoint];
@@ -45,6 +45,7 @@ export function mountBubble({root,adapter,config,library,id,difficulty='beginner
  let audioWait=null;
  function stopAudio(){mediaToken++;audioWait?.();audioWait=null;audio.stop();}
  async function listen(piece){
+  if(!piece&&audioMode==='echo'&&state.session.status==='playing'){state=stepBubble(state,{type:'pause'});paint();}
   stopAudio();const token=mediaToken,urls=piece?piece.words.map(w=>w.audio):[sector().audio];
   for(const url of urls){
    if(disposed||token!==mediaToken)return;
@@ -52,11 +53,12 @@ export function mountBubble({root,adapter,config,library,id,difficulty='beginner
     audioWait=resolve;
     audio.play(url,{muted:muted(),loop:!piece&&audioMode==='listen',onEnded:resolve,onError:resolve}).then(ok=>{
      if(disposed||token!==mediaToken){resolve();return;}
-     if(ok&&!muted()&&state.session.status==='playing')state=stepBubble(state,{type:'assist',kind:'audio'});
-     if(!ok){state.message='Recitation unavailable. Keep playing without a strike.';paint();resolve();}
+     if(ok&&!muted()){if(state.session.status==='playing')state=stepBubble(state,{type:'assist',kind:'audio'});else pendingAudio=true;}
+     if(!ok){state.message='Recitation unavailable. Replay the ayah to retry. No memory strike.';paint();resolve();}
     });
    });
   }
+  if(piece&&!disposed&&token===mediaToken&&audioMode==='listen'&&state.session.status==='playing')listen();
  }
  function expose(key){try{reportStudyExposure([key]);return true;}catch(e){state.message=e.message;paint();return false;}}
  function send(action){
@@ -65,16 +67,18 @@ export function mountBubble({root,adapter,config,library,id,difficulty='beginner
   if(action.type==='save'){if(state.session.status==='won')save();paint();return;}
   if(action.type==='exit'){stopAudio();onExit(sector().key);return;}
   if(action.type==='recall'){if(state.session.status!=='won')return;if(save()){stopAudio();onRecall(sector().key);}paint();return;}
-  if(action.type==='replay'){if(state.session.status!=='won')return;if(!expose(config.keys[0]))return;if(!save()){paint();return;}stopAudio();state=createBubble({id:crypto.randomUUID(),config,difficulty,sectors:state.sectors});saved=false;paint();send({type:'start'});return;}
+  if(action.type==='replay'){if(audioMode==='silent'){audioMode='listen';root.querySelector('[data-bubble-audio]').value=audioMode;}if(state.session.status!=='won')return;if(!expose(config.keys[0]))return;if(!save()){paint();return;}stopAudio();state=createBubble({id:crypto.randomUUID(),config,difficulty,sectors:state.sectors});saved=false;paint();send({type:'start'});return;}
   if(action.type==='left'||action.type==='right')action={type:'aim',angle:state.angle+(action.type==='left'?-.07:.07)};
   if(action.type==='pause')action={type:state.session.status==='paused'?'resume':'pause'};
   if(action.type==='next'&&state.awaitingNext&&!expose(sector().key))return;
   if(action.type==='retry'&&state.session.status==='lost'&&!expose(config.chainMode==='classic'?config.keys[0]:sector().key))return;
   const old=state;state=stepBubble(state,action);
+  if(pendingAudio&&state.session.status==='playing'){state=stepBubble(state,{type:'assist',kind:'audio'});pendingAudio=false;}
   if(['pause','retry','next','start','resume'].includes(action.type))last=0;
   if(state.session.status==='paused')audio.pause();
   if(state.awaitingNext||['won','lost'].includes(state.session.status))stopAudio();
-  if(['start','next','retry'].includes(action.type)&&audioMode==='listen')listen();
+  if(['next','retry'].includes(action.type)&&audioMode==='silent'){audioMode='listen';root.querySelector('[data-bubble-audio]').value=audioMode;}
+  if(['start','next','retry'].includes(action.type)&&audioMode!=='silent')listen();
   if(action.type==='resume')audio.resume();
   if(state.effect!==old.effect)successCue(`${state.session.id}:${state.effect}`,'Connection found!');
   if(state.session.status==='won'&&old.session.status!=='won'){save();successCue(`${state.session.id}:won`,'Your constellation is connected!');}
@@ -89,7 +93,7 @@ export function mountBubble({root,adapter,config,library,id,difficulty='beginner
  const move=e=>{if(pointer===e.pointerId)aim(e);};const up=e=>{if(pointer!==e.pointerId)return;aim(e);pointer=null;send({type:'launch'});};const cancel=()=>pointer=null;
  const blur=()=>{pointer=null;if(state.session.status==='playing')send({type:'pause'});};const visibility=()=>{if(document.hidden)blur();};
  root.addEventListener('click',click);document.addEventListener('keydown',key);arena.addEventListener('pointerdown',down);arena.addEventListener('pointermove',move);arena.addEventListener('pointerup',up);arena.addEventListener('pointercancel',cancel);window.addEventListener('blur',blur);document.addEventListener('visibilitychange',visibility);
- slider.oninput=()=>send({type:'aim',angle:Number(slider.value)*Math.PI/180});const select=root.querySelector('[data-bubble-audio]');select.value=audioMode;select.onchange=()=>{audioMode=select.value;stopAudio();if(audioMode==='listen'&&state.session.status==='playing')listen();};
+ slider.oninput=()=>send({type:'aim',angle:Number(slider.value)*Math.PI/180});const select=root.querySelector('[data-bubble-audio]');select.value=audioMode;select.onchange=()=>{audioMode=select.value;stopAudio();if(audioMode!=='silent'&&state.session.status==='playing')listen();};
  function tick(time){if(disposed)return;if(last&&state.projectile&&state.session.status==='playing')send({type:'tick',dt:(time-last)/1000});last=time;frame=requestAnimationFrame(tick);}paint();frame=requestAnimationFrame(tick);
  return {start:()=>send({type:'start'}),pause:()=>{if(state.session.status==='playing')send({type:'pause'});},resume:()=>send({type:'resume'}),dispatch:send,getSnapshot:()=>structuredClone(state),listen:()=>listen(),mute:()=>audio.mute(muted()),setVolume:v=>audio.setVolume(v),dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(frame);stopAudio();audio.dispose();state=stepBubble(state,{type:'dispose'});root.removeEventListener('click',click);document.removeEventListener('keydown',key);arena.removeEventListener('pointerdown',down);arena.removeEventListener('pointermove',move);arena.removeEventListener('pointerup',up);arena.removeEventListener('pointercancel',cancel);window.removeEventListener('blur',blur);document.removeEventListener('visibilitychange',visibility);root.replaceChildren();}};
 }

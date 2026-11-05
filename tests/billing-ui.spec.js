@@ -89,6 +89,7 @@ test("billing cancellation/expiry preserve free access, ignore forged local plan
   );
   await page.reload();
   await open(page, "Passage Builder");
+  await page.locator("[data-open-saved]").click();
   await expect(page.locator(".billing-dialog")).toContainText(
     "required to save new passages",
   );
@@ -116,6 +117,7 @@ test("Explorer saves five choices and builds a named passage through existing fr
   await expect(page.locator("[data-billing-status]")).toContainText("saved");
   await page.keyboard.press("Escape");
   await open(page, "Passage Builder");
+  await page.locator("[data-open-saved]").click();
   await page.locator('[name="title"]').fill("My Fatiha passage");
   await page.locator('[name="first"]').fill("3");
   await page.locator('[name="last"]').fill("5");

@@ -32,7 +32,7 @@ test('fog exploration, map reveal, zoom, native input guards, pause and cleanup 
 
 test('entry audio, listening stations, shared volume, silence, failures and disposal',async({page})=>{
  await page.addInitScript(()=>{window.mazeAudio=[];window.mazeStops=0;window.Audio=class{constructor(src){this.src=src;window.mazeAudio.push(this);}play(){return window.failMazeAudio?Promise.reject(Error('offline')):Promise.resolve();}pause(){window.mazeStops++;}removeAttribute(){}load(){}};});
- await openMaze(page,{audio:'listen'});expect(await page.evaluate(()=>window.mazeAudio.at(-1).src)).toContain('001001');expect(await page.evaluate(()=>window.mazeAudio.at(-1).loop)).toBe(false);
+ await openMaze(page,{audio:'listen'});expect(await page.evaluate(()=>window.mazeAudio.at(-1).src)).toContain('001001');expect(await page.evaluate(()=>window.mazeAudio.at(-1).loop)).toBe(true);
  await page.locator('#lab-volume').fill('23');expect(await page.evaluate(()=>window.mazeAudio.at(-1).volume)).toBe(.23);await page.locator('#lab-mute').click();expect(await page.evaluate(()=>window.mazeAudio.at(-1).muted)).toBe(true);
  await page.locator('[data-maze-audio]').selectOption('silent');const stops=await page.evaluate(()=>window.mazeStops);await page.evaluate(()=>window.failMazeAudio=true);await page.locator('[data-maze-action=listen]').click();await expect(page.locator('.maze-status')).toContainText('could not start');await expect(page.locator('[data-maze-strikes]')).toContainText('3/3');
  await page.locator('[data-game=asteroids]').click();expect(await page.evaluate(()=>window.mazeStops)).toBeGreaterThanOrEqual(stops);await expect(page.locator('.maze-grid')).toHaveCount(0);

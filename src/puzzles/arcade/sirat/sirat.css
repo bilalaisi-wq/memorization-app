@@ -2,3 +2,12 @@
 :root[data-theme="night-sky"] .sirat-quest .sirat-choices button,:root[data-theme="night-sky"] .sirat-quest .sirat-choices button .arabic,:root[data-theme="night-sky"] .sirat-quest .sirat-choices button b{color:#234235}
 
 :root[data-theme="night-sky"] .sirat-quest .sirat-overlay button{color:#254438}
+.sirat-stage{height:660px}.sirat-stage .sirat-gateways{position:absolute;inset:8px 8px auto;z-index:5;background:#f3f8edee;border:1px solid #789780;border-radius:14px;padding:8px;color:#234235}.sirat-stage .sirat-gateways h4{margin:0;font-size:14px}.sirat-stage .sirat-gateways p{font-size:13px;line-height:1.4;margin:4px 0}.sirat-stage .sirat-choices{gap:6px;flex-wrap:nowrap}.sirat-stage .sirat-choices button{flex:1 1 0;min-width:0;min-height:68px;padding:6px}.sirat-stage .sirat-choices .arabic{font-size:clamp(22px,3vw,28px);line-height:1.7;word-break:normal}.sirat-stage .sirat-selected-gateway{outline:3px solid #ba8728;outline-offset:1px}.sirat-stage .sirat-pad{position:absolute;bottom:8px;left:8px;right:8px;z-index:5;margin:0;gap:6px}.sirat-stage .sirat-pad button{min-width:48px;min-height:48px}.sirat-stage .sirat-hud{position:absolute;bottom:144px;left:8px;right:8px;z-index:4;padding:6px;background:#e7f2e6eb;color:#234235;font-size:12px}.sirat-stage .sirat-overlay{z-index:7}
+@media(max-width:600px){.sirat-stage{height:520px}.sirat-stage .sirat-gateways h4{display:none}.sirat-stage .sirat-choices b{font-size:11px}.sirat-stage .sirat-choices .arabic{font-size:22px}.sirat-stage .sirat-pad button{padding:7px}.sirat-stage .sirat-hud{font-size:11px}}
+.sirat-stage .sirat-pad [data-sirat-move]{flex:0 0 48px}.sirat-stage .sirat-pad [data-sirat-action]{font-size:14px;flex:1;min-width:0;padding:8px}
+
+.sirat-stage .sirat-pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.sirat-stage .sirat-pad button{width:100%;min-height:48px}.sirat-stage .sirat-pad [data-sirat-move]{max-width:none}
+
+.sirat-stage .sirat-toolbar{position:absolute;top:8px;left:8px;right:8px;z-index:9;margin:0;padding:6px;border-radius:12px;background:#f3f8edee;color:#234235}.sirat-stage .sirat-toolbar label{width:100%;min-width:0;display:flex;gap:6px}.sirat-stage .sirat-toolbar select{flex:1;min-width:0;max-width:100%}.sirat-stage .sirat-gateways{top:76px}
+.sirat-stage [data-sirat-gate-tip]{color:#244d43}
+:root[data-theme="night-sky"] .sirat-stage [data-sirat-gate-tip]{color:#244d43}

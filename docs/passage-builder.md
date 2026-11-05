@@ -34,7 +34,7 @@ For other long ayahs, initial **unapproved visual proposals** use the verified s
 
 ## Learner workflow
 
-In active developer mode, open **Menu → Passage memorization**, or **Passage Builder → Open memorization studio**. Guest access to existing free ayahs needs no subscription or backend. Additional private references are checked on the server.
+In active developer mode, open **Menu → Passage Builder**. The studio opens directly; use **Saved passages** for the named library or **Explore Passage Expedition** for the guided campaign. Guest access to existing free ayahs needs no subscription or backend. Additional private references are checked on the server.
 
 - Choose an ayah; the grouped layout renders up to 12 movable pieces, containing one, two, three or up to five original words each depending on ayah length. Original 12-word windows remain selectable for saved drafts.
 - Reduce word hints progressively, reveal as needed, and say the words aloud as you work.

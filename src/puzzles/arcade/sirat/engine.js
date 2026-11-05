@@ -25,6 +25,12 @@ export function createSirat({id,config,sectors,difficulty='beginner'}){
  const s={session:createSession({id,game:'sirat',config}),sectors:structuredClone(sectors),difficulty,cursor:0,captured:[],player:null,platforms:[],choices:[],checkpoint:null,direction:0,jumpQueued:false,resolved:false,awaitingNext:false,time:0,camera:0,recoveries:0,score:0,gateFeedback:null,message:'Explore a fictional hilltop garden. Reach the gateway and choose the next continuation.'};layout(s);return s;
 }
 export const nearGateway=s=>!s.awaitingNext&&s.player.x>=s.cursor*SIRAT.sectionWidth+1190&&s.player.grounded;
+// Gateway centers match the fictional arches in the renderer; Space commits
+// only the gateway the explorer is standing at. Navigation is never a grade.
+export function gatewayIndex(s) {
+ const base=s.cursor*SIRAT.sectionWidth;
+ return s.choices.reduce((best,_,i)=>Math.abs(s.player.x+SIRAT.playerWidth/2-(base+1264+i*100))<Math.abs(s.player.x+SIRAT.playerWidth/2-(base+1264+best*100))?i:best,0);
+}
 function recover(s){reduce(s,'motor-error');s.recoveries++;s.player={...s.player,...s.checkpoint,vx:0,vy:0,grounded:true,support:null};s.direction=0;s.jumpQueued=false;s.message='Back at your last safe landing. No memory strike or learning penalty.';}
 export function stepSirat(previous,action){
  if(previous.session.status==='disposed')return previous;

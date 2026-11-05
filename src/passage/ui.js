@@ -124,7 +124,7 @@ export function openPassageStudio(ctx = {}) {
   }
 
   d.innerHTML =
-    '<button class="text-button" data-close>Close ×</button><h2>Passage Builder · memorization studio</h2><button class="primary" data-open-expedition>✦ Explore Passage Expedition</button><button class="text-button" data-open-rescue>✧ Constellation Rescue</button><button class="text-button" data-set-aside hidden>Set aside unfinished recall · no grade</button><div data-studio></div><p data-studio-status role="status" aria-live="polite"></p>';
+    '<button class="text-button" data-close>Close ×</button><h2>Passage Builder · memorization studio</h2><button class="text-button" data-open-saved>Saved passages</button><button class="primary" data-open-expedition>✦ Explore Passage Expedition</button><button class="text-button" data-open-rescue>✧ Constellation Rescue</button><button class="text-button" data-set-aside hidden>Set aside unfinished recall · no grade</button><div data-studio></div><p data-studio-status role="status" aria-live="polite"></p>';
   const root = d.querySelector("[data-studio]"),
     status = d.querySelector("[data-studio-status]");
   const note = (text, error = false) => {
@@ -159,8 +159,9 @@ export function openPassageStudio(ctx = {}) {
   d.querySelector('[data-set-aside]').onclick=()=>{try{const a=memory.snapshot().active;memory.cancel(a.id);navigation++;assessmentView++;stop();assessmentBundles=null;bundle=null;selectedRefs=['1:1'];draw();note('Unfinished attempt set aside. No grade or review date changed. Start free study or choose another available passage.');}catch(e){note(e.message,true);}};
   d.querySelector("[data-close]").onclick = close;
   d.oncancel = close;
-  d.querySelector('[data-open-rescue]').onclick=async()=>{const {openRescue}=await import('../quest/rescue/ui.js');close();openRescue(ctx);};
-  d.querySelector('[data-open-expedition]').onclick=async()=>{const {openExpedition}=await import('../quest/expedition/ui.js');close();openExpedition({...ctx,initialReference:bundle?.key||ctx.initialReference});};
+  d.querySelector('[data-open-saved]').onclick=async()=>{const {openSavedPassages}=await import('../billing/ui.js');if(closed)return;close();openSavedPassages(ctx);};
+  d.querySelector('[data-open-rescue]').onclick=async()=>{const {openRescue}=await import('../quest/rescue/ui.js');if(closed)return;close();openRescue(ctx);};
+  d.querySelector('[data-open-expedition]').onclick=async()=>{const {openExpedition}=await import('../quest/expedition/ui.js');if(closed)return;close();openExpedition({...ctx,initialReference:bundle?.key||ctx.initialReference});};
   const get = async (key) => {
     if (cache.has(key)) return cache.get(key);
     const b = await loadBundle(key, ctx.client);

@@ -78,7 +78,7 @@ test('a late private audio response cannot autoplay through pause or after game 
 });
 
 test('named passages include loaded developer chapters and reopen them lazily after a browser reload',async({page})=>{
- const state=await privateLibrary(page);await menu(page);await page.getByRole('button',{name:'Passage Builder',exact:true}).click();
+ const state=await privateLibrary(page);await menu(page);await page.getByRole('button',{name:'Passage Builder',exact:true}).click();await page.locator('[data-open-saved]').click();
  await expect(page.locator('[data-passage-form] [name=surah] option[value="7"]')).toHaveCount(1);await page.locator('[data-passage-form] [name=surah]').selectOption('7');await page.locator('[data-passage-form] [name=title]').fill('My private passage');await page.getByRole('button',{name:'Save passage',exact:true}).click();await expect(page.locator('.saved-passages')).toContainText('My private passage');expect(state.passages[0].surah).toBe(7);
- await page.reload();await enableDeveloperLab(page);await menu(page);await page.getByRole('button',{name:'Passage Builder',exact:true}).click();await page.getByRole('button',{name:'Practice passage',exact:true}).click();await expect(page.locator('.chain-choices input:checked')).toHaveCount(2);await expect(page.locator('.chain-config')).toContainText("Al-A'raf");
+ await page.reload();await enableDeveloperLab(page);await menu(page);await page.getByRole('button',{name:'Passage Builder',exact:true}).click();await page.locator('[data-open-saved]').click();await page.getByRole('button',{name:'Practice passage',exact:true}).click();await expect(page.locator('.chain-choices input:checked')).toHaveCount(2);await expect(page.locator('.chain-config')).toContainText("Al-A'raf");
 });

@@ -12,7 +12,7 @@ async function open(page) {
   // have their own source-integrity and UI suite.
   await page.evaluate(async()=>{const {profileStorage}=await import('/src/learner/profile-storage.js');if(profileStorage.getItem('ayah-passage-workspaces-v1')===null)profileStorage.setItem('ayah-passage-workspaces-v1',JSON.stringify({version:1,records:{},refs:['1:1'],layoutPreference:'legacy'}));});
   await menu(page);
-  await page.getByRole("button", { name: "Passage memorization", exact: true })
+  await page.getByRole("button", { name: "Passage Builder", exact: true })
     .click();
   await page.getByRole("button", { name: /Start with Al-Fatihah|Resume saved workspace/ }).click();
   await expect(page.locator("[data-reference]")).toBeVisible();
@@ -258,7 +258,7 @@ test("reviewed segment drafts restore separately and unavailable saved content h
   await page.locator('[data-close]').click();
   await page.route('**/functions/v1/quran-content',r=>r.fulfill({status:403,json:{error:'Access unavailable'}}));
   await enableDeveloperLab(page); await menu(page);
-  await page.getByRole('button',{name:'Passage memorization',exact:true}).click();
+  await page.getByRole('button',{name:'Passage Builder',exact:true}).click();
   await page.getByRole('button',{name:'Resume saved workspace'}).click();
   await expect(page.locator('[data-studio-status]')).toContainText('Access unavailable');
   await page.getByRole('button',{name:'Practice free Al-Fatihah'}).click();
@@ -338,7 +338,7 @@ for (const action of ['data-compare','data-recall-listen']) test(`requesting ${a
   await page.locator('[data-recall]').click(); await page.locator('[data-close]').click();
   requested=false;gate=new Promise(resolve=>release=resolve);
   await enableDeveloperLab(page);await menu(page);
-  await page.getByRole('button',{name:'Passage memorization',exact:true}).click();
+  await page.getByRole('button',{name:'Passage Builder',exact:true}).click();
   await page.locator(`[${action}]`).click();
   await expect.poll(()=>requested).toBe(true);
   await page.locator('[data-declare]').click();

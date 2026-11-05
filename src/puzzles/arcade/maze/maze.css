@@ -7,3 +7,25 @@
 .puzzle-lab .memory-maze .maze-pad button{min-height:68px;min-width:64px}
 .puzzle-lab .memory-maze .maze-heading{height:auto;min-height:0;padding:0;background:transparent;border:0;justify-content:flex-start;align-items:center;overflow:visible}.puzzle-lab .memory-maze .maze-heading h3{line-height:1.25}.puzzle-lab .memory-maze .maze-heading .eyebrow{display:block;margin:0}
 .puzzle-lab .memory-maze .maze-pad [data-maze-direction]{font-size:28px;line-height:1}
+/* Door meaning and touch input belong to the playfield, not a distant legend. */
+.memory-maze .maze-stage{display:flex;flex-direction:column;isolation:isolate}.memory-maze .maze-scroll{height:clamp(150px,30svh,280px);max-height:280px;width:100%}.memory-maze .maze-door-signs{margin:0;padding:8px;gap:6px;background:var(--maze-floor,#f5f5de)}.memory-maze .maze-sign{padding:6px;min-height:65px}.memory-maze .maze-sign .arabic{font-size:clamp(28px,3.2vw,30px);line-height:1.65;word-break:normal;overflow-wrap:normal}.memory-maze .maze-pad{margin:0;padding:8px;position:relative}.memory-maze .maze-overlay{z-index:5}.memory-maze .maze-pad button,.puzzle-lab .memory-maze .maze-pad button{min-height:68px}
+
+.memory-maze .maze-stage .maze-hud{margin:0;padding:6px}.memory-maze .maze-stage .maze-location,.memory-maze .maze-stage .maze-status{margin:0;padding:6px;min-height:0;font-size:13px;line-height:1.5}
+
+.memory-maze .maze-stage .maze-tools{position:relative;z-index:6;background:var(--maze-floor,#f5f5de);margin:0;padding:6px;gap:6px}.memory-maze .maze-stage .maze-tools label{flex:1 1 100%;display:flex;min-width:0;gap:6px}.memory-maze .maze-stage .maze-tools select{flex:1;min-width:0;max-width:100%}
+/* Keep doors and the complete touch pad together on a phone-height playfield. */
+.memory-maze .maze-scroll{height:clamp(130px,19svh,200px)}
+.memory-maze .maze-stage .maze-hud{gap:4px;padding:4px}
+.memory-maze .maze-stage .maze-hud>span{padding:3px 6px;font-size:12px}
+.memory-maze .maze-stage .maze-tools label{font-size:12px;align-items:center}
+.memory-maze .maze-stage .maze-tools button{padding:4px 10px}
+.memory-maze .maze-pad{width:100%;box-sizing:border-box;gap:5px;padding:5px}
+.memory-maze .maze-pad [data-maze-direction=left]{grid-area:1/1}
+.memory-maze .maze-pad [data-maze-direction=up]{grid-area:1/2}
+.memory-maze .maze-pad [data-maze-direction=right]{grid-area:1/3}
+.memory-maze .maze-pad [data-maze-action=pause]{grid-area:2/1;font-size:16px}
+.memory-maze .maze-pad [data-maze-direction=down]{grid-area:2/2}
+.memory-maze .maze-pad [data-maze-action=listen]{grid-area:2/3;font-size:16px}
+.memory-maze .maze-pad [data-maze-action=open]{grid-area:3/1/4/4}
+.memory-maze .maze-sign{gap:3px}
+.memory-maze .maze-stage .maze-location{color:#f5f9e8}

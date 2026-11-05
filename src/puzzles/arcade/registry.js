@@ -1,19 +1,20 @@
+import {isDeveloperMode} from '../../developer/access.js';
 // Metadata is also used by persistence; keep retired identifiers forever.
 export const arcadeGames = Object.freeze([
   ['asteroids', 'Ayah Space'], ['sirat', 'Sirat Quest'],
   ['maze', 'Memory Maze'], ['bubble', 'Ayah Bubble Burst'],
   ['snake', 'Ayah Serpent'], ['bridge', 'Bridge Builder'],
-].map(([id, title]) => Object.freeze({id, title, category: 'order', status: ['asteroids','snake','maze','bubble','sirat','bridge'].includes(id)?'available':'planned'})));
+].map(([id, title]) => Object.freeze({id, title, category: 'order', ...(id==='bridge'?{developerOnly:true}:{}), status: ['asteroids','snake','maze','bubble','sirat','bridge'].includes(id)?'available':'planned'})));
 export const arcadeIds = [...arcadeGames.map(g => g.id), 'arcade-example', 'falling'];
 export function createRegistry() {
   const entries = new Map();
   return {
     register(definition) {
       if (!arcadeIds.includes(definition.id) || entries.has(definition.id) || typeof definition.create !== 'function') throw Error('Invalid or duplicate arcade registration');
-      entries.set(definition.id, Object.freeze({...definition}));
+      entries.set(definition.id, Object.freeze({...definition,...(definition.id==='bridge'?{developerOnly:true}:{})}));
     },
-    list({developer = false} = {}) { return [...entries.values()].filter(g => !g.developerOnly || developer).map(({create, ...metadata}) => metadata); },
-    create(id, options, {developer = false} = {}) {
+    list({developer = isDeveloperMode()} = {}) { return [...entries.values()].filter(g => !g.developerOnly || developer).map(({create, ...metadata}) => metadata); },
+    create(id, options, {developer = isDeveloperMode()} = {}) {
       const entry = entries.get(id);
       if (!entry || (entry.developerOnly && !developer)) throw Error('Game unavailable');
       const game = entry.create(options);

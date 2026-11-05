@@ -326,8 +326,8 @@ export function createQuestHost({
             difficulty: "beginner",
             volume,
             muted,
-            initialAudio: "silent",
-            initialAudioMode: "silent",
+            initialAudio: "listen",
+            initialAudioMode: "listen",
             onComplete: (data) => result(checkpoint, data),
             onExit: () => {
               clear();

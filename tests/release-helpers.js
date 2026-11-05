@@ -33,8 +33,9 @@ export async function openAuditMode(page, mode, { enable = true } = {}) {
   if (enable) await enableDeveloperLab(page);
   await menu(page);
   await page
-    .getByRole("button", { name: auditModes[mode].label, exact: true })
+    .getByRole("button", { name: mode === "expedition" ? "Passage Builder" : auditModes[mode].label, exact: true })
     .click();
+  if(mode === "expedition")await page.locator("[data-open-expedition]").click();
   await expect(page.locator(auditModes[mode].root)).toBeVisible();
 }
 export async function seedAuditRecords(page) {

@@ -43,7 +43,7 @@ export function mountFalling(
     awaitingChoice = false,
     saved = false;
   let lastTick = 0;
-  area.innerHTML = `<div class="tower-heading"><span class="eyebrow">HYBRID STACK + TOWER</span><h3>Ayah Blocks</h3><p>Build the ayah in the emerald middle lane. Park extra words in either side lane. Press Start to begin falling blocks and looping recitation.</p></div><form class="tower-settings"><label>Journey<select name="mode"><option value="single">Single Ayah</option><option value="chain">Ayah Chain</option><option value="marathon">Marathon · Classic</option></select></label><label>First ayah<input name="first" type="number" min="1" max="${surah.verses.length}" value="${config.first}"></label><label>Last ayah<input name="last" type="number" min="1" max="${surah.verses.length}" value="${config.last}"></label><label>Strikes<select name="rules"><option value="classic">Classic · 3 per chain</option><option value="practice">Practice · 3 per ayah</option></select></label><label>Speed<select name="speed"><option value="slow">Slow</option><option value="normal">Normal</option><option value="fast">Fast</option></select></label><label>Recitation<select name="audio"><option value="listen">Listen & Build · loop ayah</option><option value="silent">Silent Stack</option><option value="echo">Echo & Build · listen first</option></select></label><button class="primary small">Start</button></form><div class="tower-game"></div>`;
+  area.innerHTML = `<div class="tower-heading"><span class="eyebrow">HYBRID STACK + TOWER</span><h3>Ayah Blocks</h3><p>Build the ayah in the emerald middle lane. Park extra words in either side lane. Press Start to begin falling blocks and looping recitation.</p></div><form class="tower-settings"><label>Journey<select name="mode"><option value="single">Single Ayah</option><option value="chain">Ayah Chain</option><option value="marathon">Marathon · Classic</option></select></label><label>First ayah<input name="first" type="number" min="1" max="${surah.verses.length}" value="${config.first}"></label><label>Last ayah<input name="last" type="number" min="1" max="${surah.verses.length}" value="${config.last}"></label><label>Strikes<select name="rules"><option value="classic">Classic · 3 per chain</option><option value="practice">Practice · 3 per ayah</option></select></label><label>Speed<select name="speed"><option value="slow">Slow</option><option value="normal">Normal</option><option value="fast">Fast</option></select></label><label>Recitation<select name="audio"><option value="listen">Listen & Build · loop ayah</option><option value="silent">Pause recitation · this ayah</option><option value="echo">Echo & Build · listen first</option></select></label><button class="primary small">Start</button></form><div class="tower-game"></div>`;
   const root = area.querySelector(".tower-game"),
     form = area.querySelector("form");
   const audioLevel=createAudioLevel({initialVolume:volume()});
@@ -110,6 +110,7 @@ export function mountFalling(
       play(questOptions?.audioSource ?? verseAudio(selected[floor].id, surah.id), { before: true });
   }
   function newFloor(strikes = 0) {
+    if(floor>0&&config.audio==="silent")config.audio="listen";
     stopAudio();
     failedSaved = false;
     const v = selected[floor];
@@ -347,6 +348,7 @@ export function mountFalling(
       panel.innerHTML = `<h3>Ayah complete. What next?</h3><p>All words stay visible. Repeat at the next descent speed, or continue. You can lower the speed whenever you need more time.</p><button data-repeat>Keep practicing this ayah · ${config.speed === "fast" ? "Fast speed" : "faster descent"}</button>${selected[floor].id < surah.verses.length ? "<button data-next>Move to ayah " + (selected[floor].id + 1) + "</button>" : "<p>You reached the final ayah of this surah.</p>"}`;
       root.append(panel);
       panel.querySelector("[data-repeat]").onclick = () => {
+        if(config.audio==="silent"){config.audio="listen";form.elements.audio.value="listen";}
         const order = ["slow", "normal", "fast"];
         config.speed = order[Math.min(2, order.indexOf(config.speed) + 1)];
         form.elements.speed.value = config.speed;
@@ -501,7 +503,7 @@ export function mountFalling(
       send({ type: "tick" });
     }
   }, 100);
-  if(questOptions){config={...config,first:verse.id,last:verse.id,rules:'practice',audio:'silent'};form.hidden=true;}
+  if(questOptions){config={...config,first:verse.id,last:verse.id,rules:'practice',audio:'listen'};form.hidden=true;}
   newFloor();
   document.addEventListener("keydown", key);
   return {
