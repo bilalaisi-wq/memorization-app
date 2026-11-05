@@ -1,3 +1,4 @@
+import {PASSAGE_GAMES,validatePractice,practiceProgress,recordPracticeXP,acknowledgePracticeRecall,recommendPassageGame} from './practice-plan.js';
 import { reportStudyExposure } from "../study-exposure.js";
 import { awardStudy } from "../rewards/store.js";
 import {
@@ -23,6 +24,7 @@ import {
   shuffled,
   WINDOW_SIZE,
   wordWindow,
+  groupedWindow,
   restoreWorkspace,
 } from "./model.js";
 import { createPassageMemory, PASSAGE_MEMORY_KEY } from "./memory.js";
@@ -47,6 +49,10 @@ export function openPassageStudio(ctx = {}) {
   const lifecycle=new AbortController();
   const options = referenceOptions();
   let bundle = null,
+    layout = "grouped",
+    gameHost = null,
+    lastGame = null,
+    launchingGame = false,
     page = 0,
     level = 0,
     segmentId = "full",
@@ -78,6 +84,7 @@ export function openPassageStudio(ctx = {}) {
         reference(saved.current.key);
         if (typeof saved.current.segmentId !== "string") throw Error();
       }
+      validatePractice(saved);
       work = saved;
       selectedRefs = refs;
     }
@@ -88,12 +95,14 @@ export function openPassageStudio(ctx = {}) {
   const workKey = () =>
     `${bundle.key}:${segmentId}:${bundle.contentRevision || "free-v1"}:${
       bundle.segmentationReview?.version || "draft-0.1"
-    }`;
+    }${layout === "grouped" ? ":grouped-v1" : ""}`;
   function persistWork() {
-    if (workWarning || !bundle) return;
-    work.records[workKey()] = { page, orders, windowSequence, level };
+    if (workWarning) return;
+    if(bundle) {
+      work.records[workKey()] = { page, orders, windowSequence, level };
+      work.current = { key: bundle.key, segmentId, layout };
+    }
     work.refs = selectedRefs;
-    work.current = { key: bundle.key, segmentId };
     try {
       storage.setItem("ayah-passage-workspaces-v1", JSON.stringify(work));
     } catch {
@@ -107,7 +116,7 @@ export function openPassageStudio(ctx = {}) {
     const previous = work.records[workKey()];
     if (previous === undefined) return;
     try {
-      const restored = restoreWorkspace(bundle, segmentId === "full" ? null : currentSegment(), previous);
+      const restored = restoreWorkspace(bundle, segmentId === "full" ? null : currentSegment(), previous, layout);
       ({ page, orders, windowSequence, level } = restored);
     } catch (e) {
       workWarning = e.message;
@@ -133,6 +142,7 @@ export function openPassageStudio(ctx = {}) {
   }
   const close = () => {
     if(closed)return;
+    gameHost?.dispose();gameHost=null;
     closed=true;
     lifecycle.abort();
     navigation++;
@@ -160,6 +170,7 @@ export function openPassageStudio(ctx = {}) {
     return b;
   };
   async function select(key) {
+    gameHost?.dispose();gameHost=null;lastGame=null;
     stop();
     loading = true;
     note("Loading validated content…");
@@ -175,6 +186,8 @@ export function openPassageStudio(ctx = {}) {
       orders = {};
       windowSequence = [];
       assessmentBundles = null;
+      layout = ["grouped","legacy"].includes(work.layoutPreference) ? work.layoutPreference : work.current?.key === key && ["grouped","legacy"].includes(work.current.layout) ? work.current.layout : "grouped";
+      if (!work.layoutPreference && !work.records[workKey()]) { layout="legacy";if(!work.records[workKey()])layout="grouped"; }
       restoreWork();
       draw();
       note(
@@ -234,7 +247,7 @@ export function openPassageStudio(ctx = {}) {
   const currentSegment = () =>
     bundle?.segments.find((s) => s.id === segmentId) || null;
   function currentWindow() {
-    return wordWindow(
+    return (layout === "grouped" ? groupedWindow : wordWindow)(
       bundle,
       page,
       segmentId === "full" ? null : currentSegment(),
@@ -244,9 +257,7 @@ export function openPassageStudio(ctx = {}) {
     const w = currentWindow();
     orders[page] ??= [];
     bank = shuffled(
-      w.words.filter((x) => !orders[page].includes(x.position)).map((w) =>
-        w.position
-      ),
+      (w.groups || w.words.map(x=>({id:x.position,positions:[x.position]}))).filter(g=>!g.positions.every(id=>orders[page].includes(id))).map(g=>g.id),
     );
     if (!windowSequence.length) {
       windowSequence = shuffled(Array.from({ length: w.count }, (_, i) => i));
@@ -255,6 +266,50 @@ export function openPassageStudio(ctx = {}) {
   function allowStudy(keys) {
     try { reportStudyExposure(keys); return true; }
     catch(e) { root.replaceChildren(); const p=document.createElement("p");p.setAttribute("role","alert");p.textContent=e.message;root.append(p);return false; }
+  }
+  const practiceRefs = () => bundle && selectedRefs.includes(bundle.key) ? [...selectedRefs] : bundle ? [bundle.key] : [];
+  function trackAward(result) {
+    if(result?.event&&result.xp>0) {recordPracticeXP(work,practiceRefs(),{id:result.event.id,xp:result.xp});persistWork();mountGamePicker();if(practiceProgress(work,practiceRefs()).due)root.querySelector('[data-required-recall]')?.focus({preventScroll:false});}
+  }
+  async function recallPractice() {
+    gameHost?.dispose();gameHost=null;
+    const token=++navigation;stop();
+    try {const all=await Promise.all(practiceRefs().map(get));if(token!==navigation||closed)return;await beginRecall(all);}catch(e){note(e.message,true);}
+  }
+  function mountGamePicker() {
+    root.querySelector('[data-passage-games]')?.remove();if(!bundle||!root.querySelector('[data-check-window]'))return;
+    const recommendation=recommendPassageGame(bundle,memory.snapshot()),choices=work.games||[recommendation.game],progress=practiceProgress(work,practiceRefs());
+    const panel=document.createElement('section');panel.dataset.passageGames='';panel.className='passage-games';
+    panel.innerHTML=`<h3>Choose your passage games</h3><p>${esc(recommendation.reason)}</p><p>Suggested: ${esc(PASSAGE_GAMES.find(g=>g.id===recommendation.game).title)}. You choose the games and their order.</p><fieldset><legend>Games to include</legend>${PASSAGE_GAMES.map(g=>`<label><input type="checkbox" data-passage-game-choice="${g.id}" ${choices.includes(g.id)?'checked':''}> ${esc(g.title)}</label>`).join('')}</fieldset><p>Games use the current visual workspace’s original words, in canonical order; full-ayah audio stays continuous. They do not certify recall or approved phrase stops.</p><div class="passage-toolbar">${choices.map(id=>`<button class="primary" data-passage-game="${id}" ${progress.due||workWarning?'disabled':''}>Play ${esc(PASSAGE_GAMES.find(g=>g.id===id).title)}</button>`).join('')||'<p>Select at least one game, or continue word practice.</p>'}</div><p>${progress.sinceRecall} / 16 earned practice XP toward your next self-assessment for ${esc(practiceRefs().join(', '))}. Only actually awarded XP counts; normal caps stay in place.</p>${progress.due?'<p role="status"><strong>Time for self-assessed recall.</strong> Recite, reveal and compare, then rate yourself before another passage game. You may leave or keep studying without an invented grade.</p>':''}<button class="primary" data-practice-recall ${progress.due?'data-required-recall':''}>${progress.due?'Start required self-assessment':'Self-assess now'}</button><p>Cosmic Rush is available separately in Revision Lab for Al-Fatihah and Juz Amma.</p>`;
+    root.querySelector('[data-check-window]').after(panel);
+    panel.querySelectorAll('[data-passage-game-choice]').forEach(input=>input.onchange=()=>{work.games=[...panel.querySelectorAll('[data-passage-game-choice]:checked')].map(n=>n.dataset.passageGameChoice);persistWork();mountGamePicker();root.querySelector(`[data-passage-game-choice="${input.dataset.passageGameChoice}"]`)?.focus({preventScroll:true});});
+    panel.querySelectorAll('[data-passage-game]').forEach(b=>b.onclick=()=>runGame(b.dataset.passageGame));panel.querySelector('[data-practice-recall]').onclick=recallPractice;
+  }
+  async function runGame(game) {
+    if(launchingGame||closed||workWarning)return;
+    if(practiceProgress(work,practiceRefs()).due){mountGamePicker();return;}
+    if(!allowStudy([bundle.key]))return;
+    launchingGame=true;stop();const token=++navigation,w=currentWindow();lastGame=game;
+    gameHost?.dispose();gameHost=null;
+    root.innerHTML='<button class="text-button" data-game-back>← Return to Passage Builder</button><p>Visual word practice, not an approved recitation segment. Motor mistakes do not grade your recall.</p><div data-passage-game-host></div>';
+    root.querySelector('[data-game-back]').onclick=()=>{navigation++;gameHost?.dispose();gameHost=null;launchingGame=false;draw();};
+    try {
+      const {mountPassageGame}=await import('./games.js');if(closed||token!==navigation)return;
+      const mounted=await mountPassageGame(root.querySelector('[data-passage-game-host]'),{bundle,window:w,game,ctx,storage,isCurrent:()=>!closed&&token===navigation,onComplete:receipt=>{
+        guard();recordPracticeXP(work,practiceRefs(),receipt);persistWork();
+        queueMicrotask(()=>{if(!closed&&token===navigation){draw();note(`Game saved · ${receipt.xp} XP awarded. Choose another game or self-assess recall.`);root.querySelector('[data-practice-recall]')?.focus({preventScroll:true});}});
+      }});
+      if(closed||token!==navigation)mounted?.dispose();else gameHost=mounted;
+    }catch(e){if(!closed&&token===navigation){draw();note(e.message,true);}}
+    finally{launchingGame=false;}
+  }
+  function postRecallOptions(unit) {
+    const panel=document.createElement('section');panel.className='passage-after-recall';panel.dataset.afterRecall='';panel.innerHTML='<h3>Self-assessment saved. What next?</h3><p>Your own rating—not a game victory—controls the existing review schedule.</p><button class="primary" data-after-practice>Keep practising this ayah</button>'+(lastGame?'<button class="primary" data-after-game>Return to my game</button>':'')+'<button class="primary" data-after-next>Continue to the next available ayah</button>';
+    root.prepend(panel);panel.querySelector('[data-after-practice]').onclick=()=>{panel.remove();if(!bundle){selectedRefs=[...unit.refs];select(unit.refs[0]);}else root.querySelector('[data-check-window]')?.focus();};panel.querySelector('[data-after-game]')?.addEventListener('click',()=>runGame(lastGame));
+    const end=reference(unit.refs.at(-1)),next=[];
+    for(let i=1;i<=unit.refs.length;i++){const o=options.find(o=>reference(o.key).surah===end.surah&&reference(o.key).ayah===end.ayah+i);if(!o)break;next.push(o.key);}
+    panel.querySelector('[data-after-next]').disabled=!next.length;panel.querySelector('[data-after-next]').textContent=next.length>1?`Continue to the next ${next.length} ayahs`:'Continue to the next available ayah';panel.querySelector('[data-after-next]').onclick=()=>{selectedRefs=next;select(next[0]);};
+    panel.querySelector('h3').tabIndex=-1;panel.querySelector('h3').focus({preventScroll:true});
   }
   function draw() {
     pendingControl();
@@ -276,11 +331,15 @@ export function openPassageStudio(ctx = {}) {
     const focused = document.activeElement;
     const focusWord = focused?.dataset.word;
     const focusMove = focused?.dataset.move;
+    gameHost?.dispose();gameHost=null;
     resetWindow();
     persistWork();
     const w = currentWindow(),
       selected = orders[page] || [],
-      textAt = (id) => bundle.words.find((x) => x.position === id)?.text || "";
+      groups = w.groups || w.words.map(x=>({id:x.position,positions:[x.position]})),
+      selectedPieces = groups.filter(g=>g.positions.every(id=>selected.includes(id))).sort((a,b)=>selected.indexOf(a.id)-selected.indexOf(b.id)).map(g=>g.id),
+      pieceFor = id => groups.find(g=>g.id===id),
+      textAt = id => pieceFor(id).positions.map(p=>hiddenWord(p,level)?'✧':bundle.words.find(x=>x.position===p).text).join(' ');
     root.innerHTML =
       `<p>Work a few words at a time, reconstruct the full ayah, then recite independently. <strong>Visual pages are not approved recitation stops.</strong> Full-ayah audio continues across visual pages.</p><div class="passage-toolbar"><label>Ayah<select data-reference>${
         options.map((o) =>
@@ -288,7 +347,7 @@ export function openPassageStudio(ctx = {}) {
             esc(o.label)
           }</option>`
         ).join("")
-      }</select></label><button class="text-button" data-add-ref>Add to my passage</button></div><p>Current: ${bundle.key} · Juz ${bundle.juz} · ${bundle.words.length} words</p><details data-full-reference><summary>Full verified ayah and translation</summary><p class="arabic" lang="ar" dir="rtl">${
+      }</select></label><button class="text-button" data-add-ref>Add to my passage</button></div><label>Workspace layout<select data-layout><option value="grouped" ${layout==="grouped"?"selected":""}>Grouped · up to 12 pieces</option><option value="legacy" ${layout==="legacy"?"selected":""}>Original word windows · saved drafts</option></select></label><p>Current: ${bundle.key} · Juz ${bundle.juz} · ${bundle.words.length} words</p><details data-full-reference><summary>Full verified ayah and translation</summary><p class="arabic" lang="ar" dir="rtl">${
         esc(bundle.textUthmani)
       }</p><p>${esc(bundle.translation)}</p><p>${
         bundle.sources.map((s) =>
@@ -320,7 +379,7 @@ export function openPassageStudio(ctx = {}) {
         w.page + 1
       } / ${w.count} · Phrase ${w.phrase} / ${w.phraseCount}</strong><button class="text-button" data-next ${
         w.page + 1 === w.count ? "disabled" : ""
-      }>Next workspace</button><label>Word hints<select data-hints><option value="0" ${
+      }>Next workspace</button><label>Jump to workspace<select data-workspace-jump>${Array.from({length:w.count},(_,i)=>`<option value="${i}" ${i===page?"selected":""}>${i+1} / ${w.count}</option>`).join('')}</select></label><label>Word hints<select data-hints><option value="0" ${
         level === 0 ? "selected" : ""
       }>All visible</option><option value="1" ${
         level === 1 ? "selected" : ""
@@ -334,27 +393,23 @@ export function openPassageStudio(ctx = {}) {
         w.continuation
           ? "Continue the phrase into the next workspace; this is not recitation stop guidance."
           : "Study boundary only. Full-ayah recitation remains continuous."
-      }</p><p>Say each word as you move it. Hidden pieces are practice, not an independent recall assessment.</p><div class="passage-piece-zone" data-place="built" dir="rtl">${
-        selected.map((id, i) =>
+      }</p><p>${layout==="grouped"?`${w.groups.length} pieces · up to ${w.groupSize} words per piece. Grouping is visual only.`:"Original individual-word workspaces."}</p><p>Say each word as you move it. Hidden pieces are practice, not an independent recall assessment.</p><div class="passage-piece-zone" data-place="built" dir="rtl">${
+        selectedPieces.map((id, i) =>
           `<span class="passage-token"><button draggable="true" data-word="${id}" aria-label="Return piece ${
             i + 1
           }">${
-            hiddenWord(id, level)
-              ? '<span aria-hidden="true">✧</span>'
-              : `<span lang="ar">${esc(textAt(id))}</span>`
+            `<span lang="ar" dir="rtl">${esc(textAt(id))}</span>`
           }</button><button class="text-button" data-move="${id}:-1" aria-label="Move piece earlier">→</button><button class="text-button" data-move="${id}:1" aria-label="Move piece later">←</button></span>`
         ).join("") || "<p>Move words here in order.</p>"
       }</div><div class="passage-piece-zone passage-word-bank" data-place="bank" dir="rtl">${
         bank.map((id) =>
           `<button class="passage-token" draggable="true" data-word="${id}" aria-label="Add word piece">${
-            hiddenWord(id, level)
-              ? "✧"
-              : `<span lang="ar">${esc(textAt(id))}</span>`
+            `<span lang="ar" dir="rtl">${esc(textAt(id))}</span>`
           }</button>`
         ).join("")
       }</div><button class="primary" data-check-window>Check workspace</button><h3>Full-ayah reconstruction</h3><p>Arrange completed visual workspaces in ayah order, then check the whole ayah. Each card is an excerpt, not a recitation stop.</p><div class="workspace-chain">${
         windowSequence.map((p, i) => {
-          const words = wordWindow(
+          const words = (layout === "grouped" ? groupedWindow : wordWindow)(
             bundle,
             p,
             segmentId === "full" ? null : currentSegment(),
@@ -383,6 +438,9 @@ export function openPassageStudio(ctx = {}) {
       }<button class="text-button" data-sync>Sync private passage reviews</button><button class="text-button" data-export>Export passage review data</button><button class="text-button" data-export-work>Export workspace data</button></section>`;
     if (focusWord) root.querySelector(`[data-word="${Number(focusWord)}"]`)?.focus({preventScroll:true});
     if (focusMove && /^\d+:-?1$/.test(focusMove)) root.querySelector(`[data-move="${focusMove}"]`)?.focus({preventScroll:true});
+    root.querySelector('[data-layout]').onchange=e=>{persistWork();layout=e.target.value;work.layoutPreference=layout;page=0;orders={};windowSequence=[];restoreWork();draw();};
+    root.querySelector('[data-workspace-jump]').onchange=e=>{page=Number(e.target.value);draw();};
+    mountGamePicker();
     root.querySelector("[data-reference]").onchange = (e) =>
       select(e.target.value);
     root.querySelector("[data-add-ref]").onclick = () => {
@@ -438,9 +496,9 @@ export function openPassageStudio(ctx = {}) {
     root.querySelectorAll("[data-word]").forEach((b) => {
       b.onclick = () => {
         const id = Number(b.dataset.word);
-        if (selected.includes(id)) {
-          orders[page] = selected.filter((x) => x !== id);
-        } else orders[page] = [...selected, id];
+        if (selectedPieces.includes(id)) {
+          orders[page] = selected.filter(x=>!pieceFor(id).positions.includes(x));
+        } else orders[page] = [...selected, ...pieceFor(id).positions];
         draw();
       };
       b.ondragstart = (e) =>
@@ -450,16 +508,16 @@ export function openPassageStudio(ctx = {}) {
         e.preventDefault();
         e.stopPropagation();
         const id = Number(e.dataTransfer.getData("text/plain"));
-        if (!w.words.some((x) => x.position === id)) return;
+        if (!pieceFor(id)) return;
         if (zoneIsBank(b)) {
-          orders[page] = selected.filter(x => x !== id);
+          orders[page] = selected.filter(x => !pieceFor(id).positions.includes(x));
           draw();
           return;
         }
         if (id === Number(b.dataset.word)) return;
-        const next = selected.filter((x) => x !== id);
-        next.splice(Math.max(0, next.indexOf(Number(b.dataset.word))), 0, id);
-        orders[page] = next;
+        const next = selectedPieces.filter(x=>x!==id);
+        next.splice(Math.max(0,next.indexOf(Number(b.dataset.word))),0,id);
+        orders[page] = next.flatMap(x=>pieceFor(x).positions);
         draw();
       };
     });
@@ -468,22 +526,22 @@ export function openPassageStudio(ctx = {}) {
       zone.ondrop = (e) => {
         e.preventDefault();
         const id = Number(e.dataTransfer.getData("text/plain"));
-        if (!w.words.some((x) => x.position === id)) return;
+        if (!pieceFor(id)) return;
         orders[page] = zone.dataset.place === "bank"
-          ? selected.filter((x) => x !== id)
-          : [...selected.filter((x) => x !== id), id];
+          ? selected.filter(x=>!pieceFor(id).positions.includes(x))
+          : [...selected.filter(x=>!pieceFor(id).positions.includes(x)), ...pieceFor(id).positions];
         draw();
       };
     });
     root.querySelectorAll("[data-move]").forEach((b) =>
       b.onclick = () => {
         const [id, delta] = b.dataset.move.split(":").map(Number),
-          next = [...selected],
+          next = [...selectedPieces],
           i = next.indexOf(id),
           j = i + delta;
         if (j < 0 || j >= next.length) return;
         [next[i], next[j]] = [next[j], next[i]];
-        orders[page] = next;
+        orders[page] = next.flatMap(x=>pieceFor(x).positions);
         draw();
       }
     );
@@ -496,7 +554,7 @@ export function openPassageStudio(ctx = {}) {
         !good,
       );
       if (good) {
-        awardStudy({mode:"passage",unit:bundle.key,action:"completion",xp:8});
+        trackAward(awardStudy({mode:"passage",unit:bundle.key,action:"completion",xp:8}));
         successCue(
           `passage-window-${bundle.key}-${page}`,
           "Beautiful work. Connect what you remember.",
@@ -531,7 +589,7 @@ export function openPassageStudio(ctx = {}) {
         !good,
       );
       if (good) {
-        awardStudy({mode:"passage",unit:bundle.key,action:"completion",xp:8});
+        trackAward(awardStudy({mode:"passage",unit:bundle.key,action:"completion",xp:8}));
         successCue(
           `passage-whole-${bundle.key}`,
           "Ayah connected. Keep growing.",
@@ -620,11 +678,12 @@ export function openPassageStudio(ctx = {}) {
           : "The ayah sequence needs another look.",
         !good,
       );
-      if (good) { awardStudy({mode:"passage",unit:selectedRefs.join("|"),action:"chain",xp:8});successCue("passage-chain", "Your passage is connected."); }
+      if (good) { trackAward(awardStudy({mode:"passage",unit:selectedRefs.join("|"),action:"chain",xp:8}));successCue("passage-chain", "Your passage is connected."); }
     };
   }
   async function beginRecall(all, segment = null) {
     try {
+      gameHost?.dispose();gameHost=null;
       loading = false;
       stop();
       assessmentBundles = all;
@@ -794,9 +853,12 @@ export function openPassageStudio(ctx = {}) {
           stop();
           const result = memory.grade(a.id, b.dataset.grade, {assessmentSource:"self-assessed"});
           awardStudy({mode:"passage-recall",unit:a.unitId,action:"assessment",xp:result.independent?10:3});
+          if(unit.type!=="segment")acknowledgePracticeRecall(work,unit.refs,memory.snapshot().active);
+          persistWork();
           assessmentView++;
           assessmentBundles = null;
           draw();
+          postRecallOptions(unit);
           note(
             `${
               result.independent ? "Independent" : "Assisted"

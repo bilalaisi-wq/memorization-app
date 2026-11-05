@@ -229,3 +229,8 @@ dialog.passage-studio[data-recall-active="true"]::backdrop {
   }
   .passage-studio [data-move] { font-size: 20px; }
 }
+.passage-games,.passage-after-recall{padding:18px;margin:18px 0;border:1px solid #879f9b;border-radius:18px;background:var(--panel-bg,#edf3ed);color:var(--text-color,#234940)}
+.passage-games fieldset{display:flex;flex-wrap:wrap;gap:12px;border-radius:12px}.passage-games fieldset label{display:flex;gap:8px;align-items:center;min-height:48px}.passage-games input[type=checkbox]{width:24px;height:24px}.passage-games button,.passage-after-recall button{min-height:48px;margin:4px}.passage-studio [data-layout]{max-width:100%;min-height:48px}.passage-studio [data-passage-game-host]{max-width:100%;min-width:0}
+.passage-studio .passage-token [lang=ar]{white-space:normal;overflow-wrap:normal;word-break:normal;line-height:1.9}.passage-studio .passage-piece-zone>button.passage-token{flex-wrap:wrap;text-align:center}
+:root[data-theme=night-sky] :is(.passage-games,.passage-after-recall){background:#17243c;color:#f1f5ff;border-color:#768dad}
+@media(max-width:480px){.passage-studio .passage-token>button[data-word],.passage-studio button.passage-token{font-size:26px;padding:10px;max-width:100%}.passage-studio .passage-piece-zone{padding:10px}.passage-games{padding:12px}.passage-games fieldset{display:grid;grid-template-columns:1fr}}

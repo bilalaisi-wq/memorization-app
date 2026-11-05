@@ -1,3 +1,4 @@
+import {outsideGameDialog} from '../input-scope.js';
 import {createAsteroids,stepAsteroids,aimedObject,WORLD} from './engine.js';
 import {buildSectors,asteroidProfiles} from './content.js';
 import {createAudioManager,motionSettings} from '../services.js';
@@ -106,8 +107,8 @@ export function mountAsteroids({root,adapter,config,library,id,difficulty='begin
     paint();
   }
   const keys={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',KeyQ:'turn-left',KeyR:'turn-right'};
-  const typing=e=>e.target.closest?.('input,select,textarea,a,[contenteditable=true],dialog,.astro-overlay')||e.target.closest?.('button')&&!stage.contains(e.target);
-  const keydown=e=>{if(root.closest("[inert]"))return;if(typing(e)||e.altKey||e.ctrlKey||e.metaKey)return;if(keys[e.code]){e.preventDefault();held.add(keys[e.code]);}else if(['Space','KeyE','KeyP'].includes(e.code)){e.preventDefault();if(!e.repeat)send({type:{Space:'capture',KeyE:'shield',KeyP:'pause'}[e.code]});}};
+  const typing=e=>e.target.closest?.('input,select,textarea,a,[contenteditable=true],.astro-overlay')||e.target.closest?.('button')&&!stage.contains(e.target);
+  const keydown=e=>{if(root.closest("[inert]")||outsideGameDialog(root,e))return;if(typing(e)||e.altKey||e.ctrlKey||e.metaKey)return;if(keys[e.code]){e.preventDefault();held.add(keys[e.code]);}else if(['Space','KeyE','KeyP'].includes(e.code)){e.preventDefault();if(!e.repeat)send({type:{Space:'capture',KeyE:'shield',KeyP:'pause'}[e.code]});}};
   const keyup=e=>{if(keys[e.code])held.delete(keys[e.code]);};
   const coordinates=e=>{const r=stage.getBoundingClientRect();return {x:(e.clientX-r.left)/r.width*1000,y:(e.clientY-r.top)/r.height*600};};
   let dragging=false;

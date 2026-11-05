@@ -1,3 +1,4 @@
+import {outsideGameDialog} from './arcade/input-scope.js';
 import {resolvePlaybackSource} from "../content/private-audio.js";
 import {createAudioLevel} from "./audio-level.js";
 import {
@@ -397,9 +398,10 @@ export function mountFalling(
     if (
       !area.isConnected ||
       area.closest("[inert]") ||
+      outsideGameDialog(area,event) ||
       !started ||
       event.target.closest(
-        "input,select,textarea,[contenteditable=true],dialog,a",
+        "input,select,textarea,[contenteditable=true],a",
       ) ||
       (event.target.closest("button") &&
         (!area.contains(event.target) ||

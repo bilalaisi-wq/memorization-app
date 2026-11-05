@@ -8,11 +8,15 @@ const long = JSON.parse(
 );
 async function open(page) {
   await enableDeveloperLab(page);
+  // Explicitly retain coverage of the original layout; new grouped defaults
+  // have their own source-integrity and UI suite.
+  await page.evaluate(async()=>{const {profileStorage}=await import('/src/learner/profile-storage.js');if(profileStorage.getItem('ayah-passage-workspaces-v1')===null)profileStorage.setItem('ayah-passage-workspaces-v1',JSON.stringify({version:1,records:{},refs:['1:1'],layoutPreference:'legacy'}));});
   await menu(page);
   await page.getByRole("button", { name: "Passage memorization", exact: true })
     .click();
   await page.getByRole("button", { name: /Start with Al-Fatihah|Resume saved workspace/ }).click();
   await expect(page.locator("[data-reference]")).toBeVisible();
+
 }
 test("128-word ayah uses bounded workspaces, progressive hints, and no unapproved segment audio", async ({ page }) => {
   await mockBilling(page, { plan: "pathfinder" });

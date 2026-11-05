@@ -1,3 +1,4 @@
+import {outsideGameDialog} from '../input-scope.js';
 import {createSnake,stepSnake,buildSnakeSectors,snakeSpeeds,GRID} from './engine.js';
 import {createAudioManager,motionSettings} from '../services.js';
 import {esc} from '../../../ui/dom.js';
@@ -82,8 +83,8 @@ export function mountSnake({root,adapter,config,id,speed='slow',muted=()=>false,
     if(['start','retry','recover','resume'].includes(action.type))board.focus({preventScroll:true});
   }
   const directionKeys={ArrowUp:'up',KeyW:'up',ArrowRight:'right',KeyD:'right',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left'};
-  const keydown=e=>{if(root.closest("[inert]"))return;
-    if(e.altKey||e.ctrlKey||e.metaKey||e.target.closest?.('input,select,textarea,button,a,[contenteditable=true],.snake-overlay,dialog'))return;
+  const keydown=e=>{if(root.closest("[inert]")||outsideGameDialog(root,e))return;
+    if(e.altKey||e.ctrlKey||e.metaKey||e.target.closest?.('input,select,textarea,button,a,[contenteditable=true],.snake-overlay'))return;
     if(directionKeys[e.code]){e.preventDefault();send({type:'direction',value:directionKeys[e.code]});}
     if(e.code==='KeyP'&&!e.repeat){e.preventDefault();send({type:'pause'});}
   };

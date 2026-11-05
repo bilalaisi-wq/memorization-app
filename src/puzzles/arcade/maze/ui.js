@@ -1,3 +1,4 @@
+import {outsideGameDialog} from '../input-scope.js';
 import {createMaze,stepMaze,buildMazeChambers,mazeProfiles,cellKey} from './engine.js';
 import {createAudioManager,motionSettings} from '../services.js';
 import {esc} from '../../../ui/dom.js';
@@ -66,7 +67,7 @@ export function mountMaze({root,adapter,config,library,id,difficulty='beginner',
   if(state.session.status==='won'||state.session.status==='lost')panel.focus({preventScroll:true});
  }
  const keyDirections={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right'};
- const keydown=e=>{if(root.closest("[inert]"))return;if(e.altKey||e.ctrlKey||e.metaKey||e.target.closest?.('input,select,textarea,button,a,[contenteditable=true],dialog,.maze-overlay'))return;if(keyDirections[e.code]){e.preventDefault();send({type:'move',direction:keyDirections[e.code]});}else if((e.code==='Enter'||e.code==='Space')&&!e.repeat){e.preventDefault();send({type:'open'});}else if(e.code==='KeyP'&&!e.repeat){e.preventDefault();send({type:'pause'});}};
+ const keydown=e=>{if(root.closest("[inert]")||outsideGameDialog(root,e))return;if(e.altKey||e.ctrlKey||e.metaKey||e.target.closest?.('input,select,textarea,button,a,[contenteditable=true],.maze-overlay'))return;if(keyDirections[e.code]){e.preventDefault();send({type:'move',direction:keyDirections[e.code]});}else if((e.code==='Enter'||e.code==='Space')&&!e.repeat){e.preventDefault();send({type:'open'});}else if(e.code==='KeyP'&&!e.repeat){e.preventDefault();send({type:'pause'});}};
  let swiped=false;
  const click=e=>{if(swiped&&e.target.closest('.maze-scroll')){swiped=false;return;}const button=e.target.closest('[data-maze-action]'),dir=e.target.closest('[data-maze-direction]');if(button&&!button.disabled)send({type:button.dataset.mazeAction});else if(dir)send({type:'move',direction:dir.dataset.mazeDirection});else{const tile=e.target.closest('.maze-tile');if(tile){const dx=Number(tile.dataset.x)-state.player.x,dy=Number(tile.dataset.y)-state.player.y;if(Math.abs(dx)+Math.abs(dy)===1)send({type:'move',direction:dx===1?'right':dx===-1?'left':dy===1?'down':'up'});}}};
  let touch=null;const down=e=>{swiped=false;touch={x:e.clientX,y:e.clientY};};const up=e=>{if(!touch)return;const dx=e.clientX-touch.x,dy=e.clientY-touch.y;touch=null;if(Math.max(Math.abs(dx),Math.abs(dy))>=20){swiped=true;send({type:'move',direction:Math.abs(dx)>Math.abs(dy)?dx>0?'right':'left':dy>0?'down':'up'});}};const cancel=()=>touch=null;

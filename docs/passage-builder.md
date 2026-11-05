@@ -1,5 +1,7 @@
 # Qur’an content and long-ayah Passage Builder
 
+Current studio update: [grouped workspaces, chosen games and XP-prompted self-assessment](passage-grouped-practice.md). The original word-window layout and saved Expedition routes remain available.
+
 ## Scope and release status
 
 The architecture covers **all 114 surahs, 30 juz and 6,236 ayah references**. Long-ayah segmentation/review rules apply generally to every ayah longer than the 12-word viewport. The uploaded 2:255/2:282 ranges are reference-specific seed overrides, not a template of numeric indices to paste onto other ayahs.
@@ -34,7 +36,7 @@ For other long ayahs, initial **unapproved visual proposals** use the verified s
 
 In active developer mode, open **Menu → Passage memorization**, or **Passage Builder → Open memorization studio**. Guest access to existing free ayahs needs no subscription or backend. Additional private references are checked on the server.
 
-- Choose an ayah; no more than 12 movable word pieces are rendered in the current viewport.
+- Choose an ayah; the grouped layout renders up to 12 movable pieces, containing one, two, three or up to five original words each depending on ayah length. Original 12-word windows remain selectable for saved drafts.
 - Reduce word hints progressively, reveal as needed, and say the words aloud as you work.
 - Complete each phrase workspace and arrange the workspace excerpts to reconstruct the full ayah. Excerpts are labeled; they never replace the authoritative full reference.
 - Full-ayah audio is loaded only on request, and continues through visual page changes. No timing is inferred from text punctuation, screen breaks or breaths.
