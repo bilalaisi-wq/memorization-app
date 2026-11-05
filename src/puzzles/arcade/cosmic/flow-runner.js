@@ -3,7 +3,7 @@ import {flowChoices} from '../../../quest/cosmic/flow-content.js';
 const clone=x=>structuredClone(x);
 const preparedKinds=new Set();
 export const BOOST_CAPACITY=4;
-export const BOOST_MULTIPLIER=2.31;
+export const BOOST_MULTIPLIER=3.234;
 // Arabic pickups are intact capsules, separate from unlabeled environmental rocks.
 export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0,slow=false,compact=false,onEvent=()=>{}}) {
   if(!units?.length)throw Error('Verified flow units required.');

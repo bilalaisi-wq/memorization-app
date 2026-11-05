@@ -17,7 +17,7 @@ function pilot(g){let max=0;for(let i=0;i<30000;i++){
   else {const danger=s.objects.find(o=>o.kind==='asteroid'&&o.y>400&&o.y<670),target=s.objects.find(o=>o.kind==='pickup'&&o.unit.id===s.unit?.id);const lane=danger?(danger.lane+1)%3:target?.lane;if(lane!==undefined)while(g.getSnapshot().lane!==lane)g.dispatch({type:'lane',direction:Math.sign(lane-g.getSnapshot().lane)});}
   tick(g);
 }throw Error('Activity was not solvable');}
-test('boost speed is precisely 40% faster while retaining four seconds of fuel',()=>{expect(BOOST_MULTIPLIER).toBeCloseTo(1.65*1.4);expect(BOOST_CAPACITY).toBe(4);});
+test('boost speed adds another 40% to the previous 2.31× rate while retaining four seconds of fuel',()=>{expect(BOOST_MULTIPLIER).toBeCloseTo(2.31*1.4);expect(BOOST_CAPACITY).toBe(4);});
 test('defense rejects premium/noncontiguous content and physical objects never carry Quran text',()=>{
   expect(()=>createMeteorDefense({refs:['67:1'],stageId:'x'})).toThrow();expect(()=>createMeteorDefense({refs:['1:1','1:3'],stageId:'x'})).toThrow();expect(()=>createMeteorDefense({refs:['1:1'],stageId:'x',configuration:'unknown'})).toThrow();
   const g=createMeteorDefense({refs:['1:1'],stageId:'neutral'});g.start();answer(g);g.dispatch({type:'gateway-continue'});for(let i=0;i<100;i++)tick(g);
