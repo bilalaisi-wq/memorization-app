@@ -1,3 +1,4 @@
+import {createBridgeTutorialStore,mountBridgeTutorial} from './arcade/bridge/tutorial.js';
 import {bridgeRegistration} from "./arcade/bridge/ui.js";
 import {buildCrossings} from "./arcade/bridge/engine.js";
 import {siratRegistration} from "./arcade/sirat/ui.js";
@@ -308,21 +309,21 @@ export function mountPuzzleLab(
     const registry=createRegistry();registry.register(bridgeRegistration);
     const launcher=createLauncher(registry),adapter=createContentAdapter(surahs);
     const record=createResultRecorder({learning,lab,accountId:activeProfileId(),getAccountId:activeProfileId});
-    let cancelled=false,launchToken=0,nextAudio='listen';
+    let cancelled=false,launchToken=0,nextAudio='listen',tutorial=null;
     const initial=Math.min(verse.id,surah.verses.at(-1).id-1);
-    area.innerHTML=`<form class="bridge-config"><h3>Bridge Builder · Ayah Link</h3><p>Recall the next ayah’s opening. Connect the ending on the right island to the opening on the left. A chain of N ayahs has N−1 bridges.</p><div class="bridge-config-fields"><label>Journey<select name="journey"><option value="single">Single Transition · two adjacent ayahs</option><option value="chain">Ayah Chain · one bridge per boundary</option></select></label><label>Starting ayah<input name="first" type="number" min="1" max="${surah.verses.at(-1).id-1}" value="${initial}"></label><label>Through ayah<input name="last" type="number" min="2" max="${surah.verses.at(-1).id}" value="${initial+1}" disabled></label><label>Checkpoints<select name="rules"><option value="classic">Classic · three strikes per run</option><option value="practice">Practice · three per boundary</option></select></label><label>Bridge difficulty<select name="difficulty"><option value="beginner">Beginner · guided openings</option><option value="standard">Intermediate · opening phrases</option><option value="expert">Advanced · recall before choices</option></select></label></div><p>Only source-backed visual excerpts are used. Full-ayah audio preserves recitation; visual excerpts do not certify stopping points.</p><button class="primary" type="submit">Prepare crossing</button><p data-bridge-preparation role="status"></p></form><div data-bridge-host></div>`;
+    area.innerHTML=`<form class="bridge-config"><h3>Bridge Builder · Ayah Link</h3><p>Recall the next ayah’s opening. Connect the ending on the right island to the opening on the left. A chain of N ayahs has N−1 bridges.</p><div class="bridge-config-fields"><label>Journey<select name="journey"><option value="single">Single Transition · two adjacent ayahs</option><option value="chain">Ayah Chain · one bridge per boundary</option></select></label><label>Starting ayah<input name="first" type="number" min="1" max="${surah.verses.at(-1).id-1}" value="${initial}"></label><label>Through ayah<input name="last" type="number" min="2" max="${surah.verses.at(-1).id}" value="${initial+1}" disabled></label><label>Checkpoints<select name="rules"><option value="classic">Classic · three strikes per run</option><option value="practice">Practice · three per boundary</option></select></label><label>Bridge difficulty<select name="difficulty"><option value="beginner">Beginner · guided openings</option><option value="standard">Intermediate · opening phrases</option><option value="expert">Advanced · Cold Crossing</option></select></label></div><label><input type="checkbox" name="bridgeGate"> Optional Bridge Gate · review two links after every three bridges in longer chains</label><button class="text-button" type="button" data-bridge-tutorial>How to Play</button><p>Only source-backed visual excerpts are used. Full-ayah audio preserves recitation; visual excerpts do not certify stopping points.</p><button class="primary" type="submit">Prepare crossing</button><p data-bridge-preparation role="status"></p></form><div data-bridge-host></div>`;
     const form=area.querySelector('form'),host=area.querySelector('[data-bridge-host]'),status=area.querySelector('[data-bridge-preparation]'),through=form.elements.last;
     form.elements.journey.onchange=()=>through.disabled=form.elements.journey.value==='single';
     async function launch(autoStart=false){
       const token=++launchToken,button=form.querySelector('[type=submit]');button.disabled=true;status.textContent='Preparing verified bridge signs…';
       try{
         const first=Number(form.elements.first.value),difficulty=form.elements.difficulty.value;
-        const config=adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first+1:Number(through.value),mode:'chain',chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]});
+        const config={...adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first+1:Number(through.value),mode:'chain',chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]}),...(form.elements.bridgeGate.checked?{bridgeGate:true}:{})};
         const reviews={};
         if(cancelled||token!==launchToken)return;
         buildCrossings(adapter,config,surahs,{difficulty,reviews}); // Preserve the old result if preparation fails.
         fallingControl=launcher.launch('bridge',{root:host,adapter,config,library:surahs,id:uid(),difficulty,reviews,initialAudio:nextAudio,muted:()=>muted,volume:()=>recitationVolume,
-          onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
+          onSetup:()=>{form.scrollIntoView({block:'start'});form.elements.first.focus();},onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
           getNextSteps:s=>arcadeNextSteps({session:s.session,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'journey'}),
           onJourney:async choice=>{
             nextAudio=choice.audioMode==='echo'?'echo':'listen';
@@ -335,7 +336,10 @@ export function mountPuzzleLab(
         if(autoStart)fallingControl.start();status.textContent=autoStart?'Your next bridge has started.':'Ready. Press Start linking in the scene.';host.scrollIntoView({block:'start'});
       }catch(e){if(!cancelled){status.textContent=e.message;if(autoStart)throw e;}}finally{if(!cancelled&&token===launchToken)button.disabled=false;}
     }
-    form.onsubmit=e=>{e.preventDefault();launch();};pauseGame=()=>fallingControl?.pause();gameCleanup=()=>{cancelled=true;launchToken++;launcher.dispose();};
+    const showTutorial=()=>{fallingControl?.pause();tutorial?.dispose();tutorial=mountBridgeTutorial({adapter,library:surahs,volume:()=>recitationVolume,muted:()=>muted,onClose:result=>{tutorial=null;if(result.warning)status.textContent=result.warning;form.scrollIntoView({block:'start'});form.elements.first.focus();}});};
+    form.querySelector('[data-bridge-tutorial]').onclick=showTutorial;
+    if(createBridgeTutorialStore().needsTutorial())showTutorial();
+    form.onsubmit=e=>{e.preventDefault();tutorial?.dispose();tutorial=null;launch();};pauseGame=()=>fallingControl?.pause();gameCleanup=()=>{cancelled=true;launchToken++;tutorial?.dispose();launcher.dispose();};
   }
   function sirat() {
     const registry=createRegistry();registry.register(siratRegistration);

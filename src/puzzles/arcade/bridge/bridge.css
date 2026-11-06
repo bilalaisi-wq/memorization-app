@@ -4,3 +4,45 @@
 .bridge-island .arabic{display:block;unicode-bidi:isolate}
 .bridge-island>span,.bridge-island>small{display:block;direction:ltr;unicode-bidi:isolate}
 .bridge-stage:is([data-phase=choose],[data-phase=recall],[data-phase=checkpoint]) [data-bridge-opening]{font-family:system-ui}
+/* A river journey: bright deck joints, deep water and a visible chain of islands. */
+.bridge-landscape{background:repeating-linear-gradient(170deg,transparent 0 26px,#2c759427 27px 30px,transparent 31px 55px),radial-gradient(ellipse at 50% 90%,#15779899,#091b38 80%);border-radius:24px;padding:12px 0}
+.bridge-island{border-top:4px solid #72cfc3;background:linear-gradient(#356d73 0 65%,#293e60 65%,#132441);box-shadow:0 14px 28px #030d25a0}
+.bridge-deck{border-color:#f6d786;box-shadow:0 4px 0 #8d702f,0 -3px 0 #71ddd6,0 0 22px #e9c75f66;transition:transform .55s cubic-bezier(.2,.8,.2,1.2)}
+.bridge-connector{border-top:4px solid #5bc6c2!important;box-shadow:0 4px 0 #102a43;transition:box-shadow .15s}
+.bridge-connector.bridge-selected{outline-color:#ffd784;box-shadow:0 0 18px #fac45f55}
+.bridge-chain-map{display:flex;overflow-x:auto;list-style:none;margin:12px 0 6px;padding:6px;gap:0;scrollbar-width:thin;color:#bfd0e7;max-width:100%;box-sizing:border-box}
+.bridge-chain-map li{flex:1 0 52px;display:grid;place-items:center;font-size:12px;position:relative;gap:2px}
+.bridge-chain-map li:not(:last-child):after{content:'';position:absolute;top:9px;right:60%;width:80%;height:2px;background:#45778e}
+.bridge-chain-map li.linked{color:#ffe3a0}.bridge-chain-map li.linked:after{background:#f2ce78}.bridge-chain-map li[aria-current]{color:#8cf5e4;font-weight:800}
+.bridge-strikes{display:inline-flex;gap:5px;margin-inline-end:8px}.bridge-strikes i{font-style:normal;color:#ffd97f}.bridge-strikes .spent{color:#70819e;opacity:.6}
+.bridge-stage[data-phase=gate-crossing] .bridge-deck{transform:scaleX(1)}.bridge-stage[data-phase=gate-crossing] .bridge-lantern{opacity:1}
+.bridge-next-arrival .bridge-landscape{animation:bridge-arrival .5s ease-out}.bridge-result-art{font-size:40px;color:#567b96;margin:10px}.bridge-result-victory{color:#977124;animation:bridge-glow 1.2s ease-in-out 2}
+@keyframes bridge-arrival{from{opacity:.25;transform:translateX(-18px)}to{opacity:1;transform:none}}@keyframes bridge-glow{50%{filter:drop-shadow(0 0 12px #edc66a);transform:scale(1.06)}}
+.bridge-tutorial-dialog{width:min(960px,96vw);max-width:96vw;max-height:95svh;border:2px solid #eacb7a;border-radius:24px;padding:0;box-sizing:border-box;overflow:auto;background:#132441;color:#eef4ff}
+.bridge-tutorial-dialog::backdrop{background:#081328db}.bridge-tutorial{background:linear-gradient(150deg,#142342,#233c5b)!important;color:#edf5ff!important;border:0;border-radius:20px;padding:clamp(12px,3vw,24px)}
+.bridge-tutorial header{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.bridge-tutorial h2{font-size:clamp(24px,4vw,34px);margin:6px 0;flex:1 1 240px;color:#f7e2aa!important}.bridge-tutorial button{min-height:48px;padding:10px 14px;border-radius:12px;background:#e3f5ec;color:#173e44!important;border:2px solid #70bdb8;touch-action:manipulation;font-weight:700}
+.bridge-tutorial p,.bridge-tutorial label,.bridge-tutorial strong{color:#eef4ff!important}.bridge-tutorial .bridge-connector .arabic,.bridge-tutorial .bridge-connector b{color:#173e44!important}
+.bridge-tutorial-step{margin:12px 0;line-height:1.6}.bridge-tutorial-verses{background:#0c1b35;border-radius:18px;padding:8px 16px}.bridge-tutorial-verses .arabic{font-size:clamp(27px,4vw,36px);line-height:2;margin:4px 0;color:#f2f6ff!important;overflow-wrap:anywhere}.bridge-tutorial-verses small{font:13px system-ui;color:#add9db}.bridge-tutorial-verses [aria-current]{outline:2px solid #64d4cf;outline-offset:4px;border-radius:8px}.bridge-word-highlight{background:#f4d58b;color:#192d41!important;border-radius:6px;padding:0 3px;box-decoration-break:clone}
+.bridge-tutorial .bridge-landscape{min-height:180px}.bridge-tutorial .bridge-island .arabic{font-size:28px}.bridge-tutorial-connected .bridge-deck{transform:scaleX(1)}.bridge-tutorial-connected .bridge-lantern{opacity:1;animation:tutorial-traveler 1.8s ease-in-out forwards}
+.bridge-tutorial-actions{margin:10px 0}.bridge-tutorial [data-tutorial-status]{min-height:32px;color:#ffe1a0!important;line-height:1.6}.bridge-tutorial .bridge-guided{outline:3px solid #ffd67c;box-shadow:0 0 18px #f7c76255}.bridge-tutorial-audio{display:flex;flex-wrap:wrap;align-items:center;gap:8px;border-top:1px solid #47738b;padding-top:10px}.bridge-tutorial-audio label{display:flex;align-items:center;gap:6px}.bridge-tutorial-audio input[type=checkbox]{width:24px;height:24px}.bridge-tutorial-audio input[type=range]{max-width:140px}
+@keyframes tutorial-traveler{from{right:0}to{right:100%}}
+.bridge-tutorial-dialog.bridge-reduced .bridge-lantern{right:50%;animation:none}
+@media(max-width:600px){.bridge-tutorial-dialog{width:calc(100vw - 12px);max-width:calc(100vw - 12px)}.bridge-tutorial .bridge-landscape{min-height:165px}.bridge-tutorial-verses{padding:5px 8px}.bridge-tutorial .bridge-island{padding:10px 5px 18px}.bridge-tutorial header [data-tutorial-skip]{font-size:12px}.bridge-tutorial .bridge-yard{flex-direction:column}.bridge-tutorial .bridge-connector{min-height:58px}.bridge-tutorial .bridge-connector b{font-size:11px}.bridge-tutorial .bridge-connector .arabic{font-size:27px}}
+@media(prefers-reduced-motion:reduce){.bridge-tutorial *,.bridge-next-arrival *{animation:none!important;transition:none!important}.bridge-tutorial-connected .bridge-lantern{right:50%}}
+/* Override the site's fixed-height app header inside the tutorial dialog. */
+.bridge-tutorial>header{height:auto;min-height:0;position:static;background:transparent;border:0;border-radius:0;overflow:visible;padding:0 0 8px;justify-content:flex-start;align-items:flex-start;box-shadow:none}
+.bridge-tutorial>header .eyebrow{flex-basis:100%;color:#9edfd7;letter-spacing:.13em;font-size:11px}
+.bridge-tutorial>header h2{flex-basis:100%;line-height:1.2;margin:0 0 8px}
+.bridge-tutorial-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;width:100%;align-items:stretch}
+.bridge-tutorial-controls label{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;background:#11243e;border-radius:12px;padding:4px}
+.bridge-tutorial-controls input{width:23px;height:23px;flex-shrink:0}.bridge-tutorial-controls button{min-width:0;font-size:13px;padding:8px}
+@media(max-width:600px){.bridge-tutorial>header{gap:5px}.bridge-tutorial>header h2{font-size:24px}.bridge-tutorial .bridge-landscape{min-height:145px}.bridge-tutorial-verses .arabic{line-height:1.8}.bridge-tutorial-controls label{font-size:12px}.bridge-tutorial-audio{font-size:13px}}
+.bridge-builder[data-state=won] .bridge-chain-map li{color:#ffe3a0}
+/* Keyboard focus is turquoise; only the first lesson's answer guide is gold. */
+.bridge-tutorial .bridge-selected:not(.bridge-guided){outline-color:#85d9e2;box-shadow:none}
+.bridge-reduced .bridge-lantern{right:50%}
+@media(prefers-reduced-motion:reduce){.bridge-builder .bridge-lantern{right:50%}}
+/* Newly rendered tutorial bridges need an explicit formation animation. */
+.bridge-tutorial-connected .bridge-deck{animation:tutorial-build .4s cubic-bezier(.2,.8,.2,1.15) both}
+.bridge-tutorial-connected .bridge-lantern{animation-duration:1.4s;animation-delay:.3s}
+@keyframes tutorial-build{from{transform:scaleX(0)}to{transform:scaleX(1)}}
