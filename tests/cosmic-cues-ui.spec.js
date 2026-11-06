@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 import {createFlowUnits} from '../src/quest/cosmic/flow-content.js';
 async function open(page,style='words',ref='1:3',failure=false){
   await page.addInitScript(({failure})=>{window.cues=[];window.allowCue=!failure;window.Audio=class{constructor(src){this.src=src;window.cues.push(this);}async play(){if(!window.allowCue)throw Error('autoplay blocked');this.active=true;}pause(){this.active=false;}removeAttribute(){}load(){}};},{failure});
-  await page.goto('/');await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Cosmic Rush/}).click();
+  await page.goto('/');await page.locator('#nav-revision-lab').click();await expect(page.locator('.cosmic-form')).toBeVisible();
   const [surah,ayah]=ref.split(':');await page.locator('[name=surah]').selectOption(surah);await page.locator('[name=selection]').selectOption('custom');await page.locator('[name=start]').fill(ayah);await page.locator('[name=end]').fill(ayah);
   await page.getByRole('button',{name:'View mission briefing →'}).click();await page.locator('[data-pickup-mode]').selectOption(style);await expect(page.locator('[data-flow-guidance]')).toBeChecked();await page.clock.install();
   await page.locator('[data-launch-runner]').click();await expect(page.getByRole('button',{name:'Start flight',exact:true})).toBeVisible();

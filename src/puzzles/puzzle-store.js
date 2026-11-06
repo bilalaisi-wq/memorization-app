@@ -2,7 +2,7 @@ import { arcadeGames } from "./arcade/registry.js";
 import { versionedStore } from "../ui/versioned-store.js";
 export const LAB_KEY = "ayah-puzzle-lab-v1";
 export const gameTypes = [
-  ["bridge","Bridge Builder","Construct connected word beams, add supports and test a moving load.","order"],
+  ["bridge","Bridge Builder","Recall the opening of the next ayah and connect two islands.","order"],
   ["sirat","Sirat Quest","Explore garden terraces and connect verified continuation gateways.","order"],
   ["bubble","Ayah Bubble Burst","Aim, ricochet and connect verified Arabic bubble clusters.","order"],
   ["maze","Memory Maze","Explore corridors and open verified Arabic continuation doors.","order"],

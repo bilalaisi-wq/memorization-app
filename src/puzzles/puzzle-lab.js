@@ -309,24 +309,16 @@ export function mountPuzzleLab(
     const launcher=createLauncher(registry),adapter=createContentAdapter(surahs);
     const record=createResultRecorder({learning,lab,accountId:activeProfileId(),getAccountId:activeProfileId});
     let cancelled=false,launchToken=0,nextAudio='listen';
-    area.innerHTML=`<form class="bridge-config"><h3>Choose your bridge crossing</h3><p>Select canonical Arabic beams, engineer their connections and test a moving load. Structural failures never cost memory charges.</p><div class="bridge-config-fields"><label>Journey<select name="journey"><option value="single">Single Ayah</option><option value="chain">Ayah Chain · successive crossings</option></select></label><label>Starting ayah<input name="first" type="number" min="1" max="${surah.verses.at(-1).id}" value="${verse.id}"></label><label>Through ayah<input name="last" type="number" min="1" max="${surah.verses.at(-1).id}" value="${verse.id}" disabled></label><label>Checkpoints<select name="rules"><option value="classic">Classic · three strikes per run</option><option value="practice">Practice · three per ayah</option></select></label><label>Bridge difficulty<select name="difficulty"><option value="beginner">Beginner · marked pier foundation</option><option value="standard">Standard · multiple support layouts</option><option value="expert">Expert · long span, fewer supports, similar phrases</option></select></label></div><p>Expert uses approved study phrases or short whole ayahs. Phrase signs do not authorize recitation stops.</p><button class="primary" type="submit">Prepare crossing</button><p data-bridge-preparation role="status"></p></form><div data-bridge-host></div>`;
+    const initial=Math.min(verse.id,surah.verses.at(-1).id-1);
+    area.innerHTML=`<form class="bridge-config"><h3>Bridge Builder · Ayah Link</h3><p>Recall the next ayah’s opening. Connect the ending on the right island to the opening on the left. A chain of N ayahs has N−1 bridges.</p><div class="bridge-config-fields"><label>Journey<select name="journey"><option value="single">Single Transition · two adjacent ayahs</option><option value="chain">Ayah Chain · one bridge per boundary</option></select></label><label>Starting ayah<input name="first" type="number" min="1" max="${surah.verses.at(-1).id-1}" value="${initial}"></label><label>Through ayah<input name="last" type="number" min="2" max="${surah.verses.at(-1).id}" value="${initial+1}" disabled></label><label>Checkpoints<select name="rules"><option value="classic">Classic · three strikes per run</option><option value="practice">Practice · three per boundary</option></select></label><label>Bridge difficulty<select name="difficulty"><option value="beginner">Beginner · guided openings</option><option value="standard">Intermediate · opening phrases</option><option value="expert">Advanced · recall before choices</option></select></label></div><p>Only source-backed visual excerpts are used. Full-ayah audio preserves recitation; visual excerpts do not certify stopping points.</p><button class="primary" type="submit">Prepare crossing</button><p data-bridge-preparation role="status"></p></form><div data-bridge-host></div>`;
     const form=area.querySelector('form'),host=area.querySelector('[data-bridge-host]'),status=area.querySelector('[data-bridge-preparation]'),through=form.elements.last;
     form.elements.journey.onchange=()=>through.disabled=form.elements.journey.value==='single';
     async function launch(autoStart=false){
       const token=++launchToken,button=form.querySelector('[type=submit]');button.disabled=true;status.textContent='Preparing verified bridge signs…';
       try{
         const first=Number(form.elements.first.value),difficulty=form.elements.difficulty.value;
-        const config=adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first:Number(through.value),mode:form.elements.journey.value,chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]});
+        const config=adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first+1:Number(through.value),mode:'chain',chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]});
         const reviews={};
-        for(const key of config.keys){
-          const canonical=adapter.words(key);
-          if((difficulty==='expert'&&canonical.length>8)||canonical.length>40&&!config.visualWindows){
-            const bundle=await callbacks.getArcadeBundle?.(key);if(cancelled||token!==launchToken)return;
-            const review=bundle?.segmentationReview;
-            if(!review||review.verseKey!==key||review.sourceHash!==bundle.contentRevision||!review.version||bundle.words.length!==canonical.length||bundle.words.some((w,i)=>w.text!==canonical[i].text))throw Error(`${key}: published teacher-approved phrase boundaries are unavailable. Choose Beginner/Standard for short ayahs.`);
-            reviews[key]=review.segments.map(s=>({key,startWord:s.startWord-1,endWord:s.endWord,status:s.displayStatus,reviewId:`${key}:v${review.version}`,stopStatus:s.stopStatus,recitationStop:s.recitationStop}));
-          }
-        }
         if(cancelled||token!==launchToken)return;
         buildCrossings(adapter,config,surahs,{difficulty,reviews}); // Preserve the old result if preparation fails.
         fallingControl=launcher.launch('bridge',{root:host,adapter,config,library:surahs,id:uid(),difficulty,reviews,initialAudio:nextAudio,muted:()=>muted,volume:()=>recitationVolume,
@@ -340,7 +332,7 @@ export function mountPuzzleLab(
             form.elements.first.value=String(range.first);through.value=String(range.last);form.elements.rules.value=choice.config.chainMode;form.elements.difficulty.value=choice.difficulty;
             form.elements.journey.value=range.first===range.last?'single':'chain';through.disabled=range.first===range.last;await launch(true);
           }});
-        if(autoStart)fallingControl.start();status.textContent=autoStart?'Your next bridge has started.':'Ready. Press Start building below.';host.scrollIntoView({block:'start'});
+        if(autoStart)fallingControl.start();status.textContent=autoStart?'Your next bridge has started.':'Ready. Press Start linking in the scene.';host.scrollIntoView({block:'start'});
       }catch(e){if(!cancelled){status.textContent=e.message;if(autoStart)throw e;}}finally{if(!cancelled&&token===launchToken)button.disabled=false;}
     }
     form.onsubmit=e=>{e.preventDefault();launch();};pauseGame=()=>fallingControl?.pause();gameCleanup=()=>{cancelled=true;launchToken++;launcher.dispose();};

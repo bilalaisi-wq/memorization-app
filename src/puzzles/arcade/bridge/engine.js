@@ -1,63 +1,58 @@
 import {createSession,reduceSession} from '../session.js';
 import {seededShuffle} from '../content.js';
-import {buildSectors} from '../asteroids/content.js';
-import {selectionEvidence} from '../evidence.js';
 import {wordIdentity} from '../../../distractors.js';
-import {makeStructure,bridgeProfiles,inspectBridge} from './structure.js';
-export {bridgeProfiles} from './structure.js';
-const identity=p=>p.words.map(w=>wordIdentity(w.text)).join(' ');
-export function buildCrossings(adapter,config,library,options={}){const sectors=buildSectors(adapter,config,library,options);if(sectors.some(s=>s.targets.some(p=>p.words.length>8)))throw Error('Choose word mode or smaller published reviewed phrases for bridge labels.');return sectors;}
+export const bridgeProfiles=Object.freeze({beginner:{ending:1,opening:1,moving:false},standard:{ending:3,opening:3,moving:true},expert:{ending:3,opening:3,moving:true}});
+const identity=words=>words.map(w=>wordIdentity(w.text)).join(' ');
+export const transitionId=(from,to)=>`${from}>${to}`;
+export function buildCrossings(adapter,config,library,{difficulty='beginner'}={}){
+ const profile=bridgeProfiles[difficulty];if(!profile||config.keys.length<2)throw Error('Choose at least two consecutive ayahs for an ayah-to-ayah bridge.');
+ const all=library.flatMap(s=>s.verses.map(v=>`${s.id}:${v.id}`));
+ return config.keys.slice(1).map((to,i)=>{
+  const from=config.keys[i],[s,a]=from.split(':').map(Number),[t,b]=to.split(':').map(Number);
+  if(s!==t||b!==a+1)throw Error('Bridge transitions require adjacent ayahs in canonical order.');
+  const previous=adapter.words(from),next=adapter.words(to),opening=next.slice(0,profile.opening),seen=new Set([identity(opening)]),alternatives=[];
+  const pool=seededShuffle(all,config.seed+i);
+  if(difficulty==='expert'){const expected=new Set(opening.map(w=>wordIdentity(w.text))),score=key=>adapter.words(key).slice(0,profile.opening).reduce((n,w)=>n+(expected.has(wordIdentity(w.text))?1:0),0);pool.sort((a,b)=>score(b)-score(a));}
+  for(const key of pool){
+   if(key===to)continue;const words=adapter.words(key).slice(0,profile.opening),value=identity(words);
+   // Identical displayed openings can never be a wrong answer; exclude them.
+   if(!value||seen.has(value))continue;seen.add(value);alternatives.push({id:key,key,words});if(alternatives.length===2)break;
+  }
+  if(alternatives.length!==2)throw Error('Insufficient distinguishable verified openings. Choose another authorized passage.');
+  return {id:transitionId(from,to),key:to,from,to,previous,next,ending:previous.slice(-profile.ending),opening,audio:adapter.audio(from),nextAudio:adapter.audio(to),choices:seededShuffle([{id:to,key:to,words:opening},...alternatives],config.seed+i+17)};
+ });
+}
+export function bridgeRevision(sectors){let n=2166136261;for(const c of sectors.map(t=>[t.id,...t.previous.map(w=>w.text),...t.next.map(w=>w.text)].join('|')).join('\n'))n=Math.imul(n^c.charCodeAt(0),16777619);return (n>>>0).toString(16);}
+export function createBridge({id,config,sectors,difficulty='beginner'}){
+ if(!bridgeProfiles[difficulty]||sectors.length!==config.keys.length-1||sectors.some((s,i)=>s.from!==config.keys[i]||s.to!==config.keys[i+1]||s.choices.length!==3||s.choices.filter(c=>c.key===s.to).length!==1||new Set(s.choices.map(c=>identity(c.words))).size!==3))throw Error('Invalid verified transition content');
+ const session=createSession({id,game:'bridge',config:{...config,sourceKeys:[...config.keys],keys:config.keys.slice(1)}});
+ return {version:2,session,sourceConfig:structuredClone(config),sectors,difficulty,revision:bridgeRevision(sectors),phase:difficulty==='expert'?'recall':'choose',crossing:0,bridges:[],transitionErrors:[],score:0,clock:0,selection:0,message:'Recall the opening of the next ayah. Connect the right island to the left island.'};
+}
 const reduce=(s,type,extra={})=>s.session=reduceSession(s.session,{type,...extra});
-function crossing(s){const sector=s.sectors[s.session.checkpoint],count=Math.min(4,sector.targets.length-s.windowStart);s.structure=makeStructure(count,s.difficulty);s.beams=[];s.supports=[];s.testing=null;s.lastLoadIndex=0;s.lastReport=null;s.awaitingNext=false;s.awaitingWindow=false;s.selectedBeam=null;refreshChoices(s);}
-function refreshChoices(s){if(s.beams.length>=s.structure.nodes.length-1){s.choices=[];return;}const sector=s.sectors[s.session.checkpoint],expected=sector.targets[s.windowStart+s.beams.length];const all=[...sector.targets.slice(s.windowStart+s.beams.length,s.windowStart+s.structure.nodes.length-1),...sector.distractors];const seen=new Set();s.choices=expected?seededShuffle(all.filter(p=>{const value=identity(p);if(seen.has(value))return false;seen.add(value);return true;}),s.session.config.seed+s.windowStart+s.beams.length):[];}
-export function createBridge({id,config,sectors,difficulty='beginner'}){if(!bridgeProfiles[difficulty]||!sectors.length||sectors.map(s=>s.key).join('|')!==config.keys.join('|')||sectors.some(s=>!s.targets.length||!s.distractors.length))throw Error('Invalid verified bridge content');const s={session:createSession({id,game:'bridge',config}),sectors:structuredClone(sectors),difficulty,windowStart:0,captured:[],beams:[],supports:[],structure:null,choices:[],testing:null,lastReport:null,engineeringErrors:0,tests:0,score:0,lastLoadIndex:0,awaitingNext:false,awaitingWindow:false,message:'Select the next Arabic piece, then connect it between deck joints. Supports and load testing are separate engineering decisions.'};crossing(s);return s;}
-function engineering(s,message){reduce(s,'motor-error');s.engineeringErrors++;s.message=`Engineering check: ${message} No memory strike. Your accepted words are safe.`;}
 export function stepBridge(previous,action){
  if(previous.session.status==='disposed')return previous;
- const s={...structuredClone({...previous,sectors:undefined,lastReport:undefined,structure:undefined}),sectors:previous.sectors,lastReport:previous.lastReport,structure:previous.structure};
- if(action.type==='dispose'){reduce(s,'dispose');s.testing=null;return s;}
+ const s={...structuredClone({...previous,sectors:undefined}),sectors:previous.sectors},t=s.sectors[s.session.checkpoint];
+ if(action.type==='dispose'){reduce(s,'dispose');return s;}
  if(action.type==='start'&&s.session.status==='ready'){reduce(s,'start');return s;}
  if(action.type==='pause'){reduce(s,'pause');return s;}
  if(action.type==='resume'){reduce(s,'resume');return s;}
- if(action.type==='retry'&&s.session.status==='lost'){reduce(s,'retry');s.windowStart=0;s.captured=[];crossing(s);return s;}
+ if(action.type==='retry'&&s.session.status==='lost'){reduce(s,'retry');if(s.sourceConfig.chainMode==='classic'){s.bridges=[];s.score=0;}s.phase=s.difficulty==='expert'?'recall':'choose';s.crossing=0;return s;}
+ if(action.type==='assist'&&['ready','playing','paused'].includes(s.session.status)){const status=s.session.status;s.session.status='playing';reduce(s,'assist',{kind:action.kind});s.session.status=status;return s;}
  if(s.session.status!=='playing')return previous;
- if(action.type==='assist'){reduce(s,'assist',{kind:action.kind});return s;}
- if(action.type==='next'&&(s.awaitingNext||s.awaitingWindow)){crossing(s);return s;}
- if(s.awaitingNext||s.awaitingWindow)return previous;
- if(s.testing){
-  if(action.type!=='tick'||!Number.isFinite(action.dt)||action.dt<=0||action.dt>.15)return previous;
-  s.testing.progress=Math.min(1,s.testing.progress+action.dt*.2);const index=Math.min(24,Math.floor(s.testing.progress*24)),load=s.lastReport.cases[index];s.lastLoadIndex=index;
-  if(!load.stable){s.testing=null;engineering(s,load.reason);return s;}
-  if(s.testing.progress===1){s.testing=null;s.score+=100*s.beams.length;s.windowStart+=s.beams.length;const sector=s.sectors[s.session.checkpoint];if(s.windowStart===sector.targets.length){reduce(s,'checkpoint');if(s.session.status==='won'){s.message='Crossing complete! Recognition and construction are separate from independent recall.';}else{s.windowStart=0;s.captured=[];s.awaitingNext=true;s.message='Ayah crossing complete. Prepare the next linked crossing.';}}else{s.awaitingWindow=true;s.message='Load test passed. Continue with the next connected study section.';}}
+ if(action.type==='motor-error'){reduce(s,'motor-error');s.message='Connector returned safely. Tap it or try again; no memory strike.';return s;}
+ if(action.type==='ready'&&s.phase==='recall'){s.phase='choose';s.message='Choose the opening you recalled. This is recognition, not a verified oral assessment.';return s;}
+ if(action.type==='next'&&s.phase==='checkpoint'){s.phase=s.difficulty==='expert'?'recall':'choose';s.crossing=0;s.selection=0;s.message='Recite the ending, then recall the next opening.';return s;}
+ if(action.type==='steer'&&s.phase==='choose'){s.selection=(s.selection+(action.direction<0?-1:1)+3)%3;return s;}
+ if(action.type==='tick'){
+  if(!Number.isFinite(action.dt)||action.dt<=0||action.dt>.2)return previous;
+  s.clock+=action.dt;
+  if(s.phase==='crossing'){s.crossing=Math.min(1,s.crossing+action.dt/2);if(s.crossing===1){s.bridges.push(t.id);s.score+=100;reduce(s,'checkpoint');s.phase=s.session.status==='won'?'complete':'checkpoint';s.message='Connection complete! Recite both ayahs together. Game success does not certify memorization.';}}
   return s;
  }
- if(action.type==='select'){
-  if(s.beams.length>=s.structure.nodes.length-1)return previous;
-  const selected=s.choices[action.index],expected=s.sectors[s.session.checkpoint].targets[s.windowStart+s.beams.length];if(!Number.isInteger(action.index)||!selected||!expected)return previous;
-  if(identity(selected)!==identity(expected)){reduce(s,'mistake',selectionEvidence(selected,expected));s.message='That is not the next Arabic continuation. The bridge and accepted pieces stay intact.';return s;}
-  s.beams.push({id:s.windowStart+s.beams.length,piece:expected,bay:null,reinforced:false});s.selectedBeam=s.beams.at(-1).id;s.captured.push(...expected.words);s.message='Correct continuation. Place this beam where the structure needs it.';refreshChoices(s);return s;
- }
- const beam=s.beams.find(b=>b.id===action.beamId);
- if(action.type==='place'){
-  if(!beam||!Number.isInteger(action.from)||!Number.isInteger(action.to)||action.from<0||action.to<0||action.from>=s.structure.nodes.length||action.to>=s.structure.nodes.length)return previous;
-  if(Math.abs(action.from-action.to)!==1){engineering(s,'A deck beam must connect two neighboring deck joints.');return s;}
-  const bay=Math.min(action.from,action.to);if(s.beams.some(b=>b.id!==beam.id&&b.bay===bay)){engineering(s,'That bay already has a beam. Move or remove it first.');return s;}
-  beam.bay=bay;s.lastReport=null;s.selectedBeam=beam.id;s.message='Connection made. You can move this beam without retaking the Arabic selection.';return s;
- }
- if(action.type==='remove'&&beam){beam.bay=null;s.lastReport=null;return s;}
- if(action.type==='reinforce'&&beam){const limit=bridgeProfiles[s.difficulty].upgrades;if(!beam.reinforced&&s.beams.filter(b=>b.reinforced).length>=limit){engineering(s,'The reinforcement budget is used. Remove another upgrade first.');return s;}beam.reinforced=!beam.reinforced;s.lastReport=null;return s;}
- if(action.type==='support'){
-  const node=s.structure.nodes[action.node],profile=bridgeProfiles[s.difficulty];if(!node||node.anchor||!['pier','left','right'].includes(action.kind))return previous;
-  const existing=s.supports.findIndex(p=>p.node===node.id&&p.kind===action.kind);if(existing>=0){s.supports.splice(existing,1);s.lastReport=null;return s;}
-  const pier=action.kind==='pier',used=s.supports.filter(p=>(p.kind==='pier')===pier).length;
-  if(used>=(pier?profile.pierBudget:profile.strutBudget)||(pier&&s.difficulty==='beginner'&&node.id!==Math.floor((s.structure.nodes.length-1)/2))){engineering(s,'This support is outside the available foundation or budget. Try another layout.');return s;}
-  s.supports.push({node:node.id,kind:action.kind});s.lastReport=null;s.message='Support installed. Test the load to see how this layout behaves.';return s;
- }
- if(action.type==='test'){
-  if(s.beams.length!==s.structure.nodes.length-1){engineering(s,'Accept every required Arabic beam before testing.');return s;}
-  s.tests++;s.lastReport=inspectBridge(s.structure,s.beams,s.supports);
-  if(!s.lastReport.connected){engineering(s,s.lastReport.reason);return s;}
-  s.lastLoadIndex=0;s.testing={progress:0};s.message='Load cart crossing. The model checks bending and member load at each position.';return s;
+ if(action.type==='select'&&s.phase==='choose'){
+  const index=action.index??s.selection,choice=t.choices[index];if(!Number.isInteger(index)||!choice)return previous;
+  if(choice.key!==t.to){const evidence={category:'phrase-transition',expected:t.opening.map(w=>w.id),selected:choice.words.map(w=>w.id)};reduce(s,'mistake',evidence);s.transitionErrors.push({transitionId:t.id,from:t.from,to:t.to,selected:choice.key,event:s.session.events});s.message='That opening belongs elsewhere. Listen, recall and try again. Completed bridges stay safe.';return s;}
+  s.phase='crossing';s.crossing=0;s.message='The bridge connects! Follow the lantern from right to left.';return s;
  }
  return previous;
 }

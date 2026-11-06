@@ -3,7 +3,7 @@ async function open(page) {
   await page.goto('/');
   await page.locator('#nav-revision-lab').click();
   await expect(page.locator('.page-heading h1')).toHaveText('Revision Lab');
-  await page.getByRole('button',{name:/Cosmic Rush/}).click();
+  await expect(page.locator('.cosmic-form')).toBeVisible();
 }
 test('regular navigation supports all mission selections, briefing stages and existing labs', async ({page})=>{
   const premiumRequests=[];

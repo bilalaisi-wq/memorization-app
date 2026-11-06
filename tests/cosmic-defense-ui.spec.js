@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 import {flyTo} from './cosmic-flow-helper.js';
 test.setTimeout(90000);
 async function open(page,activity='defense',waitGateway=true){
-  await page.goto('/');await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Cosmic Rush/}).click();
+  await page.goto('/');await page.locator('#nav-revision-lab').click();await expect(page.locator('.cosmic-form')).toBeVisible();
   await page.locator('[name=surah]').selectOption('112');await page.locator('[name=selection]').selectOption('custom');await page.locator('[name=start]').fill('2');await page.locator('[name=end]').fill('3');
   await page.getByRole('button',{name:'View mission briefing →'}).click();await page.locator('[data-pickup-mode]').selectOption('ayahs');await page.locator('[data-flow-guidance]').uncheck();
   await page.clock.install();await page.locator(activity==='defense'?'[data-launch-defense]':'[data-launch-runner]').click();

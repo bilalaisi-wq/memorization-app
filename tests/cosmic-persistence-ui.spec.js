@@ -15,7 +15,7 @@ test('signed-in Cosmic progress syncs, survives sign-out and restores on an empt
  api.owner=b;await signIn(page,b);await page.locator('#nav-revision-lab').click();await expect(page.getByRole('button',{name:/Resume saved expedition/})).toHaveCount(0);expect(api.rows.has(b)).toBe(false);
 });
 test('a delayed Cosmic database read does not block regular navigation or local practice',async({page})=>{
- const api=await mock(page);let release;api.hold=new Promise(r=>release=r);await page.goto('/');await signIn(page,a);await page.locator('#nav-revision-lab').click();await expect(page.getByRole('button',{name:/Cosmic Rush/})).toBeVisible();await page.locator('#nav-learn').click();await expect(page.locator('.builder')).toBeVisible();release();
+ const api=await mock(page);let release;api.hold=new Promise(r=>release=r);await page.goto('/');await signIn(page,a);await page.locator('#nav-revision-lab').click();await expect(page.locator('.cosmic-form')).toBeVisible();await page.locator('#nav-learn').click();await expect(page.locator('.builder')).toBeVisible();release();
 });
 test('adaptive decisions use different motor and memory evidence and a recorded weak link launches with surrounding context',async({page})=>{
  await page.goto('/');await page.evaluate(async()=>{

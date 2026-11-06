@@ -3,7 +3,7 @@ import {test,expect} from '@playwright/test';
 async function open(page,{mobile=false,freeze=false}={}){
   if(mobile)await page.setViewportSize({width:390,height:844});
   await page.goto('/');await page.locator('#nav-revision-lab').click();
-  await page.getByRole('button',{name:/Cosmic Rush/}).click();
+  await expect(page.locator('.cosmic-form')).toBeVisible();
   await page.locator('[name=surah]').selectOption('108');
   await page.locator('[name=selection]').selectOption('custom');await page.locator('[name=start]').fill('1');await page.locator('[name=end]').fill('1');
 
@@ -86,7 +86,7 @@ test('mobile swipe, touch-sized controls and reduced motion work; profile change
 
 test('mission stages advance only from safe checkpoints and restart retains the current stage',async({page})=>{
   test.setTimeout(300000);
-  await page.goto('/');await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Cosmic Rush/}).click();
+  await page.goto('/');await page.locator('#nav-revision-lab').click();await expect(page.locator('.cosmic-form')).toBeVisible();
   await page.locator('[name=surah]').selectOption('114');
   await page.locator('[name=selection]').selectOption('entire');
   await page.getByRole('button',{name:'View mission briefing →'}).click();await page.locator('[data-pickup-mode]').selectOption('ayahs');await page.locator('[data-flow-guidance]').uncheck();await page.clock.install();
@@ -103,7 +103,7 @@ test('mission stages advance only from safe checkpoints and restart retains the 
 });
 
 test('an overlay cancels a pending launch without leaving an invisible flight or disabled launch button',async({page})=>{
-  await page.goto('/');await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Cosmic Rush/}).click();
+  await page.goto('/');await page.locator('#nav-revision-lab').click();await expect(page.locator('.cosmic-form')).toBeVisible();
   await page.getByRole('button',{name:'View mission briefing →'}).click();
   await page.evaluate(()=>{
     const digest=crypto.subtle.digest.bind(crypto.subtle);let first=true;

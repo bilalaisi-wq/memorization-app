@@ -1,7 +1,7 @@
 import {test,expect} from '@playwright/test';
 import {menu} from './menu-helper.js';
 async function start(page){
-  await page.goto('/');await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Cosmic Rush/}).click();
+  await page.goto('/');await page.locator('#nav-revision-lab').click();await expect(page.locator('.cosmic-form')).toBeVisible();
   await page.locator('[name=selection]').selectOption('custom');await page.locator('[name=start]').fill('3');await page.locator('[name=end]').fill('3');
   await page.getByRole('button',{name:'View mission briefing →'}).click();await page.locator('[data-pickup-mode]').selectOption('words');
   await page.locator('[data-flow-guidance]').uncheck();await page.clock.install();await page.locator('[data-launch-runner]').click();await expect(page.getByRole('button',{name:'Start flight',exact:true})).toBeVisible();

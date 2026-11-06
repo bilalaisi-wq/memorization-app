@@ -3,7 +3,7 @@ import {canonicalLinkAyah} from '../src/quest/cosmic/link-content.js';
 test.setTimeout(120000);
 async function open(page,mode='guided',start='1',end='2',surah='112'){
   await page.route('**/rest/v1/rpc/published_segmentation_review',r=>r.fulfill({json:null}));
-  await page.goto('/');await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Cosmic Rush/}).click();
+  await page.goto('/');await page.locator('#nav-revision-lab').click();await expect(page.locator('.cosmic-form')).toBeVisible();
   await page.locator('[name=surah]').selectOption(surah);await page.locator('[name=selection]').selectOption('custom');await page.locator('[name=start]').fill(start);await page.locator('[name=end]').fill(end);await page.getByRole('button',{name:'View mission briefing →'}).click();
   await page.locator('[data-link-mode]').selectOption(mode);await page.clock.install();await page.locator('[data-launch-link]').click();await expect(page.getByRole('button',{name:'Start Ayah Link',exact:true})).toBeVisible();await page.clock.pauseAt(new Date(await page.evaluate(()=>Date.now()+1000)));await page.getByRole('button',{name:'Start Ayah Link',exact:true}).click();
 }

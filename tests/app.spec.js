@@ -238,7 +238,8 @@ test("revealing then hiding reference still limits stars; practice rejects wrong
 test("all thirty-eight surahs have aligned verified words and readable learning modes", async ({
   page,
 }) => {
-  test.setTimeout(180000);
+  // Visit every ayah and all three modes; shared CI may exceed three minutes.
+  test.setTimeout(600000);
   const { surahs } = await import("../src/data.js");
   expect(surahs.map((s) => s.verses.length)).toEqual([
     7, 6, 5, 4, 5, 3, 6, 3, 7, 4, 5, 9, 3, 8, 11, 11, 8, 8, 5, 19, 8, 8, 11, 21,

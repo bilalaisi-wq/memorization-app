@@ -24,7 +24,7 @@ Other games already display the Arabic choices on their actual objects: incoming
 
 Bridge Builder is **developer-only**. It is hidden/disabled in the learner launcher and learner recommendations. Its registry entry requires the existing developer-mode access and is omitted from ordinary registry lists, so other activity launchers cannot quietly expose it. Turning developer mode off replaces an active Bridge activity with a supported learner game.
 
-Its permanent game identifier, old Puzzle Lab history, XP receipts and exports remain valid. This change does not claim that Bridge's missing demo, confusing construction flow or left-to-right engineering presentation has been redesigned. Those remain experimental work before any public re-release. Developer previews retain their audio controls and regression coverage.
+Its permanent game identifier, old Puzzle Lab history, XP receipts and exports remain valid. Bridge has since been redesigned as [Bridge Builder 2.0 · Ayah Link](bridge-builder.md), with a demonstration, right-to-left islands and adjacent-ayah opening challenges. It remains developer-only for owner review. Its Advanced preset deliberately offers Silent Challenge; the active-audio defaults above apply to released learner games.
 
 ## One passage entry
 

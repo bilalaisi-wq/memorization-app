@@ -1,7 +1,7 @@
 import {test,expect} from '@playwright/test';
 import {flyTo} from './cosmic-flow-helper.js';
 async function start(page,style='words'){
-  await page.goto('/');await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Cosmic Rush/}).click();
+  await page.goto('/');await page.locator('#nav-revision-lab').click();await expect(page.locator('.cosmic-form')).toBeVisible();
   await page.locator('[name=selection]').selectOption('custom');await page.locator('[name=start]').fill('3');await page.locator('[name=end]').fill('3');
   await page.getByRole('button',{name:'View mission briefing →'}).click();await page.locator('[data-pickup-mode]').selectOption(style);await page.locator('[data-flow-guidance]').uncheck();await page.clock.install();
   await page.locator('[data-launch-runner]').click();await page.getByRole('button',{name:'Start flight',exact:true}).click();
@@ -41,7 +41,7 @@ test('flowing Quran text fails closed when study assistance cannot be recorded, 
 
 test('round selector starts at three and chunk revision advances through four increasingly demanding rounds',async({page})=>{
   test.setTimeout(180000);
-  await page.goto('/');await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Cosmic Rush/}).click();
+  await page.goto('/');await page.locator('#nav-revision-lab').click();await expect(page.locator('.cosmic-form')).toBeVisible();
   await page.locator('[name=selection]').selectOption('custom');await page.locator('[name=start]').fill('3');await page.locator('[name=end]').fill('3');
   await page.getByRole('button',{name:'View mission briefing →'}).click();
   await expect(page.locator('[data-flight-rounds]')).toHaveValue('3');

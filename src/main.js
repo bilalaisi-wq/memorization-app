@@ -98,7 +98,7 @@ const key = () => surahs[chapter].id + ":" + verses[ayah].id;
 const chapterCompleted = () =>
   verses.filter((v) => completed.has(surahs[chapter].id + ":" + v.id)).length;
 let ayah = 0,
-  mode = "practice",
+  mode = (()=>{try{if(sessionStorage.getItem("ayah-update-return")==="revision"){sessionStorage.removeItem("ayah-update-return");return "revision";}}catch{}return "practice";})(),
   selected = [],
   bank = [],
   hidden = new Set(),

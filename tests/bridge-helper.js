@@ -1,10 +1,14 @@
+import {expect} from '@playwright/test';
 import {enableDeveloperLab} from './developer-lab-helper.js';
-export async function openBridge(page,{end=1,rules='classic',difficulty='beginner',audio='silent'}={}){
- await page.addInitScript(()=>{window.bridgeAudio=[];window.Audio=class{constructor(src){this.src=src;window.bridgeAudio.push(this);}play(){this.playing=true;return Promise.resolve();}pause(){this.playing=false;}load(){}removeAttribute(){} };});
- await page.goto('/');await enableDeveloperLab(page);await page.locator('#nav-puzzle-lab').click();await page.locator('[data-game=bridge]').click();if(end>1){await page.locator('[name=journey]').selectOption('chain');await page.locator('[name=last]').fill(String(end));}await page.locator('[name=rules]').selectOption(rules);await page.locator('[name=difficulty]').selectOption(difficulty);await page.clock.install();await page.getByRole('button',{name:'Prepare crossing',exact:true}).click();await page.locator('[data-bridge-audio]').selectOption(audio);await page.getByRole('button',{name:'Start building',exact:true}).click();
+import {surahs} from '../src/data.js';
+export async function openBridge(page,{end=2,rules='classic',difficulty='beginner',audio='silent',start=true,reload=false}={}){
+ if(!reload)await page.addInitScript(()=>{window.bridgeAudio=[];window.Audio=class{constructor(src){this.src=src;window.bridgeAudio.push(this);}play(){this.playing=true;return Promise.resolve();}pause(){this.playing=false;}load(){}removeAttribute(){} };});
+ await page.goto('/');await enableDeveloperLab(page);await page.locator('#nav-puzzle-lab').click();await page.locator('[data-game=bridge]').click();
+ if(end>2){await page.locator('[name=journey]').selectOption('chain');await page.locator('[name=last]').fill(String(end));}
+ await page.locator('[name=rules]').selectOption(rules);await page.locator('[name=difficulty]').selectOption(difficulty);if(!reload)await page.clock.install();await page.getByRole('button',{name:'Prepare crossing',exact:true}).click();await expect(page.locator('.bridge-stage')).toBeVisible();if(audio!==null)await page.locator('[data-bridge-audio]').selectOption(audio);if(start)await page.getByRole('button',{name:'Start linking',exact:true}).click();
 }
-export async function acceptWords(page,words){for(const word of words)await page.locator('[data-bridge-choice]').filter({has:page.getByText(word,{exact:true})}).click();}
-export async function connectBeams(page,{reverse=false}={}){const ids=await page.locator('[data-bridge-inventory]').evaluateAll(bs=>bs.map(b=>b.dataset.bridgeInventory));for(let i=0;i<ids.length;i++){const bay=reverse?ids.length-1-i:i;await page.locator('[data-bridge-beam]').selectOption(ids[i]);await page.locator('[data-bridge-from]').selectOption(String(bay));await page.locator('[data-bridge-to]').selectOption(String(bay+1));await page.getByRole('button',{name:'Connect chosen beam',exact:true}).click();}}
-export async function supportBridge(page,{struts=false}={}){const n=await page.locator('[data-bridge-inventory]').count();if(n===1){await page.locator('[data-bridge-reinforce]').first().click();return;}if(struts){await page.locator('[data-bridge-support]').selectOption('1');await page.locator('[data-bridge-support-kind=left]').click();await page.locator('[data-bridge-support]').selectOption(String(n-1));await page.locator('[data-bridge-support-kind=right]').click();}else{await page.locator('[data-bridge-support]').selectOption(String(Math.floor(n/2)));await page.locator('[data-bridge-support-kind=pier]').click();}}
-export async function testBridge(page){await page.getByRole('button',{name:'Test crossing',exact:true}).click();await page.clock.runFor(5400);}
-export async function dragBeam(page,source,bay){const target=page.locator(`[data-bridge-bay="${bay}"]`);await source.dragTo(target);await page.clock.runFor(150);}
+export function opening(ayah,difficulty='beginner'){return surahs[0].verses[ayah-1].words.slice(0,difficulty==='beginner'?1:3).join(' ');}
+export async function connectBoundary(page,ayah=2,difficulty='beginner'){
+ if(await page.locator('[data-bridge-action=ready]').isVisible())await page.locator('[data-bridge-action=ready]').click();
+ const card=page.locator('[data-bridge-choice]').filter({has:page.getByText(opening(ayah,difficulty),{exact:true})});await card.evaluate(e=>e.scrollIntoView({block:'center'}));const box=await card.boundingBox();await page.mouse.click(box.x+box.width/2,box.y+box.height/2);await page.clock.runFor(2400);
+}

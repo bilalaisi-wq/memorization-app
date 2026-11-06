@@ -29,32 +29,38 @@ export function mountRevisionLab(main) {
   root.className = 'cosmic-rush';
   root.setAttribute('aria-label', 'Revision Lab');
   main.append(root);
-  let generation = 0,atSelection=false;
-  const restored=()=>{if(atSelection&&root.isConnected)selection();};window.addEventListener('ayahcosmicrestored',restored);
+  let generation = 0,atSelection=false,atPlanner=false;
+  const restored=()=>{if((atSelection||atPlanner)&&root.isConnected)savedRoutes();};window.addEventListener('ayahcosmicrestored',restored);
   const oldCleanup=cleanup;cleanup=()=>{window.removeEventListener('ayahcosmicrestored',restored);oldCleanup();};
   function selection() {
-    atSelection=true;
+    atSelection=true;atPlanner=false;
     generation++;
     root.innerHTML = `<div class="cosmic-hero"><span class="cosmic-eyebrow">YOUR NEXT CONSTELLATION</span><h2>Revision Lab</h2><p>Plan a passage journey. Return to familiar ayahs and connect them together.</p></div><button class="cosmic-card" data-cosmic-select><span aria-hidden="true">✦</span><strong>Cosmic Rush</strong><span>Ayah Relay 2.0</span><p>Explore the mission planner and constellation route.</p><small>Star Runner + Meteor Defense + Ayah Link</small><b>Choose a mission →</b></button>`;
     root.querySelector('[data-cosmic-select]').onclick = () => planner();
+    savedRoutes();
+  }
+  function savedRoutes(){
+    root.querySelector('.exp-saved-routes')?.remove();
+    const back=atPlanner?planner:selection;
     const saved=createExpeditionStore();
     const list=document.createElement('div');list.className='exp-saved-routes';
     if(saved.warning){const p=document.createElement('p');p.setAttribute('role','alert');p.textContent=saved.warning;list.append(p);}
     for(const run of COSMIC_EXPEDITIONS_ENABLED?Object.values(saved.snapshot().runs).reverse():[]){
       const b=document.createElement('button');b.className='cosmic-secondary';b.textContent=`Resume saved expedition · ${cosmicSurahs.find(s=>s.id===run.surah)?.name||run.surah} ${run.first}–${run.last}${run.final?.result?' · assessed':''}`;
-      b.onclick=async()=>{const token=++generation;b.disabled=true;try{const mission=await createMission({surahId:run.surah,selection:'custom',start:run.first,end:run.last});if(token!==generation)return;if(mission.id!==run.missionId||mission.sourceHash!==run.sourceHash)throw Error('Saved content revision changed. Export the existing expedition before recovery.');await expedition(mission,{rounds:run.rounds},selection);}catch(e){if(token===generation){const p=document.createElement('p');p.setAttribute('role','alert');p.textContent=e.message;list.append(p);b.disabled=false;}}};list.append(b);
+      b.onclick=async()=>{const token=++generation;b.disabled=true;try{const mission=await createMission({surahId:run.surah,selection:'custom',start:run.first,end:run.last});if(token!==generation)return;if(mission.id!==run.missionId||mission.sourceHash!==run.sourceHash)throw Error('Saved content revision changed. Export the existing expedition before recovery.');await expedition(mission,{rounds:run.rounds},back);}catch(e){if(token===generation){const p=document.createElement('p');p.setAttribute('role','alert');p.textContent=e.message;list.append(p);b.disabled=false;}}};list.append(b);
     }
     root.append(list);
-    const repairToken=generation;if(COSMIC_EXPEDITIONS_ENABLED)repairMissions().then(plans=>{if(repairToken!==generation||!root.isConnected)return;for(const plan of plans){const b=document.createElement('button');b.className='cosmic-secondary';b.textContent=`Repair ${plan.pairKey} · practice with surrounding context`;b.title=plan.reason;b.onclick=()=>expedition(plan.mission,{rounds:3},selection);list.append(b);}}).catch(error=>{if(repairToken===generation){const p=document.createElement('p');p.textContent=error.message;list.append(p);}});
+    const repairToken=generation;if(COSMIC_EXPEDITIONS_ENABLED)repairMissions().then(plans=>{if(repairToken!==generation||!root.isConnected||!list.isConnected)return;for(const plan of plans){const b=document.createElement('button');b.className='cosmic-secondary';b.textContent=`Repair ${plan.pairKey} · practice with surrounding context`;b.title=plan.reason;b.onclick=()=>expedition(plan.mission,{rounds:3},back);list.append(b);}}).catch(error=>{if(repairToken===generation){const p=document.createElement('p');p.textContent=error.message;list.append(p);}});
   }
+
   async function expedition(mission,options,back){
     if(!COSMIC_EXPEDITIONS_ENABLED)throw Error('Expeditions are paused for this rollout. Standalone activities remain available.');
-    atSelection=false;
+    atSelection=false;atPlanner=false;
     const token=++generation;flight?.dispose();director?.dispose();director=null;flight=null;
     try{const {mountExpedition}=await import('../quest/cosmic/expedition/ui.js');if(token!==generation||!root.isConnected)return;const next=await mountExpedition(root,mission,{...options,isCurrent:()=>token===generation,onExit:()=>{flight=null;back();}});if(token!==generation||!root.isConnected)next?.dispose();else flight=next;}catch(e){if(token===generation&&root.isConnected){back();const p=document.createElement('p');p.setAttribute('role','alert');p.textContent=e.message;root.append(p);}}
   }
   function planner() {
-    atSelection=false;
+    atSelection=false;atPlanner=true;
     generation++;
     root.innerHTML = `<button class="cosmic-secondary" data-back>← Revision Lab</button><div class="cosmic-hero"><span class="cosmic-eyebrow">COSMIC RUSH · MISSION PLANNER</span><h2>Chart your ayah journey</h2><p>Al-Fatihah and Juz Amma are free for everyone. Choose a contiguous passage, then explore its route.</p></div><form class="cosmic-form"><label>Surah<select name="surah">${cosmicSurahs.slice().sort((a,b)=>a.id-b.id).map(s=>`<option value="${s.id}">${esc(s.name)} · ${s.verses.length} ayahs</option>`).join('')}</select></label><label>Passage length<select name="selection"><option value="5">Five ayahs</option><option value="10">Ten ayahs</option><option value="15">Fifteen ayahs</option><option value="20">Twenty ayahs</option><option value="custom">Custom contiguous range</option><option value="entire">Entire surah</option></select></label><label data-start>First ayah<input name="start" type="number" min="1" value="1" required></label><label data-end hidden>Last ayah<input name="end" type="number" min="1" value="1"></label><p class="cosmic-range-note">Presets use up to the selected number of ayahs. Shorter surahs and passages include all remaining ayahs.</p><button class="cosmic-primary" type="submit">View mission briefing →</button><p data-error role="alert"></p></form>`;
     root.querySelector('[data-back]').onclick = selection;
@@ -73,6 +79,7 @@ export function mountRevisionLab(main) {
     form.elements.surah.onchange = () => { form.elements.start.value = '1'; form.elements.end.value = '1'; update(); };
     form.elements.selection.onchange = update;
     update();
+    savedRoutes();
     form.onsubmit = async event => {
       event.preventDefault();
       const token = ++generation;
@@ -88,7 +95,7 @@ export function mountRevisionLab(main) {
     };
   }
   function briefing(mission) {
-    atSelection=false;
+    atSelection=false;atPlanner=false;
     let active = 0;
     const s = cosmicSurahs.find(s=>s.id === mission.surah);
     function render(focus = false) {
@@ -127,5 +134,5 @@ export function mountRevisionLab(main) {
     }
     render(true);
   }
-  selection();
+  planner();
 }
