@@ -29,3 +29,25 @@
 .memory-maze .maze-pad [data-maze-action=open]{grid-area:3/1/4/4}
 .memory-maze .maze-sign{gap:3px}
 .memory-maze .maze-stage .maze-location{color:#f5f9e8}
+
+/* Adventure rooms remain in the playfield alongside navigation controls. */
+.memory-maze .maze-quest-hud{display:flex;flex-wrap:wrap;gap:5px;padding:6px;background:#183d36;color:#f4f6e4;font-size:12px;text-transform:capitalize}
+.memory-maze .maze-quest-hud span{border:1px solid #8dba9c;border-radius:18px;padding:4px 8px}
+.memory-maze .maze-quest-hud .maze-key-earned{background:#efd588;color:#284f40;border-color:#fceab0}
+.memory-maze .maze-room-panel{padding:12px;background:#fff9e7;color:#244d43;border:2px solid #cba34c;border-radius:14px;margin:6px;max-height:300px;overflow:auto;z-index:3}
+.memory-maze .maze-room-panel[hidden]{display:none}
+.memory-maze .maze-room-panel .arabic{font-size:clamp(28px,4vw,38px);line-height:1.9;white-space:normal;overflow-wrap:normal;word-break:normal;margin:4px}
+.memory-maze .maze-room-panel button{min-height:48px;touch-action:manipulation;padding:8px 12px;border-radius:12px}
+.memory-maze .maze-room-choices{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.memory-maze .maze-room-choices button{flex:1 1 120px;border:2px solid #7b9e83;background:#f0f5dc;color:#244d43}
+.memory-maze .maze-question-active .maze-door-signs,.memory-maze .maze-question-active .maze-location{display:none}
+.memory-maze .maze-question-active .maze-scroll{height:100px;flex-shrink:0}
+.memory-maze .maze-tile[data-maze-room]{color:#284d5f;background:#c6e0df;border:1px solid #679391;border-radius:24%}
+.memory-maze .maze-tile[data-maze-room=crystal]{color:#5a388f;background:#e4d9fa}
+.memory-maze button:focus-visible{outline:3px solid #d39b28;outline-offset:2px}
+:root[data-theme="night-sky"] .memory-maze .maze-room-panel{background:#263454;color:#f2f2ff;border-color:#cba95e}
+:root[data-theme="night-sky"] .memory-maze .maze-room-choices button{background:#344867;color:#fff;border-color:#80b4ba}
+@media(max-width:600px){.memory-maze .maze-quest-hud{font-size:11px;padding:4px}.memory-maze .maze-room-panel{padding:8px;max-height:280px}.memory-maze .maze-room-panel p{margin:4px 0}.memory-maze .maze-room-choices{gap:5px}.memory-maze .maze-stage .maze-status{font-size:12px}.memory-maze .maze-question-active .maze-scroll{height:70px}}
+:root[data-theme="night-sky"] .memory-maze .maze-stage .maze-tools{background:#202b49;color:#eff0ff}
+:root[data-theme="night-sky"] .memory-maze .maze-stage .maze-tools button{color:#eff0ff;border-color:#8594bb}
+:root[data-theme="night-sky"] .memory-maze .maze-empty{color:#c4d0ee}

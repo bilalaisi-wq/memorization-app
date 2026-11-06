@@ -1,10 +1,10 @@
 # Bridge Builder 2.0 · Ayah Link
 
-Bridge Builder now tests **the transition between adjacent ayahs**, not the order of words inside one ayah. The permanent arcade identifier remains `bridge`. It remains developer-only for review, as requested in the preceding rollout; no premium content or developer authorization has been relaxed.
+Bridge Builder now tests **the transition between adjacent ayahs**, not the order of words inside one ayah. The permanent arcade identifier remains `bridge`. It is now available to learners in the regular Puzzle Lab. Premium content and developer authorization remain enforced.
 
 ## Playing
 
-Open Your Space → Puzzle Lab → Bridge Builder in developer mode. Choose **Single Transition** (two adjacent ayahs) or **Ayah Chain**, a start/end, strike rules and difficulty. Prepare crossing, then Start linking. The last ayah of a surah cannot be chosen as a starting boundary; opening on that ayah selects the preceding pair. A chain of N selected ayahs generates N−1 challenges, including every internal boundary. The existing shared arcade configuration bounds each route to at most 50 ayahs; choose a subsequent contiguous range for longer surahs.
+Open Your Space → Puzzle Lab → Bridge Builder. Choose **Single Transition** (two adjacent ayahs) or **Ayah Chain**, a start/end, strike rules and difficulty. Prepare crossing, then Start linking. The last ayah of a surah cannot be chosen as a starting boundary; opening on that ayah selects the preceding pair. A chain of N selected ayahs generates N−1 challenges, including every internal boundary. The existing shared arcade configuration bounds each route to at most 50 ayahs; choose a subsequent contiguous range for longer surahs.
 
 The right island shows the ending of ayah N, and the left island asks how N+1 begins. Say the opening aloud, choose its connector and watch the bridge snap in and the lantern cross **right to left**. Continue to the next boundary. The built-in How to play demonstration explains this without requiring engineering knowledge.
 
@@ -59,3 +59,7 @@ The scene now includes deep-blue water, turquoise banks/joints, golden snapping 
 The optional **Bridge Gate** checkbox adds a two-boundary review after each three completed bridges when more of the route remains. It reviews two consecutive existing links, asks for recall before options, preserves provenance and uses the selected Classic/Practice strike rules. Gate completions do not duplicate completed boundaries, score or XP and never submit FSRS ratings. Gate state is saved in the existing checkpoint format as optional metadata; old version-2 runs remain compatible. Gate-enabled routes use a separate checkpoint key so they cannot overwrite a non-Gate route.
 
 Tutorial previews, captured in actual pointer and native touch-tap sessions: [desktop 1280×950](bridge-builder/tutorial-desktop.png) and [mobile 390×844](bridge-builder/tutorial-mobile.png). Both were inspected for clipped headings, Arabic readability and reachable controls. Run `node scripts/bridge-tutorial-screenshots.mjs` against the local Vite server to reproduce the two-transition, no-reward touch/pointer smoke check. The script uses an explicit local developer presentation fixture, not a production sign-in.
+
+## Learner availability
+
+Bridge Builder is available from the regular Puzzle Lab and the shared arcade registry without developer mode. First-time players receive the interactive tutorial. Exiting developer mode keeps an active Bridge run available. Existing content authorization still applies: releasing the game does not unlock paid surahs or developer-only content. Other unreleased games remain hidden.

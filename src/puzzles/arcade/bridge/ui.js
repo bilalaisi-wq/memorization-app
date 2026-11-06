@@ -7,7 +7,7 @@ import {profileStorage,activeProfileId} from '../../../learner/profile-storage.j
 import {esc} from '../../../ui/dom.js';
 import {successCue} from '../../../ui/encouragement.js';
 import {reportStudyExposure} from '../../../study-exposure.js';
-export const bridgeRegistration={id:'bridge',title:'Bridge Builder · Ayah Link',developerOnly:true,create:mountBridge};
+export const bridgeRegistration={id:'bridge',title:'Bridge Builder · Ayah Link',create:mountBridge};
 const phrase=ws=>ws.map(w=>w.text).join(' ');
 export function mountBridge({root,adapter,config,library,id,difficulty='beginner',muted=()=>false,volume=()=>1,initialAudio='listen',storage=profileStorage,onComplete=()=>{},onExit=()=>{},onRecall=()=>{},onSetup=()=>{}}){
  const owner=activeProfileId(),checkpoints=createBridgeCheckpoints(storage),old=checkpoints.read(config,difficulty);
