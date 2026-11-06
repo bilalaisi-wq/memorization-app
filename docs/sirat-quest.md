@@ -1,42 +1,64 @@
-# Sirat Quest — Hilltop Gardens
+# Sirat Quest 2.0 — Hilltop Gardens
 
-Open **Your Space → Puzzle Lab → Sirat Quest**, select Single Ayah or a consecutive Ayah Chain, then **Prepare journey → Start exploring**.
+Open **Your Space → Puzzle Lab → Sirat Quest**, choose a route and Single Ayah or a consecutive Ayah Chain, then **Prepare journey → Start exploring**. Existing free/premium content authorization and published phrase-review restrictions remain in force. No new dependency or database migration is required.
 
-## Controls and journey
+## Real exploration
 
-- Hold Left/Right or A/D to move; Space, Up or W jumps. P pauses. The large mobile direction buttons support held touch while the other finger taps Jump.
-- Cross terraces and ride the moving ferry. Horizontal movement, gravity, swept landing/solid-platform collisions, moving-platform carry and side-scrolling camera movement are actual game physics.
-- Every stable terrace updates a safe landing checkpoint. A missed jump returns the explorer to that landing, preserving connected words, opened gateways and memory charges. Moving platforms are not unsafe respawn positions. Return to safe checkpoint is available manually.
-- Reach the courtyard to unlock the continuation buttons. Choose the next exact word or approved phrase with its button or keys 1–3. A correct choice opens the arch; walk through it to reach the next connected section. Choices cannot be committed from the starting area or repeatedly farmed after an arch opens.
-- Wrong committed continuations consume one memory charge. Ordinary platforming failures are motor events only. Classic keeps three charges for the entire run; Practice restores three per ayah and retries the current ayah after game over. No missed-day or movement penalty affects learning XP or FSRS.
-- Guided listening plays the full verified ayah before exploration. Both in-game and shared Puzzle Lab replay freeze the physics. Resume stops recitation and restores movement. Silent exploration is optional; volume/mute use the existing shared controls. Playback failure leaves a clear resume path without a strike. Opening another study surface stops even an already-paused listening track.
-- Completion saves through the existing account-bound recorder. Save failures stay visible with retry. Partial chain saves can finish the remaining ayah receipts without duplicating the successful ones. Play Again starts a new run after saving; independent recall and return to study remain available.
+Hold Left/Right or A/D to move; Up/W jumps. Space jumps during exploration and enters the nearest arch when standing at a gateway. Keys 1–3 select its continuation; E uses Echo. The large touch buttons support holding a direction while another finger taps Jump. P pauses; full-ayah Replay freezes physics until Resume. Continuous full-ayah recitation accompanies play by default; listen-first and temporary recitation pause remain available. Audio failure costs no strike.
 
-## Content and fairness
+The original gravity, jump impulse, horizontal collision handling, swept landings, moving-ferry carry and safe checkpoints are retained. New elevators carry the explorer vertically using the same collision loop. Optional relaxed movement reduces horizontal navigation speed to 75%; it does not alter jump strength, score, memory difficulty or recall outcomes. The responsive camera follows the explorer through the end of each section on phones as well as desktop.
 
-Beginner has wider platforms and two continuation choices. Standard has narrower approaches and three branches. Expert adds authentic similar phrase choices and optional raised ledges. Required routes stay reachable; optional terrain is not required to demonstrate Quran knowledge. Movement speed, jump strength and gravity remain identical across presets.
+Three selectable routes lead to the same canonical source sequence:
 
-Only verified application content is used. Beginner/Standard use canonical words in order; Expert uses short whole ayahs or source-matched published reviewed phrase boundaries, with at most eight words per phrase for gateway readability. Unreviewed/draft or oversized phrases fail preparation and offer word mode instead. No arbitrary phrase splitting, regenerated Arabic or new recitation-stop certification is introduced. Recitation always uses the full ayah.
+- **Guided Garden:** familiar wide terraces and ferry, recommended first.
+- **Mountain Challenge:** a raised ferry and optional overlook, with mountain scenery.
+- **Star Path:** a higher ferry and optional raised terrain under a starry sky. This route is optional, never required for memorization progress.
 
-Sirat Quest depicts **ordinary fictional gardens, terraces and stone architecture**. It does not represent the actual eschatological Sirat, paradise/hell, spiritual worth or religious judgment. An animal-like garden explorer and ordinary safe returns keep feedback about play and recognition skills.
+Every stable terrace supplies a safe landing. Moving platforms never become respawn checkpoints. Missed jumps and Return to Safe Checkpoint preserve connected words and powered surfaces and record motor events only. The memory elevator returns to its accessible dock after recovery. There are no navigation deadlines or penalties for missed study days.
 
-## Framework and persistence
+## Memory-powered bridges and elevators
 
-- `src/puzzles/arcade/sirat/engine.js`: deterministic reducer, seeded section geometry, shared strike/checkpoint events, canonical continuation evidence and bounded current-section platforms.
-- `src/puzzles/arcade/sirat/ui.js`: existing start/pause/resume/dispatch/getSnapshot/dispose contract plus shared listen/mute/setVolume controls. Animation frames, input listeners and audio are disposed on exit. Lost focus pauses safely; inert underlying surfaces cannot consume movement input.
-- Vite entry points import the scoped CSS. Night Sky and Simple themes retain readable Uthmanic Arabic, large controls and reduced-motion behavior. Cosmetic walk/success effects do not change physics or accuracy.
-- Registered in the shared arcade registry and Quest host. Existing free/premium authorization and reviewed-source loaders remain in use.
-- `ayah-puzzle-lab-v1` retains its existing format and historic data. New Sirat receipts add bounded numeric recognition score/recovery metadata. Existing per-ayah/day XP caps, duplicate receipt protection and account isolation are reused. No SQL migration, API key or dependency is required.
-- Arcade victories never create recall grades, alter FSRS dates or certify spoken memorization. Study exposure is marked only for the displayed ayah; later chain selections alone do not mark unseen ayahs as studied.
+Each word/approved-phrase section ends in a courtyard of authentic continuation gateways. The bridge and elevator beyond it initially appear translucent and do not collide with the explorer. Correctly identifying the next canonical source occurrence powers both surfaces. Walk across the bridge and board the elevator: it rises after boarding and carries the explorer upward before the exit opens. It cannot depart before the learner reaches it.
 
-Current platform positions/checkpoints are in-memory for the active run; completed receipts survive reload. Reloading restarts an unfinished run. Long ayahs use sequential bounded sections and the construction line shows the latest 12 collected words, while the full canonical sequence stays in session state.
+Wrong committed Arabic choices cost one memory strike. Merely walking near a wrong arch, missed jumps, dropped touches, delays or failed audio never do. Classic has three strikes across the run; Practice restores three per ayah and retains completed gardens when retrying the current ayah. Correct gateway decisions cannot be repeated to farm score or Echo.
 
-## Tests and previews
+## Echo assistance
 
-`tests/sirat-engine.spec.js` covers deterministic geometry, real jump/landing/camera physics, ferry carry, motor-only recovery, physical gateway arrival, wrong choices, all difficulty routes over multiple seeds, Classic/Practice chains, long source coverage, phrase restrictions, pause/lag/disposal, ownership, capped receipts and FSRS non-interference.
+Existing positive-XP learning receipts provide a bounded **0–3 charge loadout per journey**. This reads actual saved learning data without inventing progress or changing learning records. A new learner earns a charge from each first correct gateway decision, up to three. Repeating that same decision after a retry does not earn another charge.
 
-`tests/sirat-ui.spec.js` and `tests/sirat-helper.js` drive real keyboard/touch platform traversal, completion/replay, chain transitions, partial-save recovery and reloads, guided entry audio, shared replay/volume, overlay audio suspension, failures, Night Sky contrast, mobile sizing and reduced motion. Existing Quest planned-game tests now leave only Bridge Builder/unknown IDs as unavailable examples.
+Echo consumes one charge to briefly reveal the exact verified current study piece for four seconds. It retains that piece even if a later decision is made while the reveal is visible. Use records reference assistance, never a strike, independent recall, mastery or an FSRS grade. Charges are a local journey aid, not a global purchased currency; a new journey can start with its receipt-based loadout again. Full-ayah replay is always available without Echo charges. No audio is cropped at an unapproved stop.
 
-Previews: [desktop courtyard](sirat-quest/desktop.png), [mobile ferry crossing](sirat-quest/mobile.png). These are local QA captures without real learner data; physical-device/store certification is outside these browser checks.
+## Final continuation
 
-Release validation: **466 Playwright tests passed** (5.4 minutes), including the 21 new Sirat engine/browser cases and all existing free-learning, arcade, Quest, persistence, account and entitlement regressions. Production build passed (5.25 seconds). Desktop and 390px mobile screenshots were visually inspected; neither layout overflows the page. Night Sky gateway and paused-overlay text contrast has explicit regression checks. `git diff --check` passed.
+Before an ayah garden is completed, reconnect up to three previously studied source pieces in their canonical order. For a short Expert whole-ayah unit in a chain, preceding studied ayah units provide context when available. A single whole-ayah source unit remains one legitimate unit; the game never invents internal phrase boundaries to create extra questions.
+
+This challenge is untimed and physics is frozen. Choices retain canonical references and word ranges so repeated identical wording can be distinguished by occurrence. Correct links remain in place after a wrong choice; wrong committed continuations use the same Classic/Practice strike budget. All required links must be completed before the checkpoint or victory is recorded.
+
+Victory offers the **existing independent self-assessed recall workflow**, replay and return to study. Arcade recognition never certifies spoken recitation or submits Again/Hard/Good/Easy ratings automatically. FSRS parameters, dates and recall history remain managed by the established learning system.
+
+## Authentic content and presentation
+
+Only verified application content is used. Beginner/Standard use canonical word occurrences. Expert uses short whole ayahs or source-matched published reviewed phrase boundaries with at most eight words per sign. Draft, incomplete, revoked or oversized phrase data fails preparation. Long sources use bounded consecutive sections; the construction line displays the latest twelve connected words while canonical coverage remains intact.
+
+All Uthmanic spelling, diacritics, ordering and source IDs are preserved. Phrase signs and visible study groupings are not waqf/restart certification. Recitation always uses the complete verified ayah. This game depicts ordinary fictional gardens, mountain terraces, platforms and an animal-like explorer. It does not represent the actual eschatological Sirat, paradise/hell, spiritual worth or judgment.
+
+## Persistence, accounts and compatibility
+
+The game ID remains `sirat`. Existing `ayah-puzzle-lab-v1` history and XP caps are unchanged. New results add bounded route/Echo metadata and source-referenced final-continuation evidence. Existing result receipts remain idempotent and account-bound. Navigation evidence remains separate from Arabic errors and study assistance.
+
+New `ayah-sirat-journeys-v2` records are scoped to the current account/guest and included in account export. They store references, source fingerprint, original session ID/config, completed ayahs, current section, safe checkpoint, powered state, Echo accounting and final challenge metadata—never duplicated Arabic or raw recordings. Prepare the same route/range/difficulty/rules to resume safely paused at the last stable landing. Moving elevators reset to the dock while learning progress is retained. When resuming between ayahs, choose Resume first, then Next Ayah Garden; the next full recitation starts on entry. Unfinished records are browser-local; this change does not introduce cross-device checkpoint synchronization.
+
+Source content and reviewed segmentation are rebuilt through current authorized adapters on restore. Invalid/future/source-mismatched records remain preserved with export and study-recovery options. Save failures retain retry; an unsaved victory retains its original receipt for reload recovery. Profile changes and exit dispose animation frames, media, reveal timers, input handlers and the resize observer. No departing draft is written into the new account.
+
+## Modules and QA
+
+- `engine.js`: existing platform physics plus powered collision surfaces, vertical carry, responsive camera and final recognition progression. Legacy direct reducer consumers remain compatible; the learner UI uses version 2.
+- `adventure.js`: route geometry decorations, exact-source final units and idempotent Echo earning.
+- `checkpoints.js`: versioned metadata-only checkpoints, source validation and recovery.
+- `ui.js` / `sirat.css`: real platform scene, in-frame Arabic choices, large two-thumb controls, source labels, audio, lifecycle and reduced-motion presentation.
+- `tests/sirat-engine.spec.js`, `tests/sirat-ui.spec.js`: original physics, gameplay, strikes, audio, XP and FSRS regressions.
+- `tests/sirat2-model.spec.js`, `tests/sirat2-ui.spec.js`: all routes/presets, powered surfaces, real elevator ascent, Echo assistance, final ordering, safe resume, account isolation, source integrity, mobile controls and reduced motion.
+
+Run the Sirat suites with `npx playwright test tests/sirat-engine.spec.js tests/sirat-ui.spec.js tests/sirat2-model.spec.js tests/sirat2-ui.spec.js --config=playwright.regression.config.js --workers=1`, followed by the shared arcade/Quest regressions and `npm run build`.
+
+Desktop and 390px mobile game captures: [powered elevator](sirat-quest/sirat2-desktop.png), [mobile](sirat-quest/sirat2-mobile.png). Reproduce with Vite running on port 5173 and `node scripts/sirat2-previews.mjs`. Physical-device and screen-reader certification remain separate from automated Chromium QA. See [release evidence](sirat2-release.md) for measured results and remaining limits.

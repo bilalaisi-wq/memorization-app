@@ -11,3 +11,25 @@
 .sirat-stage .sirat-toolbar{position:absolute;top:8px;left:8px;right:8px;z-index:9;margin:0;padding:6px;border-radius:12px;background:#f3f8edee;color:#234235}.sirat-stage .sirat-toolbar label{width:100%;min-width:0;display:flex;gap:6px}.sirat-stage .sirat-toolbar select{flex:1;min-width:0;max-width:100%}.sirat-stage .sirat-gateways{top:76px}
 .sirat-stage [data-sirat-gate-tip]{color:#244d43}
 :root[data-theme="night-sky"] .sirat-stage [data-sirat-gate-tip]{color:#244d43}
+/* Memory surfaces change collision state, never Arabic wording. */
+.sirat-platform.sirat-translucent{opacity:.25;border:3px dashed #746ca7;background:#bbc9e1;box-shadow:none}
+.sirat-platform[data-solid=true]{transition:opacity .25s,box-shadow .25s}
+.sirat-elevator{color:#244438;text-align:center;font-size:22px;line-height:18px;background:#edc56a;border-color:#fff2a8;box-shadow:0 6px 0 #9f854d}
+.sirat-quest[data-route=mountain] .sirat-sky:after{background:#637d9188;border-radius:8%;transform:rotate(-12deg)}
+.sirat-quest[data-route=star] .sirat-sky{background:radial-gradient(circle at 20% 18%,#fbe7a5 0 2px,transparent 3px),radial-gradient(circle at 70% 30%,#fff 0 2px,transparent 3px),linear-gradient(#192b50,#6d8e95)}
+.sirat-echo{position:absolute;top:220px;right:12px;max-width:80%;padding:12px;border:2px solid #d7af58;border-radius:16px;background:#fffae8;color:#244438;z-index:8;box-shadow:0 0 20px #efdb9a66}
+.sirat-echo[hidden]{display:none}.sirat-echo strong,.sirat-echo .arabic{display:block}.sirat-echo .arabic{font-size:30px;line-height:1.9}
+.sirat-final-pieces{display:flex;flex-wrap:wrap;gap:8px;width:100%}.sirat-final-pieces button{flex:1 1 130px;white-space:normal;min-width:0;min-height:64px}.sirat-final-pieces .arabic{display:block;font-size:28px;line-height:1.9}.sirat-final-pieces small{display:block;font-size:11px;line-height:1.4}
+.sirat-quest button:focus-visible{outline:3px solid #d6a746;outline-offset:2px}
+.sirat-stage .sirat-pad{grid-template-columns:repeat(4,minmax(0,1fr))}.sirat-stage .sirat-pad button{min-height:52px}.sirat-stage .sirat-hud{bottom:130px}
+@media(max-width:600px){.sirat-stage .sirat-pad{grid-template-columns:repeat(4,minmax(0,1fr))}.sirat-stage .sirat-pad button{padding:6px;font-size:12px}.sirat-stage .sirat-choices .arabic{font-size:26px}.sirat-stage .sirat-hud{font-size:10px;bottom:128px}.sirat-final-pieces button{flex-basis:100%;padding:6px}.sirat-stage .sirat-overlay>div{max-height:100%;overflow:auto}.sirat-echo{top:220px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){.sirat-platform[data-solid=true]{transition:none}}
+.sirat-reduced .sirat-platform{transition:none!important}
+
+.sirat-stage .sirat-gateways{max-height:220px;overflow:auto;scroll-padding:8px}.sirat-phrase-choices .sirat-stage .sirat-choices{flex-wrap:wrap}.sirat-phrase-choices .sirat-stage .sirat-choices button{flex-basis:100%}
+@media(max-width:600px){.sirat-stage .sirat-gateways{max-height:180px}}
+
+/* Keep the traversal visible; choices expand only at an unanswered gateway. */
+.sirat-stage[data-near=false] .sirat-choices,.sirat-stage[data-resolved=true] .sirat-choices{display:none}
+:root[data-theme="night-sky"] .sirat-quest .sirat-stage .sirat-toolbar,:root[data-theme="night-sky"] .sirat-quest .sirat-stage .sirat-gateways,:root[data-theme="night-sky"] .sirat-quest .sirat-stage .sirat-hud{background:#263e50;color:#edf5e9;border-color:#90b5b4}
+:root[data-theme="night-sky"] .sirat-quest .sirat-stage .sirat-toolbar label,:root[data-theme="night-sky"] .sirat-quest .sirat-stage .sirat-gateways :is(h4,p){color:#edf5e9}
