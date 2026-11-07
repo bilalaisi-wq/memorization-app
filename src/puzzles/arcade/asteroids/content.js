@@ -1,3 +1,4 @@
+import {memoryLevel} from '../difficulty.js';
 import {wordIdentity} from '../../../distractors.js';
 import {seededShuffle} from '../content.js';
 
@@ -11,11 +12,13 @@ const unit = (words, order, target=true) => ({id:`${words[0].key}:${words[0].ind
 
 // Only authenticated/published, source-hash-matched review documents belong in reviews.
 export function buildSectors(adapter, config, library, {difficulty='beginner', reviews={}}={}) {
+  difficulty=memoryLevel(config,difficulty);
   if(!asteroidProfiles[difficulty]) throw Error('Unknown flight difficulty');
   const phrasePool=library.flatMap(s=>s.verses.filter(v=>v.words.length<=8).map(v=>unit(adapter.words(`${s.id}:${v.id}`),-1,false)));
   return config.keys.map((key,sector)=>{
     const canonical=adapter.words(key),review=reviews[key];
-    const phrases=difficulty==='expert'||canonical.length>40&&!config.visualWindows;
+    const adapted=['words','visual-groups','study-segments'].includes(config.sourceUnitKind)&&config.contextVersion===1;
+    const phrases=!adapted&&(difficulty==='expert'||canonical.length>40&&!config.visualWindows);
     let targets;
     if(phrases) {
       if(review) targets=adapter.phrases(key,review).map((p,i)=>unit(p.words,i));
@@ -34,6 +37,6 @@ export function buildSectors(adapter, config, library, {difficulty='beginner', r
     const seen=new Set(),distractors=[];
     for(const candidate of candidates){const text=identity(candidate.words);if(seen.has(text))continue;seen.add(text);distractors.push(candidate);if(distractors.length===asteroidProfiles[difficulty].distractors)break;}
     if(!distractors.length)throw Error('No verified distractors available');
-    return {key,targets,distractors,words:canonical,audio:adapter.audio(key),phrases};
+    return {key,targets,distractors,words:canonical,audio:adapter.audio(key),phrases,visualGroups:canonical.some(w=>w.sourcePositions?.length>1)};
   });
 }

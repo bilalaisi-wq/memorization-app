@@ -1,3 +1,4 @@
+import {contentContracts} from './passage/contracts.js';
 import {compatibility} from '../../passage-context/compatibility.js';
 import {isDeveloperMode} from '../../developer/access.js';
 // Metadata is also used by persistence; keep retired identifiers forever.
@@ -12,13 +13,13 @@ export function createRegistry() {
   return {
     register(definition) {
       if (!arcadeIds.includes(definition.id) || entries.has(definition.id) || typeof definition.create !== 'function') throw Error('Invalid or duplicate arcade registration');
-      entries.set(definition.id, Object.freeze({...definition}));
+      entries.set(definition.id, Object.freeze({...definition,content:contentContracts[definition.id]||null}));
     },
     list({developer = isDeveloperMode()} = {}) { return [...entries.values()].filter(g => !g.developerOnly || developer).map(({create, ...metadata}) => metadata); },
     create(id, options, {developer = isDeveloperMode()} = {}) {
       const entry = entries.get(id);
       if (!entry || (entry.developerOnly && !developer)) throw Error('Game unavailable');
-      if(options?.passageContext){const result=compatibility({game:id,refs:options.passageContext.refs,units:options.sourceUnitKind||"words",registered:[...entries.keys()]});if(!result.available)throw Error(result.reason);}
+      if(options?.passageContext){const result=compatibility({game:id,refs:options.passageContext.refs,units:options.config?.sourceUnitKind||options.sourceUnitKind||"words",unitCount:options.config?.contentUnits?.length||0,groupWords:Math.max(0,...(options.config?.contentUnits||[]).map(u=>u.lastWord-u.firstWord+1)),approved:options.config?.sourceUnitKind==='study-segments'&&options.config?.contentUnits?.every(u=>u.kind==='approved-study'),wordCount:Math.max(0,...(options.config?.contentUnits||[]).map(u=>u.lastWord-u.firstWord+1)),registered:[...entries.keys()]});if(!result.available)throw Error(result.reason);}
       const game = entry.create(options);
       for (const method of ['start','pause','resume','dispatch','getSnapshot','dispose']) {
         if (typeof game?.[method] !== 'function') { game?.dispose?.(); throw Error(`Missing game method: ${method}`); }

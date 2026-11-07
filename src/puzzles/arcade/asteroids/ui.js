@@ -1,3 +1,4 @@
+import {annotateDifficulty,memoryLevel,motorLevel} from '../difficulty.js';
 import {outsideGameDialog} from '../input-scope.js';
 import {createAsteroids,stepAsteroids,aimedObject,WORLD} from './engine.js';
 import {buildSectors,asteroidProfiles} from './content.js';
@@ -8,6 +9,7 @@ const shipArt='<svg viewBox="0 0 80 80" aria-hidden="true"><path class="astro-fl
 const wordsHTML=words=>words.map(w=>`<span>${esc(w.text)}</span>`).join(' ');
 export const asteroidsRegistration={id:'asteroids',title:'Ayah Space',create:mountAsteroids};
 export function mountAsteroids({root,adapter,config,library,id,difficulty='beginner',reviews={},muted=()=>false,volume=()=>1,onComplete=()=>{},onExit=()=>{},getNextSteps=()=>({}),onJourney=()=>{},onRecall=()=>{},onPractice=()=>{},initialAudioMode='listen'}) {
+ config=annotateDifficulty(config,difficulty);difficulty=memoryLevel(config,difficulty);
   const sectors=buildSectors(adapter,config,library,{difficulty,reviews});
   let state=createAsteroids({id,config,sectors,difficulty}),disposed=false,frame=0,last=0,audioGate=false,audioMode=initialAudioMode,run=0,transition=false,transitionTimer=null;
   let saveState='pending',saveError='',guidance=null,navigating=false;
@@ -31,7 +33,7 @@ export function mountAsteroids({root,adapter,config,library,id,difficulty='begin
     ship.style.left=`${state.ship.x/10}%`;ship.style.top=`${state.ship.y/6}%`;ship.style.transform=`translate(-50%,-50%) rotate(${visualAngle+Math.PI/2}rad)`;
     for(const object of state.objects){
       let node=nodes.get(object.id);
-      if(!node){node=document.createElement('button');node.className=`astro-rock ${object.piece.words.length>1?'astro-phrase':''}`;node.dataset.object=object.id;node.innerHTML=`<span class="arabic" dir="rtl" lang="ar">${wordsHTML(object.piece.words)}</span>`;node.title='Aim at this object; move within range, then use the tractor beam';objects.append(node);nodes.set(object.id,node);}
+      if(!node){node=document.createElement('button');node.className=`astro-rock ${(object.piece.words.length>1||object.piece.words[0]?.sourcePositions?.length>1)?'astro-phrase':''}`;node.dataset.object=object.id;node.innerHTML=`<span class="arabic" dir="rtl" lang="ar">${wordsHTML(object.piece.words)}</span>`;node.title='Aim at this object; move within range, then use the tractor beam';objects.append(node);nodes.set(object.id,node);}
       node.style.left=`${object.x/10}%`;node.style.top=`${object.y/6}%`;node.classList.toggle('astro-locked',target?.id===object.id);node.classList.toggle('astro-redirected',object.redirected);node.disabled=object.redirected;node.setAttribute('aria-label',`Aim at ${object.piece.words.map(w=>w.text).join(' ')} · source ${object.piece.key}`);
     }
     for(const [key,node] of nodes)if(!state.objects.some(o=>o.id===key)){node.remove();nodes.delete(key);}
@@ -69,7 +71,7 @@ export function mountAsteroids({root,adapter,config,library,id,difficulty='begin
   }
   function save(){
     if(saveState==='saved')return true;
-    try{onComplete(state.session);saveState='saved';saveError='';state.message='Flight saved. Choose your next step below.';}
+    try{onComplete({...state.session,config:annotateDifficulty(state.session.config,difficulty)});saveState='saved';saveError='';state.message='Flight saved. Choose your next step below.';}
     catch(e){saveState='failed';saveError=e.message;state.message='Your flight is still here. Retry saving before starting another activity.';}
     paint();return saveState==='saved';
   }

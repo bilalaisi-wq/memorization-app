@@ -1,3 +1,4 @@
+import {snakeMotor} from '../difficulty.js';
 import {selectionEvidence} from '../evidence.js';
 import {createSession,reduceSession} from '../session.js';
 import {seededShuffle} from '../content.js';
@@ -7,7 +8,8 @@ export const snakeSpeeds={slow:1000,steady:650,brisk:380};
 const key=p=>`${p.x}:${p.y}`;
 const same=(a,b)=>a.x===b.x&&a.y===b.y;
 const inside=p=>p.x>=0&&p.x<GRID.columns&&p.y>=0&&p.y<GRID.rows;
-const cells=food=>Array.from({length:6},(_,i)=>({x:food.x+i%3,y:food.y+Math.floor(i/3)}));
+export const foodSize=food=>food.word?.sourcePositions?.length>1?{width:4,height:3}:{width:3,height:2};
+const cells=food=>{const {width,height}=foodSize(food);return Array.from({length:width*height},(_,i)=>({x:food.x+i%width,y:food.y+Math.floor(i/width)}));};
 export const foodCells=cells;
 const reduce=(s,type,extra={})=>s.session=reduceSession(s.session,{type,...extra});
 export function buildSnakeSectors(adapter,config){
@@ -31,11 +33,11 @@ export function reachableCells(s,blocked=[]){
   }
   return visited;
 }
-function candidates(s){
+function candidates(s,word){
   const occupied=new Set(s.body.map(key)),head=s.body[0],result=[];
   for(let y=0;y<=GRID.rows-2;y++)for(let x=0;x<=GRID.columns-3;x++){
-    const area=cells({x,y});
-    if(area.some(p=>occupied.has(key(p))||Math.abs(p.x-head.x)+Math.abs(p.y-head.y)<3))continue;
+    const area=cells({x,y,word});
+    if(area.some(p=>!inside(p)||occupied.has(key(p))||Math.abs(p.x-head.x)+Math.abs(p.y-head.y)<3))continue;
     result.push({x,y});
   }
   return seededShuffle(result,s.session.config.seed+s.serial++);
@@ -48,18 +50,20 @@ function populate(s){
     const value=free.at(-1);s.portal=value?{x:Number(value.split(':')[0]),y:Number(value.split(':')[1])}:null;
     return !!s.portal;
   }
-  const reachable=reachableCells(s),places=candidates(s),required=places.find(p=>cells(p).some(c=>reachable.has(key(c))));
+  const targetWord=sector.words[s.cursor],reachable=reachableCells(s),places=candidates(s,targetWord),location=places.find(p=>cells({...p,word:targetWord}).some(c=>reachable.has(key(c)))),required=location?{...location,word:targetWord}:null;
   if(!required)return false;
   s.food.push({...required,id:`word-${s.serial++}`,word:sector.words[s.cursor],required:true});
   for(const word of seededShuffle(sector.distractors,s.serial+s.session.config.seed).slice(0,2)){
     const occupied=new Set(s.food.flatMap(cells).map(key));
-    const place=places.find(p=>!cells(p).some(c=>occupied.has(key(c)))&&cells(required).some(c=>reachableCells(s,[...s.food.filter(f=>!f.required).flatMap(cells),...cells(p)]).has(key(c))));
+    const options=s.session.config.contextVersion?candidates(s,word):places;
+    const place=options.find(p=>!cells({...p,word}).some(c=>occupied.has(key(c)))&&cells(required).some(c=>reachableCells(s,[...s.food.filter(f=>!f.required).flatMap(cells),...cells({...p,word})]).has(key(c))));
     if(place)s.food.push({...place,id:`word-${s.serial++}`,word,required:false});
   }
   return true;
 }
 function freshSector(s){s.cursor=0;s.captured=[];s.portal=null;resetBody(s);populate(s);}
 export function createSnake({id,config,sectors,speed='slow'}){
+  if(config.difficultySchema===1)speed=snakeMotor(config);
   if(!snakeSpeeds[speed]||!sectors.length||sectors.map(s=>s.key).join('|')!==config.keys.join('|')||sectors.some(s=>!s.words.length||s.words.length>(config.visualWindows?1000:40)))throw Error('Invalid Snake content or speed');
   const s={session:createSession({id,game:'snake',config}),sectors:structuredClone(sectors),body:[],direction:'up',queued:null,cursor:0,captured:[],food:[],portal:null,score:0,serial:0,speed,steps:0,elapsed:0,motorPause:false,message:'Press Start trail. Steer into the next word.'};
   freshSector(s);return s;
@@ -69,7 +73,7 @@ export function stepSnake(previous,action){
   const s={...structuredClone({...previous,sectors:undefined}),sectors:previous.sectors};
   const status=s.session.status;
   if(action.type==='dispose'){reduce(s,'dispose');return s;}
-  if(action.type==='speed'){if(!snakeSpeeds[action.value])return previous;s.speed=action.value;return s;}
+  if(action.type==='speed'){if(!snakeSpeeds[action.value])return previous;s.speed=action.value;if(s.session.config.memoryDifficulty)s.session.config.motorDifficulty={slow:'relaxed',steady:'normal',brisk:'arcade'}[action.value];return s;}
   if(action.type==='start'&&status==='ready'){reduce(s,'start');s.message='Follow the trail. Say each collected word aloud.';return s;}
   if(action.type==='pause'){reduce(s,'pause');return s;}
   if(action.type==='resume'){reduce(s,'resume');return s;}

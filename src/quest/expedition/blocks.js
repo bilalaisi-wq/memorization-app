@@ -1,3 +1,4 @@
+import {annotateDifficulty,blocksMotor} from '../../puzzles/arcade/difficulty.js';
 import { successCue } from "../../ui/encouragement.js";
 import { mountFalling } from "../../puzzles/falling-ui.js";
 export const blocksRegistration = {
@@ -5,6 +6,7 @@ export const blocksRegistration = {
   title: "Ayah Blocks",
   status: "available",
   create({ root, adapter, config, id, volume, muted, onComplete }) {
+    config=annotateDifficulty(config);
     const key = config.keys[0],
       words = adapter.words(key),
       [surah, ayah] = key.split(":").map(Number);
@@ -51,11 +53,12 @@ export const blocksRegistration = {
           id,
           game: "falling",
           status: "won",
+          strikes:result.strikes||0,
           config,
           completed: [key],
           mistakes: result.errors.map(() => ({ key, kind: "sequence" })),
-          motorErrors: [],
-          assistance: result.usedAudio ? [{ key, kind: "audio" }] : [],
+          motorErrors: Array.from({length:result.motorErrors||0},(_,event)=>({key,event,kind:'navigation'})),
+          assistance: [...(result.usedAudio?[{key,kind:"audio"}]:[]),...(config.difficultySchema===1&&config.memoryDifficulty==='guided'?[{key,kind:"hint"}]:[])],
         };
         function save() {
           try {
@@ -89,7 +92,7 @@ export const blocksRegistration = {
       onFailure: () => {},
       onExit: () => {},
       onChange: () => {},
-      questOptions: { entries, order, audioSource: adapter.audio(key) },
+      questOptions: { entries, order, audioSource: adapter.audio(key),motorSafe:config.contextVersion===1,speed:config.difficultySchema===1?blocksMotor(config):'slow',initialStrikes:config.initialStrikes||0,chainMode:config.chainMode },
     });
     return {
       ...view,

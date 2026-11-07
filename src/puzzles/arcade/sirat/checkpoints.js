@@ -1,8 +1,9 @@
+import {difficultyKey} from '../difficulty.js';
 import {versionedStore} from '../../../ui/versioned-store.js';
 import {createSirat,restoreSiratLayout} from './engine.js';
 import {finalUnits,routes} from './adventure.js';
 export const SIRAT_KEY='ayah-sirat-journeys-v2';
-export const routeKey=(c,d)=>`${c.keys.join(',')}|${c.chainMode}|${d}|${c.siratRoute||'garden'}|${c.siratScope||'whole'}|${c.siratRelaxed?'relaxed':'normal'}`;
+export const routeKey=(c,d)=>`${c.keys.join(',')}|${c.chainMode}|${d}|${c.siratRoute||'garden'}|${c.siratScope||'whole'}|${c.siratRelaxed?'relaxed':'normal'}` + difficultyKey(c);
 export function sourceRevision(sectors){let n=2166136261;for(const c of sectors.map(s=>s.key+'|'+s.targets.map(t=>t.id+':'+t.words.map(w=>w.text).join(' ')).join('|')).join('\n'))n=Math.imul(n^c.charCodeAt(0),16777619);return (n>>>0).toString(16);}
 export function checkpoint(s){return {version:2,revision:sourceRevision(s.sectors),session:s.session,difficulty:s.difficulty,cursor:s.cursor,resolved:s.resolved,awaitingNext:s.awaitingNext,time:s.time,checkpoint:s.checkpoint,score:s.score,recoveries:s.recoveries,resultSaved:s.resultSaved===true,quest:{...structuredClone(s.quest),echoVisible:false}};}
 export function createSiratStore(storage){const store=versionedStore(storage,SIRAT_KEY,()=>({version:2,runs:{}}),s=>s?.version===2&&s.runs&&typeof s.runs==='object'&&!Array.isArray(s.runs)&&Object.values(s.runs).every(r=>r?.version===2&&r.session?.config&&typeof r.revision==='string'));return {get warning(){return store.warning;},read(c,d){return store.snapshot().runs[routeKey(c,d)]||null;},save(s){store.transact(data=>{data.runs[routeKey(s.session.config,s.difficulty)]=checkpoint(s);});}};}

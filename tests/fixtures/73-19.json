@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "key": "73:19",
+  "surah": 73,
+  "ayah": 19,
+  "juz": 29,
+  "textUthmani": "إِنَّ هَـٰذِهِۦ تَذْكِرَةٌ ۖ فَمَن شَآءَ ٱتَّخَذَ إِلَىٰ رَبِّهِۦ سَبِيلًا",
+  "translation": "Indeed, this is a reminder, so whoever wills may take to his Lord a way.",
+  "translationSource": {
+    "resourceId": 20,
+    "name": "Saheeh International",
+    "text": "Indeed, this is a reminder, so whoever wills may take to his Lord a way."
+  },
+  "sources": [
+    {
+      "url": "https://api.quran.com/api/v4/verses/by_key/73:19?words=true&word_fields=text_uthmani,audio_url&translations=20",
+      "sha256": "1bd466ffcfcc5870bbc8ab5551f3537f79957ca11896fda39126380fcc23b432"
+    },
+    {
+      "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=73:19",
+      "sha256": "3d64ad0af1a3c4ab2fe14cbe78ce21b6bdaa74ed8f12298d25cd34ba1335789d"
+    }
+  ],
+  "words": [
+    {
+      "position": 1,
+      "text": "إِنَّ",
+      "translation": "Indeed",
+      "transliteration": "inna",
+      "audioSource": "wbw/073_019_001.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 2,
+      "text": "هَـٰذِهِۦ",
+      "translation": "this",
+      "transliteration": "hādhihi",
+      "audioSource": "wbw/073_019_002.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 3,
+      "text": "تَذْكِرَةٌ ۖ",
+      "translation": "(is) a Reminder",
+      "transliteration": "tadhkiratun",
+      "audioSource": "wbw/073_019_003.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 4,
+      "text": "فَمَن",
+      "translation": "then whoever",
+      "transliteration": "faman",
+      "audioSource": "wbw/073_019_005.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 5,
+      "text": "شَآءَ",
+      "translation": "wills",
+      "transliteration": "shāa",
+      "audioSource": "wbw/073_019_006.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 6,
+      "text": "ٱتَّخَذَ",
+      "translation": "(let him) take",
+      "transliteration": "ittakhadha",
+      "audioSource": "wbw/073_019_007.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 7,
+      "text": "إِلَىٰ",
+      "translation": "to",
+      "transliteration": "ilā",
+      "audioSource": "wbw/073_019_008.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 8,
+      "text": "رَبِّهِۦ",
+      "translation": "his Lord",
+      "transliteration": "rabbihi",
+      "audioSource": "wbw/073_019_009.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 9,
+      "text": "سَبِيلًا",
+      "translation": "a way",
+      "transliteration": "sabīlan",
+      "audioSource": "wbw/073_019_010.mp3",
+      "audioVerified": false
+    }
+  ],
+  "segments": [
+    {
+      "id": "full",
+      "firstWord": 1,
+      "lastWord": 9,
+      "reference": "73:19",
+      "kind": "whole-ayah",
+      "review": {
+        "status": "source-validated",
+        "basis": "Complete ayah boundary; no internal recitation stop asserted."
+      }
+    }
+  ],
+  "audioAssets": [
+    {
+      "file": "73/19/full.mp3",
+      "source": "https://verses.quran.com/Alafasy/mp3/073019.mp3",
+      "sha256": "79ef3120be4719fd632e608cab80aaf9106fb56a207630d7a279e6fe77cb081f",
+      "bytes": 175251,
+      "durationMs": 10919
+    }
+  ]
+}

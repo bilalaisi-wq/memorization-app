@@ -15,6 +15,6 @@ export function finalUnits(s){
  return [...(current.length<3?previous.slice(-(3-current.length)):[]),...current].slice(-3);
 }
 export function beginFinal(s){s.quest.finalActive=true;s.quest.finalCursor=0;s.quest.finalChoices=seededShuffle(finalUnits(s).map(p=>p.id),s.session.config.seed+s.session.checkpoint+91);s.direction=0;s.jumpQueued=false;s.message='Final continuation: reconnect these studied pieces in canonical order. Take your time; this is recognition, not spoken assessment.';}
-export function awardEcho(s){const receipt=`${s.sectors[s.session.checkpoint].key}:${s.cursor}`;if(!s.quest.earned.includes(receipt)){s.quest.earned.push(receipt);s.quest.echo=Math.min(3,s.quest.echo+1);}}
+export function awardEcho(s){const receipt=s.session.config.contextVersion?s.sectors[s.session.checkpoint].targets[s.cursor].words[0].id:`${s.sectors[s.session.checkpoint].key}:${s.cursor}`;if(!s.quest.earned.includes(receipt)){s.quest.earned.push(receipt);s.quest.echo=Math.min(3,s.quest.echo+1);}}
 // Existing learning receipts supply a bounded journey loadout; no XP or FSRS writes.
 export function learningEchoCredits(storage){try{const s=JSON.parse(storage.getItem('ayah-learning-v1')||'null');return s?.schemaVersion===1?Math.min(3,Object.values(s.receipts||{}).filter(r=>Number.isFinite(r?.xp)&&r.xp>0).length):0;}catch{return 0;}}

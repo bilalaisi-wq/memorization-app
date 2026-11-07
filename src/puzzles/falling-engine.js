@@ -65,7 +65,7 @@ export function landing(state) {
 }
 const empty = () => Array.from({ length: ROWS }, () => Array(COLS).fill(null));
 function spawn(s, entry) {
-  s.current = { entry, shape: entry?.shape || "T", rotation: 0, x: 3, y: 0 };
+  s.current = { entry, shape: entry?.shape || "T", rotation: 0, x: 3, y: 0,...(s.motorSafe?{controlled:false}:{}) };
   if (entry && collides(s.board, s.current)) {
     s.board = empty();
     s.boardEpoch++;
@@ -75,6 +75,7 @@ export function createFalling({
   words,
   entries,
   order = entries.map((_, i) => i),
+  motorSafe = false,
 }) {
   if (!words.length || !entries.length) throw Error("Verified words required");
   if (
@@ -103,6 +104,7 @@ export function createFalling({
   let at = 0;
   const queue = pool.map((e) => (e.target ? targets[at++] : e));
   const s = {
+    ...(motorSafe?{motorSafe:true,motorErrors:0}:{}),
     words: [...words],
     queue: queue.slice(1),
     current: null,
@@ -151,21 +153,22 @@ export function stepFalling(state, action) {
   const p = s.current;
   if (action.type === "move") {
     const q = { ...p, x: p.x + action.delta };
-    if (!collides(s.board, q)) s.current = q;
+    if (!collides(s.board, q)) s.current = {...q,...(s.motorSafe?{controlled:true}:{})};
     return s;
   }
   if (action.type === "rotate") {
     const q = { ...p, rotation: (p.rotation + 1) % 4 };
     for (const kick of [0, -1, 1, -2, 2])
       if (!collides(s.board, { ...q, x: q.x + kick })) {
-        s.current = { ...q, x: q.x + kick };
+        s.current = { ...q, x: q.x + kick,...(s.motorSafe?{controlled:true}:{}) };
         break;
       }
     return s;
   }
   if (action.type === "tick" || action.type === "soft") {
+    if(s.motorSafe&&action.type==='soft')p.controlled=true;
     if (!collides(s.board, { ...p, y: p.y + 1 })) p.y++;
-    else return stepFalling(s, { type: "drop" });
+    else return stepFalling(s, { type: "drop",automatic:action.type==='tick' });
     return s;
   }
   if (action.type === "hold") {
@@ -182,6 +185,7 @@ export function stepFalling(state, action) {
   const landed = landing(s);
   const side =
     action.slot === undefined && cells(landed).every(([x]) => x < 3 || x > 6);
+  if(s.motorSafe&&action.automatic&&!p.controlled&&!side){s.motorErrors++;if(e.target)s.queue.unshift(e);else s.queue.push(e);advance(s);s.event='motor-recovery';return s;}
   if (side) {
     s.placements.push({
       entry: e,

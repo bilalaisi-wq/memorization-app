@@ -100,6 +100,7 @@ export function mountPuzzleLab(
     pauseGame = () => {},
     fallingControl = null,
     arcadeMeta = null;
+  const contextButton=document.createElement('button');contextButton.className='primary small';contextButton.dataset.passageArcade='';contextButton.textContent='Passage games · separate memory and movement challenges';contextButton.onclick=()=>callbacks.onPassageArcade?.(key);root.querySelector('.lab-intro').append(contextButton);
   const say = (text) => {
     status.textContent = text;
     status.dataset.tone = "info";
@@ -565,7 +566,7 @@ export function mountPuzzleLab(
     const control = mountFalling(area, {
       surah, verse, level, muted: () => muted, volume:()=>recitationVolume, say,
       onScope(target) { resultKey=target;session=uid(); done=false; },
-      onFinish(meta) { arcadeMeta=meta; mistakes=meta.errors.length; hinted ||= meta.usedAudio; finish(); },
+      onFinish(meta) { arcadeMeta={...meta,memoryDifficulty:'guided',motorDifficulty:{slow:'relaxed',normal:'normal',fast:'arcade'}[meta.speed]||'relaxed'}; mistakes=meta.errors.length; hinted ||= meta.usedAudio; finish(); },
       onFailure(meta) {
         try {
           lab.record({key:resultKey,sessionId:`${session}:failed:${uid()}`,game:"falling",mistakes:meta.errors.length,hinted:true,xp:0,arcade:meta});

@@ -1,3 +1,4 @@
+import {annotateDifficulty,memoryLevel,motorLevel} from '../difficulty.js';
 import {profileStorage,activeProfileId} from '../../../learner/profile-storage.js';
 import {createSiratStore,restoreSirat,SIRAT_KEY} from './checkpoints.js';
 import {learningEchoCredits,routes,finalUnits} from './adventure.js';
@@ -10,6 +11,7 @@ import {reportStudyExposure} from '../../../study-exposure.js';
 export const siratRegistration={id:'sirat',title:'Sirat Quest',create:mountSirat};
 const phrase=p=>p.words.map(w=>w.text).join(' ');
 export function mountSirat({root,adapter,config,library,id,difficulty='beginner',reviews={},muted=()=>false,volume=()=>1,initialAudio='listen',onComplete=()=>{},onExit=()=>{},onRecall=()=>{},storage=profileStorage}){
+ config=annotateDifficulty(config,difficulty);difficulty=memoryLevel(config,difficulty);
  const owner=activeProfileId(),store=createSiratStore(storage);
  let sectors=buildSiratSections(adapter,config,library,{difficulty,reviews});
  config={...config,siratVersion:2,siratRoute:config.siratRoute||'garden',siratScope:sectors.map(s=>s.words[0].id+'..'+s.words.at(-1).id).join('|')};
@@ -60,7 +62,7 @@ export function mountSirat({root,adapter,config,library,id,difficulty='beginner'
  }
  function persist(force=false){if(blocked||disposed||activeProfileId()!==owner)return;const key=`${state.session.status}:${state.session.checkpoint}:${state.cursor}:${state.resolved}:${state.quest.finalActive}:${state.quest.finalCursor}:${state.session.events}:${Math.floor(state.time/2)}`;if(!force&&key===persistKey)return;try{store.save(state);persistKey=key;warning='';}catch(e){warning=e.message;}}
  function stopAudio(){audioToken++;audio.stop();}
- function save(){if(saved)return true;try{onComplete({...state.session,arcadeStats:{score:state.score,recoveries:state.recoveries,echoUsed:state.quest.echoUsed,route:state.quest.route},siratVersion:2,continuationEvidence:state.quest.finalEvidence});saved=true;saveError='';state.resultSaved=true;persist(true);}catch(e){saveError=e.message;}return saved;}
+ function save(){if(saved)return true;try{onComplete({...state.session,config:annotateDifficulty(state.session.config,difficulty),arcadeStats:{score:state.score,recoveries:state.recoveries,echoUsed:state.quest.echoUsed,route:state.quest.route},siratVersion:2,continuationEvidence:state.quest.finalEvidence});saved=true;saveError='';state.resultSaved=true;persist(true);}catch(e){saveError=e.message;}return saved;}
  function expose(key){try{reportStudyExposure([key],storage);return true;}catch(e){state.message=e.message;paint();return false;}}
  async function listen(before=false){
   if(disposed)return;if(before||audioMode==='echo'){held.clear();pointerMoves.clear();if(state.session.status==='playing')state=stepSirat(state,{type:'pause'});state.message='Listen first, then Resume when ready.';}stopAudio();const token=audioToken;last=0;paint();

@@ -11,7 +11,7 @@ export function selectionEvidence(selected, expected) {
         : a[0].key === b[0].key
           ? "word-order"
           : "word-selection",
-    expected: b.map((w) => w.id),
-    selected: a.map((w) => w.id),
+    expected: b.flatMap(w=>w.sourceWordIds||[w.id]),
+    selected: a.flatMap(w=>w.sourceWordIds||[w.id]),
   };
 }

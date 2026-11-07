@@ -1,3 +1,4 @@
+import {memoryLevel,motorLevel} from '../difficulty.js';
 import {createSession, reduceSession} from '../session.js';
 import {seededShuffle} from '../content.js';
 import {buildSectors} from '../asteroids/content.js';
@@ -7,7 +8,8 @@ export const WORLD={width:900,height:820,launcher:{x:450,y:760},shotRadius:13};
 export const bubbleProfiles={beginner:{radius:96,choices:2,speed:500},standard:{radius:84,choices:3,speed:640},expert:{radius:128,choices:2,speed:700}};
 const identity=p=>p.words.map(w=>wordIdentity(w.text)).join(' ');
 export function buildFormations(adapter,config,library,options={}) {
-  const phraseLibrary=options.difficulty==='expert'?library.map(chapter=>({...chapter,verses:chapter.verses.filter(verse=>verse.words.length<=4)})):library;
+  options={...options,difficulty:memoryLevel(config,options.difficulty)};
+  const phraseLibrary=options.difficulty==='expert'&&!config.contextVersion?library.map(chapter=>({...chapter,verses:chapter.verses.filter(verse=>verse.words.length<=4)})):library;
   const sectors=buildSectors(adapter,config,phraseLibrary,options);
   if(sectors.some(s=>s.targets.some(p=>p.words.length>4)))throw Error('Bubble phrase targets must fit four words. Choose Beginner/Standard word mode or smaller published reviewed phrases; no boundaries are generated.');
   return sectors;
@@ -23,14 +25,15 @@ export function connectedCluster(bubbles,id) {
   return queue.map(b=>b.id);
 }
 function populate(s) {
-  const sector=s.sectors[s.session.checkpoint],profile=bubbleProfiles[s.difficulty];
+  const sector=s.sectors[s.session.checkpoint],profile={...bubbleProfiles[s.difficulty],...(s.session.config.difficultySchema===1?{radius:128,speed:bubbleProfiles[s.motionDifficulty].speed}:{})};
   const expected=sector.targets[s.cursor];if(!expected){s.bubbles=[];return;}
   const candidates=seededShuffle([expected,...sector.distractors.slice(0,profile.choices-1)],s.session.config.seed+s.cursor+s.session.checkpoint*101);
   s.bubbles=candidates.flatMap((piece,i)=>[0,1].map(row=>({id:`${s.session.checkpoint}-${s.cursor}-${i}-${row}`,piece,x:WORLD.width*(i+.5)/candidates.length,y:(s.difficulty==='expert'?420:320)-row*profile.radius*2,radius:profile.radius})));
 }
 export function createBubble({id,config,sectors,difficulty='beginner'}) {
+  difficulty=memoryLevel(config,difficulty);
   if(!bubbleProfiles[difficulty]||!sectors.length||sectors.map(s=>s.key).join('|')!==config.keys.join('|')||sectors.some(s=>!s.targets.length||!s.distractors.length))throw Error('Invalid verified bubble content');
-  const s={session:createSession({id,game:'bubble',config}),sectors:structuredClone(sectors),difficulty,cursor:0,captured:[],bubbles:[],projectile:null,angle:-Math.PI/2,score:0,shots:0,bounces:0,lastClear:[],effect:0,awaitingNext:false,message:'Aim the connector, then launch toward the next continuation.'};populate(s);return s;
+  const s={session:createSession({id,game:'bubble',config}),sectors:structuredClone(sectors),difficulty,motionDifficulty:motorLevel(config,difficulty),cursor:0,captured:[],bubbles:[],projectile:null,angle:-Math.PI/2,score:0,shots:0,bounces:0,lastClear:[],effect:0,awaitingNext:false,message:'Aim the connector, then launch toward the next continuation.'};populate(s);return s;
 }
 export function stepBubble(previous,action) {
   if(previous.session.status==='disposed')return previous;
@@ -46,7 +49,7 @@ export function stepBubble(previous,action) {
   if(action.type==='next'&&s.awaitingNext){s.awaitingNext=false;populate(s);return s;}
   if(s.awaitingNext)return previous;
   if(action.type==='aim'&&!s.projectile&&Number.isFinite(action.angle)){s.angle=Math.max(-Math.PI+.12,Math.min(-.12,action.angle));return s;}
-  if(action.type==='launch'&&!s.projectile){const speed=bubbleProfiles[s.difficulty].speed;s.projectile={...WORLD.launcher,vx:Math.cos(s.angle)*speed,vy:Math.sin(s.angle)*speed};s.shots++;return s;}
+  if(action.type==='launch'&&!s.projectile){const speed=bubbleProfiles[s.motionDifficulty||s.difficulty].speed;s.projectile={...WORLD.launcher,vx:Math.cos(s.angle)*speed,vy:Math.sin(s.angle)*speed};s.shots++;return s;}
   if(action.type!=='tick'||!s.projectile||!Number.isFinite(action.dt)||action.dt<=0)return previous;
   // Large/lagged frames do not advance or punish the learner. Substeps prevent tunnelling.
   if(action.dt>.15)return previous;

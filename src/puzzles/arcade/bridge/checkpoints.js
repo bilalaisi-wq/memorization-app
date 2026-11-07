@@ -1,7 +1,8 @@
+import {difficultyKey} from '../difficulty.js';
 import {versionedStore} from '../../../ui/versioned-store.js';
 import {createBridge,bridgeRevision} from './engine.js';
 export const BRIDGE_CHECKPOINT_KEY='ayah-bridge-checkpoints-v2';
-export const checkpointKey=(config,difficulty)=>`${config.keys.join(',')}|${config.chainMode}|${difficulty}${config.bridgeGate?'|gate':''}`;
+export const checkpointKey=(config,difficulty)=>`${config.keys.join(',')}|${config.chainMode}|${difficulty}${config.bridgeGate?'|gate':''}` + difficultyKey(config);
 export function createBridgeCheckpoints(storage){
  const store=versionedStore(storage,BRIDGE_CHECKPOINT_KEY,()=>({version:2,runs:{}}),s=>s?.version===2&&s.runs&&typeof s.runs==='object'&&!Array.isArray(s.runs)&&Object.values(s.runs).every(r=>r&&typeof r==='object'&&r.version===2&&typeof r.id==='string'&&typeof r.revision==='string'&&r.config&&Array.isArray(r.config.keys)&&r.session&&Array.isArray(r.bridges)&&Array.isArray(r.transitionErrors)));
  return {...store,save(state){store.transact(s=>{s.runs[checkpointKey(state.sourceConfig,state.difficulty)]={version:2,revision:state.revision,id:state.session.id,config:state.sourceConfig,difficulty:state.difficulty,session:state.session,bridges:state.bridges,transitionErrors:state.transitionErrors,score:state.score,phase:state.phase,crossing:state.crossing,gate:state.gate,gatesCleared:state.gatesCleared};});},read(config,difficulty){return store.snapshot().runs[checkpointKey(config,difficulty)]??null;}};

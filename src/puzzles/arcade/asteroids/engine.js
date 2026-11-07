@@ -1,3 +1,4 @@
+import {memoryLevel,motorLevel} from '../difficulty.js';
 import {selectionEvidence} from '../evidence.js';
 import {createSession,reduceSession} from '../session.js';
 import {asteroidProfiles} from './content.js';
@@ -6,22 +7,23 @@ const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 const angleDifference=(a,b)=>Math.atan2(Math.sin(a-b),Math.cos(a-b));
 const reduce=(s,type,extra={})=>{s.session=reduceSession(s.session,{type,...extra});};
 function fillWave(s) {
-  const sector=s.sectors[s.session.checkpoint],profile=asteroidProfiles[s.difficulty];
+  const sector=s.sectors[s.session.checkpoint],profile=asteroidProfiles[s.motionDifficulty||s.difficulty];
   const needed=sector.targets[s.cursor];
-  const desired=[needed,...(sector.targets[s.cursor+1]?[sector.targets[s.cursor+1]]:[]),...sector.distractors].slice(0,profile.simultaneous);
+  const desired=[needed,...(sector.targets[s.cursor+1]?[sector.targets[s.cursor+1]]:[]),...sector.distractors].slice(0,sector.visualGroups?Math.min(3,profile.simultaneous):profile.simultaneous);
   for(const piece of desired){
     if(s.objects.some(o=>o.piece.id===piece.id))continue;
-    const n=s.serial++,slots=sector.phrases?[[300,130],[700,300],[300,470]]:[[200,80],[800,150],[500,230],[200,330],[800,410]];
+    const n=s.serial++,slots=(sector.phrases||sector.visualGroups)?[[300,130],[700,300],[300,470]]:[[200,80],[800,150],[500,230],[200,330],[800,410]];
     const [x,y]=slots[n%slots.length];
-    s.objects.push({id:`object-${n}`,piece,x,y,vx:(n%2?1:-1)*(8+n%7),vy:profile.speed,phase:n,redirected:false});
+    s.objects.push({id:`object-${n}`,piece,x,y,vx:(n%2?1:-1)*(8+n%7)*(s.session.config.contextVersion?profile.speed/22:1),vy:profile.speed,phase:n,redirected:false});
   }
 }
 function resetSector(s) {
   s.cursor=0;s.captured=[];s.objects=[];s.ship={x:500,y:480,angle:-Math.PI/2};s.aimId=null;s.sectorReady=false;fillWave(s);
 }
 export function createAsteroids({id,config,sectors,difficulty='beginner'}) {
+  difficulty=memoryLevel(config,difficulty);
   if(!asteroidProfiles[difficulty] || !sectors.length || sectors.map(s=>s.key).join('|')!==config.keys.join('|')) throw Error('Invalid flight configuration');
-  const s={session:createSession({id,game:'asteroids',config}),sectors:structuredClone(sectors),difficulty,ship:{x:500,y:480,angle:-Math.PI/2},objects:[],cursor:0,captured:[],serial:0,elapsed:0,pulse:0,beam:0,message:'Press Start flight. Move, aim, then capture.',aimId:null,sectorReady:false,assistedNavigation:false};
+  const s={session:createSession({id,game:'asteroids',config}),sectors:structuredClone(sectors),difficulty,motionDifficulty:motorLevel(config,difficulty),ship:{x:500,y:480,angle:-Math.PI/2},objects:[],cursor:0,captured:[],serial:0,elapsed:0,pulse:0,beam:0,message:'Press Start flight. Move, aim, then capture.',aimId:null,sectorReady:false,assistedNavigation:false};
   resetSector(s);return s;
 }
 export function aimedObject(s) {
@@ -77,7 +79,7 @@ export function stepAsteroids(previous,action) {
     s.ship.x=clamp(s.ship.x+dx/length*245*dt,110,890);s.ship.y=clamp(s.ship.y+dy/length*245*dt,55,550);
     if(action.turn)s.aimId=null;
     s.ship.angle+=(action.turn||0)*2.2*dt;
-    for(const o of s.objects){o.x+=o.vx*dt;o.y+=o.vy*dt;if(!o.redirected&&(o.x<(s.sectors[s.session.checkpoint].phrases?290:180)||o.x>(s.sectors[s.session.checkpoint].phrases?710:820)))o.vx*=-1;}
+    for(const o of s.objects){o.x+=o.vx*dt;o.y+=o.vy*dt;if(!o.redirected&&(o.x<((s.sectors[s.session.checkpoint].phrases||s.sectors[s.session.checkpoint].visualGroups)?290:180)||o.x>((s.sectors[s.session.checkpoint].phrases||s.sectors[s.session.checkpoint].visualGroups)?710:820)))o.vx*=-1;}
     s.objects=s.objects.filter(o=>o.y<660&&o.y>-150&&o.x>-200&&o.x<1200);
     const target=s.objects.find(o=>o.id===s.aimId&&!o.redirected);
     if(target){s.ship.angle=Math.atan2(target.y-s.ship.y,target.x-s.ship.x);if(s.assistedNavigation){const distance=Math.hypot(target.x-s.ship.x,target.y-s.ship.y);if(distance>150){s.ship.x=clamp(s.ship.x+(target.x-s.ship.x)/distance*180*dt,110,890);s.ship.y=clamp(s.ship.y+(target.y-s.ship.y)/distance*180*dt,55,550);}}}

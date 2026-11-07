@@ -21,7 +21,7 @@ export function quiz(s,kind=s.quest.challenge){
   if(!next)return null;answer=next.targets[0];context=sector.words.slice(-1);prompt=`Connect ${sector.key} → ${next.key}: which opening comes next?`;
  }else if(kind==='correction'){
   const item=s.quest.corrections[0];if(!item)return null;answer=sector.targets[item.index];context=item.cue==='recognition'?sector.words.slice(-1):sector.targets[Math.max(0,item.index-1)].words;prompt=`Correction room · ${item.cue==='recognition'?'connection':'recognition'} cue. Find the same verified continuation (${sector.key}, piece ${item.index+1}).`;
- }else if(kind==='recognition'){answer=sector.targets[0];prompt='Recognition key · Which word or approved phrase did your crystal reveal?';}
+ }else if(kind==='recognition'){answer=sector.targets[0];prompt='Recognition key · Which verified source piece did your crystal reveal?';}
  else if(kind==='continuation'){answer=sector.targets[Math.min(1,sector.targets.length-1)];context=sector.targets.length>1?sector.targets[0].words:sector.words.slice(-1);prompt=sector.targets.length>1?'Continuation key · What follows this source piece?':'Continuation key · Which complete source unit contains this ending?';}
  else if(kind==='connection'){
   const previous=s.chambers[s.session.checkpoint-1];
@@ -57,7 +57,7 @@ export function interact(s){
 export function answerQuiz(s,index,reduce){
  const q=quiz(s),choice=q?.choices[index];if(!q||!Number.isInteger(index)||!choice)return false;
  const correct=identity(choice)===identity(q.answer);
- s.quest.evidence.push({kind:q.kind,key:s.chambers[s.session.checkpoint].key,expected:q.answer.words.map(w=>w.id),selected:choice.words.map(w=>w.id),correct,event:s.session.events});
+ s.quest.evidence.push({kind:q.kind,key:s.chambers[s.session.checkpoint].key,expected:q.answer.words.flatMap(w=>w.sourceWordIds||[w.id]),selected:choice.words.flatMap(w=>w.sourceWordIds||[w.id]),correct,event:s.session.events});
  if(!correct){reduce(s,'mistake',selectionEvidence(choice,q.answer));if(q.kind!=='correction'&&q.kind!=='boundary'){const target=s.chambers[s.session.checkpoint].targets.findIndex(t=>t.id===q.answer.id);queueCorrection(s,Math.max(0,target),q.kind,s.session.events);}s.message='That wording belongs elsewhere. One Arabic-memory strike. Try again, listen or return to exploration.';return false;}
  if(keyTypes.includes(q.kind))s.quest.keys.push(q.kind);
  if(q.kind==='correction')s.quest.corrections.shift();

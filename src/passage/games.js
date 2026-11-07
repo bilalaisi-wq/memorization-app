@@ -1,3 +1,5 @@
+import {fingerprints} from '../passage-context/model.js';
+import {mountPassageArcade} from '../puzzles/arcade/passage/host.js';
 import {compatibility} from '../passage-context/compatibility.js';
 import {createQuestHost,questArcadeRegistry} from '../quest/host.js';
 import {blocksRegistration} from '../quest/expedition/blocks.js';
@@ -11,7 +13,8 @@ import {PASSAGE_GAMES} from './practice-plan.js';
 import {readLabVolume} from '../puzzles/audio-level.js';
 // Reuses the authenticated source/revision checks, canonical word adapter,
 // media cleanup, motor/memory separation and capped arcade result recorder.
-export async function mountPassageGame(root,{bundle,window:workspace,game,ctx,storage,onComplete,isCurrent=()=>true}) {
+export async function mountPassageGame(root,{bundle,window:workspace,game,ctx,storage,onComplete,isCurrent=()=>true,contextAware=false,onDenied=()=>{}}) {
+  if(contextAware){const observed={getItem:k=>storage.getItem(k),setItem:(k,v)=>{storage.getItem(k);profileStorage.setItem(k,v);},removeItem:k=>{storage.getItem(k);profileStorage.removeItem(k);}};return mountPassageArcade(root,{refs:[bundle.key],game,client:ctx.client,storage:observed,autoStart:true,isCurrent,onComplete,onDenied,scope:{first:workspace.first,last:workspace.last},verifyBundle:async fresh=>{if(JSON.stringify(await fingerprints(fresh))!==JSON.stringify(await fingerprints(bundle)))throw Error('Source or review changed. Return to the passage selector; your drafts are preserved.');}});}
   const supported=compatibility({game,refs:[bundle.key],units:'words'});if(!supported.available)throw Error(supported.reason);
   if(!PASSAGE_GAMES.some(g=>g.id===game))throw Error('Choose an available Passage Builder game.');
   const owner=activeProfileId(),base=await createExpeditionMap({bundles:[bundle],game});

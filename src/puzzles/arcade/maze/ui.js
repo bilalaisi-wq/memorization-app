@@ -1,3 +1,4 @@
+import {annotateDifficulty,memoryLevel,motorLevel} from '../difficulty.js';
 import {profileStorage,activeProfileId} from '../../../learner/profile-storage.js';
 import {reportStudyExposure} from '../../../study-exposure.js';
 import {createMazeCheckpoints,MAZE_CHECKPOINT_KEY} from './checkpoints.js';
@@ -9,6 +10,7 @@ import {esc} from '../../../ui/dom.js';
 import {successCue} from '../../../ui/encouragement.js';
 export const mazeRegistration={id:'maze',title:'Memory Maze',create:mountMaze};
 export function mountMaze({root,adapter,config,library,id,difficulty='beginner',reviews={},muted=()=>false,volume=()=>1,initialAudio='listen',onComplete=()=>{},onJourney=()=>{},onRecall=()=>{},onPractice=()=>{},onExit=()=>{},getNextSteps=()=>({}),storage=profileStorage}){
+ config=annotateDifficulty(config,difficulty);difficulty=memoryLevel(config,difficulty);
  const owner=activeProfileId(),checkpoints=createMazeCheckpoints(storage);
  let chambers=buildMazeChambers(adapter,config,library,{difficulty,reviews});
  config={...config,mazeVersion:2,mazeScope:chambers.map(c=>c.words[0].id+'..'+c.words.at(-1).id).join('|')};
@@ -68,7 +70,7 @@ export function mountMaze({root,adapter,config,library,id,difficulty='beginner',
   if(p.top<b.top)board.scrollTop-=b.top-p.top+12;else if(p.bottom>b.bottom)board.scrollTop+=p.bottom-b.bottom+12;
   if(p.left<b.left)board.scrollLeft-=b.left-p.left+12;else if(p.right>b.right)board.scrollLeft+=p.right-b.right+12;
  }
- function save(){if(saveState==='saved')return true;try{onComplete({...state.session,mazeVersion:2,mazeEvidence:state.quest.evidence,transitionCoverage:state.quest.transitionCoverage,memoryKeys:[...state.quest.keys]});saveState='saved';saveError='';state.resultSaved=true;persist();}catch(e){saveState='failed';saveError=e.message;}paint();return saveState==='saved';}
+ function save(){if(saveState==='saved')return true;try{onComplete({...state.session,config:annotateDifficulty(state.session.config,difficulty),mazeVersion:2,mazeEvidence:state.quest.evidence,transitionCoverage:state.quest.transitionCoverage,memoryKeys:[...state.quest.keys]});saveState='saved';saveError='';state.resultSaved=true;persist();}catch(e){saveState='failed';saveError=e.message;}paint();return saveState==='saved';}
  function listen(){resumeNeedsAudio=false;if(audioMode==='echo'&&state.session.status==='playing')state=stepMaze(state,{type:'pause'});paint();const owner=state.session.id,cp=state.session.checkpoint;audio.play(chamber().audio,{loop:audioMode==='listen',muted:muted(),onError:()=>{if(!disposed){state.message='Audio unavailable. Tap Replay ayah to retry. No memory strike.';paint();}}}).then(ok=>{if(disposed||owner!==state.session.id||cp!==state.session.checkpoint)return;if(ok&&!muted()){if(state.session.status==='playing')state=stepMaze(state,{type:'assist',kind:'audio'});else pendingAudio=true;}if(!ok)state.message='Audio could not start. Tap Replay ayah to retry. No memory strike.';paint();});}
  async function choose(kind){if(navigating||!save())return;navigating=true;paint();try{if(kind==='recall')onRecall(guidance?.action==='recall'?guidance.target:chamber().key);else if(kind==='practice')onPractice(guidance?.action==='practice'?guidance.target:chamber().key);else await onJourney({kind,next:guidance?.next,config,audioMode,difficulty});}catch(e){if(!disposed)state.message=`Could not start your next journey: ${e.message} Your result is saved.`;}finally{if(!disposed){navigating=false;paint();}}}
  function send(action){

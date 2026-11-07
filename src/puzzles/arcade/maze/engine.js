@@ -1,3 +1,4 @@
+import {memoryLevel,motorLevel} from '../difficulty.js';
 import {freshQuest,decorateMaze,afterMove,interact,answerQuiz,keyTypes,quiz,queueCorrection} from './adventure.js';
 export {keyTypes,quiz,currentRoom} from './adventure.js';
 import {selectionEvidence} from '../evidence.js';
@@ -24,6 +25,7 @@ export function generateMaze(seed,difficulty='beginner'){
  return {width,height,cells,start,doors,station:{x:exitX,y:hall-1}};
 }
 export function buildMazeChambers(adapter,config,library,{difficulty='beginner',reviews={}}={}){
+ difficulty=memoryLevel(config,difficulty);
  if(!mazeProfiles[difficulty])throw Error('Unknown maze difficulty');
  return buildSectors(adapter,config,library,{difficulty,reviews}).map(s=>{
   if(s.distractors.length<mazeProfiles[difficulty].choices-1)throw Error('Insufficient verified maze choices');
@@ -46,7 +48,9 @@ function reveal(s){
 }
 function wing(s){
  const seed=(s.session.config.seed+s.session.checkpoint*1009+s.cursor*79)>>>0,sector=s.chambers[s.session.checkpoint];
- s.layout=generateMaze(seed,s.difficulty);s.player={...s.layout.start};s.seen=[];s.deadEnd=null;
+ s.layout=generateMaze(seed,s.motionDifficulty||s.difficulty);
+ // Three reachable door positions remain available at every motor level.
+ if(s.session.config.difficultySchema===1){const width=s.layout.width,hall=width;s.layout.doors=[1,Math.floor(width/2),width-2].map((x,index)=>{s.layout.cells[hall+1][x]=1;return {x,y:hall,index};});}s.player={...s.layout.start};s.seen=[];s.deadEnd=null;
  const target=sector.targets[s.cursor];
  const pool=seededShuffle(sector.distractors,seed);if(s.difficulty==='expert')pool.sort((a,b)=>similarity(b,target)-similarity(a,target));
  const distractors=pool.slice(0,mazeProfiles[s.difficulty].choices-1);
@@ -55,9 +59,10 @@ function wing(s){
  reveal(s);
 }
 export function createMaze({id,config,chambers,difficulty='beginner'}){
+ difficulty=memoryLevel(config,difficulty);
  if(!mazeProfiles[difficulty]||!chambers.length||chambers.map(s=>s.key).join('|')!==config.keys.join('|')||chambers.some(c=>!c.targets.length||c.targets.flatMap(t=>t.words).map(w=>w.id).join('|')!==c.words.map(w=>w.id).join('|')))throw Error('Invalid verified maze content');
  if(config.mazeVersion===2)for(let i=1;i<config.keys.length;i++){const [a,b]=config.keys[i-1].split(':').map(Number),[c,d]=config.keys[i].split(':').map(Number);if(a!==c||d!==b+1)throw Error('Enhanced Maze requires consecutive ayah references');}
- const s={session:createSession({id,game:'maze',config}),chambers:structuredClone(chambers),difficulty,cursor:0,captured:[],seen:[],player:null,layout:null,choices:[],deadEnd:null,portal:false,mapRevealed:false,score:0,steps:0,...(config.mazeVersion===2?{quest:freshQuest()}:{}),message:'Press Enter maze to begin. Explore, then open the next correct continuation.'};wing(s);return s;
+ const s={session:createSession({id,game:'maze',config}),chambers:structuredClone(chambers),difficulty,motionDifficulty:motorLevel(config,difficulty),cursor:0,captured:[],seen:[],player:null,layout:null,choices:[],deadEnd:null,portal:false,mapRevealed:false,score:0,steps:0,...(config.mazeVersion===2?{quest:freshQuest()}:{}),message:'Press Enter maze to begin. Explore, then open the next correct continuation.'};wing(s);return s;
 }
 const reduce=(s,type,extra={})=>s.session=reduceSession(s.session,{type,...extra});
 export function stepMaze(previous,action){
@@ -77,8 +82,8 @@ export function stepMaze(previous,action){
   if(action.type==='leave-room'){s.quest.challenge=null;return s;}
   if(action.type==='answer'){
    if(s.quest.challenge==='boundary'){const q=quiz(s),choice=q?.choices[action.index];if(!Number.isInteger(action.index)||!choice)return previous;
-    if(choice.id!==q.answer.id){reduce(s,'mistake',selectionEvidence(choice,q.answer));s.quest.evidence.push({kind:'boundary',key:s.chambers[s.session.checkpoint].key,expected:q.answer.words.map(w=>w.id),selected:choice.words.map(w=>w.id),correct:false,event:s.session.events});s.message='Not the next ayah opening. One memory strike; your completed chambers stay safe.';return s;}
-    s.quest.evidence.push({kind:'boundary',key:s.chambers[s.session.checkpoint].key,expected:q.answer.words.map(w=>w.id),selected:choice.words.map(w=>w.id),correct:true,event:s.session.events});
+    if(choice.id!==q.answer.id){reduce(s,'mistake',selectionEvidence(choice,q.answer));s.quest.evidence.push({kind:'boundary',key:s.chambers[s.session.checkpoint].key,expected:q.answer.words.flatMap(w=>w.sourceWordIds||[w.id]),selected:choice.words.flatMap(w=>w.sourceWordIds||[w.id]),correct:false,event:s.session.events});s.message='Not the next ayah opening. One memory strike; your completed chambers stay safe.';return s;}
+    s.quest.evidence.push({kind:'boundary',key:s.chambers[s.session.checkpoint].key,expected:q.answer.words.flatMap(w=>w.sourceWordIds||[w.id]),selected:choice.words.flatMap(w=>w.sourceWordIds||[w.id]),correct:true,event:s.session.events});
     const coverage=[...s.quest.transitionCoverage,`${s.chambers[s.session.checkpoint].key}>${s.chambers[s.session.checkpoint+1].key}`],evidence=[...s.quest.evidence];
     reduce(s,'checkpoint');s.score+=200;s.cursor=0;s.captured=[];s.portal=false;s.mapRevealed=false;s.quest=freshQuest();s.quest.transitionCoverage=coverage;s.quest.evidence=evidence;wing(s);s.message='The ayah connection opens a new chamber. Listen and explore.';return s;
    }

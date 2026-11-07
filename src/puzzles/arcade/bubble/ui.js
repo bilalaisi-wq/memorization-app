@@ -1,3 +1,4 @@
+import {annotateDifficulty,memoryLevel,motorLevel} from '../difficulty.js';
 import {reportStudyExposure} from "../../../study-exposure.js";
 import {createBubble,stepBubble,buildFormations,WORLD} from './engine.js';
 import {createAudioManager,motionSettings} from '../services.js';
@@ -6,6 +7,7 @@ import {successCue} from '../../../ui/encouragement.js';
 export const bubbleRegistration={id:'bubble',title:'Ayah Bubble Burst',create:mountBubble};
 const text=p=>p.words.map(w=>w.text).join(' ');
 export function mountBubble({root,adapter,config,library,id,difficulty='beginner',reviews={},muted=()=>false,volume=()=>1,onComplete=()=>{},onExit=()=>{},onRecall=()=>{},initialAudio='listen'}) {
+ config=annotateDifficulty(config,difficulty);difficulty=memoryLevel(config,difficulty);
  reportStudyExposure([config.keys[0]]);
  let state=createBubble({id,config,difficulty,sectors:buildFormations(adapter,config,library,{difficulty,reviews})}),disposed=false,frame=0,last=0,saved=false,saveError='',audioMode=initialAudio,pendingAudio=false,mediaToken=0,paintedEffect=0,formationSignature='';
  const audio=createAudioManager({owner:'bubble',initialVolume:volume()}),motion=motionSettings();
@@ -41,7 +43,7 @@ export function mountBubble({root,adapter,config,library,id,difficulty='beginner
   else if(s.status==='lost')panel.innerHTML='<h4>A fresh connection awaits</h4><p>Three memory charges used. Your learning progress is safe.</p><button class="primary" data-bubble-action="retry">Retry checkpoint</button><button data-bubble-action="exit">Return to study</button>';
   else if(s.status==='won')panel.innerHTML=`<h4>Beautiful connections! ✦</h4><p class="bubble-save" role="status">${saved?'Result saved.':`Not saved yet: ${esc(saveError)}`}</p><p>Repeat this ayah, then try independent recall or choose the next ayah in the journey settings.</p>${!saved?'<button data-bubble-action="save">Retry saving</button>':''}<button class="primary" data-bubble-action="replay">Play again</button><button data-bubble-action="recall">Try independent recall</button><button data-bubble-action="exit">Choose another ayah / study</button>`;
  }
- function save(){if(saved)return true;try{onComplete({...state.session,arcadeStats:{score:state.score,shots:state.shots,bounces:state.bounces}});saved=true;saveError='';}catch(e){saveError=e.message;}return saved;}
+ function save(){if(saved)return true;try{onComplete({...state.session,config:annotateDifficulty(state.session.config,difficulty),arcadeStats:{score:state.score,shots:state.shots,bounces:state.bounces}});saved=true;saveError='';}catch(e){saveError=e.message;}return saved;}
  let audioWait=null;
  function stopAudio(){mediaToken++;audioWait?.();audioWait=null;audio.stop();}
  async function listen(piece){

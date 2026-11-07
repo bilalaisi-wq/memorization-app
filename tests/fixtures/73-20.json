@@ -1,0 +1,672 @@
+{
+  "schemaVersion": 1,
+  "key": "73:20",
+  "surah": 73,
+  "ayah": 20,
+  "juz": 29,
+  "textUthmani": "۞ إِنَّ رَبَّكَ يَعْلَمُ أَنَّكَ تَقُومُ أَدْنَىٰ مِن ثُلُثَىِ ٱلَّيْلِ وَنِصْفَهُۥ وَثُلُثَهُۥ وَطَآئِفَةٌ مِّنَ ٱلَّذِينَ مَعَكَ ۚ وَٱللَّهُ يُقَدِّرُ ٱلَّيْلَ وَٱلنَّهَارَ ۚ عَلِمَ أَن لَّن تُحْصُوهُ فَتَابَ عَلَيْكُمْ ۖ فَٱقْرَءُوا۟ مَا تَيَسَّرَ مِنَ ٱلْقُرْءَانِ ۚ عَلِمَ أَن سَيَكُونُ مِنكُم مَّرْضَىٰ ۙ وَءَاخَرُونَ يَضْرِبُونَ فِى ٱلْأَرْضِ يَبْتَغُونَ مِن فَضْلِ ٱللَّهِ ۙ وَءَاخَرُونَ يُقَـٰتِلُونَ فِى سَبِيلِ ٱللَّهِ ۖ فَٱقْرَءُوا۟ مَا تَيَسَّرَ مِنْهُ ۚ وَأَقِيمُوا۟ ٱلصَّلَوٰةَ وَءَاتُوا۟ ٱلزَّكَوٰةَ وَأَقْرِضُوا۟ ٱللَّهَ قَرْضًا حَسَنًا ۚ وَمَا تُقَدِّمُوا۟ لِأَنفُسِكُم مِّنْ خَيْرٍ تَجِدُوهُ عِندَ ٱللَّهِ هُوَ خَيْرًا وَأَعْظَمَ أَجْرًا ۚ وَٱسْتَغْفِرُوا۟ ٱللَّهَ ۖ إِنَّ ٱللَّهَ غَفُورٌ رَّحِيمٌۢ",
+  "translation": "Indeed, your Lord knows, [O Muḥammad], that you stand [in prayer] almost two thirds of the night or half of it or a third of it, and [so do] a group of those with you. And Allāh determines [the extent of] the night and the day. He has known that you [Muslims] will not be able to do it and has turned to you in forgiveness, so recite what is easy [for you] of the Qur’ān. He has known that there will be among you those who are ill and others traveling throughout the land seeking [something] of the bounty of Allāh and others fighting for the cause of Allāh. So recite what is easy from it and establish prayer and give zakāh and loan Allāh a goodly loan. And whatever good you put forward for yourselves - you will find it with Allāh. It is better and greater in reward. And seek forgiveness of Allāh. Indeed, Allāh is Forgiving and Merciful.",
+  "translationSource": {
+    "resourceId": 20,
+    "name": "Saheeh International",
+    "text": "Indeed, your Lord knows, [O Muḥammad], that you stand [in prayer] almost two thirds of the night or half of it or a third of it, and [so do] a group of those with you. And Allāh determines [the extent of] the night and the day. He has known that you [Muslims] will not be able to do it<sup foot_note=197643>1</sup> and has turned to you in forgiveness, so recite what is easy [for you] of the Qur’ān. He has known that there will be among you those who are ill and others traveling throughout the land seeking [something] of the bounty of Allāh and others fighting for the cause of Allāh. So recite what is easy from it and establish prayer and give zakāh and loan Allāh a goodly loan.<sup foot_note=197642>2</sup> And whatever good you put forward for yourselves - you will find it with Allāh. It is better and greater in reward. And seek forgiveness of Allāh. Indeed, Allāh is Forgiving and Merciful."
+  },
+  "sources": [
+    {
+      "url": "https://api.quran.com/api/v4/verses/by_key/73:20?words=true&word_fields=text_uthmani,audio_url&translations=20",
+      "sha256": "632d6ed310aba376e23382499b035f0c0a172433d25a5a824bee3f50dcda855f"
+    },
+    {
+      "url": "https://api.quran.com/api/v4/quran/verses/uthmani?verse_key=73:20",
+      "sha256": "d9e66d9e57173fa54d15b548a626b60afb80cabc28eaa8f61ad2dd7fa208fff7"
+    }
+  ],
+  "words": [
+    {
+      "position": 1,
+      "text": "۞ إِنَّ",
+      "translation": "Indeed",
+      "transliteration": "inna",
+      "audioSource": "wbw/073_020_002.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 2,
+      "text": "رَبَّكَ",
+      "translation": "your Lord",
+      "transliteration": "rabbaka",
+      "audioSource": "wbw/073_020_003.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 3,
+      "text": "يَعْلَمُ",
+      "translation": "knows",
+      "transliteration": "yaʿlamu",
+      "audioSource": "wbw/073_020_004.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 4,
+      "text": "أَنَّكَ",
+      "translation": "that you",
+      "transliteration": "annaka",
+      "audioSource": "wbw/073_020_005.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 5,
+      "text": "تَقُومُ",
+      "translation": "stand",
+      "transliteration": "taqūmu",
+      "audioSource": "wbw/073_020_006.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 6,
+      "text": "أَدْنَىٰ",
+      "translation": "(a little) less",
+      "transliteration": "adnā",
+      "audioSource": "wbw/073_020_007.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 7,
+      "text": "مِن",
+      "translation": "than",
+      "transliteration": "min",
+      "audioSource": "wbw/073_020_008.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 8,
+      "text": "ثُلُثَىِ",
+      "translation": "two-thirds",
+      "transliteration": "thuluthayi",
+      "audioSource": "wbw/073_020_009.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 9,
+      "text": "ٱلَّيْلِ",
+      "translation": "(of) the night",
+      "transliteration": "al-layli",
+      "audioSource": "wbw/073_020_010.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 10,
+      "text": "وَنِصْفَهُۥ",
+      "translation": "and half of it",
+      "transliteration": "waniṣ'fahu",
+      "audioSource": "wbw/073_020_011.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 11,
+      "text": "وَثُلُثَهُۥ",
+      "translation": "and a third of it",
+      "transliteration": "wathuluthahu",
+      "audioSource": "wbw/073_020_012.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 12,
+      "text": "وَطَآئِفَةٌ",
+      "translation": "and (so do) a group",
+      "transliteration": "waṭāifatun",
+      "audioSource": "wbw/073_020_013.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 13,
+      "text": "مِّنَ",
+      "translation": "of",
+      "transliteration": "mina",
+      "audioSource": "wbw/073_020_014.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 14,
+      "text": "ٱلَّذِينَ",
+      "translation": "those who",
+      "transliteration": "alladhīna",
+      "audioSource": "wbw/073_020_015.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 15,
+      "text": "مَعَكَ ۚ",
+      "translation": "(are) with you",
+      "transliteration": "maʿaka",
+      "audioSource": "wbw/073_020_016.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 16,
+      "text": "وَٱللَّهُ",
+      "translation": "And Allah",
+      "transliteration": "wal-lahu",
+      "audioSource": "wbw/073_020_018.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 17,
+      "text": "يُقَدِّرُ",
+      "translation": "determines",
+      "transliteration": "yuqaddiru",
+      "audioSource": "wbw/073_020_019.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 18,
+      "text": "ٱلَّيْلَ",
+      "translation": "the night",
+      "transliteration": "al-layla",
+      "audioSource": "wbw/073_020_020.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 19,
+      "text": "وَٱلنَّهَارَ ۚ",
+      "translation": "and the day",
+      "transliteration": "wal-nahāra",
+      "audioSource": "wbw/073_020_021.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 20,
+      "text": "عَلِمَ",
+      "translation": "He knows",
+      "transliteration": "ʿalima",
+      "audioSource": "wbw/073_020_023.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 21,
+      "text": "أَن",
+      "translation": "that",
+      "transliteration": "an",
+      "audioSource": "wbw/073_020_024.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 22,
+      "text": "لَّن",
+      "translation": "not",
+      "transliteration": "lan",
+      "audioSource": "wbw/073_020_025.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 23,
+      "text": "تُحْصُوهُ",
+      "translation": "you count it",
+      "transliteration": "tuḥ'ṣūhu",
+      "audioSource": "wbw/073_020_026.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 24,
+      "text": "فَتَابَ",
+      "translation": "so He has turned",
+      "transliteration": "fatāba",
+      "audioSource": "wbw/073_020_027.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 25,
+      "text": "عَلَيْكُمْ ۖ",
+      "translation": "to you",
+      "transliteration": "ʿalaykum",
+      "audioSource": "wbw/073_020_028.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 26,
+      "text": "فَٱقْرَءُوا۟",
+      "translation": "so recite",
+      "transliteration": "fa-iq'raū",
+      "audioSource": "wbw/073_020_030.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 27,
+      "text": "مَا",
+      "translation": "what",
+      "transliteration": "mā",
+      "audioSource": "wbw/073_020_031.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 28,
+      "text": "تَيَسَّرَ",
+      "translation": "is easy",
+      "transliteration": "tayassara",
+      "audioSource": "wbw/073_020_032.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 29,
+      "text": "مِنَ",
+      "translation": "of",
+      "transliteration": "mina",
+      "audioSource": "wbw/073_020_033.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 30,
+      "text": "ٱلْقُرْءَانِ ۚ",
+      "translation": "the Quran",
+      "transliteration": "l-qur'āni",
+      "audioSource": "wbw/073_020_034.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 31,
+      "text": "عَلِمَ",
+      "translation": "He knows",
+      "transliteration": "ʿalima",
+      "audioSource": "wbw/073_020_036.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 32,
+      "text": "أَن",
+      "translation": "that",
+      "transliteration": "an",
+      "audioSource": "wbw/073_020_037.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 33,
+      "text": "سَيَكُونُ",
+      "translation": "there will be",
+      "transliteration": "sayakūnu",
+      "audioSource": "wbw/073_020_038.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 34,
+      "text": "مِنكُم",
+      "translation": "among you",
+      "transliteration": "minkum",
+      "audioSource": "wbw/073_020_039.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 35,
+      "text": "مَّرْضَىٰ ۙ",
+      "translation": "sick",
+      "transliteration": "marḍā",
+      "audioSource": "wbw/073_020_040.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 36,
+      "text": "وَءَاخَرُونَ",
+      "translation": "and others",
+      "transliteration": "waākharūna",
+      "audioSource": "wbw/073_020_042.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 37,
+      "text": "يَضْرِبُونَ",
+      "translation": "traveling",
+      "transliteration": "yaḍribūna",
+      "audioSource": "wbw/073_020_043.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 38,
+      "text": "فِى",
+      "translation": "in",
+      "transliteration": "fī",
+      "audioSource": "wbw/073_020_044.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 39,
+      "text": "ٱلْأَرْضِ",
+      "translation": "the land",
+      "transliteration": "l-arḍi",
+      "audioSource": "wbw/073_020_045.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 40,
+      "text": "يَبْتَغُونَ",
+      "translation": "seeking",
+      "transliteration": "yabtaghūna",
+      "audioSource": "wbw/073_020_046.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 41,
+      "text": "مِن",
+      "translation": "of",
+      "transliteration": "min",
+      "audioSource": "wbw/073_020_047.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 42,
+      "text": "فَضْلِ",
+      "translation": "(the) Bounty",
+      "transliteration": "faḍli",
+      "audioSource": "wbw/073_020_048.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 43,
+      "text": "ٱللَّهِ ۙ",
+      "translation": "(of) Allah",
+      "transliteration": "l-lahi",
+      "audioSource": "wbw/073_020_049.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 44,
+      "text": "وَءَاخَرُونَ",
+      "translation": "and others",
+      "transliteration": "waākharūna",
+      "audioSource": "wbw/073_020_051.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 45,
+      "text": "يُقَـٰتِلُونَ",
+      "translation": "fighting",
+      "transliteration": "yuqātilūna",
+      "audioSource": "wbw/073_020_052.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 46,
+      "text": "فِى",
+      "translation": "in",
+      "transliteration": "fī",
+      "audioSource": "wbw/073_020_053.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 47,
+      "text": "سَبِيلِ",
+      "translation": "(the) way",
+      "transliteration": "sabīli",
+      "audioSource": "wbw/073_020_054.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 48,
+      "text": "ٱللَّهِ ۖ",
+      "translation": "(of) Allah",
+      "transliteration": "l-lahi",
+      "audioSource": "wbw/073_020_055.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 49,
+      "text": "فَٱقْرَءُوا۟",
+      "translation": "So recite",
+      "transliteration": "fa-iq'raū",
+      "audioSource": "wbw/073_020_057.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 50,
+      "text": "مَا",
+      "translation": "what",
+      "transliteration": "mā",
+      "audioSource": "wbw/073_020_058.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 51,
+      "text": "تَيَسَّرَ",
+      "translation": "is easy",
+      "transliteration": "tayassara",
+      "audioSource": "wbw/073_020_059.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 52,
+      "text": "مِنْهُ ۚ",
+      "translation": "of it",
+      "transliteration": "min'hu",
+      "audioSource": "wbw/073_020_060.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 53,
+      "text": "وَأَقِيمُوا۟",
+      "translation": "and establish",
+      "transliteration": "wa-aqīmū",
+      "audioSource": "wbw/073_020_062.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 54,
+      "text": "ٱلصَّلَوٰةَ",
+      "translation": "the prayer",
+      "transliteration": "l-ṣalata",
+      "audioSource": "wbw/073_020_063.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 55,
+      "text": "وَءَاتُوا۟",
+      "translation": "and give",
+      "transliteration": "waātū",
+      "audioSource": "wbw/073_020_064.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 56,
+      "text": "ٱلزَّكَوٰةَ",
+      "translation": "the zakah",
+      "transliteration": "l-zakata",
+      "audioSource": "wbw/073_020_065.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 57,
+      "text": "وَأَقْرِضُوا۟",
+      "translation": "and loan",
+      "transliteration": "wa-aqriḍū",
+      "audioSource": "wbw/073_020_066.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 58,
+      "text": "ٱللَّهَ",
+      "translation": "Allah",
+      "transliteration": "l-laha",
+      "audioSource": "wbw/073_020_067.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 59,
+      "text": "قَرْضًا",
+      "translation": "a loan",
+      "transliteration": "qarḍan",
+      "audioSource": "wbw/073_020_068.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 60,
+      "text": "حَسَنًا ۚ",
+      "translation": "goodly",
+      "transliteration": "ḥasanan",
+      "audioSource": "wbw/073_020_069.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 61,
+      "text": "وَمَا",
+      "translation": "And whatever",
+      "transliteration": "wamā",
+      "audioSource": "wbw/073_020_071.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 62,
+      "text": "تُقَدِّمُوا۟",
+      "translation": "you send forth",
+      "transliteration": "tuqaddimū",
+      "audioSource": "wbw/073_020_072.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 63,
+      "text": "لِأَنفُسِكُم",
+      "translation": "for yourselves",
+      "transliteration": "li-anfusikum",
+      "audioSource": "wbw/073_020_073.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 64,
+      "text": "مِّنْ",
+      "translation": "of",
+      "transliteration": "min",
+      "audioSource": "wbw/073_020_074.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 65,
+      "text": "خَيْرٍ",
+      "translation": "good",
+      "transliteration": "khayrin",
+      "audioSource": "wbw/073_020_075.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 66,
+      "text": "تَجِدُوهُ",
+      "translation": "you will find it",
+      "transliteration": "tajidūhu",
+      "audioSource": "wbw/073_020_076.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 67,
+      "text": "عِندَ",
+      "translation": "with",
+      "transliteration": "ʿinda",
+      "audioSource": "wbw/073_020_077.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 68,
+      "text": "ٱللَّهِ",
+      "translation": "Allah",
+      "transliteration": "l-lahi",
+      "audioSource": "wbw/073_020_078.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 69,
+      "text": "هُوَ",
+      "translation": "It",
+      "transliteration": "huwa",
+      "audioSource": "wbw/073_020_079.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 70,
+      "text": "خَيْرًا",
+      "translation": "(will be) better",
+      "transliteration": "khayran",
+      "audioSource": "wbw/073_020_080.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 71,
+      "text": "وَأَعْظَمَ",
+      "translation": "and greater",
+      "transliteration": "wa-aʿẓama",
+      "audioSource": "wbw/073_020_081.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 72,
+      "text": "أَجْرًا ۚ",
+      "translation": "(in) reward",
+      "transliteration": "ajran",
+      "audioSource": "wbw/073_020_082.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 73,
+      "text": "وَٱسْتَغْفِرُوا۟",
+      "translation": "And seek forgiveness",
+      "transliteration": "wa-is'taghfirū",
+      "audioSource": "wbw/073_020_084.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 74,
+      "text": "ٱللَّهَ ۖ",
+      "translation": "(of) Allah",
+      "transliteration": "l-laha",
+      "audioSource": "wbw/073_020_085.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 75,
+      "text": "إِنَّ",
+      "translation": "Indeed",
+      "transliteration": "inna",
+      "audioSource": "wbw/073_020_087.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 76,
+      "text": "ٱللَّهَ",
+      "translation": "Allah",
+      "transliteration": "l-laha",
+      "audioSource": "wbw/073_020_088.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 77,
+      "text": "غَفُورٌ",
+      "translation": "(is) Oft-Forgiving",
+      "transliteration": "ghafūrun",
+      "audioSource": "wbw/073_020_089.mp3",
+      "audioVerified": false
+    },
+    {
+      "position": 78,
+      "text": "رَّحِيمٌۢ",
+      "translation": "Most Merciful",
+      "transliteration": "raḥīmun",
+      "audioSource": "wbw/073_020_090.mp3",
+      "audioVerified": false
+    }
+  ],
+  "segments": [
+    {
+      "id": "full",
+      "firstWord": 1,
+      "lastWord": 78,
+      "reference": "73:20",
+      "kind": "whole-ayah",
+      "review": {
+        "status": "source-validated",
+        "basis": "Complete ayah boundary; no internal recitation stop asserted."
+      }
+    }
+  ],
+  "audioAssets": [
+    {
+      "file": "73/20/full.mp3",
+      "source": "https://verses.quran.com/Alafasy/mp3/073020.mp3",
+      "sha256": "aa14e9460166b1d8a6f72868a68d6d8d5999fc72afa1742a3ca4a79d4fa0db9e",
+      "bytes": 1435398,
+      "durationMs": 89678
+    }
+  ]
+}

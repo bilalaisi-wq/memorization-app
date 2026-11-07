@@ -452,6 +452,7 @@ function markStudyBeforeRecall(target) {
 }
 let galleryFocus = null;
 const memoryCallbacks = {
+  onPassageArcade:target=>openSharedPassage([target],"puzzle"),
   onLongStudy(target){if(!isDeveloperMode())return;const a=appearanceAccount();import('./passage/ui.js').then(m=>m.openPassageStudio({client:a.client,user:a.userId?{id:a.userId}:null,learning,initialReference:target}));},
   async getArcadeBundle(key) {const {loadBundle}=await import("./content/library.js");return loadBundle(key,appearanceAccount().client);},
   async onPassage(passage) {

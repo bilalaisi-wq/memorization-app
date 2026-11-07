@@ -1,3 +1,4 @@
+import {validateDifficulties,annotateDifficulty} from './difficulty.js';
 import {arcadeIds} from './registry.js';
 // Both stores are idempotent. A failed second write can be safely retried.
 export function createResultRecorder({learning,lab,accountId,getAccountId}) {
@@ -17,7 +18,8 @@ export function createResultRecorder({learning,lab,accountId,getAccountId}) {
       const sessionId=`arcade:${snapshot.id}:${key}`;
       const reward=learning.recordLabPuzzle({key,sessionId,game:snapshot.game,mistakes,hinted:assistance.length>0});
       lab.record({key,sessionId,game:snapshot.game,mistakes,hinted:assistance.length>0,xp:reward.xp,
-        arcade:{schemaVersion:3,success:true,mode:snapshot.config.mode,chainMode:snapshot.config.chainMode,seed:snapshot.config.seed,
+        arcade:{schemaVersion:3,success:true,...validateDifficulties(annotateDifficulty(snapshot.config)),
+          ...(snapshot.config.contentUnits?{contentUnits:structuredClone(snapshot.config.contentUnits),contextStageId:snapshot.config.contextStageId,...(snapshot.config.stageSettings?{stageSettings:structuredClone(snapshot.config.stageSettings)}:{})}:{}),mode:snapshot.config.mode,chainMode:snapshot.config.chainMode,seed:snapshot.config.seed,
           mistakes:snapshot.mistakes.filter(e=>e.key===key),motorErrors:snapshot.motorErrors.filter(e=>e.key===key),assistance,
           completedCheckpoints:[...snapshot.completed],
           ...(Number.isInteger(snapshot.studyScope?.firstWord)&&Number.isInteger(snapshot.studyScope?.lastWord)&&snapshot.studyScope.firstWord>=1&&snapshot.studyScope.lastWord>=snapshot.studyScope.firstWord?{studyScope:{kind:'visual-study',reference:key,firstWord:snapshot.studyScope.firstWord,lastWord:snapshot.studyScope.lastWord}}:{}),

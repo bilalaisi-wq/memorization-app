@@ -109,6 +109,7 @@ export function mountFalling(
     if (config.audio === "echo")
       play(questOptions?.audioSource ?? verseAudio(selected[floor].id, surah.id), { before: true });
   }
+  let usedInitialStrikes=false;
   function newFloor(strikes = 0) {
     if(floor>0&&config.audio==="silent")config.audio="listen";
     stopAudio();
@@ -119,8 +120,10 @@ export function mountFalling(
       words: v.words,
       entries,
       order: questOptions?.order || shuffled(entries.length),
+      motorSafe:questOptions?.motorSafe===true,
     });
-    state.strikes = strikes;
+    state.strikes = !usedInitialStrikes ? (questOptions?.initialStrikes??strikes) : strikes;
+    usedInitialStrikes=true;
     lastTick = Date.now();
     paint();
     if (started) startAudio();
@@ -159,6 +162,7 @@ export function mountFalling(
       paintMotion();
       return;
     }
+    if(state.event==='motor-recovery')say('Missed landing. Your piece returns with no memory strike. Move or drop deliberately to build.');
     if (state.event === "mistake") {
       const e = state.errors.at(-1);
       runErrors.push({
@@ -214,6 +218,8 @@ export function mountFalling(
       schemaVersion: 2,
       success,
       usedAudio,
+      ...(questOptions?{strikes:state?.strikes||0}:{}),
+      ...(questOptions?.motorSafe?{motorErrors:state?.motorErrors||0}:{}),
       newErrors: runErrors.length - recordedErrors,
       mode: config.mode,
       rules: config.rules,
@@ -503,7 +509,7 @@ export function mountFalling(
       send({ type: "tick" });
     }
   }, 100);
-  if(questOptions){config={...config,first:verse.id,last:verse.id,rules:'practice',audio:'listen'};form.hidden=true;}
+  if(questOptions){config={...config,first:verse.id,last:verse.id,rules:questOptions.chainMode||'practice',speed:questOptions.speed||'slow',audio:'listen'};form.hidden=true;}
   newFloor();
   document.addEventListener("keydown", key);
   return {

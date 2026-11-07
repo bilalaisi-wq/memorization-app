@@ -1,3 +1,4 @@
+import {memoryLevel,motorLevel} from '../difficulty.js';
 import {freshAdventure,decoratePlatforms,awardEcho,beginFinal,finalUnits} from './adventure.js';
 export {routes,finalUnits} from './adventure.js';
 import {createSession,reduceSession} from '../session.js';
@@ -21,10 +22,11 @@ export function generatePlatforms(seed,difficulty='beginner',offset=0){
 }
 const reduce=(s,type,extra={})=>s.session=reduceSession(s.session,{type,...extra});
 export const platformAt=(p,time)=>({...p,x:p.x+(p.moving&&!p.elevator?Math.sin(time*1.2+p.phase)*p.amplitude:0),y:p.y-(p.elevator&&p.started!==null&&p.started!==undefined?Math.min(60,Math.max(0,time-p.started)*50):0)});
-function layout(s){if(s.quest){s.quest.finalActive=false;s.quest.finalCursor=0;s.quest.finalChoices=[];}s.camera=s.cursor*1800;s.gateFeedback=null;s.platforms=generatePlatforms(s.session.config.seed+s.cursor,s.difficulty,s.cursor*SIRAT.sectionWidth);s.player={x:s.cursor*SIRAT.sectionWidth+70,y:440-SIRAT.playerHeight,vx:0,vy:0,grounded:true,support:'start'};s.checkpoint={x:s.player.x,y:s.player.y};if(s.quest)decoratePlatforms(s);s.resolved=false;s.direction=0;s.jumpQueued=false;s.choices=seededShuffle([s.sectors[s.session.checkpoint].targets[s.cursor],...s.sectors[s.session.checkpoint].distractors.slice(0,siratProfiles[s.difficulty].choices-1)],s.session.config.seed+s.cursor);}
+function layout(s){if(s.quest){s.quest.finalActive=false;s.quest.finalCursor=0;s.quest.finalChoices=[];}s.camera=s.cursor*1800;s.gateFeedback=null;s.platforms=generatePlatforms(s.session.config.seed+s.cursor,s.motionDifficulty||s.difficulty,s.cursor*SIRAT.sectionWidth);s.player={x:s.cursor*SIRAT.sectionWidth+70,y:440-SIRAT.playerHeight,vx:0,vy:0,grounded:true,support:'start'};s.checkpoint={x:s.player.x,y:s.player.y};if(s.quest)decoratePlatforms(s);s.resolved=false;s.direction=0;s.jumpQueued=false;s.choices=seededShuffle([s.sectors[s.session.checkpoint].targets[s.cursor],...s.sectors[s.session.checkpoint].distractors.slice(0,siratProfiles[s.difficulty].choices-1)],s.session.config.seed+s.cursor);}
 export function createSirat({id,config,sectors,difficulty='beginner',echoCredits=0}){
+ difficulty=memoryLevel(config,difficulty);
  if(!siratProfiles[difficulty]||sectors.map(s=>s.key).join('|')!==config.keys.join('|')||!sectors.length||sectors.some(s=>!s.targets.length||s.distractors.length<siratProfiles[difficulty].choices-1))throw Error('Invalid verified gateway content');
- const s={session:createSession({id,game:'sirat',config}),sectors:structuredClone(sectors),difficulty,cursor:0,captured:[],player:null,platforms:[],choices:[],checkpoint:null,direction:0,jumpQueued:false,resolved:false,awaitingNext:false,time:0,camera:0,recoveries:0,score:0,gateFeedback:null,...(config.siratVersion===2?{quest:freshAdventure(echoCredits)}:{}),message:'Explore a fictional hilltop garden. Reach the gateway and choose the next continuation.'};layout(s);return s;
+ const s={session:createSession({id,game:'sirat',config}),sectors:structuredClone(sectors),difficulty,motionDifficulty:motorLevel(config,difficulty),cursor:0,captured:[],player:null,platforms:[],choices:[],checkpoint:null,direction:0,jumpQueued:false,resolved:false,awaitingNext:false,time:0,camera:0,recoveries:0,score:0,gateFeedback:null,...(config.siratVersion===2?{quest:freshAdventure(echoCredits)}:{}),message:'Explore a fictional hilltop garden. Reach the gateway and choose the next continuation.'};layout(s);return s;
 }
 export const nearGateway=s=>!s.awaitingNext&&s.player.x>=s.cursor*SIRAT.sectionWidth+1190&&s.player.grounded;
 // Gateway centers match the fictional arches in the renderer; Space commits
@@ -56,7 +58,7 @@ export function stepSirat(previous,action){
    const units=finalUnits(s),selected=units.find(u=>u.id===s.quest.finalChoices[action.index]),expected=units[s.quest.finalCursor];
    if(!selected||!expected||units.slice(0,s.quest.finalCursor).some(u=>u.id===selected.id))return previous;
    const correct=selected.id===expected.id;
-   s.quest.finalEvidence.push({key:s.sectors[s.session.checkpoint].key,expected:expected.words.map(w=>w.id),selected:selected.words.map(w=>w.id),correct,event:s.session.events});
+   s.quest.finalEvidence.push({key:s.sectors[s.session.checkpoint].key,expected:expected.words.flatMap(w=>w.sourceWordIds||[w.id]),selected:selected.words.flatMap(w=>w.sourceWordIds||[w.id]),correct,event:s.session.events});
    if(!correct){reduce(s,'mistake',selectionEvidence(selected,expected));s.message='Not this continuation. One memory charge; earlier connections stay intact.';return s;}
    s.quest.finalCursor++;if(s.quest.finalCursor===units.length){s.quest.finalActive=false;reduce(s,'checkpoint');s.direction=0;if(s.session.status==='won')s.message='Gardens connected through recognition. Independent recitation assessment is optional and separate.';else{s.awaitingNext=true;s.message='Ayah garden complete. Continue to the next garden.';}}return s;
   }

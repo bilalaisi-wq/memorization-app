@@ -1,7 +1,7 @@
 // Pure reducer. Games map their own mechanics into these learning events.
 export function createSession({id,game,config}) {
   if (!id || !game || !config?.keys?.length || !['classic','practice'].includes(config.chainMode)) throw Error('Invalid session');
-  return {id,game,config:structuredClone(config),status:'ready',checkpoint:0,completed:[],strikes:0,mistakes:[],motorErrors:[],assistance:[],events:0};
+  return {id,game,config:structuredClone(config),status:'ready',checkpoint:0,completed:[],strikes:config.contextVersion===1&&Number.isInteger(config.initialStrikes)?Math.min(2,Math.max(0,config.initialStrikes)):0,mistakes:[],motorErrors:[],assistance:config.difficultySchema===1&&config.memoryDifficulty==='guided'?[{key:config.keys[0],kind:'hint',event:0}]:[],events:0};
 }
 export function reduceSession(previous, action) {
   if (previous.status==='disposed') return previous;
@@ -28,7 +28,7 @@ export function reduceSession(previous, action) {
     else if(action.type==='checkpoint') {
       s.completed.push(key);
       if(s.checkpoint===s.config.keys.length-1) s.status='won';
-      else { s.checkpoint++; if(s.config.chainMode==='practice') s.strikes=0; }
+      else { s.checkpoint++; if(s.config.chainMode==='practice') s.strikes=0;if(s.config.difficultySchema===1&&s.config.memoryDifficulty==='guided')s.assistance.push({key:s.config.keys[s.checkpoint],kind:'hint',event:s.events}); }
     } else return previous;
   } else return previous;
   s.events++;return s;

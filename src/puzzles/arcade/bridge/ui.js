@@ -1,3 +1,4 @@
+import {annotateDifficulty,memoryLevel,motorLevel} from '../difficulty.js';
 import {mountBridgeTutorial} from './tutorial.js';
 import {createBridge,stepBridge,buildCrossings,bridgeTransition} from './engine.js';
 import {createBridgeCheckpoints,restoreBridge,BRIDGE_CHECKPOINT_KEY} from './checkpoints.js';
@@ -10,6 +11,7 @@ import {reportStudyExposure} from '../../../study-exposure.js';
 export const bridgeRegistration={id:'bridge',title:'Bridge Builder · Ayah Link',create:mountBridge};
 const phrase=ws=>ws.map(w=>w.text).join(' ');
 export function mountBridge({root,adapter,config,library,id,difficulty='beginner',muted=()=>false,volume=()=>1,initialAudio='listen',storage=profileStorage,onComplete=()=>{},onExit=()=>{},onRecall=()=>{},onSetup=()=>{}}){
+ config=annotateDifficulty(config,difficulty);difficulty=memoryLevel(config,difficulty);
  const owner=activeProfileId(),checkpoints=createBridgeCheckpoints(storage),old=checkpoints.read(config,difficulty);
  let state,warning=checkpoints.warning,blocked=!!warning;
  const compatible=old?.config&&Array.isArray(old.config.keys)&&old.config.keys.join('|')===config.keys.join('|')&&old.config.chainMode===config.chainMode&&old.difficulty===difficulty&&Number.isInteger(old.config.seed);
@@ -25,11 +27,11 @@ export function mountBridge({root,adapter,config,library,id,difficulty='beginner
  const view=root.querySelector('.bridge-builder'),stage=root.querySelector('.bridge-stage'),panel=root.querySelector('[data-bridge-panel]'),yard=root.querySelector('.bridge-yard'),overlay=root.querySelector('.bridge-overlay'),select=root.querySelector('[data-bridge-audio]');select.value=audioMode;
  const transition=()=>bridgeTransition(state);
  function persist(){if(blocked||activeProfileId()!==owner)return;try{checkpoints.save(state);warning='';}catch(e){warning=e.message;}}
- function save(){if(saved)return true;try{onComplete({...state.session,bridgeVersion:2,transitions:state.sectors.map(t=>({id:t.id,from:t.from,to:t.to})),transitionErrors:state.transitionErrors,arcadeStats:{score:state.score}});saved=true;saveError='';}catch(e){saveError=e.message;}return saved;}
+ function save(){if(saved)return true;try{onComplete({...state.session,config:annotateDifficulty(state.session.config,difficulty),bridgeVersion:2,transitions:state.sectors.map(t=>({id:t.id,from:t.from,to:t.to})),transitionErrors:state.transitionErrors,arcadeStats:{score:state.score}});saved=true;saveError='';}catch(e){saveError=e.message;}return saved;}
  function paint(){
   if(disposed)return;const s=state.session,t=transition(),choose=s.status==='playing'&&['choose','gate-choose'].includes(state.phase)&&!blocked;
   view.dataset.state=s.status;stage.dataset.phase=state.phase;stage.dataset.transition=t.id;stage.dataset.progress=state.crossing;
-  stage.style.setProperty('--crossing',state.crossing);stage.classList.toggle('bridge-moving',difficulty!=='beginner'&&!motion.reducedMotion&&choose);
+  stage.style.setProperty('--crossing',state.crossing);if(config.difficultySchema===1)stage.style.setProperty('--connector-duration',config.motorDifficulty==='arcade'?'2.5s':'6s');stage.classList.toggle('bridge-moving',motorLevel(config,difficulty)!=='beginner'&&!motion.reducedMotion&&choose);
   root.querySelector('.bridge-hud').innerHTML=`<span class="bridge-strikes" aria-hidden="true">${[0,1,2].map(i=>`<i class="${i<3-s.strikes?'charged':'spent'}">✦</i>`).join('')}</span> ${state.gate?'Bridge Gate · '+(state.gate.cursor+1)+'/2 · ':''}Boundary ${Math.min(s.checkpoint+1,state.sectors.length)}/${state.sectors.length} · ${3-s.strikes}/3 memory charges · ${state.bridges.length} bridges linked`;
   const map=root.querySelector('.bridge-chain-map'),mapKey=s.completed.join('|')+':'+t.from;if(map.dataset.signature!==mapKey){map.dataset.signature=mapKey;map.innerHTML=sourceConfig.keys.map((key,i)=>`<li class="${i<s.completed.length?'linked':''}" ${key===t.from?'aria-current="step"':''}><span aria-hidden="true">◆</span><span>${key}</span></li>`).join('');}
   root.querySelector('[data-bridge-from]').textContent=t.from;root.querySelector('[data-bridge-to]').textContent=t.to;
@@ -79,7 +81,7 @@ export function mountBridge({root,adapter,config,library,id,difficulty='beginner
   if(['start','resume','next','retry'].includes(action.type)){stage.scrollIntoView({block:'start'});stage.focus({preventScroll:true});}
  }
  const click=e=>{if(e.detail&&performance.now()-lastDrag<180)return;const c=e.target.closest('[data-bridge-choice]'),b=e.target.closest('[data-bridge-action]');if(c&&!c.disabled)send({type:'select',index:Number(c.dataset.bridgeChoice)});else if(b)send({type:b.dataset.bridgeAction});};
- const down=e=>{const c=e.target.closest('[data-bridge-choice]');if(difficulty==='beginner'||!c||c.disabled||e.button>0)return;drag={id:e.pointerId,index:Number(c.dataset.bridgeChoice),x:e.clientX,y:e.clientY,moved:false};c.setPointerCapture?.(e.pointerId);};
+ const down=e=>{const c=e.target.closest('[data-bridge-choice]');if(motorLevel(config,difficulty)==='beginner'||!c||c.disabled||e.button>0)return;drag={id:e.pointerId,index:Number(c.dataset.bridgeChoice),x:e.clientX,y:e.clientY,moved:false};c.setPointerCapture?.(e.pointerId);};
  const move=e=>{if(!drag||drag.id!==e.pointerId)return;if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>12){drag.moved=true;e.preventDefault();stage.classList.add('bridge-dragging');}};
  const up=e=>{if(!drag||drag.id!==e.pointerId)return;const d=drag;drag=null;stage.classList.remove('bridge-dragging');if(d.moved){lastDrag=performance.now();const gap=root.querySelector('.bridge-gap').getBoundingClientRect();send(e.clientX>=gap.left&&e.clientX<=gap.right&&e.clientY>=gap.top&&e.clientY<=gap.bottom?{type:'select',index:d.index}:{type:'motor-error'});}};
  const cancel=()=>{if(drag?.moved)send({type:'motor-error'});drag=null;stage.classList.remove('bridge-dragging');};

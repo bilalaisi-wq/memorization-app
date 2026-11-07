@@ -1,3 +1,4 @@
+import {memoryLevel} from '../difficulty.js';
 import {createSession,reduceSession} from '../session.js';
 import {seededShuffle} from '../content.js';
 import {wordIdentity} from '../../../distractors.js';
@@ -5,6 +6,7 @@ export const bridgeProfiles=Object.freeze({beginner:{ending:1,opening:1,moving:f
 const identity=words=>words.map(w=>wordIdentity(w.text)).join(' ');
 export const transitionId=(from,to)=>`${from}>${to}`;
 export function buildCrossings(adapter,config,library,{difficulty='beginner'}={}){
+ difficulty=memoryLevel(config,difficulty);
  const profile=bridgeProfiles[difficulty];if(!profile||config.keys.length<2)throw Error('Choose at least two consecutive ayahs for an ayah-to-ayah bridge.');
  const all=library.flatMap(s=>s.verses.map(v=>`${s.id}:${v.id}`));
  return config.keys.slice(1).map((to,i)=>{
@@ -24,6 +26,7 @@ export function buildCrossings(adapter,config,library,{difficulty='beginner'}={}
 }
 export function bridgeRevision(sectors){let n=2166136261;for(const c of sectors.map(t=>[t.id,...t.previous.map(w=>w.text),...t.next.map(w=>w.text)].join('|')).join('\n'))n=Math.imul(n^c.charCodeAt(0),16777619);return (n>>>0).toString(16);}
 export function createBridge({id,config,sectors,difficulty='beginner'}){
+ difficulty=memoryLevel(config,difficulty);
  if(!bridgeProfiles[difficulty]||sectors.length!==config.keys.length-1||sectors.some((s,i)=>s.from!==config.keys[i]||s.to!==config.keys[i+1]||s.choices.length!==3||s.choices.filter(c=>c.key===s.to).length!==1||new Set(s.choices.map(c=>identity(c.words))).size!==3))throw Error('Invalid verified transition content');
  const session=createSession({id,game:'bridge',config:{...config,sourceKeys:[...config.keys],keys:config.keys.slice(1)}});
  return {version:2,session,sourceConfig:structuredClone(config),sectors,difficulty,revision:bridgeRevision(sectors),phase:difficulty==='expert'?'recall':'choose',crossing:0,bridges:[],transitionErrors:[],score:0,clock:0,selection:0,gate:null,gatesCleared:[],message:'Recall the opening of the next ayah. Connect the right island to the left island.'};

@@ -311,7 +311,7 @@ export function openPassageStudio(ctx = {}) {
     root.querySelector('[data-game-back]').onclick=()=>{navigation++;gameHost?.dispose();gameHost=null;launchingGame=false;draw();};
     try {
       const {mountPassageGame}=await import('./games.js');if(closed||token!==navigation)return;
-      const mounted=await mountPassageGame(root.querySelector('[data-passage-game-host]'),{bundle,window:w,game,ctx,storage,isCurrent:()=>!closed&&token===navigation,onComplete:receipt=>{
+      const mounted=await mountPassageGame(root.querySelector('[data-passage-game-host]'),{bundle,window:w,game,ctx,storage,contextAware:true,onDenied:()=>close(),isCurrent:()=>!closed&&token===navigation,onComplete:receipt=>{
         guard();recordPracticeXP(work,practiceRefs(),receipt);persistWork();
         queueMicrotask(()=>{if(!closed&&token===navigation){draw();note(`Game saved · ${receipt.xp} XP awarded. Choose another game or self-assess recall.`);root.querySelector('[data-practice-recall]')?.focus({preventScroll:true});}});
       }});
