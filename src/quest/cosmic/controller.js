@@ -1,3 +1,8 @@
+import {createCaptureStore} from './defense-capture-store.js';
+import {profileStorage,activeProfileId} from '../../learner/profile-storage.js';
+import {sha256} from '../../content/library.js';
+import {prepareDefenseContent} from './defense-content.js';
+import {createCaptureDirector} from '../../puzzles/arcade/cosmic/defense-capture-host.js';
 import {prepareBoundaryContent} from './boundary-content.js';
 import {BOUNDARY_MODES} from '../../puzzles/arcade/cosmic/link-boundary.js';
 import {createAyahLink,LINK_MODES} from '../../puzzles/arcade/cosmic/link.js';
@@ -10,7 +15,7 @@ import {createMission} from './mission.js';
 import {createRunner} from '../../puzzles/arcade/cosmic/runner.js';
 
 // One mission director. Arcade checkpoints never certify independent recall or mastery.
-export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=3,activity='runner',defenseConfig='balanced',linkMode='guided',linkChainMode='practice',reducedMotion=false,initialStage=0,initialRound=0,compact=false}={}){
+export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=3,activity='runner',defenseConfig='balanced',defenseMode=null,defenseMotor='relaxed',linkMode='guided',linkChainMode='practice',reducedMotion=false,initialStage=0,initialRound=0,compact=false}={}){
   const canonical=await createMission({surahId:manifest.surah,selection:'custom',start:manifest.first,end:manifest.last});
   if(JSON.stringify(manifest)!==JSON.stringify(canonical))throw Error('Mission configuration changed. Rebuild the briefing.');
   if(!Number.isInteger(rounds)||rounds<3||rounds>10)throw Error('Choose between 3 and 10 revision rounds.');
@@ -22,6 +27,10 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
   const linkPlans={},reviewRequested=new Set();
   if(activity==='link')Object.assign(linkPlans,await prepareLinkPlans(canonical.refs,null));
   let boundaryContent=activity==='link'&&BOUNDARY_MODES[linkMode]?await prepareBoundaryContent(canonical.refs):null;
+  const defenseContent=defenseMode?await prepareDefenseContent(canonical.refs,null,{motorDifficulty:defenseMotor}):null;
+  const captureOwner=activeProfileId(),captureRuntimes=new Map(),captureStore=defenseMode?createCaptureStore(profileStorage):null,captureRouteId=defenseMode?await sha256(JSON.stringify([canonical.id,defenseContent.plan.id,defenseMode,defenseMotor])):null;
+  if(captureStore?.warning){defenseContent.dispose();throw Error(captureStore.warning);}
+  const savedCapture=captureStore?.snapshot().routes?.[captureRouteId];if(savedCapture){if(savedCapture.stage>=canonical.stages.length||savedCapture.round>=roundCount){defenseContent.dispose();throw Error('Saved capture route needs recovery.');}index=savedCapture.stage;roundIndex=savedCapture.round;}
   let boundaryReviewed=false;
   let boundaryStrikes=0;const boundaryConnections=new Set();
   const engines=new Map(),checkpoints=new Set(),activityClears=new Set(),scoreReceipts=new Set();
@@ -39,11 +48,13 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
     const targetIndex=event.targetRef?canonical.refs.indexOf(event.targetRef):-1;
     emit({...event,awardedPoints,...(targetIndex>=0?{fromRef:(event.type.startsWith('defense:memory-')||event.type.startsWith('link:'))?event.fromRef||null:['word','chunk'].includes(event.kind)&&(event.kind==='chunk'?event.unitId.split(':').at(-1).split('-')[0]!=='0':!event.unitId.endsWith(':0'))?event.targetRef:targetIndex?canonical.refs[targetIndex-1]:null}:{}),activity:currentActivity,missionId:canonical.id,runId,stageIndex:index,roundIndex,roundCount,completedCheckpoints:[...checkpoints]});
   }
+  if(defenseMode)try{for(const stage of canonical.stages)for(let r=0;r<roundCount;r++){const runtime=await createCaptureDirector({refs:stage.refs,content:defenseContent,ownedContent:false,mode:defenseMode,motorDifficulty:defenseMotor,stageId:`${stage.id}:round:${r}`,configuration:defenseConfig,onEvent:event});captureRuntimes.set(`${stage.order-1}:${r}`,runtime);const restored=runtime.getSnapshot();if(restored.status==='checkpoint'){activityClears.add(`defense:${stage.order-1}:${r}`);checkpoints.add(restored.checkpointId);}}}catch(e){captureRuntimes.forEach(g=>g.dispose());defenseContent.dispose();throw e;}
   function mount(){
     stageGates=0;
     const stage=canonical.stages[index],seed=parseInt(canonical.sourceHash.slice(0,8),16)+index+roundIndex*3571;
     if(currentActivity==='link')engine=createAyahLink({refs:stage.refs,allRefs:canonical.refs,plans:linkPlans,stageId:stage.id,seed,mode:linkMode,boundaryContent,chainMode:linkChainMode,initialStrikes:linkChainMode==='classic'?boundaryStrikes:0,cumulativeAll:index===canonical.stages.length-1&&roundIndex===roundCount-1,reducedMotion,onEvent:event});
-    else if(currentActivity==='defense')engine=createMeteorDefense({refs:stage.refs,stageId:stage.id,sourceHash:canonical.sourceHash,seed,revisionLoop:true,configuration:defenseConfig,difficulty:index+roundIndex,slow,onEvent:event});
+    else if(currentActivity==='defense'&&defenseMode){engine=captureRuntimes.get(`${index}:${roundIndex}`);if(captureOwner!==activeProfileId())throw Error('Account changed.');captureStore.transact(s=>{s.routes??={};s.routes[captureRouteId]={stage:index,round:roundIndex};});}
+    else if(currentActivity==='defense')engine=createMeteorDefense({refs:stage.refs,stageId:stage.id,sourceHash:canonical.sourceHash,seed,revisionLoop:true,configuration:defenseConfig,difficulty:index+roundIndex,slow,carrierMode:defenseMode,captureContent:defenseContent,motorDifficulty:defenseMotor,onEvent:event});
     else engine=(pickupMode?createFlowRunner:createRunner)({...(pickupMode?{units:createFlowUnits(stage.refs,pickupMode,roundIndex),roundIndex}:{}),stageId:stage.id,seed,difficulty:index,slow,compact,onEvent:event});
     engines.set(currentActivity,engine);
   }
@@ -51,6 +62,7 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
   const pending=()=>currentActivity==='runner'&&(gateway?.remaining(index)||0)>0;
   return {
     getBoundaryContent:()=>boundaryContent,
+    getDefenseContent:()=>defenseContent,
     subscribe(fn){listeners.add(fn);return()=>listeners.delete(fn);},
     start:()=>engine.start(),pause:reason=>engine.pause(reason),resume:()=>engine.resume(),
     dispatch(action){
@@ -101,9 +113,9 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
     },
     nextStage(){
       if(disposed||engine.getSnapshot().status!=='checkpoint'||pending()||index>=canonical.stages.length-1&&roundIndex>=roundCount-1)return false;
-      for(const e of new Set(engines.values()))e.dispose();engines.clear();
+      for(const e of new Set(engines.values()))if(![...captureRuntimes.values()].includes(e))e.dispose();engines.clear();
       if(roundIndex<roundCount-1)roundIndex++;else{index++;roundIndex=0;}mount();engine.start();return true;
     },
-    dispose(){if(disposed)return;disposed=true;for(const e of new Set(engines.values()))e.dispose();engines.clear();boundaryContent?.dispose();gateway?.dispose();listeners.clear();},
+    dispose(){if(disposed)return;disposed=true;for(const e of new Set(engines.values()))e.dispose();engines.clear();captureRuntimes.forEach(g=>g.dispose());captureRuntimes.clear();boundaryContent?.dispose();defenseContent?.dispose();gateway?.dispose();listeners.clear();},
   };
 }

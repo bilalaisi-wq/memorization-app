@@ -1,3 +1,4 @@
+import {mountCaptureDefenseUI} from './defense-capture-ui.js';
 import {mountCosmicControls,cosmicReducedMotion} from '../../../quest/cosmic/preferences.js';
 import {createFlightBonuses} from '../../../quest/cosmic/bonuses.js';
 import {createFlightController} from '../../../quest/cosmic/controller.js';
@@ -14,6 +15,7 @@ import './defense.css';
 const NS='http://www.w3.org/2000/svg';
 export async function mountMeteorDefense(root,mission,{controller=null,onExit=()=>{},onRunner=null,onLink=null,onCheckpoint=null,isCurrent=()=>true,configuration='balanced',slow=false}={}){
   const owner=activeProfileId(),game=controller||await createFlightController(mission,{activity:'defense',defenseConfig:configuration,slow});
+  if(game.getSnapshot().defenseVersion===2)return mountCaptureDefenseUI(root,mission,{game,ownsGame:!controller,onExit,onRunner,onLink,onCheckpoint,isCurrent});
   if(!root.isConnected||owner!==activeProfileId()||!isCurrent()){if(!controller)game.dispose();return null;}
   const recorder=createGatewayRecorder(mission,{runId:game.getSnapshot().runId}),bonuses=createFlightBonuses(mission);let bonusXP=0,warning='',disposed=false,raf=0,last=0,warmup=0,lastState='',audioToken=0,loopKey=null,loopStopped=false,loopFailed=false,controls=null;
   const unsubscribe=game.subscribe(e=>{try{recorder.record(e);}catch(error){warning=error.message;}if(e.type==='defense:memory-correct')bonuses.record(e).then(result=>{if(disposed)return;if(result.xp&&!result.duplicate)bonusXP+=result.xp;paint();}).catch(error=>{if(!disposed){warning=error.message;paint();}});}),abort=new AbortController(),nodes=new Map();
@@ -123,3 +125,5 @@ export async function mountMeteorDefense(root,mission,{controller=null,onExit=()
   function dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(raf);abort.abort();observer.disconnect();stopAudio();panel.dispose();audio.dispose();unsubscribe();nodes.clear();controls?.dispose();if(!controller)game.dispose();}
   listen(document,'ayahappearancechange',paint);listen(window,'ayahcosmicpreferences',paint);controls=mountCosmicControls(view);paint();return {pause:()=>send({type:'pause'}),resume:()=>send({type:'resume'}),dispose,getSnapshot:()=>game.getSnapshot()};
 }
+
+export async function mountPassageDefense(root,{refs,client=null,verifyBundle=null,isCurrent=()=>true,onExit=()=>{},mode='capture',motorDifficulty='relaxed',chainMode='practice'}={}){const {createCaptureDirector}=await import('./defense-capture-host.js');const game=await createCaptureDirector({refs,client,verifyBundle,mode,motorDifficulty,chainMode});if(!root.isConnected||!isCurrent()){game.dispose();return null;}root.classList.add('cosmic-rush');return mountCaptureDefenseUI(root,game.mission,{game,ownsGame:true,onExit,isCurrent});}

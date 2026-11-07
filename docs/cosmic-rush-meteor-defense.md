@@ -1,8 +1,10 @@
 # Cosmic Rush Phase 4 — Meteor Defense
 
+Ayah Quest 3.0 Phase 5 adds [Protect and Capture](meteor-defense-protect-capture.md): protected Arabic carriers, tractor targeting and bounded shared-passage workspaces. The rules below document the retained legacy gateway mode.
+
 Phase 6 update: [Saved expeditions and Weak-Link Bosses](cosmic-rush-expeditions.md) now coordinate these activities and offer final native passage recall. Release details below describe the original standalone implementation.
 
-Meteor Defense is a playable second activity in the regular Revision Lab. It uses the existing Vite/vanilla JavaScript stack, a bounded SVG battlefield, the same canonical mission manifest and the same mission director as Star Runner. No engine dependency, Quran import or database migration was added. The complete five-part Cosmic Rush campaign remains unfinished; this release does not claim that Weak-Link Boss or final independent oral recall is implemented.
+Meteor Defense is a playable second activity in the regular Revision Lab. It uses the existing Vite/vanilla JavaScript stack, a bounded SVG battlefield, the same canonical mission manifest and the same mission director as Star Runner. No engine dependency, Quran import or database migration was added. Later campaign phases coordinate Weak-Link Boss and final self-assessed oral recall; this document describes the original defense activity rather than those campaign additions.
 
 ## Start and transitions
 
