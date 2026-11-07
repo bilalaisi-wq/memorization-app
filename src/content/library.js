@@ -1,3 +1,4 @@
+import {activeProfileId,profileRevision} from '../learner/profile-storage.js';
 import { approvedRecitationSegments } from "../../supabase/functions/_shared/segmentation.js";
 import { surahs, verseAudio } from "../data.js";
 import {
@@ -84,15 +85,19 @@ export async function loadBundle(key, client) {
   const entry = availability.premium.find((p) => p.key === key);
   if (!entry) throw Error("This ayah has not been validated for release.");
   if (!client) throw Error("Sign in to request premium content.");
+  const owner=activeProfileId(),identity=profileRevision();
   const { data, error } = await client.functions.invoke("quran-content", {
     body: { key, asset: "bundle" },
   });
+  if(owner!==activeProfileId()||identity!==profileRevision())throw Error("Account changed during private content loading.");
   if (error) {
     let message =
       "Private content is not available. Check your subscription and server deployment.";
     try {
       message = (await error.context.json()).error || message;
     } catch {}
+    if(owner!==activeProfileId()||identity!==profileRevision())throw Error("Account changed during private content loading.");
+    if(typeof window!=="undefined"&&[401,403].includes(error?.context?.status||error?.status))window.dispatchEvent(new CustomEvent("ayah-private-content-denied",{detail:{owner,key,message}}));
     throw Error(message);
   }
   // The server checks exact bytes against a pinned hash before returning JSON.
@@ -100,17 +105,22 @@ export async function loadBundle(key, client) {
   return validateBundle(data, key);
 }
 export async function loadAudio(bundle, client) {
-  if (bundle.freeAudio) return { url: bundle.freeAudio, revoke: () => {} };
+  if (freeReference(bundle.key)) {const r=reference(bundle.key);return { url: verseAudio(r.ayah,r.surah), revoke: () => {} };}
+  if(!client)throw Error("Sign in to request private recitation.");
+  const owner=activeProfileId(),identity=profileRevision();
   const { data, error } = await client.functions.invoke("quran-content", {
     body: { key: bundle.key, asset: "audio" },
   });
+  if(owner!==activeProfileId()||identity!==profileRevision())throw Error("Account changed during private audio loading.");
   if (error || !(data instanceof Blob)) {
+    if(typeof window!=="undefined"&&[401,403].includes(error?.context?.status||error?.status))window.dispatchEvent(new CustomEvent("ayah-private-content-denied",{detail:{owner,key:bundle.key}}));
     throw Error("Verified recitation is unavailable.");
   }
   if (
     await sha256(await data.arrayBuffer()) !==
       availability.premium.find((p) => p.key === bundle.key)?.audioSha256
   ) throw Error("Audio integrity check failed.");
+  if(owner!==activeProfileId()||identity!==profileRevision())throw Error("Account changed during private audio validation.");
   const url = URL.createObjectURL(data);
   return { url, revoke: () => URL.revokeObjectURL(url) };
 }

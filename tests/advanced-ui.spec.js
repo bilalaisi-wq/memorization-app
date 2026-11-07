@@ -77,7 +77,7 @@ test("Boss Rush completes five real gates, discrimination never writes recall, a
     "Five gates complete",
   );
   expect((await runState(page)).status).toBe("won");
-  await page.locator("summary").click();
+  await page.locator(".rv-summary summary").click();
   await expect(page.locator(".rv-summary")).toContainText("not a recall grade");
 });
 test("three Again self-grades produce game over and Practice retries preserve the cleared opening gate", async ({

@@ -1,3 +1,4 @@
+import {compatibility} from '../passage-context/compatibility.js';
 import {createQuestHost,questArcadeRegistry} from '../quest/host.js';
 import {blocksRegistration} from '../quest/expedition/blocks.js';
 import {createExpeditionMap} from '../quest/expedition/model.js';
@@ -5,19 +6,20 @@ import {createQuestStore} from '../quest/store.js';
 import {createLearningStore} from '../learning-store.js';
 import {createPuzzleStore} from '../puzzles/puzzle-store.js';
 import {activeProfileId,profileStorage} from '../learner/profile-storage.js';
-import {referenceOptions,reference,sha256} from '../content/library.js';
+import {catalog,referenceOptions,reference,sha256} from '../content/library.js';
 import {PASSAGE_GAMES} from './practice-plan.js';
 import {readLabVolume} from '../puzzles/audio-level.js';
 // Reuses the authenticated source/revision checks, canonical word adapter,
 // media cleanup, motor/memory separation and capped arcade result recorder.
 export async function mountPassageGame(root,{bundle,window:workspace,game,ctx,storage,onComplete,isCurrent=()=>true}) {
+  const supported=compatibility({game,refs:[bundle.key],units:'words'});if(!supported.available)throw Error(supported.reason);
   if(!PASSAGE_GAMES.some(g=>g.id===game))throw Error('Choose an available Passage Builder game.');
   const owner=activeProfileId(),base=await createExpeditionMap({bundles:[bundle],game});
   const definition={...base.checkpoints.find(c=>c.stage==='trial'),workspace:{page:workspace.page,firstWord:workspace.first,lastWord:workspace.last},session:crypto.randomUUID()};
   definition.id=`quest:${await sha256(JSON.stringify(definition))}`;
   const map={...base,routeVersion:1,id:`campaign:${await sha256(definition.id)}`,checkpoints:[definition]};
   if(!isCurrent()||!root.isConnected)return null;
-  const chapters=new Map();for(const o of referenceOptions()){const r=reference(o.key);if(!chapters.has(r.surah))chapters.set(r.surah,{id:r.surah,verses:[]});chapters.get(r.surah).verses.push({id:r.ayah});}
+  const chapters=new Map(catalog.chapters.map(c=>[c.id,{id:c.id,verses:Array.from({length:c.verseCount},(_,i)=>({id:i+1}))}]));
   // Notify the existing header/cloud/leaderboard observers, with the same live
   // owner guard as the studio. Never publish private Quran content.
   const guarded=storage;

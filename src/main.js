@@ -1,3 +1,7 @@
+import {createPassageSession} from './passage-context/session.js';
+import {mountPassageNavigation,mountContextLab} from './passage-context/ui.js';
+import {freeReference,availability,reference as referenceForContext} from './content/library.js';
+import {clearLearningView} from './ui/dom.js';
 import { mountRevisionLab, stopRevisionLab, pauseRevisionLab } from "./revision/ui.js";
 import "./puzzles/arcade/bridge/bridge.css";
 import "./puzzles/arcade/sirat/sirat.css";
@@ -13,7 +17,7 @@ import { mountSiteMenu } from "./ui/site-menu.js";
 import { initializeAppearance, openAppearance } from "./themes/appearance.js";
 import { mountSkyProgress, resetSkyObserver } from "./themes/constellations.js";
 import { initializeAccounts, mountAccountControls, appearanceAccount } from "./learner/accounts.js";
-import { profileStorage } from "./learner/profile-storage.js";
+import { profileStorage,activeProfileId } from "./learner/profile-storage.js";
 import { trackStudy, summarizeActivity, achievements, preserveAchievements } from "./learner/insights.js";
 import { mountMemoryTip } from "./ui/memory-tips.js";
 import { bindPieceDrag, stopPieceDrag } from "./ui/piece-drag.js";
@@ -79,7 +83,7 @@ await initializeAccounts();
 initializeAppearance(appearanceAccount());
 const learning = createLearningStore(profileStorage, surahs);
 const gallery = createMasteryStore(profileStorage, surahs);
-const progressLibrary=[...freeSurahs,...catalog.chapters.filter(c=>previewSurahs.includes(c.id)).map(c=>({id:c.id,verses:Array.from({length:c.verseCount},(_,i)=>({id:i+1}))}))];
+const progressLibrary=catalog.chapters.map(c=>({id:c.id,verses:Array.from({length:c.verseCount},(_,i)=>({id:i+1}))}));
 const lab = createPuzzleStore(profileStorage, progressLibrary);
 let puzzleSessionId = "";
 let chapter = 0,
@@ -126,6 +130,18 @@ let completed = new Set(
     .map((r) => r.key),
 );
 const app = document.querySelector("#app");
+let contextSurface=null,contextBusy=false,cosmicContext=false;
+const labName=()=>mode==='revision'?'revision':mode==='lab'?'puzzle':'memorization';
+const passageSession=createPassageSession({getClient:()=>appearanceAccount().client,onInvalidate:reason=>{stop();contextSurface?.dispose();contextSurface=null;const root=document.querySelector(cosmicContext?'.cosmic-rush':'.context-lab-content');root?.replaceChildren(Object.assign(document.createElement('p'),{textContent:reason}));if(!reason.startsWith('Loading')&&!reason.startsWith('Selection cleared')&&!reason.startsWith('Passage session closed')){const main=document.querySelector('main');if(main){let note=main.querySelector('[data-context-access-notice]');if(!note){note=document.createElement('p');note.dataset.contextAccessNotice='';note.setAttribute('role','alert');main.prepend(note);}note.textContent=reason;}}}});
+Object.defineProperty(passageSession,'clientContext',{get:()=>({...appearanceAccount(),user:activeProfileId()?{id:activeProfileId()}:null})});
+async function openSharedPassage(refs,lab=labName(),{restore=false,cosmic=false}={}){
+ if(contextBusy)return;contextBusy=true;
+ try{const active=passageSession.has()&&refs.includes(passageSession.descriptor().active)?passageSession.descriptor().active:restore&&passageSession.saved().selection?.refs.join('|')===refs.join('|')?passageSession.saved().selection.active:refs[0];await passageSession.open(refs,{active,lab,restore});mode=lab==='revision'?'revision':lab==='puzzle'?'lab':'practice';cosmicContext=cosmic;reset();}
+ finally{contextBusy=false;}
+}
+function clearSharedPassage(){try{passageSession.clear();cosmicContext=false;reset();}catch(e){const p=document.querySelector('[data-context-status]');if(p)p.textContent=e.message;}}
+async function rememberCosmic(refs){if(passageSession.has()&&passageSession.descriptor().refs.join('|')!==refs.join('|'))await openSharedPassage(refs,'revision',{cosmic:true});}
+
 function reset() {
   stop();
   clearTimeout(peekTimer);
@@ -234,7 +250,11 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
     .querySelector("#nav-daily")
     .classList.toggle("active", mode === "daily");
   document.querySelector("#nav-revision-lab").classList.toggle("active", mode === "revision");
-  if (mode === "revision") mountRevisionLab(document.querySelector("main"));
+  if (passageSession.has()&&['practice','quiz','recall','sequence','lab','revision'].includes(mode)&&!cosmicContext){
+    const main=document.querySelector('main');clearLearningView(main);
+    contextSurface=mountContextLab(main,{session:passageSession,lab:labName(),ctx:passageSession.clientContext,onActive:active=>{passageSession.navigate(labName(),active);reset();},onLab:(lab,refs)=>openSharedPassage(refs||passageSession.descriptor().refs,lab),onCosmic:()=>{cosmicContext=true;reset();}});
+  }
+  else if (mode === "revision") mountRevisionLab(document.querySelector("main"),{selectedPassage:passageSession.has()?passageSession.descriptor():null,onMissionSelection:rememberCosmic});
   else if (mode === "gallery")
     mountGallery(
       document.querySelector("main"),
@@ -317,8 +337,16 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
     gallery: memoryCallbacks.onGallery,
   });
   mountSiteMenu(document.querySelector("main"));
+  if(['practice','quiz','recall','sequence','lab','revision','review'].includes(mode))mountPassageNavigation(document.querySelector('main'),{session:passageSession,current:key(),lab:labName(),onSelect:openSharedPassage,onClear:clearSharedPassage,onLab:lab=>{mode=lab==='revision'?'revision':lab==='puzzle'?'lab':'practice';reset();}});
+  if(passageSession.has()){
+    const d=passageSession.descriptor(),source=catalog.chapters.find(c=>c.id===referenceForContext(d.active).surah),crumb=document.querySelector('.breadcrumb strong');if(crumb)crumb.textContent=`${source.name} · ${d.refs[0]} → ${d.refs.at(-1)}`;
+    document.querySelector('.surah-side strong').textContent=source.name;document.querySelector('.surah-side small').textContent=`${d.refs.length} selected ayahs · ${d.refs[0]} → ${d.refs.at(-1)}`;
+    const picker=document.querySelector('#surah-picker'),option=document.createElement('option');option.value='shared';option.disabled=true;option.selected=true;option.textContent=`Selected passage · ${d.refs[0]} → ${d.refs.at(-1)}`;picker.prepend(option);
+    document.querySelector('.ayah-nav').innerHTML=d.refs.map(ref=>`<button data-context-active-ref="${ref}" class="ayah-item ${ref===d.active?'current':''}">Ayah ${ref}</button>`).join('');document.querySelectorAll('[data-context-active-ref]').forEach(b=>b.onclick=()=>{passageSession.navigate(labName(),b.dataset.contextActiveRef);reset();});
+  }
 }
 function stop({preserveLab = false} = {}) {
+  if(!preserveLab){contextSurface?.dispose();contextSurface=null;}
   if (preserveLab) pauseRevisionLab(); else stopRevisionLab();
   stopPieceDrag();
   stopEncouragement();
@@ -445,6 +473,7 @@ const memoryCallbacks = {
     reset();
   },
   onLab() {
+    if(passageSession.has())return openSharedPassage(passageSession.descriptor().refs,"puzzle",{restore:true});
     if (!markStudyBeforeRecall(key())) return;
     mode = "lab";
     reset();
@@ -687,6 +716,7 @@ function bind() {
   document.querySelector('#developer-passage')?.addEventListener('click',()=>{if(isDeveloperMode())import('./passage/ui.js').then(m=>m.openPassageStudio({...appearanceAccount(),user:appearanceAccount().userId?{id:appearanceAccount().userId}:null,initialReference:key()}));});
   document.querySelectorAll('[data-workspace-step]').forEach(b=>b.onclick=()=>{stop();selected=workspace.go(workspace.page+Number(b.dataset.workspaceStep),selected);feedback='Workspace saved locally in this round. Complete every workspace before checking the full ayah.';render();});
   document.querySelector("#surah-picker").onchange = async (e) => {
+    if(passageSession.has())passageSession.clear();cosmicContext=false;
     if(e.target.value.startsWith('private:')){
       const id=Number(e.target.value.split(':')[1]),token=++privateLoadToken,owner=appearanceAccount().userId,picker=e.target,status=document.querySelector('[data-private-load-status]');
       picker.disabled=true;status.textContent='Loading the complete verified chapter…';
@@ -793,3 +823,18 @@ window.addEventListener("ayah-study-exposure", event => {
   try { learning.updateRecall(a.id,"assisted"); } catch { event.preventDefault(); }
  }
 });
+
+document.addEventListener('click',e=>{const b=e.target.closest('#nav-learn,#nav-puzzle-lab,#nav-lab,#nav-revision-lab');if(!b)return;const saved=passageSession.saved().selection;if(!saved)return;e.preventDefault();e.stopImmediatePropagation();const lab=b.id==='nav-revision-lab'?'revision':b.id==='nav-learn'?'memorization':'puzzle';void openSharedPassage(saved.refs,lab,{restore:true}).catch(error=>{const p=document.querySelector('[data-context-status]');if(p){p.textContent=error.message;p.setAttribute('role','alert');}});},true);
+document.addEventListener('click',e=>{if(e.target.closest('[data-ayah]')&&passageSession.has()){passageSession.clear();cosmicContext=false;}},true);
+function revokePrivateContent(){const privateActive=passageSession.private(),legacy=surahs.some(s=>s.developerOnly);if(privateActive)passageSession.invalidate('Private source authorization changed. Reopen the selected passage to reauthorize.');if(legacy){privateLoadToken++;stop();clearPrivateAudio();surahs.splice(0,surahs.length,...freeSurahs);learning.setLibrary(surahs);chapter=Math.min(chapter,surahs.length-1);verses=surahs[chapter].verses;ayah=Math.min(ayah,verses.length-1);}if(privateActive||legacy)document.querySelectorAll('.passage-studio').forEach(d=>d.querySelector('[data-close]')?.click());if(privateActive||legacy){cosmicContext=false;render();}}
+window.addEventListener('ayah-content-access-changed',revokePrivateContent);
+window.addEventListener('ayah-private-content-denied',revokePrivateContent);
+window.addEventListener('ayahprofilechange',()=>{hiddenPrivate=null;cosmicContext=false;});
+window.addEventListener('ayah-developer-mode',()=>{if(!isDeveloperMode()&&passageSession.private())revokePrivateContent();});
+let hiddenPrivate=null;
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&passageSession.private()){hiddenPrivate=passageSession.descriptor();passageSession.invalidate('Private passage paused while this tab is hidden.');}else if(!document.hidden&&hiddenPrivate){const saved=hiddenPrivate;hiddenPrivate=null;void openSharedPassage(saved.refs,saved.lab,{restore:true}).catch(()=>{});}});
+window.addEventListener('focus',()=>{if(passageSession.private())void recheckPassage();});
+async function recheckPassage(){if(contextBusy||!passageSession.private())return;try{const d=passageSession.descriptor(),seen=new Set();for(const key of d.refs){const r=referenceForContext(key);if(freeReference(key)||seen.has(`${r.juz}:${availability.developerOnlySurahs?.includes(r.surah)?'developer':'premium'}`))continue;seen.add(`${r.juz}:${availability.developerOnlySurahs?.includes(r.surah)?'developer':'premium'}`);const {loadBundle}=await import('./content/library.js');const {fingerprints}=await import('./passage-context/model.js');const current=await fingerprints(await loadBundle(key,appearanceAccount().client));if(!passageSession.has())return;if(JSON.stringify(current)!==JSON.stringify(d.fingerprints[key]))throw Error('Private source revision changed.');}}catch{revokePrivateContent();}}
+const contextLease=setInterval(()=>{void recheckPassage();},60000);
+window.addEventListener('pagehide',()=>{clearInterval(contextLease);passageSession.dispose();});
+const savedPassage=passageSession.saved();if(savedPassage.selection&&!savedPassage.warning)void openSharedPassage(savedPassage.selection.refs,savedPassage.selection.lab,{restore:true}).catch(e=>{const p=document.querySelector('[data-context-status]');if(p)p.textContent=e.message;});

@@ -14,7 +14,7 @@ let cleanup = () => {}, pause = () => {};
 export function stopRevisionLab() { cleanup(); cleanup = () => {}; pause = () => {}; }
 export function pauseRevisionLab() { pause(); }
 
-export function mountRevisionLab(main) {
+export function mountRevisionLab(main,{selectedPassage=null,onMissionSelection=()=>{}}={}) {
   stopRevisionLab();
   let flight = null, director=null;
   cleanup = () => { generation++; flight?.dispose();director?.dispose();director=null; };
@@ -88,6 +88,7 @@ export function mountRevisionLab(main) {
       try {
         const mission = await createMission({surahId:Number(form.elements.surah.value),selection:form.elements.selection.value,start:Number(form.elements.start.value),end:Number(form.elements.end.value)});
         if (token !== generation || !root.isConnected) return;
+        void Promise.resolve(onMissionSelection(mission.refs)).catch(()=>{});
         briefing(mission);
       } catch (error) {
         if (token === generation && root.isConnected) { root.querySelector('[data-error]').textContent = error.message; submit.disabled = false; }
@@ -135,4 +136,5 @@ export function mountRevisionLab(main) {
     render(true);
   }
   planner();
+  if(selectedPassage){const refs=selectedPassage.refs,first=refs[0].split(':').map(Number),last=Number(refs.at(-1).split(':')[1]),token=generation;void createMission({surahId:first[0],selection:'custom',start:first[1],end:last}).then(m=>{if(token===generation&&root.isConnected)briefing(m);}).catch(e=>{if(root.isConnected){const p=document.createElement('p');p.setAttribute('role','alert');p.textContent=e.message;root.append(p);}});}
 }

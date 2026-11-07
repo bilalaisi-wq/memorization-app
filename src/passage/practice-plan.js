@@ -1,6 +1,7 @@
 export const PASSAGE_GAMES = Object.freeze([
   {id:'asteroids', title:'Ayah Space'}, {id:'snake', title:'Ayah Serpent'},
   {id:'falling', title:'Ayah Blocks'}, {id:'maze', title:'Memory Maze'},
+  {id:'bubble',title:'Ayah Bubble Burst'}, {id:'sirat',title:'Sirat Quest'},
 ]);
 export const RECALL_XP_INTERVAL = 16;
 export const practiceScope = refs => [...new Set(refs)].sort((a,b)=>{const x=a.split(':').map(Number),y=b.split(':').map(Number);return x[0]-y[0]||x[1]-y[1];}).join('|');

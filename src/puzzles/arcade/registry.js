@@ -1,3 +1,4 @@
+import {compatibility} from '../../passage-context/compatibility.js';
 import {isDeveloperMode} from '../../developer/access.js';
 // Metadata is also used by persistence; keep retired identifiers forever.
 export const arcadeGames = Object.freeze([
@@ -17,6 +18,7 @@ export function createRegistry() {
     create(id, options, {developer = isDeveloperMode()} = {}) {
       const entry = entries.get(id);
       if (!entry || (entry.developerOnly && !developer)) throw Error('Game unavailable');
+      if(options?.passageContext){const result=compatibility({game:id,refs:options.passageContext.refs,units:options.sourceUnitKind||"words",registered:[...entries.keys()]});if(!result.available)throw Error(result.reason);}
       const game = entry.create(options);
       for (const method of ['start','pause','resume','dispatch','getSnapshot','dispose']) {
         if (typeof game?.[method] !== 'function') { game?.dispose?.(); throw Error(`Missing game method: ${method}`); }

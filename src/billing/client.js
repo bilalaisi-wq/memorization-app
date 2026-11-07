@@ -1,3 +1,5 @@
+import {activeProfileId} from '../learner/profile-storage.js';
+const observedAccess=new WeakMap();
 // Entitlements are intentionally never accepted from localStorage or URL params.
 export function billingClient(client) {
   const fail = () => {
@@ -8,11 +10,16 @@ export function billingClient(client) {
   return {
     async entitlements() {
       if (!client) return fail();
+      const owner=activeProfileId();
       const { data, error } = await client.rpc("my_billing_entitlements");
+      if(owner!==activeProfileId())throw Error("Account changed while loading entitlements.");
       if (
         error || !data?.features ||
         !["free", "explorer", "pathfinder", "guardian"].includes(data.plan)
       ) return fail();
+      const signature=JSON.stringify([activeProfileId(),data.plan,data.selectedJuz,data.developer,data.features,data.accessUntil]);
+      const previous=observedAccess.get(client);observedAccess.set(client,signature);
+      if(previous&&previous!==signature&&typeof window!=="undefined")window.dispatchEvent(new CustomEvent("ayah-content-access-changed",{detail:{owner:activeProfileId()}}));
       return data;
     },
     async invoke(name, body = {}) {

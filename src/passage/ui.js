@@ -36,9 +36,9 @@ import {
 } from "../ui/encouragement.js";
 import "./passage.css";
 export function openPassageStudio(ctx = {}) {
-  const d = document.createElement("dialog");
+  const d = document.createElement(ctx.inlineRoot ? "section" : "dialog");
   d.className = "account-dialog passage-studio";
-  let closed=false;
+  let closed=false,releaseOwner=()=>{};
   const owner = ctx.user?.id || null;
   const guard=()=>{if(closed||activeProfileId()!==owner)throw Error('Account changed or passage studio closed.');};
   guard();
@@ -124,7 +124,7 @@ export function openPassageStudio(ctx = {}) {
   }
 
   d.innerHTML =
-    '<button class="text-button" data-close>Close ×</button><h2>Passage Builder · memorization studio</h2><button class="text-button" data-open-saved>Saved passages</button><button class="primary" data-open-expedition>✦ Explore Passage Expedition</button><button class="text-button" data-open-rescue>✧ Constellation Rescue</button><button class="text-button" data-set-aside hidden>Set aside unfinished recall · no grade</button><div data-studio></div><p data-studio-status role="status" aria-live="polite"></p>';
+    '<button class="text-button" data-close>Close ×</button><h2>Passage Builder · memorization studio</h2><button class="text-button" data-share-context>Use this passage across labs</button><button class="text-button" data-open-saved>Saved passages</button><button class="primary" data-open-expedition>✦ Explore Passage Expedition</button><button class="text-button" data-open-rescue>✧ Constellation Rescue</button><button class="text-button" data-set-aside hidden>Set aside unfinished recall · no grade</button><div data-studio></div><p data-studio-status role="status" aria-live="polite"></p>';
   const root = d.querySelector("[data-studio]"),
     status = d.querySelector("[data-studio-status]");
   const note = (text, error = false) => {
@@ -144,12 +144,14 @@ export function openPassageStudio(ctx = {}) {
     if(closed)return;
     gameHost?.dispose();gameHost=null;
     closed=true;
+    releaseOwner();
     lifecycle.abort();
     navigation++;
     assessmentView++;
     cache.clear();
+    bundle=null;assessmentBundles=null;chain=[];orders={};
     stop();
-    d.close();
+    if(!ctx.inlineRoot)d.close();
     d.remove();
     ctx.onClose?.();
   };
@@ -157,11 +159,15 @@ export function openPassageStudio(ctx = {}) {
   window.addEventListener('pagehide',close,{signal:lifecycle.signal});
   function pendingControl(){const a=memory.snapshot().active;d.querySelector('[data-set-aside]').hidden=!!memory.warning||!a||a.graded;}
   d.querySelector('[data-set-aside]').onclick=()=>{try{const a=memory.snapshot().active;memory.cancel(a.id);navigation++;assessmentView++;stop();assessmentBundles=null;bundle=null;selectedRefs=['1:1'];draw();note('Unfinished attempt set aside. No grade or review date changed. Start free study or choose another available passage.');}catch(e){note(e.message,true);}};
+  releaseOwner=ctx.own?.(close)||(()=>{});
   d.querySelector("[data-close]").onclick = close;
+  d.querySelector("[data-share-context]").hidden=!ctx.onPassageSelection;
+  d.querySelector("[data-share-context]").onclick=()=>{try{const result=ctx.onPassageSelection?.([...selectedRefs]);Promise.resolve(result).catch(e=>note(e.message,true));}catch(e){note(e.message,true);}};
+  window.addEventListener("ayah-content-access-changed",()=>{if([...cache.keys()].some(k=>!localBundle(k)))close();},{signal:lifecycle.signal});
   d.oncancel = close;
   d.querySelector('[data-open-saved]').onclick=async()=>{const {openSavedPassages}=await import('../billing/ui.js');if(closed)return;close();openSavedPassages(ctx);};
   d.querySelector('[data-open-rescue]').onclick=async()=>{const {openRescue}=await import('../quest/rescue/ui.js');if(closed)return;close();openRescue(ctx);};
-  d.querySelector('[data-open-expedition]').onclick=async()=>{const {openExpedition}=await import('../quest/expedition/ui.js');if(closed)return;close();openExpedition({...ctx,initialReference:bundle?.key||ctx.initialReference});};
+  d.querySelector('[data-open-expedition]').onclick=async()=>{const {openExpedition}=await import('../quest/expedition/ui.js');if(closed)return;const initialReference=bundle?.key||ctx.initialReference;close();openExpedition({...ctx,initialReference});};
   const get = async (key) => {
     if (cache.has(key)) return cache.get(key);
     const b = await loadBundle(key, ctx.client);
@@ -191,6 +197,7 @@ export function openPassageStudio(ctx = {}) {
       if (!work.layoutPreference && !work.records[workKey()]) { layout="legacy";if(!work.records[workKey()])layout="grouped"; }
       restoreWork();
       draw();
+      ctx.onReferenceSelected?.(key);
       note(
         workWarning || "Repeat aloud after the reciter. Visual workspace boundaries are not recitation stops.",
       );
@@ -878,14 +885,15 @@ export function openPassageStudio(ctx = {}) {
       }
     );
   }
-  document.body.append(d);
-  d.showModal();
+  (ctx.inlineRoot||document.body).append(d);
+  if(!ctx.inlineRoot)d.showModal();
   // A coach review must initialize once: an early resumed view could accept a
   // reveal click and then be replaced by the later verified-source handoff.
   if (ctx.coachTarget && ctx.coachAction === "review") {
     root.innerHTML = '<p role="status">Preparing verified self-assessment…</p>';
   } else draw();
   if (memory.warning || workWarning) note(memory.warning || workWarning, true);
+  if(ctx.initialRefs){try{const refs=ctx.initialRefs.map(k=>reference(k).key);if(!refs.length||refs.length>10||new Set(refs).size!==refs.length)throw Error("Choose up to ten canonical passage references.");selectedRefs=refs;}catch(e){note(e.message,true);}}
   if (ctx.initialReference) select(ctx.initialReference);
 
   if (ctx.coachTarget) (async () => {

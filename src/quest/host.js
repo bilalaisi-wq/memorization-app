@@ -8,7 +8,7 @@ import { scopedStorage } from "../learner/profile-storage.js";
 import { nextCheckpoint } from "./map.js";
 import { readLabVolume } from "../puzzles/audio-level.js";
 import { surahs } from "../data.js";
-import { loadBundle, loadAudio } from "../content/library.js";
+import { loadBundle, loadAudio, freeReference } from "../content/library.js";
 import { createRegistry, createLauncher } from "../puzzles/arcade/registry.js";
 import { createContentAdapter } from "../puzzles/arcade/content.js";
 import { mazeRegistration } from "../puzzles/arcade/maze/ui.js";
@@ -108,6 +108,8 @@ export function createQuestHost({
   };
   scope.listen(window, "ayah-developer-mode", dispose);
   scope.listen(window, "pagehide", dispose);
+  scope.listen(window,"ayah-content-access-changed",()=>{if(map.checkpoints.some(c=>typeof c.key==="string"&&!freeReference(c.key)))dispose();});
+  scope.listen(window,"ayah-private-content-denied",e=>{if(map.checkpoints.some(c=>c.key===e.detail?.key)){dispose();root.textContent=e.detail?.message||"Private content access changed. Reopen this activity to reauthorize.";}});
   scope.listen(document, "visibilitychange", () => {
     if (document.hidden) current?.pause();
   });
@@ -292,13 +294,13 @@ export function createQuestHost({
                     w.index < checkpoint.workspace.lastWord,
                 )
             : null;
+        const sourceWords=(key,words)=>key===bundle.key&&!freeReference(key)?words.map(w=>w.key===bundle.key?({...w,audio:resource?.url||""}):w):words;
         const adapter = {
           ...base,
           words: (key) =>
-            key === bundle.key && trialWords ? trialWords : base.words(key),
+            sourceWords(key,key === bundle.key && trialWords ? trialWords : base.words(key)),
           choices: (key, options) =>
-            base
-              .choices(key, options)
+            sourceWords(key,base.choices(key, options))
               .filter(
                 (w) =>
                   !w.target ||
