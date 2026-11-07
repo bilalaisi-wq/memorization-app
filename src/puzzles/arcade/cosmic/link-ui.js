@@ -1,3 +1,4 @@
+import {mountBoundaryLinkUI} from './link-boundary-ui.js';
 import {mountCosmicControls,cosmicReducedMotion} from '../../../quest/cosmic/preferences.js';
 import {captureCosmicFocus,restoreCosmicFocus} from '../../../quest/cosmic/focus.js';
 import {createFlightController} from '../../../quest/cosmic/controller.js';
@@ -23,6 +24,7 @@ export function renderLinkAyah(ayah,{end=false,opening=false,hiddenOpening=false
 export async function mountAyahLink(root,mission,{controller=null,client=null,mode='guided',onExit=()=>{},onRunner=null,onDefense=null,onCheckpoint=null,isCurrent=()=>true}={}){
   const owner=activeProfileId(),game=controller||await createFlightController(mission,{activity:'link',linkMode:mode,reducedMotion:cosmicReducedMotion()});
   if(!controller)await game.prepareLink(client);
+  if(game.getSnapshot().boundaryVersion===2)return mountBoundaryLinkUI(root,mission,{game,ownsGame:!controller,onExit,onRunner,onDefense,onCheckpoint,isCurrent});
   if(!root.isConnected||owner!==activeProfileId()||!isCurrent()){if(!controller)game.dispose();return null;}
   let disposed=false,raf=0,last=0,key='',warning='',exposureBlocked=false,audioToken=0,pending=false,bonusXP=0,weak=[];
   const abort=new AbortController(),evidence=createLinkEvidence(mission,{runId:game.getSnapshot().runId}),bonuses=createFlightBonuses(mission);

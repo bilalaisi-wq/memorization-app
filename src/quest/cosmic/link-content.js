@@ -5,7 +5,7 @@ import {freeAyah,comparableAyah,gatewayCandidates} from './gateways.js';
 import {createFlowUnits,flowChoices} from './flow-content.js';
 import {seededShuffle} from '../../puzzles/arcade/content.js';
 const trusted=new WeakSet();
-function linkSpans(bundle){
+export function linkSpans(bundle){
   const normal=t=>t.replace(/[\s\u06d6-\u06dc\u06de\u06e2\u06ed\u06e9]/g,'');
   const spans=[];let word=0;
   for(const token of bundle.textUthmani.matchAll(/\S+/g)){

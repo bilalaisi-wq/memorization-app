@@ -1,7 +1,9 @@
+import {createBoundaryLink,BOUNDARY_MODES} from './link-boundary.js';
 import {canonicalLinkAyah,pairReference,openingChoices,verifiedReactorPlan,reactorTiles} from '../../../quest/cosmic/link-content.js';
 import {comparableAyah} from '../../../quest/cosmic/gateways.js';
-export const LINK_MODES=Object.freeze({guided:'Guided demonstration',recognition:'Recognition with choices',opening:'Independent opening-word recall',extended:'Extended transition recall'});
-export function createAyahLink({refs,allRefs=refs,plans,stageId,seed=1,mode='guided',reducedMotion=false,onEvent=()=>{}}){
+export const LINK_MODES=Object.freeze({...BOUNDARY_MODES,guided:'Guided demonstration',recognition:'Recognition with choices',opening:'Independent opening-word recall',extended:'Extended transition recall'});
+export function createAyahLink({refs,allRefs=refs,plans,stageId,seed=1,mode='guided',reducedMotion=false,boundaryContent=null,chainMode='practice',initialStrikes=0,cumulativeAll=false,onEvent=()=>{}}){
+  if(BOUNDARY_MODES[mode])return createBoundaryLink({refs,allRefs,content:boundaryContent,stageId,seed,mode,reducedMotion,chainMode,initialStrikes,cumulativeAll,onEvent});
   if(!refs?.length||refs.length>5||!Object.hasOwn(LINK_MODES,mode))throw Error('Choose an available Link mode and ayah set.');
   allRefs.forEach((ref,i)=>pairReference(i?allRefs[i-1]:null,ref));
   const pairRefs=refs.filter(ref=>allRefs.length===1||ref!==allRefs[0]||canonicalLinkAyah(ref).words.length>6);

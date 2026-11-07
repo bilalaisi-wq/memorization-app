@@ -1,3 +1,5 @@
+import {prepareBoundaryContent} from './boundary-content.js';
+import {BOUNDARY_MODES} from '../../puzzles/arcade/cosmic/link-boundary.js';
 import {createAyahLink,LINK_MODES} from '../../puzzles/arcade/cosmic/link.js';
 import {prepareLinkPlans} from './link-content.js';
 import {createFlowUnits} from './flow-content.js';
@@ -8,7 +10,7 @@ import {createMission} from './mission.js';
 import {createRunner} from '../../puzzles/arcade/cosmic/runner.js';
 
 // One mission director. Arcade checkpoints never certify independent recall or mastery.
-export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=3,activity='runner',defenseConfig='balanced',linkMode='guided',reducedMotion=false,initialStage=0,initialRound=0,compact=false}={}){
+export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=3,activity='runner',defenseConfig='balanced',linkMode='guided',linkChainMode='practice',reducedMotion=false,initialStage=0,initialRound=0,compact=false}={}){
   const canonical=await createMission({surahId:manifest.surah,selection:'custom',start:manifest.first,end:manifest.last});
   if(JSON.stringify(manifest)!==JSON.stringify(canonical))throw Error('Mission configuration changed. Rebuild the briefing.');
   if(!Number.isInteger(rounds)||rounds<3||rounds>10)throw Error('Choose between 3 and 10 revision rounds.');
@@ -19,10 +21,14 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
   let index=initialStage,roundIndex=initialRound,engine,disposed=false,currentActivity=activity,stageGates=0,arcadeScore=0;
   const linkPlans={},reviewRequested=new Set();
   if(activity==='link')Object.assign(linkPlans,await prepareLinkPlans(canonical.refs,null));
+  let boundaryContent=activity==='link'&&BOUNDARY_MODES[linkMode]?await prepareBoundaryContent(canonical.refs):null;
+  let boundaryReviewed=false;
+  let boundaryStrikes=0;const boundaryConnections=new Set();
   const engines=new Map(),checkpoints=new Set(),activityClears=new Set(),scoreReceipts=new Set();
   const gateway=memoryGateways?createGatewaySession(canonical,{onEvent:e=>emit({...e,missionId:canonical.id,sourceHash:canonical.sourceHash})}):null;
   function event(event){
     if(disposed)return;
+    if(event.boundaryVersion===2){if(event.type==='link:mistake')boundaryStrikes=event.liveStrikes;if(event.type==='link:transition-correct')boundaryConnections.add(event.pairKey);}
     if(['runner:checkpoint','defense:checkpoint','link:checkpoint'].includes(event.type)){
       activityClears.add(`${currentActivity}:${index}:${roundIndex}`);
       if(checkpoints.has(event.checkpointId))return;checkpoints.add(event.checkpointId);
@@ -36,7 +42,7 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
   function mount(){
     stageGates=0;
     const stage=canonical.stages[index],seed=parseInt(canonical.sourceHash.slice(0,8),16)+index+roundIndex*3571;
-    if(currentActivity==='link')engine=createAyahLink({refs:stage.refs,allRefs:canonical.refs,plans:linkPlans,stageId:stage.id,seed,mode:linkMode,reducedMotion,onEvent:event});
+    if(currentActivity==='link')engine=createAyahLink({refs:stage.refs,allRefs:canonical.refs,plans:linkPlans,stageId:stage.id,seed,mode:linkMode,boundaryContent,chainMode:linkChainMode,initialStrikes:linkChainMode==='classic'?boundaryStrikes:0,cumulativeAll:index===canonical.stages.length-1&&roundIndex===roundCount-1,reducedMotion,onEvent:event});
     else if(currentActivity==='defense')engine=createMeteorDefense({refs:stage.refs,stageId:stage.id,sourceHash:canonical.sourceHash,seed,revisionLoop:true,configuration:defenseConfig,difficulty:index+roundIndex,slow,onEvent:event});
     else engine=(pickupMode?createFlowRunner:createRunner)({...(pickupMode?{units:createFlowUnits(stage.refs,pickupMode,roundIndex),roundIndex}:{}),stageId:stage.id,seed,difficulty:index,slow,compact,onEvent:event});
     engines.set(currentActivity,engine);
@@ -44,11 +50,12 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
   mount();
   const pending=()=>currentActivity==='runner'&&(gateway?.remaining(index)||0)>0;
   return {
+    getBoundaryContent:()=>boundaryContent,
     subscribe(fn){listeners.add(fn);return()=>listeners.delete(fn);},
     start:()=>engine.start(),pause:reason=>engine.pause(reason),resume:()=>engine.resume(),
     dispatch(action){
       if(disposed)return;
-      if(currentActivity!=='runner'){engine.dispatch(action);return;}
+      if(currentActivity!=='runner'){if(currentActivity==='link'&&BOUNDARY_MODES[linkMode]&&linkChainMode==='classic'&&action.type==='retry'&&engine.getSnapshot().status==='lost'){for(const e of new Set(engines.values()))e.dispose();engines.clear();boundaryStrikes=0;boundaryConnections.clear();for(const k of [...activityClears])if(k.startsWith('link:'))activityClears.delete(k);for(const k of [...checkpoints])if(k.includes(':link:'))checkpoints.delete(k);index=0;roundIndex=0;mount();engine.start();return;}engine.dispatch(action);return;}
       const g=gateway?.getSnapshot();
       if(g&&g.state!=='idle'){
         if(action.type==='gateway-continue'&&g.state==='open'){gateway.dispatch({type:'continue'});stageGates++;if(pickupMode){if(gateway.remaining(index))gateway.enter(index);}else engine.resume();}
@@ -68,7 +75,7 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
       const s=engine.getSnapshot(),g=currentActivity==='runner'?gateway?.getSnapshot():null;
       const atRouteEnd=roundIndex===roundCount-1&&index===canonical.stages.length-1&&s.status==='checkpoint'&&!pending();
       const activityCompletedCount=[...activityClears].filter(key=>key.startsWith(`${currentActivity}:`)).length,activityRequiredCount=canonical.stages.length*roundCount;
-      return {...s,status:g&&!['idle','disposed'].includes(g.state)?'gateway':s.status,gateway:g||s.gateway||null,activity:currentActivity,runId,arcadeScore,stageIndex:index,stageCount:canonical.stages.length,roundIndex,roundCount,completedCheckpoints:[...checkpoints],
+      return {...s,...(s.boundaryVersion===2?{routeConnections:[...boundaryConnections],routePairs:canonical.refs.slice(1).map((toRef,i)=>({fromRef:canonical.refs[i],toRef,pairKey:`${canonical.refs[i]}>${toRef}`}))}:{}),status:g&&!['idle','disposed'].includes(g.state)?'gateway':s.status,gateway:g||s.gateway||null,activity:currentActivity,runId,arcadeScore,stageIndex:index,stageCount:canonical.stages.length,roundIndex,roundCount,completedCheckpoints:[...checkpoints],
         atRouteEnd,activityCompletedCount,activityRequiredCount,routeComplete:atRouteEnd&&activityCompletedCount===activityRequiredCount};
     },
     async prepareLink(client,next=false){
@@ -81,7 +88,9 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
       missing.forEach(ref=>reviewRequested.add(ref));
       const prepared=await prepareLinkPlans(missing,client);if(disposed)return false;
       Object.assign(linkPlans,prepared);
-      if(currentActivity==='link'&&engine.getSnapshot().status==='ready'){engine.dispose();mount();}
+      const remountLink=currentActivity==='link'&&engine.getSnapshot().status==='ready';
+      if(BOUNDARY_MODES[linkMode]&&(!boundaryContent||client&&!boundaryReviewed&&engine.getSnapshot().status==='ready')){const fresh=await prepareBoundaryContent(canonical.refs,client);if(disposed){fresh.dispose();return false;}boundaryContent?.dispose();boundaryContent=fresh;boundaryReviewed=!!client;}
+      if(remountLink){engine.dispose();mount();}
       return true;
     },
     switchActivity(next){
@@ -95,6 +104,6 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
       for(const e of new Set(engines.values()))e.dispose();engines.clear();
       if(roundIndex<roundCount-1)roundIndex++;else{index++;roundIndex=0;}mount();engine.start();return true;
     },
-    dispose(){if(disposed)return;disposed=true;for(const e of new Set(engines.values()))e.dispose();engines.clear();gateway?.dispose();listeners.clear();},
+    dispose(){if(disposed)return;disposed=true;for(const e of new Set(engines.values()))e.dispose();engines.clear();boundaryContent?.dispose();gateway?.dispose();listeners.clear();},
   };
 }

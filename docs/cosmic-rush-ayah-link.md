@@ -1,41 +1,51 @@
-# Cosmic Rush Phase 5: Ayah Link and Phrase Repair
+# Ayah Quest 3.0 Phase 4: Vanishing Boundary and Constellation Chain
 
-Phase 6 update: [Saved expeditions and Weak-Link Bosses](cosmic-rush-expeditions.md) now coordinate these activities and offer final native passage recall. Release details below describe the original standalone implementation.
+## Current playable modes
 
-## Launch and mission flow
+Revision Lab → Cosmic Rush → mission briefing → **Ayah Link level** now offers:
 
-Open **Your Space → Revision Lab → Cosmic Rush**, select Al-Fatihah or Juz Amma and launch **Ayah Link**. Choose guided demonstration, recognition, independent opening-word recall or extended transition recall. Runner, Meteor Defense and Link can hand over at safe checkpoints through the same mission director. Weak-Link Boss and Final Oral Recall remain separate future hybrid stages; this release does not declare the complete hybrid mission finished.
+- **L1 Endpoint Connections** (`endpoints`): the previous ending stays visible; connect it to one of three distinct, authentic next openings.
+- **L2 Restore Both Boundary Pieces** (`boundary`): conceal both source endpoints; select or drag the correct ending onto the next opening, then connect them.
+- **L3 Constellation Chain** (`constellation`): connect every real adjacent pair in the selected set, retain illuminated stars through mission stages, then reconnect studied boundaries cumulatively. The final stage's final round includes every selected route boundary, including stage seams.
 
-The demonstration displays complete adjacent ayahs, highlights the ending and opening words, fades external verse-number annotations and draws a luminous connection. Restore markers at any time. Original Arabic, diacritics and embedded stopping symbols are retained. Hiding a word changes presentation only. Canonical boundaries never change and visual grouping does not certify a recitation stop.
+The four original IDs (`guided`, `recognition`, `opening`, `extended`) and their gateway, typed and self-assessed comparison mechanics remain available. The arcade activity ID remains `link`; all evidence stays in `ayah-cosmic-links-v1`. Public Cosmic Rush missions still use Al-Fatihah and Juz Amma. This change does not bypass that mission entitlement boundary or advertise private content in the public launcher.
 
-Arrows or A/D steer between three opening-word gateways; Enter commits after the ship reaches the selected lane. Touch users select a gateway then press Enter selected gateway. Wrong selections enter a recoverable repair state. Hints progressively reveal the verified meaning, first grapheme and full opening word. Typed responses compare normalized text without changing the source display. Spoken comparison is explicitly learner self-assessment, never speech verification. Extended recall hides the complete next ayah. Correct transitions encourage reciting both complete ayahs together.
+## Interaction and presentation
 
-All selected ayahs are covered. A short first ayah forms the preceding context for the first real pair; a long first ayah may have a standalone preparatory reactor. Single-ayah foundations are not invented adjacent pairs. Stage seams use the preceding selected ayah from the global mission range.
+Study two complete, verified consecutive ayahs in RTL reading order. Their external Mushaf markers begin visible. Watch the luminous demonstration or skip it; the markers fade and endpoint text is concealed in presentation only. **Restore Mushaf Markers** remains available, including while paused. Ayah markers are annotations identifying canonical boundaries, not sentence-ending punctuation; their removal does not imply a stopping/restart ruling.
 
-## Reactor safety contract
+Click/tap an ending and an opening, then choose **Connect selected endpoints**. Keyboard users use Tab and Enter/Space on the same controls. Pointer/touch users can drag between opposite banks; a luminous preview follows the pointer. Dropping on a valid endpoint commits that link. Dropping elsewhere or cancelling a pointer is a motor event and never a memory strike. Correct endpoints snap together, restore exact source text, illuminate the connection and send a small star traveler across it. No answer timer is used.
 
-For ayahs longer than six words, `link-content.js` loads the existing passage bundle and published segmentation review. The source hash, exact text, word positions and complete contiguous partition must match. Review identity, version and timestamp are required; **every visual segment must be approved**. Pending, rejected, missing, stale or malformed partitions produce whole-ayah reconstruction instead. Reviewed groups are used unchanged, including their original length; the application never manufactures 2–3-word boundaries.
+Classic has three memory strikes across the route; losing requires restarting that Link route. Practice replenishes the budget at each completed boundary and preserves earlier connections when retrying a failed boundary. Hints, full-text comparison and listening are assistance. All endpoint selection results are recognition, never automatic spoken verification or FSRS grades.
 
-Visual approval is separate from recitation-stop approval. Link always plays complete canonical ayahs, even when approved visual phrases exist. No clipped phrase playback or new waqf guidance is introduced. Production availability depends on real published reviews; approved fixtures in automated tests are not published scholarly approvals.
+Full preceding and following ayah recordings can play sequentially with stop and volume controls. No cropped or stitched recordings are introduced. Endpoint groups are visual cues, not approved recitation units. Reduced motion removes decorative fades/travel; skip controls remain available.
 
-Reactor tiles support drag-and-drop, touch handles, click placement and keyboard ordering. Incorrect arrangements remain adjustable. Identical Arabic components can exchange equivalent occurrence positions without a hidden identity penalty, while each tile is consumed once. The charging effect is cosmetic.
+## Contracts and compatibility
 
-## Evidence, rewards and privacy
+- `boundary-content.js`: authenticated bundle loading, canonical word spans, complete source/review fingerprints, source-backed endpoint alternatives and full-ayah audio. `prepareBoundaryContent` also accepts authorized private pairs through the existing backend loader; it does not grant entitlement based on frontend state. Access/revision checks, account changes and disposal protect active source/audio objects.
+- `link-boundary.js`: deterministic source selection, real adjacent pair IDs (`surah:ayah>surah:nextAyah`), two-endpoint commitment, memory/motor separation, Classic/Practice budgets, cumulative challenges and the standard game lifecycle.
+- `link-boundary-ui.js`: RTL source cards, interactive connectors, constellation map, accessible controls, media lifecycle, existing evidence and bonus-reward APIs.
+- `link.js` adapts the three new mode IDs while keeping original contracts intact. The shared mission controller preserves stage seams, route stars and Classic budgets.
+- Evidence root version remains 1, with additive `boundaryVersion: 2`, expected/selected endpoint IDs and optional source/review fingerprint metadata. Legacy events remain valid. Private evidence requires a trusted authorized content context; after access ends, its metadata remains recoverable without re-exposing text. Weak-link selection skips inaccessible private sources.
 
-`ayah-cosmic-links-v1` is versioned, profile-local and exportable through existing profile storage. It stores canonical adjacent references, exact-source fingerprints, event identifiers, mode, hints, assistance and evidence categories. Raw typed responses and microphone audio are not stored. Invalid/unsupported records are retained for recovery; capacity failures are surfaced rather than silently trimming history. This new ledger does not add cloud synchronization or a database migration.
+Source text is never duplicated in the ledger. Old malformed/future ledger data remains exportable and is not overwritten. Cumulative recognition does not award extra transition receipts; replay uses the existing capped, idempotent rewards. There is no new database migration and no second scheduler.
 
-The transparent weak-link selector separates observed opening selections, typed mismatches and self-reported spoken difficulty. Reactor-order errors do not fabricate a specific adjacent-pair weakness. Foundations, navigation and motor errors are excluded. Old-source evidence remains recoverable but is excluded from current recommendations. No estimated forgetting probability is invented.
+Standalone live navigation remains session-local: reload restarts an unfinished Link set, while evidence and earned rewards persist. Existing saved expedition checkpoints and native recall history retain their original behavior. This phase does not add cross-device live-game resume.
 
-Audio, hints and prior comparison reveals mark assistance. Independent-eligible here describes the local response conditions, not certified recitation or memorization mastery. Neither Link victories nor repair practice writes FSRS history. Correct links use existing capped/idempotent Puzzle Lab XP receipts; native recall remains the only existing route to its review scheduling.
+## Validation
 
-## Lifecycle and accessibility
+The new model suite exercises all **533 free adjacent-ayah pairs**, distinct normalized choices and exact source spans; authorized/private and denied pairs; ordered stage references; source/review changes; Classic/Practice recovery; full-route cumulative coverage; evidence isolation, duplicate receipts and FSRS non-interference. Browser tests exercise drag/missed drops, actual touch-enabled mobile input, keyboard selection, RTL, restored text, marker fading/restoration, sequential audio, account cleanup and reduced motion. Original Link tests still run against their legacy modes.
 
-Complete preceding/next ayah recitations play sequentially, with volume and stop controls. Changing activities, profiles or disposing the view stops owned audio and listeners. Reduced motion disables decorative travel/fades; there is no recitation timer. Three route portals, explicit buttons, focusable controls and responsive RTL cards support keyboard and mobile use.
+## Retained legacy contracts
 
-## Validation and limits
+The original `guided`, `recognition`, `opening` and `extended` modes retain gateway steering, typed text comparison and explicitly self-assessed spoken comparison. Their existing source checks, hints and events remain valid. The legacy Broken Verse Reactor still requires a complete source-matched, published approved visual partition; incomplete or unapproved partitions fall back to a whole-ayah component. Visual approval is separate from waqf/ibtida approval, and legacy audio remains full-ayah only. Local typed/recognition results never certify spoken recitation or replace the native recall scheduler.
 
-`tests/cosmic-link.spec.js` covers canonical text throughout the free corpus, approval/source validation, all four levels, duplicate-word handling, recovery, evidence isolation and mission seams. `tests/cosmic-link-ui.spec.js` exercises marker restoration, real steering, audio assistance, mobile reduced motion, approved-fixture reconstruction and native dragging.
+## Release verification
 
-This is a supported revision activity, not an independent oral exam or certified tajweed assessment. Physical-device performance and deployment-specific published reviews require deployment checks. Existing campaign resume behavior is unchanged; the evidence ledger persists, but live Link navigation is not a cross-device saved campaign.
+- Complete Playwright regression suite: **828 passed** with three workers using `playwright.regression.config.js` (21.5 minutes).
+- Focused new boundary model/browser suite: **18 passed**, including a model sweep of all **533 free adjacent pairs**.
+- Supabase content-policy tests: **6 passed**; billing tests: **7 passed**.
+- Quran-content Edge Function type check, production build and whitespace checks passed.
+- [Desktop screenshot](screenshots/ayah-link-3/desktop.png) and [390px touch screenshot](screenshots/ayah-link-3/mobile.png) were captured from playable browser sessions and visually inspected.
 
-Release verification: 100 targeted Cosmic/shared-arcade/Snake/Falling/reward regression tests passed, followed by two strengthened assistance/drag assertions. Production build and whitespace checks passed. The long `mission stages advance` browser test was excluded from this targeted run; cross-stage controller behavior is covered by the new Link model test. This is not a claim that the repository-wide suite or physical-device testing was completed.
+Private-source tests use authorized fixtures and the existing authenticated loader. Live deployed Supabase policies and physical-device speaker playback were not revalidated. Standalone in-flight Link resume across reloads/devices is not added; completed evidence, existing expedition saves and earned rewards remain preserved. Railway deployment is manual.
