@@ -21,7 +21,7 @@ export function mountPassageNavigation(main,{session,current,lab,onSelect,onClea
  bar.querySelector('[data-context-export]').onclick=()=>{const raw=profileStorage.getItem(PASSAGE_SELECTION_KEY),url=URL.createObjectURL(new Blob([raw||'null'],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='ayah-passage-selection.json';a.click();URL.revokeObjectURL(url);};
  return bar;
 }
-export function mountContextLab(main,{session,lab,ctx,onActive,onLab,onCosmic}){
+export function mountContextLab(main,{session,lab,ctx,onActive,onLab,onCosmic,onClassicMode=null}){
  ctx={...ctx,own:dispose=>session.own(dispose)};
  const descriptor=session.descriptor(),owner=activeProfileId(),root=document.createElement('section');root.className='context-lab-content';root.setAttribute('aria-label','Selected passage learning surface');main.append(root);let disposed=false,generation=0,studio=null,gameHost=null,page=0,launching=false;
  const clear=()=>{generation++;studio?.close();studio=null;gameHost?.dispose();gameHost=null;root.replaceChildren();};
@@ -29,7 +29,8 @@ export function mountContextLab(main,{session,lab,ctx,onActive,onLab,onCosmic}){
  const current=()=>!disposed&&owner===activeProfileId()&&root.isConnected&&session.has();
  async function show(){clear();if(!current())return;const token=generation,d=session.descriptor(),b=session.bundle(d.active);
   main.querySelector('.page-heading h1').textContent=lab==='memorization'?'Memorization Lab':lab==='puzzle'?'Puzzle Lab':'Revision Lab';
-  const title=catalog.chapters.find(c=>c.id===b.surah).name;root.innerHTML=`<h2>${esc(title)} · ${esc(d.refs[0])} → ${esc(d.refs.at(-1))}</h2><p>Same authorized passage across learning labs. Visual workspaces are not recitation stops.</p><label>Current ayah<select data-context-active>${d.refs.map(k=>`<option ${k===d.active?'selected':''}>${k}</option>`).join('')}</select></label><div data-context-unit></div><p data-context-feedback role="status"></p>`;
+  const title=catalog.chapters.find(c=>c.id===b.surah).name;root.innerHTML=`<h2>${esc(title)} · ${esc(d.refs[0])} → ${esc(d.refs.at(-1))}</h2><p>Same authorized passage across learning labs. Visual workspaces are not recitation stops.</p>${lab==='memorization'&&onClassicMode?`<nav class="mode-row" aria-label="Memorization Lab modes"><button class="text-button" aria-current="page">Adaptive groups</button>${[['practice','Practice'],['quiz','Puzzle quest'],['recall','Active recall'],['sequence','Ayah chain']].map(([id,label])=>`<button class="text-button" data-context-classic="${id}">${label}</button>`).join('')}</nav>`:''}<label>Current ayah<select data-context-active>${d.refs.map(k=>`<option ${k===d.active?'selected':''}>${k}</option>`).join('')}</select></label><div data-context-unit></div><p data-context-feedback role="status"></p>`;
+  root.querySelectorAll('[data-context-classic]').forEach(button=>button.onclick=()=>onClassicMode(button.dataset.contextClassic));
   root.querySelector('[data-context-active]').onchange=e=>onActive(e.target.value);
   const unit=root.querySelector('[data-context-unit]'),feedback=root.querySelector('[data-context-feedback]');
   if(lab==='memorization'){const {openPassageStudio}=await import('../passage/ui.js');if(!current()||token!==generation)return;studio=openPassageStudio({...ctx,inlineRoot:unit,initialReference:d.active,initialRefs:d.refs.length<=10?d.refs:[d.active],onReferenceSelected:key=>{const selected=session.descriptor();if(selected.refs.includes(key)){session.navigate(lab,key);root.querySelector('[data-context-active]').value=key;}else void onLab(lab,[key]);},onPassageSelection:refs=>onLab('memorization',refs)});return;}

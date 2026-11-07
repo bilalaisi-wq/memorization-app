@@ -80,9 +80,10 @@ export function createPassageMemory(
         return d.active;
       });
     },
-    update(flag) {
+    update(flag, evidence = null) {
       return save((d) => {
         if (!d.active) throw Error("Start a recall first.");
+        if(flag === "anchor"){d.active.assisted=true;d.active.anchorIds=Array.isArray(evidence)?evidence.filter(id=>typeof id==='string').slice(0,100):[];}
         if (flag === "abandon") d.active.assisted = true;
         else if (flag === "declared") d.active.declared = true;
         else if (flag === "compared") {
@@ -133,6 +134,7 @@ export function createPassageMemory(
           grade,
           ...(assessmentSource === "self-assessed" ? {assessmentSource} : {}),
           independent,
+          ...(a.anchorIds?{anchorIds:clone(a.anchorIds)}:{}),
           scheduled: eligible,
           nextReview: r.card?.due || null,
           stage: r.successfulDays.length >= 3 && r.card?.state === State.Review

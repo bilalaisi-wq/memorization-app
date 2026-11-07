@@ -1,3 +1,5 @@
+import {mountExpansion} from '../memorization/ui.js';
+import {reviewedAnchors} from '../memorization/model.js';
 import {PASSAGE_GAMES,validatePractice,practiceProgress,recordPracticeXP,acknowledgePracticeRecall,recommendPassageGame} from './practice-plan.js';
 import { reportStudyExposure } from "../study-exposure.js";
 import { awardStudy } from "../rewards/store.js";
@@ -38,6 +40,7 @@ import "./passage.css";
 export function openPassageStudio(ctx = {}) {
   const d = document.createElement(ctx.inlineRoot ? "section" : "dialog");
   d.className = "account-dialog passage-studio";
+  let expansion=null,groupSize=0;
   let closed=false,releaseOwner=()=>{};
   const owner = ctx.user?.id || null;
   const guard=()=>{if(closed||activeProfileId()!==owner)throw Error('Account changed or passage studio closed.');};
@@ -85,6 +88,7 @@ export function openPassageStudio(ctx = {}) {
         if (typeof saved.current.segmentId !== "string") throw Error();
       }
       validatePractice(saved);
+      if(saved.groupSizes&&(typeof saved.groupSizes!=="object"||Array.isArray(saved.groupSizes)||!Object.values(saved.groupSizes).every(x=>[0,1,2,3,4,5].includes(x))))throw Error();
       work = saved;
       selectedRefs = refs;
     }
@@ -95,7 +99,7 @@ export function openPassageStudio(ctx = {}) {
   const workKey = () =>
     `${bundle.key}:${segmentId}:${bundle.contentRevision || "free-v1"}:${
       bundle.segmentationReview?.version || "draft-0.1"
-    }${layout === "grouped" ? ":grouped-v1" : ""}`;
+    }${layout === "grouped" ? groupSize?`:adaptive-v1:${groupSize}`:":grouped-v1" : ""}`;
   function persistWork() {
     if (workWarning) return;
     if(bundle) {
@@ -116,7 +120,7 @@ export function openPassageStudio(ctx = {}) {
     const previous = work.records[workKey()];
     if (previous === undefined) return;
     try {
-      const restored = restoreWorkspace(bundle, segmentId === "full" ? null : currentSegment(), previous, layout);
+      const restored = restoreWorkspace(bundle, segmentId === "full" ? null : currentSegment(), previous, layout,groupSize||undefined);
       ({ page, orders, windowSequence, level } = restored);
     } catch (e) {
       workWarning = e.message;
@@ -142,6 +146,7 @@ export function openPassageStudio(ctx = {}) {
   }
   const close = () => {
     if(closed)return;
+    expansion?.dispose();expansion=null;
     gameHost?.dispose();gameHost=null;
     closed=true;
     releaseOwner();
@@ -153,6 +158,7 @@ export function openPassageStudio(ctx = {}) {
     stop();
     if(!ctx.inlineRoot)d.close();
     d.remove();
+    ctx.onAssessmentView?.(false);
     ctx.onClose?.();
   };
   window.addEventListener('ayahprofilechange',()=>{if(activeProfileId()!==owner)close();},{signal:lifecycle.signal});
@@ -193,6 +199,7 @@ export function openPassageStudio(ctx = {}) {
       orders = {};
       windowSequence = [];
       assessmentBundles = null;
+      groupSize=work.groupSizes?.[key]||0;
       layout = ["grouped","legacy"].includes(work.layoutPreference) ? work.layoutPreference : work.current?.key === key && ["grouped","legacy"].includes(work.current.layout) ? work.current.layout : "grouped";
       if (!work.layoutPreference && !work.records[workKey()]) { layout="legacy";if(!work.records[workKey()])layout="grouped"; }
       restoreWork();
@@ -259,6 +266,7 @@ export function openPassageStudio(ctx = {}) {
       bundle,
       page,
       segmentId === "full" ? null : currentSegment(),
+      groupSize||undefined,
     );
   }
   function resetWindow() {
@@ -320,6 +328,7 @@ export function openPassageStudio(ctx = {}) {
     panel.querySelector('h3').tabIndex=-1;panel.querySelector('h3').focus({preventScroll:true});
   }
   function draw() {
+    expansion?.dispose();expansion=null;
     pendingControl();
     assessmentView++;
     d.dataset.recallActive = "false";
@@ -328,6 +337,7 @@ export function openPassageStudio(ctx = {}) {
       drawAssessment();
       return;
     }
+    ctx.onAssessmentView?.(false);
     if (!bundle) {
       root.innerHTML =
         `<p>Build a passage from the verified library. Free ayahs work without an account.${work.current ? ' Resume saved ayah ' + esc(work.current.key) + '.' : ''}</p><button class="primary" data-start>${work.current ? "Resume saved workspace" : "Start with Al-Fatihah"}</button>${work.current ? '<button class="text-button" data-free-start>Practice free Al-Fatihah</button>' : ""}`;
@@ -355,7 +365,7 @@ export function openPassageStudio(ctx = {}) {
             esc(o.label)
           }</option>`
         ).join("")
-      }</select></label><button class="text-button" data-add-ref>Add to my passage</button></div><label>Workspace layout<select data-layout><option value="grouped" ${layout==="grouped"?"selected":""}>Grouped · up to 12 pieces</option><option value="legacy" ${layout==="legacy"?"selected":""}>Original word windows · saved drafts</option></select></label><p>Current: ${bundle.key} · Juz ${bundle.juz} · ${bundle.words.length} words</p><details data-full-reference><summary>Full verified ayah and translation</summary><p class="arabic" lang="ar" dir="rtl">${
+      }</select></label><button class="text-button" data-add-ref>Add to my passage</button></div><label>Workspace layout<select data-layout><option value="grouped" ${layout==="grouped"?"selected":""}>Grouped · up to 12 pieces</option><option value="legacy" ${layout==="legacy"?"selected":""}>Original word windows · saved drafts</option></select></label><label>Adaptive grouping<select data-group-size ${layout!=="grouped"?"disabled":""}>${[0,1,2,3,4,5].map(n=>`<option value="${n}" ${groupSize===n?"selected":""}>${n?`${n} word${n===1?"":"s"} per piece`:"Automatic · source-length baseline"}</option>`).join('')}</select></label><p>Current: ${bundle.key} · Juz ${bundle.juz} · ${bundle.words.length} words</p><details data-full-reference><summary>Full verified ayah and translation</summary><p class="arabic" lang="ar" dir="rtl">${
         esc(bundle.textUthmani)
       }</p><p>${esc(bundle.translation)}</p><p>${
         bundle.sources.map((s) =>
@@ -421,6 +431,7 @@ export function openPassageStudio(ctx = {}) {
             bundle,
             p,
             segmentId === "full" ? null : currentSegment(),
+            groupSize||undefined,
           ).words;
           return `<div><span class="arabic" dir="rtl" lang="ar">${
             esc(words[0].text)
@@ -448,6 +459,10 @@ export function openPassageStudio(ctx = {}) {
     if (focusMove && /^\d+:-?1$/.test(focusMove)) root.querySelector(`[data-move="${focusMove}"]`)?.focus({preventScroll:true});
     root.querySelector('[data-layout]').onchange=e=>{persistWork();layout=e.target.value;work.layoutPreference=layout;page=0;orders={};windowSequence=[];restoreWork();draw();};
     root.querySelector('[data-workspace-jump]').onchange=e=>{page=Number(e.target.value);draw();};
+    root.querySelector('[data-group-size]').onchange=e=>{persistWork();groupSize=Number(e.target.value);work.groupSizes??={};work.groupSizes[bundle.key]=groupSize;page=0;orders={};windowSequence=[];restoreWork();draw();};
+    const expansionRoot=document.createElement('div');expansionRoot.dataset.cumulativeRoot='';root.querySelector('[data-check-window]').after(expansionRoot);
+    const expansionToken=assessmentView;
+    void mountExpansion(expansionRoot,{bundle,segment:segmentId==='full'?null:currentSegment(),size:layout==='grouped'?groupSize:1,storage,isCurrent:()=>!closed&&expansionRoot.isConnected&&assessmentView===expansionToken,onAward:()=>trackAward(awardStudy({mode:'passage',unit:bundle.key,action:'completion',xp:8})),onRecall:()=>beginRecall([bundle]),anchors:ctx.anchors||bundle.memoryAnchors||[]}).then(handle=>{if(expansionToken===assessmentView&&!closed)expansion=handle;else handle?.dispose();}).catch(e=>{if(expansionRoot.isConnected)expansionRoot.textContent=e.message;});
     mountGamePicker();
     root.querySelector("[data-reference]").onchange = (e) =>
       select(e.target.value);
@@ -699,6 +714,7 @@ export function openPassageStudio(ctx = {}) {
       const unit = await recallUnit(all, segment);
       if (!d.isConnected || request !== navigation) return;
       // Persist externally observed quest support with the actual attempt in one write.
+      expansion?.dispose();expansion=null;
       memory.begin(unit, {assisted: ctx.assessmentAssisted === true});
       drawAssessment();
       note(
@@ -709,6 +725,8 @@ export function openPassageStudio(ctx = {}) {
     }
   }
   async function drawAssessment() {
+    ctx.onAssessmentView?.(true);
+    expansion?.dispose();expansion=null;
     pendingControl();
     const view = ++assessmentView;
     const currentView = () => d.isConnected && view === assessmentView;
@@ -730,6 +748,8 @@ export function openPassageStudio(ctx = {}) {
     } from memory. This is self-assessed recitation, not automatic speech verification.</p><button class="primary" data-declare ${
       a.declared ? "disabled" : ""
     }>I recited from memory</button><button class="text-button" data-compare>Reveal verified text and compare</button><button class="text-button" data-recall-listen>Listen to reciter (study assistance)</button><button class="text-button" data-abandon>Return to practice</button><div data-comparison></div><div data-grades></div>`;
+    const anchors=assessmentBundles?.flatMap(b=>reviewedAnchors(b,ctx.anchors||b.memoryAnchors||[]))||[];
+    if(anchors.length){const button=document.createElement('button');button.className='text-button';button.dataset.recallAnchors='';button.textContent='Use reviewed memory anchors · marks assistance';root.querySelector('[data-comparison]').before(button);button.onclick=()=>{try{memory.update('anchor',anchors.map(a=>a.id));button.disabled=true;const help=document.createElement('div');help.dataset.recallAnchorHelp='';help.innerHTML=anchors.map(a=>`<p>${esc(a.note)} · ${a.sources.map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title)}</a>`).join(' · ')}</p>`).join('');button.after(help);}catch(e){note(e.message,true);}};}
     root.querySelector("[data-declare]").onclick = () => {
       try {
         memory.update("declared");
@@ -925,7 +945,7 @@ export function openPassageStudio(ctx = {}) {
     } catch (e) { if (d.isConnected && request === navigation) note(e.message, true); }
   })();
 
-  return {close};
+  return {close,listen:()=>play()};
 }
 
 // Phase-2 integration seam; callers opt in, no campaign screen is mounted here.

@@ -88,9 +88,9 @@ export async function recallUnit(bundles, segment = null) {
 
 // Validate saved positions against the current source/review without repairing or
 // discarding the original record. Older schema-1 records remain supported.
-export function restoreWorkspace(bundle, segment, saved, layout = "legacy") {
+export function restoreWorkspace(bundle, segment, saved, layout = "legacy", groupSize) {
   const windowFor = layout === "grouped" ? groupedWindow : wordWindow;
-  const count = windowFor(bundle, 0, segment).count;
+  const count = windowFor(bundle, 0, segment, groupSize).count;
   if (!saved || !Number.isInteger(saved.page) || saved.page < 0 || saved.page >= count ||
       ![0, 1, 2].includes(saved.level) || !saved.orders || typeof saved.orders !== "object" || Array.isArray(saved.orders) ||
       !Array.isArray(saved.windowSequence) || saved.windowSequence.length !== count ||
@@ -101,12 +101,12 @@ export function restoreWorkspace(bundle, segment, saved, layout = "legacy") {
   for (const [page, ids] of Object.entries(saved.orders)) {
     if (!/^\d+$/.test(page) || Number(page) >= count || !Array.isArray(ids) ||
         new Set(ids).size !== ids.length || ids.some(id =>
-          !windowFor(bundle, Number(page), segment).words.some(w => w.position === id))) {
+          !windowFor(bundle, Number(page), segment, groupSize).words.some(w => w.position === id))) {
       throw Error("Saved workspace needs recovery; it has not been overwritten.");
     }
   }
   if (layout === "grouped") for (const [page, ids] of Object.entries(saved.orders)) {
-    const groups = windowFor(bundle, Number(page), segment).groups;
+    const groups = windowFor(bundle, Number(page), segment, groupSize).groups;
     let remaining = [...ids];
     while (remaining.length) {
       const group = groups.find(g => g.id === remaining[0]);
@@ -118,11 +118,12 @@ export function restoreWorkspace(bundle, segment, saved, layout = "legacy") {
 }
 
 // Visual grouping only: never a recitation stop or an independent recall unit.
-export function groupedWindow(bundle, page = 0, segment = null) {
+export function groupedWindow(bundle, page = 0, segment = null, requestedSize) {
   const firstWord = segment?.firstWord ?? 1, lastWord = segment?.lastWord ?? bundle.words.length;
   if (!Number.isInteger(firstWord)||!Number.isInteger(lastWord)||firstWord<1||lastWord<firstWord||lastWord>bundle.words.length||bundle.words.some((w,i)=>w.position!==i+1)) throw Error("Invalid canonical word range.");
   const length = lastWord - firstWord + 1;
-  const groupSize = length <= 12 ? 1 : length <= 24 ? 2 : length <= 36 ? 3 : 5;
+  if(requestedSize!==undefined&&![1,2,3,4,5].includes(requestedSize))throw Error("Choose one to five words per piece.");
+  const groupSize = requestedSize ?? (length <= 12 ? 1 : length <= 24 ? 2 : length <= 36 ? 3 : 5);
   const capacity = WINDOW_SIZE * groupSize, count = Math.ceil(length / capacity);
   const index = Math.max(0, Math.min(page, count - 1)), first = firstWord + index * capacity, last = Math.min(lastWord, first + capacity - 1);
   const words = bundle.words.slice(first - 1, last), groups = [];

@@ -1,0 +1,7 @@
+import {versionedStore} from '../ui/versioned-store.js';
+export const LAB_KEY='ayah-memorization-lab-v1';
+export function createLabStore(storage){
+ const validRecord=r=>r&&(r.reference===undefined||/^\d+:\d+$/.test(r.reference))&&(r.fingerprints===undefined||r.fingerprints&&/^[a-f0-9]{64}$/.test(r.fingerprints.source)&&/^[a-f0-9]{64}$/.test(r.fingerprints.review))&&(r.active===undefined||typeof r.active==='boolean')&&[0,1,2,3,4,5].includes(r.size)&&Number.isInteger(r.round)&&r.round>=0&&Number.isInteger(r.page)&&r.page>=0&&r.orders&&typeof r.orders==='object'&&!Array.isArray(r.orders)&&Object.values(r.orders).every(a=>Array.isArray(a)&&a.every(p=>Number.isInteger(p)&&p>0)&&new Set(a).size===a.length)&&Array.isArray(r.completed)&&r.completed.every(x=>typeof x==='string')&&Array.isArray(r.assistance)&&r.assistance.every(x=>typeof x.id==='string'&&typeof x.kind==='string'&&typeof x.at==='string');
+ const store=versionedStore(storage,LAB_KEY,()=>({version:1,records:{}}),v=>v?.version===1&&v.records&&typeof v.records==='object'&&!Array.isArray(v.records)&&Object.entries(v.records).every(([key,r])=>/^[a-f0-9]{64}$/.test(key)&&validRecord(r)));
+ return {...store,record(key){return store.snapshot().records[key]||{active:false,size:0,round:0,page:0,orders:{},completed:[],assistance:[]};},save(key,value){if(!validRecord(value))throw Error('Invalid adaptive practice draft.');store.transact(s=>s.records[key]=structuredClone(value));}};
+}

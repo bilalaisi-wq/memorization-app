@@ -1,3 +1,4 @@
+import {mountAdaptivePractice,disposeAdaptivePractice,playAdaptiveRecitation} from './memorization/native.js';
 import {createPassageSession} from './passage-context/session.js';
 import {mountPassageNavigation,mountContextLab} from './passage-context/ui.js';
 import {freeReference,availability,reference as referenceForContext} from './content/library.js';
@@ -130,19 +131,20 @@ let completed = new Set(
     .map((r) => r.key),
 );
 const app = document.querySelector("#app");
-let contextSurface=null,contextBusy=false,cosmicContext=false;
+let contextSurface=null,contextBusy=false,cosmicContext=false,contextClassic=false;
 const labName=()=>mode==='revision'?'revision':mode==='lab'?'puzzle':'memorization';
 const passageSession=createPassageSession({getClient:()=>appearanceAccount().client,onInvalidate:reason=>{stop();contextSurface?.dispose();contextSurface=null;const root=document.querySelector(cosmicContext?'.cosmic-rush':'.context-lab-content');root?.replaceChildren(Object.assign(document.createElement('p'),{textContent:reason}));if(!reason.startsWith('Loading')&&!reason.startsWith('Selection cleared')&&!reason.startsWith('Passage session closed')){const main=document.querySelector('main');if(main){let note=main.querySelector('[data-context-access-notice]');if(!note){note=document.createElement('p');note.dataset.contextAccessNotice='';note.setAttribute('role','alert');main.prepend(note);}note.textContent=reason;}}}});
 Object.defineProperty(passageSession,'clientContext',{get:()=>({...appearanceAccount(),user:activeProfileId()?{id:activeProfileId()}:null})});
 async function openSharedPassage(refs,lab=labName(),{restore=false,cosmic=false}={}){
  if(contextBusy)return;contextBusy=true;
- try{const active=passageSession.has()&&refs.includes(passageSession.descriptor().active)?passageSession.descriptor().active:restore&&passageSession.saved().selection?.refs.join('|')===refs.join('|')?passageSession.saved().selection.active:refs[0];await passageSession.open(refs,{active,lab,restore});mode=lab==='revision'?'revision':lab==='puzzle'?'lab':'practice';cosmicContext=cosmic;reset();}
+ try{const active=passageSession.has()&&refs.includes(passageSession.descriptor().active)?passageSession.descriptor().active:restore&&passageSession.saved().selection?.refs.join('|')===refs.join('|')?passageSession.saved().selection.active:refs[0];await passageSession.open(refs,{active,lab,restore});contextClassic=false;mode=lab==='revision'?'revision':lab==='puzzle'?'lab':'practice';cosmicContext=cosmic;reset();}
  finally{contextBusy=false;}
 }
 function clearSharedPassage(){try{passageSession.clear();cosmicContext=false;reset();}catch(e){const p=document.querySelector('[data-context-status]');if(p)p.textContent=e.message;}}
 async function rememberCosmic(refs){if(passageSession.has()&&passageSession.descriptor().refs.join('|')!==refs.join('|'))await openSharedPassage(refs,'revision',{cosmic:true});}
 
 function reset() {
+  if(contextClassic&&passageSession.has()){const r=referenceForContext(passageSession.descriptor().active);if(freeReference(r.key)){chapter=surahs.findIndex(s=>s.id===r.surah);verses=surahs[chapter].verses;ayah=verses.findIndex(v=>v.id===r.ayah);}}
   stop();
   clearTimeout(peekTimer);
   peeking = false;
@@ -210,6 +212,7 @@ function piece(i, zone) {
   return `<div class="piece-wrap"><button class="piece color-${i % 9} ${gold ? "divine-gold" : ""} ${activeWord === i ? "sounding" : ""}" data-word="${i}" data-zone="${zone}" draggable="true" aria-label="${blank ? "Hidden word" : extra ? entry.roman : v.roman[i]}, ${zone === "bank" ? "add to practice" : "remove from practice"}"><svg class="puzzle-outline" viewBox="0 0 180 140" preserveAspectRatio="none" aria-hidden="true"><path d="${outline(position, v.words.length)}"/></svg>${blank ? "" : gold ? '<span class="gold-sparkles" aria-hidden="true">✧ ˚ ✦</span>' : illustration(art)}<span class="arabic" lang="ar" dir="rtl">${blank ? "؟" : extra ? entry.text : v.words[i]}</span><span class="roman">${blank ? "Recall this word" : extra ? entry.roman : v.roman[i]}</span><span class="word-meaning">${blank ? "" : meaning}</span><span class="piece-dot">${zone === "bank" ? "+" : "−"}</span></button><button class="piece-listen" data-listen="${i}" aria-label="Listen to this piece" title="Listen to this piece">${icon(activeWord === i && playing ? "pause" : "headphones")}</button></div>`;
 }
 function render() {
+  disposeAdaptivePractice();
   stopRevisionLab();
   ({ stars, xp, streak } = {...learning.snapshot().wallet,xp:rewardSummary(learning).xp});
   const v = verses[ayah],
@@ -250,9 +253,9 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
     .querySelector("#nav-daily")
     .classList.toggle("active", mode === "daily");
   document.querySelector("#nav-revision-lab").classList.toggle("active", mode === "revision");
-  if (passageSession.has()&&['practice','quiz','recall','sequence','lab','revision'].includes(mode)&&!cosmicContext){
+  if (passageSession.has()&&['practice','quiz','recall','sequence','lab','revision'].includes(mode)&&!cosmicContext&&!contextClassic){
     const main=document.querySelector('main');clearLearningView(main);
-    contextSurface=mountContextLab(main,{session:passageSession,lab:labName(),ctx:passageSession.clientContext,onActive:active=>{passageSession.navigate(labName(),active);reset();},onLab:(lab,refs)=>openSharedPassage(refs||passageSession.descriptor().refs,lab),onCosmic:()=>{cosmicContext=true;reset();}});
+    contextSurface=mountContextLab(main,{session:passageSession,lab:labName(),ctx:passageSession.clientContext,onClassicMode:freeReference(passageSession.descriptor().active)?m=>{contextClassic=true;mode=m;reset();}:null,onActive:active=>{passageSession.navigate(labName(),active);reset();},onLab:(lab,refs)=>openSharedPassage(refs||passageSession.descriptor().refs,lab),onCosmic:()=>{cosmicContext=true;reset();}});
   }
   else if (mode === "revision") mountRevisionLab(document.querySelector("main"),{selectedPassage:passageSession.has()?passageSession.descriptor():null,onMissionSelection:rememberCosmic});
   else if (mode === "gallery")
@@ -337,6 +340,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
     gallery: memoryCallbacks.onGallery,
   });
   mountSiteMenu(document.querySelector("main"));
+  if(["practice","quiz","recall","sequence"].includes(mode)&&!passageSession.has())mountAdaptivePractice(document.querySelector("main"),{reference:key(),ctx:passageSession.clientContext});
   if(['practice','quiz','recall','sequence','lab','revision','review'].includes(mode))mountPassageNavigation(document.querySelector('main'),{session:passageSession,current:key(),lab:labName(),onSelect:openSharedPassage,onClear:clearSharedPassage,onLab:lab=>{mode=lab==='revision'?'revision':lab==='puzzle'?'lab':'practice';reset();}});
   if(passageSession.has()){
     const d=passageSession.descriptor(),source=catalog.chapters.find(c=>c.id===referenceForContext(d.active).surah),crumb=document.querySelector('.breadcrumb strong');if(crumb)crumb.textContent=`${source.name} · ${d.refs[0]} → ${d.refs.at(-1)}`;
@@ -346,7 +350,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
   }
 }
 function stop({preserveLab = false} = {}) {
-  if(!preserveLab){contextSurface?.dispose();contextSurface=null;}
+  if(!preserveLab){disposeAdaptivePractice();contextSurface?.dispose();contextSurface=null;}
   if (preserveLab) pauseRevisionLab(); else stopRevisionLab();
   stopPieceDrag();
   stopEncouragement();
@@ -613,7 +617,7 @@ function bind() {
     },
   });
   document.querySelector("#clear").onclick = reset;
-  document.querySelector("#full-audio").onclick = () => play(true);
+  document.querySelector("#full-audio").onclick = () => {if(!playAdaptiveRecitation())play(true);};
   document.querySelector("#practice-audio").onclick = () => play(false);
   document.querySelector("#build-all").onclick = () => {
     stop();
@@ -829,7 +833,7 @@ document.addEventListener('click',e=>{if(e.target.closest('[data-ayah]')&&passag
 function revokePrivateContent(){const privateActive=passageSession.private(),legacy=surahs.some(s=>s.developerOnly);if(privateActive)passageSession.invalidate('Private source authorization changed. Reopen the selected passage to reauthorize.');if(legacy){privateLoadToken++;stop();clearPrivateAudio();surahs.splice(0,surahs.length,...freeSurahs);learning.setLibrary(surahs);chapter=Math.min(chapter,surahs.length-1);verses=surahs[chapter].verses;ayah=Math.min(ayah,verses.length-1);}if(privateActive||legacy)document.querySelectorAll('.passage-studio').forEach(d=>d.querySelector('[data-close]')?.click());if(privateActive||legacy){cosmicContext=false;render();}}
 window.addEventListener('ayah-content-access-changed',revokePrivateContent);
 window.addEventListener('ayah-private-content-denied',revokePrivateContent);
-window.addEventListener('ayahprofilechange',()=>{hiddenPrivate=null;cosmicContext=false;});
+window.addEventListener('ayahprofilechange',()=>{hiddenPrivate=null;contextClassic=false;cosmicContext=false;});
 window.addEventListener('ayah-developer-mode',()=>{if(!isDeveloperMode()&&passageSession.private())revokePrivateContent();});
 let hiddenPrivate=null;
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&passageSession.private()){hiddenPrivate=passageSession.descriptor();passageSession.invalidate('Private passage paused while this tab is hidden.');}else if(!document.hidden&&hiddenPrivate){const saved=hiddenPrivate;hiddenPrivate=null;void openSharedPassage(saved.refs,saved.lab,{restore:true}).catch(()=>{});}});
