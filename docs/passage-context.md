@@ -179,3 +179,7 @@ results-panel test locator, inactive-session interference with legacy account
 cleanup, and missing denial feedback after activity disposal. Private asset
 requests remain backed by existing server policies; these automated tests do not
 claim a new live Supabase deployment or live paid-content certification.
+
+## Revision missions
+
+[Memory Rescue and Long-Surah Marathon](revision-missions.md) use the same authorized selection in Revision Lab. The original free-only Cosmic Rush mission policy remains unchanged; premium marathon stages use authenticated source adapters and reauthorize on resume. See that guide for checkpoint, assessment and local/export persistence contracts.

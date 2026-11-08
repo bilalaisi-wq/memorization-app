@@ -1,7 +1,7 @@
 import { surahs } from '../../data.js';
 import { freeReference, sha256 } from '../../../supabase/functions/_shared/content-policy.js';
 
-export const MISSION_LENGTHS = Object.freeze([5, 10, 15, 20]);
+export const MISSION_LENGTHS = Object.freeze([5, 10, 15, 20, 30]);
 export const cosmicSurahs = Object.freeze(surahs.filter(s => s.id === 1 || s.id >= 78 && s.id <= 114));
 // The saved expedition UI coordinates all five objectives; standalone launches remain available.
 export const COSMIC_GAMEPLAY_AVAILABLE = true;

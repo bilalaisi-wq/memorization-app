@@ -202,6 +202,7 @@ export function mountRecall(main, store, surahs, callbacks) {
             draw();
             root.querySelector(".recall-result")?.focus();
             callbacks.onWalletChange();
+            callbacks.onAssessmentSaved?.(graded);
             if (b.dataset.recallGrade !== "Again")
               successCue(
                 `recall:${a.id}`,
@@ -268,4 +269,5 @@ export function mountRecall(main, store, surahs, callbacks) {
     root.querySelector("#recited-compare") ||
     root.querySelector("[data-recall-grade]")
   )?.focus();
+  return {dispose(){recording?.dispose();root.remove();}};
 }

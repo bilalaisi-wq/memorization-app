@@ -32,12 +32,17 @@ export function mountRevisionLab(main,{selectedPassage=null,onMissionSelection=(
   let generation = 0,atSelection=false,atPlanner=false;
   const restored=()=>{if((atSelection||atPlanner)&&root.isConnected)savedRoutes();};window.addEventListener('ayahcosmicrestored',restored);
   const oldCleanup=cleanup;cleanup=()=>{window.removeEventListener('ayahcosmicrestored',restored);oldCleanup();};
+  async function missions(){
+    const token=++generation;atPlanner=false;atSelection=false;flight?.dispose();director?.dispose();director=null;flight=null;
+    try{const {mountRevisionMissions}=await import('./missions/ui.js');if(token!==generation||!root.isConnected)return;flight=mountRevisionMissions(root,{client:appearanceAccount().client,refs:selectedPassage?.refs||null,isCurrent:()=>token===generation,onExit:planner});}catch(e){if(token===generation){planner();const p=document.createElement('p');p.textContent=e.message;root.append(p);}}
+  }
+  function missionEntry(){const b=document.createElement('button');b.className='cosmic-secondary';b.dataset.revisionMissions='';b.textContent='Memory Rescue & Long-Surah Marathon';b.onclick=missions;root.prepend(b);}
   function selection() {
     atSelection=true;atPlanner=false;
     generation++;
     root.innerHTML = `<div class="cosmic-hero"><span class="cosmic-eyebrow">YOUR NEXT CONSTELLATION</span><h2>Revision Lab</h2><p>Plan a passage journey. Return to familiar ayahs and connect them together.</p></div><button class="cosmic-card" data-cosmic-select><span aria-hidden="true">✦</span><strong>Cosmic Rush</strong><span>Ayah Relay 2.0</span><p>Explore the mission planner and constellation route.</p><small>Star Runner + Meteor Defense + Ayah Link</small><b>Choose a mission →</b></button>`;
     root.querySelector('[data-cosmic-select]').onclick = () => planner();
-    savedRoutes();
+    missionEntry();savedRoutes();
   }
   function savedRoutes(){
     root.querySelector('.exp-saved-routes')?.remove();
@@ -62,8 +67,8 @@ export function mountRevisionLab(main,{selectedPassage=null,onMissionSelection=(
   function planner() {
     atSelection=false;atPlanner=true;
     generation++;
-    root.innerHTML = `<button class="cosmic-secondary" data-back>← Revision Lab</button><div class="cosmic-hero"><span class="cosmic-eyebrow">COSMIC RUSH · MISSION PLANNER</span><h2>Chart your ayah journey</h2><p>Al-Fatihah and Juz Amma are free for everyone. Choose a contiguous passage, then explore its route.</p></div><form class="cosmic-form"><label>Surah<select name="surah">${cosmicSurahs.slice().sort((a,b)=>a.id-b.id).map(s=>`<option value="${s.id}">${esc(s.name)} · ${s.verses.length} ayahs</option>`).join('')}</select></label><label>Passage length<select name="selection"><option value="5">Five ayahs</option><option value="10">Ten ayahs</option><option value="15">Fifteen ayahs</option><option value="20">Twenty ayahs</option><option value="custom">Custom contiguous range</option><option value="entire">Entire surah</option></select></label><label data-start>First ayah<input name="start" type="number" min="1" value="1" required></label><label data-end hidden>Last ayah<input name="end" type="number" min="1" value="1"></label><p class="cosmic-range-note">Presets use up to the selected number of ayahs. Shorter surahs and passages include all remaining ayahs.</p><button class="cosmic-primary" type="submit">View mission briefing →</button><p data-error role="alert"></p></form>`;
-    root.querySelector('[data-back]').onclick = selection;
+    root.innerHTML = `<button class="cosmic-secondary" data-back>← Revision Lab</button><div class="cosmic-hero"><span class="cosmic-eyebrow">COSMIC RUSH · MISSION PLANNER</span><h2>Chart your ayah journey</h2><p>Al-Fatihah and Juz Amma are free for everyone. Choose a contiguous passage, then explore its route.</p></div><form class="cosmic-form"><label>Surah<select name="surah">${cosmicSurahs.slice().sort((a,b)=>a.id-b.id).map(s=>`<option value="${s.id}">${esc(s.name)} · ${s.verses.length} ayahs</option>`).join('')}</select></label><label>Passage length<select name="selection"><option value="5">Five ayahs</option><option value="10">Ten ayahs</option><option value="15">Fifteen ayahs</option><option value="20">Twenty ayahs</option><option value="30">Thirty ayahs</option><option value="custom">Custom contiguous range</option><option value="entire">Entire surah</option></select></label><label data-start>First ayah<input name="start" type="number" min="1" value="1" required></label><label data-end hidden>Last ayah<input name="end" type="number" min="1" value="1"></label><p class="cosmic-range-note">Presets use up to the selected number of ayahs. Shorter surahs and passages include all remaining ayahs.</p><button class="cosmic-primary" type="submit">View mission briefing →</button><p data-error role="alert"></p></form>`;
+    missionEntry();root.querySelector('[data-back]').onclick = selection;
     const form = root.querySelector('form');
     const update = () => {
       const s = cosmicSurahs.find(s=>s.id === Number(form.elements.surah.value));
