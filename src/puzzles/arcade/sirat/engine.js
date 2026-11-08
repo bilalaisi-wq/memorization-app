@@ -81,12 +81,7 @@ export function stepSirat(previous,action){
   if(p.grounded&&p.support){const support=s.platforms.find(q=>q.id===p.support);if(support?.moving){p.x+=platformAt(support,s.time).x-platformAt(support,oldTime).x;p.y+=platformAt(support,s.time).y-platformAt(support,oldTime).y;}}
   p.vx=s.direction*SIRAT.speed*(s.quest&&s.session.config.siratRelaxed?.75:1);if(s.jumpQueued&&p.grounded){p.vy=-SIRAT.jump;p.grounded=false;p.support=null;}s.jumpQueued=false;
   const old={x:p.x,y:p.y};p.x+=p.vx*dt;p.x=Math.max(base,Math.min(base+(s.resolved?(s.quest&&platformAt(s.platforms.find(q=>q.elevator),s.time).y>390?1730:1799):1515),p.x));p.vy+=SIRAT.gravity*dt;p.y+=p.vy*dt;p.grounded=false;p.support=null;
-  for(const raw of s.platforms){if(raw.memory&&!raw.solid)continue;const q=platformAt(raw,s.time);if(p.x+30<=q.x||p.x>=q.x+q.w||p.y+46<=q.y||p.y>=q.y+q.h)continue;
-   if(old.y+46<=platformAt(raw,oldTime).y+.5&&p.vy>=0){p.y=q.y-46;p.vy=0;p.grounded=true;p.support=q.id;if(raw.checkpoint){s.checkpoint={x:Math.max(q.x+15,Math.min(q.x+q.w-45,p.x)),y:p.y};}}
-   else if(old.y>=q.y+q.h-.5&&p.vy<0){p.y=q.y+q.h;p.vy=0;}
-   else if(old.x+30<=q.x){p.x=q.x-30;p.vx=0;}
-   else if(old.x>=q.x+q.w){p.x=q.x+q.w;p.vx=0;}
-  }
+  resolvePlatformCollisions(p,old,s.platforms,s.time,oldTime,point=>{s.checkpoint=point;});
   if(p.y>650){recover(s);break;}
   if(s.resolved&&p.x>=base+1740){if(s.quest&&s.cursor===s.sectors[s.session.checkpoint].targets.length-1){beginFinal(s);break;}s.cursor++;if(s.cursor===s.sectors[s.session.checkpoint].targets.length){reduce(s,'checkpoint');if(s.session.status==='won'){s.message='Garden explored! Recognition practice is separate from independent recall.';s.direction=0;break;}s.awaitingNext=true;s.direction=0;s.message='Ayah section complete. Continue into the next garden.';break;}layout(s);s.message='Safe checkpoint reached. A new continuation gateway awaits.';break;}
  }
@@ -96,3 +91,13 @@ export function stepSirat(previous,action){
 export const restoreSiratLayout=layout;
 
 function followCamera(s){const base=s.cursor*1800,width=s.quest?s.viewportWidth||900:900;s.camera=Math.max(base,Math.min(base+1800-width,s.player.x-Math.min(180,width*.35)));}
+
+// Shared navigation only: QUR'AN CHRONICLES reuses the same swept platform collision rules.
+export function resolvePlatformCollisions(p,old,platforms,time,previousTime,checkpoint=()=>{}){
+ for(const raw of platforms){if(raw.memory&&!raw.solid)continue;const q=platformAt(raw,time);if(p.x+30<=q.x||p.x>=q.x+q.w||p.y+46<=q.y||p.y>=q.y+q.h)continue;
+   if(old.y+46<=platformAt(raw,previousTime).y+.5&&p.vy>=0){p.y=q.y-46;p.vy=0;p.grounded=true;p.support=q.id;if(raw.checkpoint){checkpoint({x:Math.max(q.x+15,Math.min(q.x+q.w-45,p.x)),y:p.y});}}
+   else if(old.y>=q.y+q.h-.5&&p.vy<0){p.y=q.y+q.h;p.vy=0;}
+   else if(old.x+30<=q.x){p.x=q.x-30;p.vx=0;}
+   else if(old.x>=q.x+q.w){p.x=q.x+q.w;p.vx=0;}
+  }
+}

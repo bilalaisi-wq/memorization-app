@@ -9,6 +9,7 @@ export const labMemoryTips = {
   detective: 'Say the opening aloud, then recall its continuation before choosing. Listen closely to the alternatives and repeat the correct passage.',
 };
 const tips = {
+  comprehension: "Read the source notes, connect ideas carefully, and distinguish Quran, translation, explanation, reporting and reflection. Do not guess a missing historical report.",
   practice: 'Listen to each word, repeat it aloud after the reciter, then say it again as you move its piece. Join two words before adding another.',
   quiz: 'Say each word aloud as you place it. Read your sequence from the right, then listen and correct one piece at a time.',
   recall: 'Say the hidden word from memory before revealing it. Compare, listen, and repeat the phrase aloud.',
@@ -21,9 +22,9 @@ const tips = {
 export function mountMemoryTip(main, mode) {
   const tip = document.createElement('aside');
   tip.className = 'memory-pro-tip';
-  tip.setAttribute('aria-label', 'Memorization pro tip');
+  tip.setAttribute('aria-label', mode==='comprehension'?"QUR'AN CHRONICLES pro tip":'Memorization pro tip');
   const title = document.createElement('strong');
-  title.textContent = '✦ Memorization pro tip';
+  title.textContent = mode==='comprehension'?"✦ QUR'AN CHRONICLES pro tip":'✦ Memorization pro tip';
   const text = document.createElement('p');
   text.textContent = mode === "lab" ? labMemoryTips.falling : tips[mode] || tips.practice;
   tip.append(title, text);

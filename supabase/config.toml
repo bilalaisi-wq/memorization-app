@@ -24,3 +24,7 @@ verify_jwt = false
 # Verified identity, subscription, adult pilot, consent and atomic coach quota.
 [functions.hifz-coach]
 verify_jwt = false
+
+# QUR'AN CHRONICLES verifies optional learner identity and mandatory editorial roles internally.
+[functions.chronicles-content]
+verify_jwt = false

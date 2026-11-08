@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "id": "al-ikhlas-pilot",
+  "title": "QUR'AN CHRONICLES — unpublished Al-Ikhlas pilot",
+  "refs": [
+    "112:1"
+  ],
+  "sources": [
+    {
+      "id": "ibn-kathir",
+      "title": "Ibn Kathir reference — owner-supplied Qtafsir.com edition",
+      "url": "https://www.qtafsir.com/",
+      "license": "",
+      "licenseUrl": "",
+      "commercialUse": false,
+      "attribution": ""
+    },
+    {
+      "id": "jalalayn",
+      "title": "Al-Jalalayn English PDF — owner-supplied Qalamlib copy",
+      "url": "https://www.qalamlib.com/book_files/pdf/en/tafsir-al-jalalain-Eng-PDF.pdf",
+      "license": "",
+      "licenseUrl": "",
+      "commercialUse": false,
+      "attribution": ""
+    },
+    {
+      "id": "muyassar",
+      "title": "Al-Tafsir Al-Muyassar translation index — owner-supplied Tulayhah reference",
+      "url": "https://tulayhah.wordpress.com/al-tafsir-al-muyassar-translation-index/",
+      "license": "",
+      "licenseUrl": "",
+      "commercialUse": false,
+      "attribution": ""
+    }
+  ],
+  "cards": [
+    {
+      "id": "ayah",
+      "kind": "quran",
+      "title": "112:1",
+      "refs": [
+        "112:1"
+      ],
+      "sources": [
+        "ibn-kathir"
+      ],
+      "locator": "",
+      "text": null
+    },
+    {
+      "id": "meaning",
+      "kind": "translation",
+      "title": "Reviewed translation",
+      "refs": [
+        "112:1"
+      ],
+      "sources": [
+        "ibn-kathir"
+      ],
+      "locator": "",
+      "text": ""
+    },
+    {
+      "id": "vocabulary",
+      "kind": "vocabulary",
+      "title": "Reviewed vocabulary",
+      "refs": [
+        "112:1"
+      ],
+      "sources": [
+        "ibn-kathir"
+      ],
+      "locator": "",
+      "positions": [
+        1
+      ],
+      "text": ""
+    },
+    {
+      "id": "explanation",
+      "kind": "tafsir",
+      "title": "Reviewed explanation",
+      "refs": [
+        "112:1"
+      ],
+      "sources": [
+        "ibn-kathir"
+      ],
+      "locator": "",
+      "text": ""
+    },
+    {
+      "id": "reflection",
+      "kind": "reflection",
+      "title": "Reviewed reflection",
+      "refs": [
+        "112:1"
+      ],
+      "sources": [
+        "ibn-kathir"
+      ],
+      "locator": "",
+      "text": ""
+    }
+  ],
+  "relations": [
+    {
+      "id": "meaning-link",
+      "from": "ayah",
+      "to": "meaning",
+      "explanation": "",
+      "sources": [
+        "ibn-kathir"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "card": "ayah",
+      "accepts": [
+        "quran"
+      ],
+      "explanation": "",
+      "sources": [
+        "ibn-kathir"
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "id": "first-concept",
+      "title": "Teacher-defined concept",
+      "cards": [
+        "ayah",
+        "meaning",
+        "vocabulary",
+        "explanation",
+        "reflection"
+      ],
+      "relations": [
+        "meaning-link"
+      ],
+      "evidence": [
+        "ayah"
+      ]
+    }
+  ],
+  "asbab": {
+    "status": "not-specified"
+  }
+}

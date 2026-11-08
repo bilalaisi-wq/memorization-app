@@ -1,0 +1,43 @@
+import {reference,sha256} from '../content-policy.js';
+export const NAME="QUR'AN CHRONICLES";
+export const kinds=['quran','translation','vocabulary','tafsir','history','asbab','reflection','unestablished'];
+export const categories=['quran','translation','tafsir','history','reflection','unestablished'];
+const text=(x,n=10000)=>typeof x==='string'&&x.trim().length>0&&x.length<=n;
+const id=x=>typeof x==='string'&&/^[a-z][a-z0-9-]{0,63}$/.test(x);
+const url=x=>{try{const u=new URL(x);return u.protocol==='https:'&&!u.username&&!u.password;}catch{return false;}};
+const unique=a=>Array.isArray(a)&&new Set(a).size===a.length;
+const fields=(x,keys)=>x&&typeof x==='object'&&!Array.isArray(x)&&Object.keys(x).every(k=>keys.includes(k));
+export function validateLesson(d){
+ if(!fields(d,['version','id','title','refs','sources','cards','relations','evidence','applications','sections','asbab']))throw Error('Use the documented QUR\'AN CHRONICLES lesson fields.');
+ if(d?.version!==1||!id(d.id)||!text(d.title,160)||!unique(d.refs)||!d.refs.length||d.refs.length>10||d.refs.some(k=>reference(k).key!==k))throw Error('Invalid QUR\'AN CHRONICLES references or title.');
+ if(!Array.isArray(d.sources)||!d.sources.length||d.sources.length>30||!unique(d.sources.map(s=>s.id))||d.sources.some(s=>!fields(s,['id','title','attribution','url','license','licenseUrl','commercialUse'])||!id(s.id)||!text(s.title,300)||!text(s.attribution,1000)||!url(s.url)||!text(s.license,200)||!url(s.licenseUrl)||s.commercialUse!==true))throw Error('Document commercial source rights, licenses and attribution before review.');
+ const cited=xs=>unique(xs)&&xs.length>0&&xs.every(x=>d.sources.some(s=>s.id===x));
+ if(!Array.isArray(d.cards)||d.cards.length<3||d.cards.length>64||!unique(d.cards.map(c=>c.id)))throw Error('Choose 3–64 distinct source-backed learning cards.');
+ for(const c of d.cards){if(!fields(c,['id','kind','title','refs','sources','locator','text','positions','reliability'])||!id(c.id)||!kinds.includes(c.kind)||!text(c.title,160)||!unique(c.refs)||!c.refs.length||c.refs.some(r=>!d.refs.includes(r))||!cited(c.sources)||!text(c.locator,500))throw Error('Each card needs references, citations and an exact source locator.');
+  if(c.kind==='quran'){if(c.positions!==undefined&&(!unique(c.positions)||!c.positions.length||c.positions.length>24||c.positions.some((n,i)=>!Number.isInteger(n)||n<1||i>0&&n!==c.positions[i-1]+1)))throw Error('Teacher-selected study excerpts need up to 24 consecutive canonical words.');if(c.text!==null||c.refs.length!==1)throw Error('Quran cards reference canonical text; never supply replacement Arabic.');}else if(!text(c.text,8000))throw Error('Reviewed card text is required.');
+  if(c.kind==='vocabulary'&&(!unique(c.positions)||!c.positions.length||c.positions.length>8||c.positions.some((n,i)=>!Number.isInteger(n)||n<1||i>0&&n!==c.positions[i-1]+1)||c.refs.length!==1))throw Error('Vocabulary needs canonical word positions.');
+  if(['asbab','history'].includes(c.kind)&&!['established','disputed','weak','unestablished'].includes(c.reliability))throw Error('Historical/asbab reports need an explicit reliability label.');
+ }
+ if(!Array.isArray(d.relations)||!d.relations.length||d.relations.length>96||!unique(d.relations.map(r=>r.id)))throw Error('Approved relations are required.');
+ for(const r of d.relations)if(!fields(r,['id','from','to','explanation','sources'])||!id(r.id)||r.from===r.to||![r.from,r.to].every(x=>d.cards.some(c=>c.id===x))||d.cards.find(c=>c.id===r.from).kind!=='quran'||!text(r.explanation,1500)||!cited(r.sources))throw Error('Relations must connect a canonical Quran reference to a sourced card.');
+ if(!unique(d.relations.map(r=>`${r.from}:${r.to}`)))throw Error('Duplicate relationships are not allowed.');
+ if(!Array.isArray(d.evidence)||!d.evidence.length||d.evidence.length>64||!unique(d.evidence.map(e=>e.card)))throw Error('Evidence analysis objectives are required.');
+ for(const e of d.evidence){if(!fields(e,['card','accepts','explanation','sources','interpretationNotes','interpretationSources']))throw Error('Invalid evidence fields.');const c=d.cards.find(c=>c.id===e.card);if(!c||!unique(e.accepts)||!e.accepts.length||e.accepts.some(x=>!categories.includes(x))||!text(e.explanation,2000)||!cited(e.sources))throw Error('Document every accepted evidence classification.');
+  const expected=c.kind==='vocabulary'?'tafsir':c.kind==='asbab'?'history':c.kind;
+  if(['weak','unestablished'].includes(c.reliability)&&e.accepts.some(x=>x!=='unestablished'))throw Error('Weak/unestablished reports cannot be taught as established history.');
+  if(!['weak','unestablished'].includes(c.reliability)&&!e.accepts.includes(expected))throw Error('Keep Quran, translation, tafsir, reporting and reflection distinct.');
+  if(e.accepts.some(x=>!(c.kind==='vocabulary'?['translation','tafsir']:c.reliability==='disputed'?['history','unestablished']:[['weak','unestablished'].includes(c.reliability)?'unestablished':expected]).includes(x)))throw Error('Source categories cannot blur Quran, translation, reporting and reflection.');
+  if(e.accepts.length>1&&(!text(e.interpretationNotes,2000)||!cited(e.interpretationSources)))throw Error('Multiple interpretations require explicit reviewed documentation.');
+ }
+ if(d.applications!==undefined){if(!Array.isArray(d.applications)||d.applications.length>20||!unique(d.applications.map(a=>a.id)))throw Error('Invalid reviewed applications.');for(const a of d.applications)if(!fields(a,['id','prompt','choices','accepts','explanation','sources'])||!id(a.id)||!text(a.prompt,2000)||!Array.isArray(a.choices)||a.choices.length<2||a.choices.length>5||!unique(a.choices.map(c=>c.id))||a.choices.some(c=>!fields(c,['id','text'])||!id(c.id)||!text(c.text,1000))||!unique(a.accepts)||!a.accepts.length||a.accepts.some(id=>!a.choices.some(c=>c.id===id))||!text(a.explanation,2000)||!cited(a.sources))throw Error('Applications need explicit source-reviewed accepted answers; free speech is not automatically graded.');}
+ if(!Array.isArray(d.sections)||!d.sections.length||d.sections.length>16||!unique(d.sections.map(s=>s.id)))throw Error('Teacher-defined conceptual sections are required.');
+ for(const s of d.sections)if(!fields(s,['id','title','cards','relations','evidence','applications'])||(s.applications!==undefined&&(!unique(s.applications)||s.applications.some(id=>!d.applications?.some(a=>a.id===id))))||!id(s.id)||!text(s.title,160)||!unique(s.cards)||s.cards.length<3||s.cards.length>8||s.cards.some(x=>!d.cards.some(c=>c.id===x))||!unique(s.relations)||!s.relations.length||s.relations.some(x=>!d.relations.some(r=>r.id===x&&s.cards.includes(r.from)&&s.cards.includes(r.to)))||!unique(s.evidence)||!s.evidence.length||s.evidence.some(x=>!s.cards.includes(x)||!d.evidence.some(e=>e.card===x)))throw Error('Each conceptual section needs 3–8 cards and contained, solvable objectives.');
+ if((d.applications||[]).some(a=>!d.sections.some(s=>s.applications?.includes(a.id)))||d.cards.some(c=>!d.sections.some(s=>s.cards.includes(c.id)))||d.relations.some(r=>!d.sections.some(s=>s.relations.includes(r.id)))||d.evidence.some(e=>!d.sections.some(s=>s.evidence.includes(e.card))))throw Error('Every published card/objective must belong to a reviewed conceptual section.');
+ if(!fields(d.asbab,['status'])||!['not-specified','reports-reviewed'].includes(d.asbab?.status)||d.asbab.status==='reports-reviewed'&&!d.cards.some(c=>c.kind==='asbab')||d.asbab.status==='not-specified'&&d.cards.some(c=>c.kind==='asbab'))throw Error('Do not assume an occasion of revelation for every ayah.');
+ return d;
+}
+export const stableJSON=x=>JSON.stringify(canonical(x));
+function canonical(x){if(Array.isArray(x))return x.map(canonical);if(x&&typeof x==='object')return Object.fromEntries(Object.keys(x).sort().map(k=>[k,canonical(x[k])]));return x;}
+export const lessonHash=d=>{validateLesson(d);return sha256(stableJSON(d));};
+export const canonicalHash=b=>sha256(JSON.stringify([b.key,b.textUthmani,b.words.map(w=>[w.position,w.text])]));
+export async function validateSources(d,bundles){validateLesson(d);const pins={};for(const key of d.refs){const b=bundles.find(b=>b.key===key);if(!b)throw Error('Canonical source unavailable.');pins[key]=await canonicalHash(b);}for(const c of d.cards.filter(c=>['quran','vocabulary'].includes(c.kind))){const b=bundles.find(b=>b.key===c.refs[0]);if(c.kind==='quran'&&b.words.length>36&&!c.positions)throw Error('Long-ayah crystals require teacher-selected conceptual excerpts; visual word groups are not lesson sections.');if(c.positions?.some(n=>!b.words.some(w=>w.position===n)))throw Error('Study word index outside canonical source.');}return pins;}

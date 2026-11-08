@@ -18,7 +18,9 @@
     "test:coach": "deno test --allow-env --allow-read supabase/functions/_shared/coach_test.ts",
     "profile:cosmic": "node scripts/profile-cosmic.mjs",
     "check:cosmic-rollout": "node scripts/check-cosmic-rollout.mjs",
-    "start": "node scripts/serve.mjs"
+    "start": "node scripts/serve.mjs",
+    "test:chronicles": "deno test --allow-env --allow-read supabase/functions/_shared/chronicles/handler_test.ts",
+    "check:chronicles": "deno check supabase/functions/chronicles-content/index.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.10",

@@ -44,7 +44,7 @@ export const progressKeys = [
 ];
 // Export scope is deliberately larger than the server's legacy cloud whitelist.
 export const exportKeys = Object.freeze([...progressKeys,
-  'ayah-revision-missions-v1','ayah-cosmic-defense-capture-v1','ayah-arcade-passages-v1','ayah-memorization-lab-v1','ayah-passage-context-v1','ayah-sirat-journeys-v2','ayah-maze-expeditions-v2','ayah-bridge-tutorial-v1','ayah-bridge-checkpoints-v2','ayah-passage-recall-v1','ayah-passage-sync-v1','ayah-passage-workspaces-v1',
+  'ayah-chronicles-v1','ayah-revision-missions-v1','ayah-cosmic-defense-capture-v1','ayah-arcade-passages-v1','ayah-memorization-lab-v1','ayah-passage-context-v1','ayah-sirat-journeys-v2','ayah-maze-expeditions-v2','ayah-bridge-tutorial-v1','ayah-bridge-checkpoints-v2','ayah-passage-recall-v1','ayah-passage-sync-v1','ayah-passage-workspaces-v1',
   'ayah-quest-campaigns-v1','ayah-quest-revision-v1','ayah-quest-recovery-backup-v1','ayah-cosmic-gateways-v1','ayah-cosmic-links-v1','ayah-cosmic-expeditions-v1',
   'ayah-cosmic-preferences-v1','ayah-cosmic-adaptive-v1','ayah-cosmic-cloud-v1','ayah-cosmic-recovery-v1','ayah-cloud-sync-v1','ayah-cloud-restore-backup-v1','ayah-rewards-v1','ayah-reward-remote-v1',
   'ayah-nature-profile-v1','ayah-appearance-v1','ayah-sky-celebrations-v1','ayah-coach-settings-v1',
