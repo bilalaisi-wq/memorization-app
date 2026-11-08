@@ -43,3 +43,9 @@ The authoring scaffold now includes these exact source records. License, attribu
 The owner was asked for relevant Al-Ikhlas passages and edition reuse notices because the linked material could not be retrieved here. No religious explanation or historical report has been invented to fill that gap.
 
 The owner subsequently confirmed that no copyright/reuse notices are available to provide. This is recorded as **unverified**, not as either a grant or a denial. A formal notice is not the only possible reuse basis: staff may document an applicable public-domain basis or original editorial writing with citations and no reproduction of third-party translation wording. The actual material and edition still need to be checked; the links alone do not supply reviewed lesson text. No further notice is presumed to exist.
+
+## Subsequently evaluated licensed English reference
+
+The owner supplied https://github.com/SafhaJournal/tafsir-ibn-kathir-english . At reviewed commit `9684fc5b28462cfb8e9ec9f66cfecb5d59b557ff`, `LICENSE` specifies CC BY 4.0 and `NOTICE.md` identifies © 2026 Yvette Z and attribution requirements. Commercial reuse/adaptation is permitted under those conditions; the material is licensed rather than uncopyrighted. Preserve source and license links, attribution and change notices when reproducing/adapting it.
+
+The repository explicitly describes AI translation/machine grading and no formal scholarly review. Its publication scores are not independent human approval. Corpus rows share tafsir blocks and covered references; report reliability must be retained rather than treating every narrated occasion as established. The maintainer's translation-provenance claims have not been independently certified. It can serve as a draft/reference source for reviewed cards, but no corpus or lesson has been imported or automatically published. Actual lesson review remains pending. See [the release security finding](release-3.0/security-findings.md).

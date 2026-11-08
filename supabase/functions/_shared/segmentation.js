@@ -5,11 +5,14 @@ const normalize = (t) =>
   t.replace(/[\s\u06d6-\u06dc\u06de\u06e2\u06ed\u06e9]/g, "");
 export function canonicalSpans(bundle) {
   const spans = [];
-  let word = 0;
+  let word = 0, openingMarkStart = null;
   for (const match of bundle.textUthmani.matchAll(/\S+/g)) {
     if (!normalize(match[0])) {
-      if (!spans.length) throw Error("Unexpected opening mark");
-      spans.at(-1).end = match.index + match[0].length;
+      // Source editions may begin an ayah with a standalone rubʿ al-ḥizb
+      // or other canonical annotation. Keep its bytes with the first word;
+      // annotations are not additional word positions or recitation rulings.
+      if (!spans.length) openingMarkStart ??= match.index;
+      else spans.at(-1).end = match.index + match[0].length;
       continue;
     }
     if (normalize(match[0]) !== normalize(bundle.words[word]?.text || "")) {
@@ -17,9 +20,10 @@ export function canonicalSpans(bundle) {
     }
     spans.push({
       position: ++word,
-      start: match.index,
+      start: openingMarkStart ?? match.index,
       end: match.index + match[0].length,
     });
+    openingMarkStart = null;
   }
   if (word !== bundle.words.length) {
     throw Error("Canonical word count mismatch");

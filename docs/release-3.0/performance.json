@@ -1,0 +1,84 @@
+{
+  "environment": "Headless Chromium on shared Linux; synthetic CPU throttling, not a physical-device certification.",
+  "generatedAt": "2026-11-08T04:44:00.328Z",
+  "runs": [
+    {
+      "cpuThrottle": 1,
+      "simulationSeconds": 3.249899999999991,
+      "stateAfterSample": "running",
+      "repeatedExit": [
+        {
+          "JSEventListeners": 152,
+          "Nodes": 843,
+          "JSHeapUsedSize": 11891988
+        },
+        {
+          "JSEventListeners": 152,
+          "Nodes": 843,
+          "JSHeapUsedSize": 11952188
+        }
+      ],
+      "launchMs": 2970,
+      "framePacingMs": {
+        "frames": 138,
+        "p50": 16.699999999999818,
+        "p95": 50,
+        "max": 50.100000000000364
+      },
+      "paused": {
+        "mutations": 0,
+        "state": "paused"
+      },
+      "runningHeap": {
+        "JSEventListeners": 218,
+        "Nodes": 1133,
+        "JSHeapUsedSize": 11803020
+      },
+      "afterExit": {
+        "JSEventListeners": 281,
+        "Nodes": 1913,
+        "JSHeapUsedSize": 11841992
+      },
+      "remainingGameNodes": 0
+    },
+    {
+      "cpuThrottle": 4,
+      "simulationSeconds": 3.3330999999999897,
+      "stateAfterSample": "running",
+      "repeatedExit": [
+        {
+          "JSEventListeners": 152,
+          "Nodes": 843,
+          "JSHeapUsedSize": 11882032
+        },
+        {
+          "JSEventListeners": 152,
+          "Nodes": 843,
+          "JSHeapUsedSize": 11952264
+        }
+      ],
+      "launchMs": 6418,
+      "framePacingMs": {
+        "frames": 93,
+        "p50": 33.29999999999927,
+        "p95": 66.70000000000073,
+        "max": 100
+      },
+      "paused": {
+        "mutations": 0,
+        "state": "paused"
+      },
+      "runningHeap": {
+        "JSEventListeners": 150,
+        "Nodes": 697,
+        "JSHeapUsedSize": 11800464
+      },
+      "afterExit": {
+        "JSEventListeners": 152,
+        "Nodes": 843,
+        "JSHeapUsedSize": 11801956
+      },
+      "remainingGameNodes": 0
+    }
+  ]
+}

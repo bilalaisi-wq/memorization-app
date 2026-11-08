@@ -33,3 +33,6 @@
 .cosmic-rush .cosmic-availability { border-top:1px solid #66759b55; padding-top:18px; }
 @media(max-width:760px) { .sidebar #nav-revision-lab { display:flex; width:100%; } }
 @media(max-width:480px) { .cosmic-rush .cosmic-form { grid-template-columns:minmax(0,1fr); } .cosmic-rush .cosmic-route { grid-template-columns:1fr; grid-auto-flow:row; grid-auto-columns:auto; } .cosmic-rush .cosmic-node { grid-template-columns:44px 1fr; text-align:left; justify-items:start; gap:4px 16px; } .cosmic-rush .cosmic-star { grid-row:span 2; text-align:center; } .cosmic-rush .cosmic-node:not(:last-child)::after { top:60px; left:27px; width:2px; height:40px; } .cosmic-rush .cosmic-briefing { padding:18px; } }
+
+/* Theme heading/button colors must not wash out teal action labels. */
+:root[data-theme="night-sky"] .cosmic-rush button.cosmic-primary { color: #092f36; }

@@ -1,0 +1,17 @@
+[
+  {
+    "check": "Railway home",
+    "status": 200,
+    "response": "HTML response received"
+  },
+  {
+    "check": "Private bundle anonymous",
+    "status": 401,
+    "response": "{\"error\":\"Sign in required\"}"
+  },
+  {
+    "check": "Chronicles anonymous catalog",
+    "status": 404,
+    "response": "{\"code\":\"NOT_FOUND\",\"message\":\"Requested function was not found\"}"
+  }
+]

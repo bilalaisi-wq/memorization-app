@@ -3031,3 +3031,6 @@ main .text-button, main .primary, .lab-game button, .lab-settings label { font-s
 
 /* QUR'AN CHRONICLES remains reachable alongside the other labs on phones. */
 @media(max-width:760px){.sidebar #nav-comprehension-lab{display:flex;width:100%}}
+
+/* Keep decoration clear of the canonical reference on narrow screens. */
+@media (max-width: 600px) { .reference-card::after { display: none; } }

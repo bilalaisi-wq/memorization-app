@@ -1,0 +1,26 @@
+{
+  "baseline": "96bd2d1",
+  "fullSuite": {
+    "command": "npx playwright test --config=playwright.regression.config.js --workers=4",
+    "passed": 900,
+    "failed": 1,
+    "minutes": 13.8,
+    "failure": "New test asserted recovery wording after fresh() replaced it with a preservation warning; test assertion corrected, no application source change."
+  },
+  "correctedRerun": {
+    "command": "npx playwright test tests/phase8-compatibility.spec.js tests/phase8-mobile.spec.js --workers=2",
+    "passed": 16,
+    "failed": 0,
+    "seconds": 12.5
+  },
+  "backendPassed": 28,
+  "edgeTypeChecks": "all passed",
+  "build": "passed",
+  "buildSeconds": 6.46,
+  "rolloutDisabled": "passed",
+  "uiCases": 24,
+  "documentOverflowCases": 0,
+  "productionReady": false,
+  "hostedAuthenticatedStaging": "not performed",
+  "stripeTransactions": "not performed"
+}

@@ -260,12 +260,15 @@
     margin: auto;
   }
   .tower-floors {
-    max-height: 150px;
-    display: flex;
+    max-height: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 8px;
+    overflow: visible;
   }
   .tower-floors > div {
-    min-width: 120px;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   .tower-settings {
     padding: 12px;

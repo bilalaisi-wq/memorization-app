@@ -24,6 +24,8 @@ export function readGoals(storage) {
   }
 }
 export function saveGoals(storage, goals, surahs) {
+  if (storage.getItem(GOALS_KEY) !== null && !readGoals(storage))
+    throw Error("Saved goals need recovery. Export device progress before replacing them; the original has not been overwritten.");
   const valid = new Set(surahs.map((s) => s.id));
   const record = {
     version: 1,

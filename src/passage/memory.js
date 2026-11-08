@@ -35,7 +35,7 @@ export function createPassageMemory(
   let data = { version: 1, timeZone, records: {}, active: null }, warning = "";
   const raw = storage.getItem(PASSAGE_MEMORY_KEY);
   let lastRaw=raw;
-  if (raw) {
+  if (raw !== null) {
     try {
       const value = JSON.parse(raw);
       if (!validMemory(value)) throw Error();

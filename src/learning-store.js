@@ -195,7 +195,7 @@ export function createLearningStore(
     );
   }
   const raw = safeGet(LEARNING_KEY);
-  if (raw) {
+  if (raw !== null) {
     try {
       data = JSON.parse(raw);
       if (!valid(data)) throw new Error("schema");
@@ -243,7 +243,7 @@ export function createLearningStore(
       }
     if (!readOnly)
       try {
-        if (!safeGet(LEGACY_BACKUP_KEY))
+        if (safeGet(LEGACY_BACKUP_KEY) === null)
           storage.setItem(
             LEGACY_BACKUP_KEY,
             JSON.stringify({
@@ -265,7 +265,7 @@ export function createLearningStore(
   }
   function fresh() {
     const latest = safeGet(LEARNING_KEY);
-    if (latest)
+    if (latest !== null)
       try {
         const parsed = JSON.parse(latest);
         if (valid(parsed)) data = parsed;
