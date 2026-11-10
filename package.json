@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0",
+    "dev": "vite --config scripts/private-vite.config.mjs --host 0.0.0.0",
+    "build": "vite build --config scripts/private-vite.config.mjs",
+    "preview": "vite preview --config scripts/private-vite.config.mjs --host 0.0.0.0",
     "test": "playwright test",
     "test:billing": "deno test --allow-env --allow-read supabase/functions/_shared/billing_test.ts",
     "check:billing": "deno check supabase/functions/billing-checkout/index.ts supabase/functions/billing-portal/index.ts supabase/functions/billing-refresh/index.ts supabase/functions/billing-passages/index.ts supabase/functions/billing-webhook/index.ts supabase/functions/billing-close/index.ts",
@@ -22,7 +22,9 @@
     "test:chronicles": "deno test --allow-env --allow-read supabase/functions/_shared/chronicles/handler_test.ts",
     "check:chronicles": "deno check supabase/functions/chronicles-content/index.ts",
     "audit:quran": "node scripts/audit-quran-manifest.mjs",
-    "check:quran-audit": "node scripts/audit-quran-manifest.mjs --check"
+    "check:quran-audit": "node scripts/audit-quran-manifest.mjs --check",
+    "test:quran-import": "playwright test tests/quran-import-pipeline.spec.js --config=playwright.regression.config.js --workers=1",
+    "validate:quran-release": "node scripts/validate-quran-release.mjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.10",

@@ -12,21 +12,21 @@ This is source validation, **not scholar approval of internal recitation stops**
 
 1. Open Supabase SQL Editor and paste the **entire [SETUP_JUZ29.sql](../supabase/SETUP_JUZ29.sql)**, then Run. It installs all SQL prerequisites together: billing tables, private passage storage, review schema, source registry and developer access. It fixes both `public.billing_config` missing and `public.quran_review_heads` missing errors. Existing progress/reviews/configuration are preserved; it does not activate payments or upload content.
 2. Sign in once as **bilalaisi@gmail.com**, the previously configured owner address, before running the setup. If you already ran it before signing in, sign in and rerun the same file. Expect `billing_ready = true`, `review_ready = true`, `registered_sources = 35` (or more), and `developer_account_provisioned = true`. No teacher roles or recitation-stop approvals are created.
-3. Prepare protected files locally from the repository root (Python, curl, ffmpeg/ffprobe required):
+3. Existing pinned local releases remain validatable with `node scripts/validate-private-juz.mjs 29`. Keep private backups of exact files and manifests. For new preparation, follow the [Phase 2 import guide](quran-import-pipeline.md):
 
    ```sh
-   python scripts/prepare-quran-content.py --surahs 67 68 69 70 71 72 73 74 75 76 77
+   python3 scripts/prepare-quran-content.py --juz 29 --dry-run
    ```
 
-   Run `node scripts/validate-private-juz.mjs 29` to independently verify every hash and all 431 references. The provided private release archive can alternatively be extracted at the repository root with `tar -xzf /path/to/ayah-juz29-private-release.tar.gz`; validate it with the same command before uploading. Output is `.quran-private/`, excluded from Git and Vite. Keep a private backup of these exact files and manifest; the frontend/server pin their hashes. If refetching changes hashes, redeploy both frontend and function metadata together. Never copy these files to `public/`.
-4. Securely provide `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in your local shell environment (not Vite variables, not committed), then run:
+   Actual fetching requires `--prepare`, a source policy with documented reuse evidence, and a pinned independent reference manifest. It creates `.quran-private/candidates/ID`, never overwriting the existing `.quran-private/manifest.json`, catalog, availability or existing text/audio. New source hashes require an explicit reviewed migration. Do not copy any private source into `public/`.
+4. Validate and preview the isolated candidate:
 
    ```sh
-   node scripts/upload-quran-content.mjs
-   supabase functions deploy quran-content --project-ref ycgyuatjgdbhiakqourg
+   node scripts/validate-quran-release.mjs --release .quran-private/candidates/ID
+   node scripts/upload-quran-content.mjs --release .quran-private/candidates/ID --dry-run
    ```
 
-   Upload credentials must be backend secrets. A browser publishable key cannot perform this step. Storage bucket `quran-premium` must remain private; direct browser object access is denied. No public or signed download links are issued.
+   After review, securely set `SUPABASE_URL` and backend `SUPABASE_SERVICE_ROLE_KEY` and explicitly run the same uploader with `--upload`. It writes immutable inactive `releases/ID` objects in the private bucket. **It does not activate them for the existing runtime.** Follow the import guide's separate reviewed server-manifest activation requirements before deploying new availability. Root manifest uploads without `--release` are intentionally rejected. Browser keys cannot upload; no key belongs in Vite, Git or chat. Deploy the authorized `quran-content` Edge Function for active pinned content; keep restrictive Storage policies in place.
 5. Deploy the matching frontend to Railway. Until private upload/function deployment is completed, content requests show a deployment error rather than claiming playable content.
 
 ## Review all eleven surahs

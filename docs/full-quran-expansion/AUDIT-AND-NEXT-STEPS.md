@@ -36,6 +36,8 @@ No current local integrity conflicts were found, but rights/review/hosted deploy
 
 ## Findings for Phase 2 — do not run the old importer blindly
 
+These are historical Phase 1 findings. The [Phase 2 importer](../quran-import-pipeline.md) addresses the unsafe preparation/upload behavior with isolated candidates and explicit gates. Coverage, licensing and deployment approvals are not inferred from those code changes.
+
 1. **Argument parsing comes after network/catalog writes.** `prepare-quran-content.py` currently fetches chapter/juz metadata and writes `quran-catalog.json` before parsing command arguments. Even a help/error invocation is not a safe dry-run interface. The new offline auditor does not invoke it.
 2. **No explicit source-version migration guard.** The old importer overwrites bundle JSON, merges the manifest and rewrites availability; it can update existing pins implicitly. Phase 2 must require explicit source migration rather than silently replacing validated assets.
 3. **Current availability rewriting risks dropping developer metadata.** The preparer's final availability object does not preserve all later preview/provider fields by construction. Preserve unknown/legacy fields and the exact existing fingerprints until an approved migration.

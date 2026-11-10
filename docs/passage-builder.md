@@ -90,18 +90,18 @@ Stop/edition decisions are received from privileged, source-hash-bound database 
    - [`20261024_segmentation_review.sql`](../supabase/migrations/20261024_segmentation_review.sql)
    - [`20261025_review_sources.sql`](../supabase/migrations/20261025_review_sources.sql)
 3. The first migration creates a **private** `quran-premium` bucket and restrictive object/bucket policies for browser roles. This blocks access even if another permissive storage policy exists. No client gets write access to reviewer roles, source registry or audit rows. Existing storage buckets are unaffected.
-4. Prepare content on an authorized backend workstation with Python 3, curl, ffmpeg, ffprobe, and Node 24:
+4. Use the [Phase 2 private import guide](quran-import-pipeline.md) with Python 3, ffmpeg/ffprobe and Node 22+. Preview explicitly:
    ```sh
-   python3 scripts/prepare-quran-content.py
-   node scripts/register-quran-review-sources.mjs
+   python3 scripts/prepare-quran-content.py --references 2:255 2:282 --dry-run
    ```
-   This writes `.quran-private/` (gitignored), validates exact references, separate Uthmani/word source responses, translation provenance, MP3 decoding and SHA-256 digests. It keeps raw translation/source references; limited pause/pronunciation-annotation normalization is used only for comparison, never to rewrite displayed Arabic. New WBW audio references with alignment concerns are retained but not offered as certified audio.
-5. Incremental imports are explicit: `--surahs 3 4`, `--references 3:1 3:2`, or `--all`. The latter can be a very large private import; it is never run implicitly. Existing manifests are merged, not replaced. A juz/surah becomes complete in availability metadata only when every reference is validated. Re-run registry generation for new source hashes and deploy metadata with the matching assets; do not republish stale registry approvals.
-6. In a secure shell, provide `SUPABASE_URL` and the backend `SUPABASE_SERVICE_ROLE_KEY`, then run:
+   Actual preparation requires `--prepare`, documented source/reuse approvals and a pinned independent reference manifest. It creates an isolated `.quran-private/candidates/ID` release; it never rewrites the existing catalog, root manifest, source registry, availability or deployed pins.
+5. Independently validate and inspect the candidate:
    ```sh
-   node scripts/upload-quran-content.mjs
+   node scripts/validate-quran-release.mjs --release .quran-private/candidates/ID
+   node scripts/upload-quran-content.mjs --release .quran-private/candidates/ID --dry-run
    ```
-   No backend key goes into `VITE_*`, browser code, logs or chat. The uploader verifies hashes and writes only the private bucket. It does not alter Quran text.
+   Required missing assets block release. Existing files remain untouched; deliberate source changes require the documented migration flags. No internal stop or word-audio alignment approval is inferred.
+6. For an approved candidate, securely set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` and explicitly invoke the uploader with the same `--release` and `--upload`. It verifies the private bucket, refuses overwrites and writes immutable **inactive** `releases/ID` objects. No backend key belongs in `VITE_*`, browser code, logs or chat. Activating those objects in the current server manifest is a separate reviewed deployment; this preparer does not silently replace active content. Generate new review-source registrations only after that explicit source/pin review, retaining existing approvals and records.
 7. Deploy the updated billing-passages function and the new content function:
    ```sh
    supabase functions deploy billing-passages --project-ref YOUR_PROJECT_REF

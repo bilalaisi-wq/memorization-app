@@ -9,3 +9,6 @@ test-results/
 .quran-private/
 # Consented recitation evaluation recordings/transcripts stay outside Git.
 .recitation-evaluation/
+# Operator Python importer caches.
+__pycache__/
+*.pyc

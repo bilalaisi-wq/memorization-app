@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "edition": "quran-com-v4-uthmani",
+  "source": {
+    "provider": "REPLACE_WITH_INDEPENDENT_REFERENCE_AUTHORITY",
+    "url": "https://example.invalid/reference-source",
+    "version": "",
+    "independentOfQuranCom": false,
+    "reviewer": "",
+    "reviewedAt": "",
+    "evidence": ""
+  },
+  "references": []
+}

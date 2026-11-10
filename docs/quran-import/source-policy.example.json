@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "edition": "quran-com-v4-uthmani",
+  "sourceVersion": "REPLACE_WITH_DOCUMENTED_PROVIDER_VERSION",
+  "translationResourceId": 20,
+  "rights": {
+    "arabic": {"commercialUse": false, "source": "Quran.com v4 Uthmani endpoint", "version": "", "evidence": "", "reviewer": "", "reviewedAt": ""},
+    "translation": {"commercialUse": false, "source": "Saheeh International resource 20 via Quran.com", "version": "", "evidence": "", "reviewer": "", "reviewedAt": ""},
+    "transliteration": {"commercialUse": false, "source": "Quran.com word transliteration", "version": "", "evidence": "", "reviewer": "", "reviewedAt": ""},
+    "wordMeanings": {"commercialUse": false, "source": "Quran.com word translation", "version": "", "evidence": "", "reviewer": "", "reviewedAt": ""},
+    "fullAyahAudio": {"commercialUse": false, "source": "Alafasy via verses.quran.com", "version": "", "evidence": "", "reviewer": "", "reviewedAt": ""}
+  }
+}

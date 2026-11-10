@@ -58,3 +58,6 @@ Generated files are metadata only, outside `public/` and outside application imp
 See [machine-readable validation](validation.json). No real hosted content/account tests, new source downloads, license approvals, scholarly review, mobile builds or store submissions are claimed.
 
 This is not a complete-Qur'an release or mobile release. The existing catalog's `fullyVerifiedJuz: [29,30]` is a retained legacy technical-coverage declaration; it is not proof of commercial rights, teacher-approved stops or hosted publication.
+
+Phase 2 operator workflow: [Reusable private import pipeline](../quran-import-pipeline.md).
+Preparation and upload remain isolated from runtime availability; independent source and reuse approvals are required before preparing a deployable candidate.
