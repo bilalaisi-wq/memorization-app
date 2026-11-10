@@ -94,7 +94,7 @@ function followCamera(s){const base=s.cursor*1800,width=s.quest?s.viewportWidth|
 
 // Shared navigation only: QUR'AN CHRONICLES reuses the same swept platform collision rules.
 export function resolvePlatformCollisions(p,old,platforms,time,previousTime,checkpoint=()=>{}){
- for(const raw of platforms){if(raw.memory&&!raw.solid)continue;const q=platformAt(raw,time);if(p.x+30<=q.x||p.x>=q.x+q.w||p.y+46<=q.y||p.y>=q.y+q.h)continue;
+ for(const raw of platforms){if(raw.memory&&!raw.solid)continue;const q=platformAt(raw,time);if(p.x+30<=q.x||p.x>=q.x+q.w||p.y+46<q.y-.01||p.y>=q.y+q.h)continue;
    if(old.y+46<=platformAt(raw,previousTime).y+.5&&p.vy>=0){p.y=q.y-46;p.vy=0;p.grounded=true;p.support=q.id;if(raw.checkpoint){checkpoint({x:Math.max(q.x+15,Math.min(q.x+q.w-45,p.x)),y:p.y});}}
    else if(old.y>=q.y+q.h-.5&&p.vy<0){p.y=q.y+q.h;p.vy=0;}
    else if(old.x+30<=q.x){p.x=q.x-30;p.vx=0;}

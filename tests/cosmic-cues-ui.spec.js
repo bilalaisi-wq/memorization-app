@@ -14,9 +14,9 @@ const elapsed=page=>page.locator('.runner-field').evaluate(n=>Number(n.style.get
 test('default word cue slows moving hazards, restores speed and cues the next individual word once',async({page})=>{
   await open(page);await expect(page.locator('.star-runner')).toHaveAttribute('data-flight-state','running');await expect(page.locator('.star-runner')).toHaveAttribute('data-cue-slow','true');
   const words=createFlowUnits(['1:3'],'words');expect(await page.evaluate(()=>window.cues.find(a=>a.active)?.src)).toBe(words[0].audio);
-  const before=await elapsed(page);await page.clock.runFor(1000);expect((await elapsed(page))-before).toBeCloseTo(.25,1);
+  const before=await elapsed(page);await page.clock.runFor(1000);expect((await elapsed(page))-before).toBeCloseTo(.175,1);
   await finish(page);await expect(page.locator('.star-runner')).toHaveAttribute('data-cue-slow','false');
-  const resumed=await elapsed(page);await page.clock.runFor(1000);expect((await elapsed(page))-resumed).toBeCloseTo(1,1);
+  const resumed=await elapsed(page);await page.clock.runFor(1000);expect((await elapsed(page))-resumed).toBeCloseTo(.7,1);
   for(let i=0;i<50;i++){
     const current=await page.locator('.star-runner').getAttribute('data-expected-unit');if(current===words[1].id)break;
     const lane=await page.locator('.star-runner').evaluate(n=>{const t=[...n.querySelectorAll('.runner-pickup')].find(o=>o.dataset.unitId===n.dataset.expectedUnit);return t?Number(t.dataset.pickupLane):null;});

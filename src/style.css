@@ -3034,3 +3034,5 @@ main .text-button, main .primary, .lab-game button, .lab-settings label { font-s
 
 /* Keep decoration clear of the canonical reference on narrow screens. */
 @media (max-width: 600px) { .reference-card::after { display: none; } }
+
+#nav-comprehension-lab[hidden]{display:none!important}

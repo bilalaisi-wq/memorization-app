@@ -93,10 +93,12 @@ set stripe_mode='test', checkout_enabled=true
 where id=1;
 ```
 
-Refresh the app. Sign into a regular test learner account, open Menu → Plans & pricing, and purchase Explorer using Stripe's test card `4242 4242 4242 4242`, future expiry, any test CVC. No real card. A success URL alone grants nothing: verify the signed webhook succeeds and Subscription & billing shows the plan. Explorer must select Juz 29 before its content is accessible.
+Refresh the app. Sign into a regular test learner account, open Menu → Plans & pricing, and purchase Explorer using Stripe's test card `4242 4242 4242 4242`, future expiry, any test CVC. No real card. A success URL alone grants nothing: verify the signed webhook succeeds and Subscription & billing shows the plan. Explorer selects five eligible additional juz, but current developer-only previews (including Juz 29) are not released to regular subscribers. Use an authorized released pilot for entitlement testing.
 
 ## 8. Verify before live activation
 
 Use two accounts. Check both billing cadences, failed initial payment, failed/successful renewals, plan changes, cancellation at period end, expiration, duplicate webhooks, and isolation between accounts. Check Juz Amma remains free and progress survives cancellation. The full acceptance checklist is in [billing.md](billing.md#test-mode-acceptance-run-must-still-be-performed-on-the-hosted-services).
 
 Live billing is separate: create live prices/portal/webhook, configure matching live secrets and SQL mode in a separate deployment where possible, and test an actual live payment and cancellation before describing payments as production-ready. Do not mix sandbox prices with live keys.
+
+For the guided hosted payment verification run, use [Stripe sandbox checks](stripe-test-checklist.md).

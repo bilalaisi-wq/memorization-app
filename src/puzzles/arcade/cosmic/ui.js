@@ -2,7 +2,7 @@ import {mountCosmicControls,readCosmicPreferences} from '../../../quest/cosmic/p
 import {createTargetCuePlayer} from '../../../quest/cosmic/target-cues.js';
 import {BOOST_CAPACITY} from './flow-runner.js';
 import {createFlightBonuses} from '../../../quest/cosmic/bonuses.js';
-import {createFlowUnits} from '../../../quest/cosmic/flow-content.js';
+import {createFlowUnits,flowTransliteration} from '../../../quest/cosmic/flow-content.js';
 import {reportStudyExposure} from '../../../study-exposure.js';
 import {freeAyah} from '../../../quest/cosmic/gateways.js';
 import {createAudioManager} from '../services.js';
@@ -89,7 +89,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
     field.style.setProperty('--flight-camera',`${(300-s.x)*.025}px`);
     field.style.setProperty('--flight-bank',isReduced()?'0deg':`${Math.max(-10,Math.min(10,( [120,300,480][s.lane]-s.x)*.08))}deg`);
     setText('[data-flight-stage]',`Stage ${s.stageIndex+1} / ${s.stageCount}`);
-    setText('[data-flight-round]',`Round ${s.roundIndex+1} / ${s.roundCount} · ${Math.round((s.speedMultiplier||1)*100)}% speed · ${s.asteroidCount||1} asteroid${s.asteroidCount===1?'':'s'} / wave`);
+    setText('[data-flight-round]',`Round ${s.roundIndex+1} / ${s.roundCount} · ${Math.round((s.speedMultiplier||1)*70)}% normal speed · ${s.asteroidCount||1} asteroid${s.asteroidCount===1?'':'s'} / wave`);
     setText('[data-shield]',`Shield ${'◈'.repeat(s.shield)}${'◇'.repeat(3-s.shield)} · ${s.shield}/3`);
     setText('[data-stars]',s.flow?`${s.completedAyahs.length} ayahs connected · ${s.memoryMistakes} word/ayah selections to practise`:`★ ${s.stars} / 3 navigation stars`);
     root.querySelector('[data-flight-progress]').value=s.progress;
@@ -103,7 +103,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
       if(!el){
         el=document.createElement('div');el.className=`runner-object runner-${o.kind}`;
         el.dataset.objectId=o.id;el.dataset.kind=o.kind;
-        if(o.kind==='pickup'){el.lang='ar';el.dir='rtl';el.dataset.unitId=o.unit.id;el.dataset.pickupLane=String(o.lane);el.textContent=o.unit.text;el.setAttribute('aria-label',`${['Left','Middle','Right'][o.lane]} lane: ${o.unit.text}`);}
+        if(o.kind==='pickup'){el.lang='ar';el.dir='rtl';el.dataset.unitId=o.unit.id;el.dataset.pickupLane=String(o.lane);const arabic=document.createElement("span");arabic.className="runner-pickup-arabic";arabic.textContent=o.unit.text;const roman=document.createElement("small");roman.className="runner-pickup-roman";roman.lang="en";roman.dir="ltr";roman.textContent=flowTransliteration(o.unit);el.append(arabic,roman);el.setAttribute('aria-label',`${['Left','Middle','Right'][o.lane]} lane: ${o.unit.text}`);}
         else {if(o.kind==='starburst'){for(let i=0;i<8;i++){const star=document.createElement('i');star.textContent='✦';star.style.setProperty('--ray',`${i*45}deg`);el.append(star);}}else el.textContent=o.kind==='star'?'✦':'';el.setAttribute('aria-hidden','true');}
         el.classList.toggle('runner-ribbon',!!o.ribbon);
         el.style.width=o.kind==='pickup'?(o.ribbon?'92%':'28%'):`${o.radius*2/600*100}%`;

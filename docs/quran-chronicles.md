@@ -99,3 +99,7 @@ The pilot contact is **Bilal Ahmad**; reviewer qualifications/completed review r
 - Inspected additional test-fixture captures: [actual platform gameplay](screenshots/quran-chronicles/gameplay-desktop.png), [illuminated one-to-many constellation](screenshots/quran-chronicles/constellation-desktop.png).
 
 No copied tafsir text, verified edition license or completed scholarly review is claimed. Bilal Ahmad is the current editorial/provisional review contact. The exact three source URLs are recorded; proxy restrictions prevented reading them here. Actual publication and live Supabase/audio checks remain deployment/editorial work.
+
+## Current availability: coming soon
+
+QUR'AN CHRONICLES is currently a developer-mode preview. Ordinary learners do not see its navigation entry. Leaving developer mode closes the preview. Published learner API reads/lists are also disabled by default: deploy `chronicles-content` with `CHRONICLES_LEARNER_ENABLED=false` (unset is also closed). Verified server developers retain preview access; existing assigned editorial staff retain private editorial workflows. Do not set this rollout flag to `true` until the content/release gates have been met. No learning records are removed by hiding the lab.

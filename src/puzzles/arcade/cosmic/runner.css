@@ -63,3 +63,5 @@
 
 :root[data-celestial-motion="reduced"] .cosmic-rush .runner-starburst {animation:runner-starburst-still .8s linear forwards;}
 .cosmic-rush .runner-boosting .runner-thruster {height:90%;}
+
+.runner-pickup{display:flex;flex-direction:column;gap:4px}.runner-pickup-arabic{display:block}.runner-pickup-roman{display:block;font-family:system-ui,sans-serif;font-size:clamp(11px,1.2vw,16px);line-height:1.4;color:#e3eeff;overflow-wrap:anywhere;text-align:center;font-weight:500}

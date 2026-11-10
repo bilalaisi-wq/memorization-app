@@ -53,3 +53,11 @@ export function flowChoices(unit,seed) {
   if(chosen.length!==3)throw Error('Distinct authentic pickups are unavailable.');
   return seededShuffle(chosen,seed+29);
 }
+
+// Read only the existing source transliteration at the same canonical positions.
+export function flowTransliteration(unit){
+ const a=freeAyah(unit.key),v=cosmicSurahs.find(s=>s.id===a.surah).verses.find(v=>v.id===a.ayah);
+ const first=unit.kind==='ayah'?0:unit.index;
+ const last=unit.kind==='ayah'?v.words.length:unit.kind==='chunk'?unit.endIndex:first+1;
+ return v.roman.slice(first,last).join(' ');
+}

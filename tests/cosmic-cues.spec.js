@@ -28,7 +28,7 @@ test('unavailable audio reports failure without certifying recall',async()=>{
 test('cue slowdown keeps moving at quarter pace, restores round speed and boost lasts four seconds',()=>{
   const g=createFlowRunner({units:createFlowUnits(['1:3'],'words'),stageId:'cue',roundIndex:2});g.start();g.dispatch({type:'cue',active:true});
   const before=g.getSnapshot().elapsed;for(let i=0;i<120;i++)g.dispatch({type:'tick',dt:1/120});
-  expect(g.getSnapshot().status).toBe('running');expect(g.getSnapshot().elapsed-before).toBeCloseTo(.25);
-  g.dispatch({type:'cue',active:false});const slow=g.getSnapshot().elapsed;for(let i=0;i<120;i++)g.dispatch({type:'tick',dt:1/120});expect(g.getSnapshot().elapsed-slow).toBeCloseTo(1);
+  expect(g.getSnapshot().status).toBe('running');expect(g.getSnapshot().elapsed-before).toBeCloseTo(.175);
+  g.dispatch({type:'cue',active:false});const slow=g.getSnapshot().elapsed;for(let i=0;i<120;i++)g.dispatch({type:'tick',dt:1/120});expect(g.getSnapshot().elapsed-slow).toBeCloseTo(.7);
   expect(BOOST_CAPACITY).toBe(4);g.dispatch({type:'boost',active:true});for(let i=0;i<120;i++)g.dispatch({type:'tick',dt:1/120});expect(g.getSnapshot().boostEnergy).toBeCloseTo(3);g.dispose();
 });

@@ -51,7 +51,7 @@ test('round selector starts at three and chunk revision advances through four in
   await expect(page.locator('.star-runner')).toHaveAttribute('data-expected-unit',/^chunk:1:3:/);
   for(let i=0;i<4;i++){
     await expect(page.locator('[data-flight-round]')).toContainText(`Round ${i+1} / 4`);
-    await expect(page.locator('[data-flight-round]')).toContainText(`${100+i*7}% speed`);
+    await expect(page.locator('[data-flight-round]')).toContainText(`${Math.round((1+i*.07)*70)}% normal speed`);
     await expect(page.locator('[data-flight-round]')).toContainText(`${i+1} asteroid`);
     await flyTo(page);
     if(i<3)await page.getByRole('button',{name:`Continue to round ${i+2} / 4`,exact:true}).click();

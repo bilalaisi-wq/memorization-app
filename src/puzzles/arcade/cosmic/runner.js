@@ -45,7 +45,7 @@ export function createRunner({ seed = 1, stageId = 'runner:stage:1', difficulty 
       progress:Math.min(1,state.elapsed/(waves.at(-1).arrival+1.5)),slow });
   }
   function advance(dt) {
-    state.elapsed += dt;
+    state.elapsed += dt * .7;
     state.invulnerable = Math.max(0,state.invulnerable-dt);
     state.impact = Math.max(0,state.impact-dt);
     const delta = WORLD.lanes[state.lane]-state.x;

@@ -62,3 +62,5 @@ Source content and reviewed segmentation are rebuilt through current authorized 
 Run the Sirat suites with `npx playwright test tests/sirat-engine.spec.js tests/sirat-ui.spec.js tests/sirat2-model.spec.js tests/sirat2-ui.spec.js --config=playwright.regression.config.js --workers=1`, followed by the shared arcade/Quest regressions and `npm run build`.
 
 Desktop and 390px mobile game captures: [powered elevator](sirat-quest/sirat2-desktop.png), [mobile](sirat-quest/sirat2-mobile.png). Reproduce with Vite running on port 5173 and `node scripts/sirat2-previews.mjs`. Physical-device and screen-reader certification remain separate from automated Chromium QA. See [release evidence](sirat2-release.md) for measured results and remaining limits.
+
+Exact standing contact now remains grounded even in zero-duration frames. Previously the platform overlap test rejected equality, making grounded-dependent gateway choices flash off and on. The shared collision helper retains its swept landing/side/underside rules; no motor event becomes a memory strike.

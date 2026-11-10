@@ -10,7 +10,7 @@ export function movePiece(selection, id, anchor = null, after = false) {
   next.splice(index < 0 ? next.length : index + Number(after), 0, id);
   return next;
 }
-export function bindPieceDrag(root, { selection, count, locked, change }) {
+export function bindPieceDrag(root, { selection, count, locked, change, scope = null }) {
   const valid = (id) => Number.isInteger(id) && id >= 0 && id < count;
   const destination = (target, x, y) => {
     let piece =
@@ -50,7 +50,7 @@ export function bindPieceDrag(root, { selection, count, locked, change }) {
     };
   };
   const update = (id, zone, target, x, y) => {
-    if (locked() || !valid(id)) return;
+    if (locked() || !valid(id) || !target || !root.contains(target)) return;
     if (zone === "bank")
       change(
         selection().filter((value) => value !== id),
@@ -68,6 +68,7 @@ export function bindPieceDrag(root, { selection, count, locked, change }) {
         return;
       }
       event.dataTransfer.setData("text/plain", piece.dataset.word);
+      if (scope !== null) event.dataTransfer.setData("application/x-ayah-piece-scope", scope);
       event.dataTransfer.effectAllowed = "move";
       piece.classList.add("dragging-piece");
     };
@@ -176,6 +177,7 @@ export function bindPieceDrag(root, { selection, count, locked, change }) {
     };
     zone.ondrop = (event) => {
       event.preventDefault();
+      if (scope !== null && event.dataTransfer.getData("application/x-ayah-piece-scope") !== scope) return;
       const raw = event.dataTransfer.getData("text/plain");
       if (raw === "") return;
       const target = event.target,

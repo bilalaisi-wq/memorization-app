@@ -1,3 +1,4 @@
+import {bindPieceDrag,stopPieceDrag} from './ui/piece-drag.js';
 import {resolvePlaybackSource} from "./content/private-audio.js";
 import { awardStudy } from "./rewards/store.js";
 import {
@@ -12,6 +13,7 @@ let state = null,
   currentAudio = null,
   token = 0;
 export function stopSequence() {
+  stopPieceDrag();
   studyAudioStop("sequence");
   token++;
   if (currentAudio) {
@@ -75,7 +77,7 @@ function wordPiece(id, i) {
   const v = verse(id),
     [meaning, art] = v.meanings[i],
     built = state.wordOrder[id].includes(i);
-  return `<div class="piece-wrap"><button class="piece color-${i % 9} ${art === "gold" ? "divine-gold" : ""} ${state.active === id + ":" + i ? "sounding" : ""}" data-chain-word="${id}:${i}" aria-label="${built ? "Return" : "Add"} ${v.roman[i]}" draggable="true"><svg class="puzzle-outline" viewBox="0 0 180 140" preserveAspectRatio="none" aria-hidden="true"><path d="${outline(i, v.words.length)}"/></svg>${art === "gold" ? '<span class="gold-sparkles" aria-hidden="true">✧</span>' : illustration(art)}<span class="arabic" lang="ar" dir="rtl">${v.words[i]}</span><span class="roman">${v.roman[i]}</span><span class="word-meaning">${meaning}</span></button><button class="piece-listen" data-chain-listen="${id}:${i}" aria-label="Listen to this piece">♫</button></div>`;
+  return `<div class="piece-wrap"><button class="piece color-${i % 9} ${art === "gold" ? "divine-gold" : ""} ${state.active === id + ":" + i ? "sounding" : ""}" data-chain-word="${id}:${i}" data-word="${i}" data-zone="${built ? "selected" : "bank"}" aria-label="${built ? "Return" : "Add"} ${v.roman[i]}" draggable="true"><svg class="puzzle-outline" viewBox="0 0 180 140" preserveAspectRatio="none" aria-hidden="true"><path d="${outline(i, v.words.length)}"/></svg>${art === "gold" ? '<span class="gold-sparkles" aria-hidden="true">✧</span>' : illustration(art)}<span class="arabic" lang="ar" dir="rtl">${v.words[i]}</span><span class="roman">${v.roman[i]}</span><span class="word-meaning">${meaning}</span></button><button class="piece-listen" data-chain-listen="${id}:${i}" aria-label="Listen to this piece">♫</button></div>`;
 }
 function draw() {
   if (!root?.isConnected) return;
@@ -93,7 +95,7 @@ ${s.surah.developerOnly?`<label>Active word puzzle<select id="chain-active-puzzl
           .filter((id) => !s.chain.includes(id)&&(!s.surah.developerOnly||id===s.activePuzzle))
           .map(
             (id) =>
-              `<section class="chain-puzzle" data-puzzle="${id}"><div class="builder-heading"><h3>Puzzle ${String.fromCharCode(65 + s.cards.indexOf(id))}</h3><button class="text-button" data-chain-reset="${id}">↺ Reset words</button></div><div class="build-zone ${s.wordOrder[id].length ? "has-pieces" : ""}" dir="rtl" data-chain-drop="${id}">${s.wordOrder[id].length ? s.wordOrder[id].filter(i=>inWindow(id,i)).map((i) => wordPiece(id, i)).join("") : "<p>Build this ayah from right to left.</p>"}</div><div class="word-bank" dir="rtl">${s.banks[
+              `<section class="chain-puzzle" data-puzzle="${id}"><div class="builder-heading"><h3>Puzzle ${String.fromCharCode(65 + s.cards.indexOf(id))}</h3><button class="text-button" data-chain-reset="${id}">↺ Reset words</button></div><div class="build-zone ${s.wordOrder[id].length ? "has-pieces" : ""}" dir="rtl" data-chain-drop="${id}" data-drop="build">${s.wordOrder[id].length ? s.wordOrder[id].filter(i=>inWindow(id,i)).map((i) => wordPiece(id, i)).join("") : "<p>Build this ayah from right to left.</p>"}</div><div class="word-bank" dir="rtl" data-drop="bank">${s.banks[
                 id
               ]
                 .filter((i) => inWindow(id,i)&&!s.wordOrder[id].includes(i))
@@ -205,22 +207,11 @@ function bind() {
       state.showReference = !state.showReference;
       draw();
     });
-  root.querySelectorAll("[data-chain-word]").forEach((b) => {
-    b.onclick = () =>
-      changeWords(...b.dataset.chainWord.split(":").map(Number));
-    b.ondragstart = (e) =>
-      e.dataTransfer.setData("text/plain", "word:" + b.dataset.chainWord);
-  });
-  root.querySelectorAll("[data-chain-drop]").forEach((b) => {
-    b.ondragover = (e) => e.preventDefault();
-    b.ondrop = (e) => {
-      e.preventDefault();
-      const match = /^word:(\d+):(\d+)$/.exec(
-        e.dataTransfer.getData("text/plain"),
-      );
-      if (match && +match[1] === +b.dataset.chainDrop)
-        changeWords(+match[1], +match[2], true);
-    };
+  root.querySelectorAll('.chain-puzzle').forEach(puzzle=>{
+    const id=Number(puzzle.dataset.puzzle);
+    puzzle.querySelectorAll('[data-chain-word]').forEach(b=>b.onclick=()=>changeWords(id,Number(b.dataset.word)));
+    bindPieceDrag(puzzle,{scope:`${state.surah.id}:${id}`,selection:()=>state.wordOrder[id],count:verse(id).words.length,
+      locked:()=>state.chain.includes(id),change(next){stopSequence();state.wordOrder[id]=next;state.feedback='';draw();}});
   });
   root
     .querySelectorAll("[data-chain-listen]")

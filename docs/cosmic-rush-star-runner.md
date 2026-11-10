@@ -90,3 +90,7 @@ During browser checks, keyboard-controlled flight collected six stars, reached a
 - `git diff --check`: passed.
 
 Browser testing found and fixed swipe capture intercepting overlay buttons, incorrect running-status text, and an interrupted pending launch leaving the launch button disabled. No known blocking gameplay defect remains from these tests; the scope and device-validation limitations above remain.
+
+## Reading pace update
+
+Normal flight now advances at 70% of the previous simulation rate, including the standalone neutral-obstacle runner. Flow Runner boost advances at 4.851× the old normal simulation rate: 50% above its previous 3.234× boost, rather than applying a boost increase that is mostly canceled by the slower base. Steering stays responsive, four-second boost fuel and bounded XP rules remain unchanged. Existing source transliterations are displayed beneath the corresponding Arabic word, chunk or ayah for every candidate, without identifying the correct answer. No Arabic or recitation is regenerated.

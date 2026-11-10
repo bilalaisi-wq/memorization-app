@@ -31,8 +31,8 @@ test('whole ayahs and canonical word parts preserve all free source text and dis
 test('active collisions collect words in order, wrong choices repeat without erasing progress or costing shield',()=>{
   const events=[],units=createFlowUnits(['1:3'],'words'),g=createFlowRunner({units,seed:5,stageId:'test',onEvent:e=>events.push(e)});g.start();
   const s=g.getSnapshot(),wrong=s.objects.find(o=>o.kind==='pickup'&&o.unit.id!==s.unit.id),rock=s.objects.find(o=>o.kind==='asteroid');
-  let lane=(rock.lane+1)%3;while(g.getSnapshot().lane!==lane)g.dispatch({type:'lane',direction:Math.sign(lane-g.getSnapshot().lane)});tick(g,3.4);
-  lane=wrong.lane;while(g.getSnapshot().lane!==lane)g.dispatch({type:'lane',direction:Math.sign(lane-g.getSnapshot().lane)});g.dispatch({type:'confirm-lane'});tick(g,2.8);
+  let lane=(rock.lane+1)%3;while(g.getSnapshot().lane!==lane)g.dispatch({type:'lane',direction:Math.sign(lane-g.getSnapshot().lane)});tick(g,3.4/.7);
+  lane=wrong.lane;while(g.getSnapshot().lane!==lane)g.dispatch({type:'lane',direction:Math.sign(lane-g.getSnapshot().lane)});g.dispatch({type:'confirm-lane'});tick(g,2.8/.7);
   expect(g.getSnapshot().memoryMistakes).toBe(1);expect(g.getSnapshot().cursor).toBe(0);expect(g.getSnapshot().shield).toBe(3);
   const result=pilot(g);expect(result.collected).toEqual(units.map(u=>u.id));expect(result.completedAyahs).toEqual(['1:3']);
   expect(events.find(e=>e.type==='runner:pickup-mistake').category).toBe('observed-flow-selection');

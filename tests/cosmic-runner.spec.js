@@ -33,7 +33,7 @@ test('ship actually moves smoothly, respects lanes, and scenery objects scroll a
   game.dispatch({type:'tick',dt:.05});
   expect(game.getSnapshot().x).toBeLessThan(300);
   expect(game.getSnapshot().x).toBeGreaterThan(120);
-  advance(game,.5);expect(game.getSnapshot().x).toBe(120);
+  advance(game,1);expect(game.getSnapshot().x).toBe(120);
   game.dispatch({type:'lane',direction:-1});expect(game.getSnapshot().lane).toBe(0);
   const a=game.getSnapshot().objects.find(o=>o.drift);
   expect(a).toBeTruthy();advance(game,.1);
@@ -44,7 +44,7 @@ test('collision shield, invulnerability, recovery, pause, lag guard and restart 
   const events=[],game=createRunner({seed:1,onEvent:e=>events.push(e)});game.start();
   const blocked=[0,1,2].find(l=>l!==game.getSnapshot().waves[0].safeLane);
   while(game.getSnapshot().lane!==blocked)game.dispatch({type:'lane',direction:Math.sign(blocked-game.getSnapshot().lane)});
-  advance(game,5);
+  advance(game,5/.7);
   expect(game.getSnapshot().shield).toBe(2);expect(game.getSnapshot().invulnerable).toBeGreaterThan(0);
   expect(events.find(e=>e.type==='runner:collision').category).toBe('motor-control');
   const t=game.getSnapshot().elapsed;game.pause();advance(game,2);expect(game.getSnapshot().elapsed).toBe(t);
