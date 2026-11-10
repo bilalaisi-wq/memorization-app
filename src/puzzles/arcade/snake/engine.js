@@ -5,6 +5,8 @@ import {seededShuffle} from '../content.js';
 export const GRID={columns:10,rows:12};
 export const DIRECTIONS={up:{x:0,y:-1},right:{x:1,y:0},down:{x:0,y:1},left:{x:-1,y:0}};
 export const snakeSpeeds={slow:1000,steady:650,brisk:380};
+export const SNAKE_BOOST={multiplier:1.6,durationMs:5000,cooldownMs:2000,correctPoints:150};
+export const snakeStepMs=s=>snakeSpeeds[s.speed]/(s.boost?.remainingMs>0?SNAKE_BOOST.multiplier:1);
 const key=p=>`${p.x}:${p.y}`;
 const same=(a,b)=>a.x===b.x&&a.y===b.y;
 const inside=p=>p.x>=0&&p.x<GRID.columns&&p.y>=0&&p.y<GRID.rows;
@@ -61,27 +63,38 @@ function populate(s){
   }
   return true;
 }
-function freshSector(s){s.cursor=0;s.captured=[];s.portal=null;resetBody(s);populate(s);}
+function freshSector(s){s.sectorScore=0;s.cursor=0;s.captured=[];s.portal=null;resetBody(s);populate(s);}
 export function createSnake({id,config,sectors,speed='slow'}){
   if(config.difficultySchema===1)speed=snakeMotor(config);
   if(!snakeSpeeds[speed]||!sectors.length||sectors.map(s=>s.key).join('|')!==config.keys.join('|')||sectors.some(s=>!s.words.length||s.words.length>(config.visualWindows?1000:40)))throw Error('Invalid Snake content or speed');
-  const s={session:createSession({id,game:'snake',config}),sectors:structuredClone(sectors),body:[],direction:'up',queued:null,cursor:0,captured:[],food:[],portal:null,score:0,serial:0,speed,steps:0,elapsed:0,motorPause:false,message:'Press Start trail. Steer into the next word.'};
+  const s={session:createSession({id,game:'snake',config}),sectors:structuredClone(sectors),body:[],direction:'up',queued:null,cursor:0,captured:[],food:[],portal:null,score:0,sectorScore:0,boost:{remainingMs:0,cooldownMs:0},boostCaptures:0,serial:0,speed,steps:0,elapsed:0,motorPause:false,message:'Press Start trail. Steer into the next word.'};
   freshSector(s);return s;
 }
 export function stepSnake(previous,action){
   if(previous.session.status==='disposed')return previous;
   const s={...structuredClone({...previous,sectors:undefined}),sectors:previous.sectors};
+  s.boost??={remainingMs:0,cooldownMs:0};s.sectorScore??=s.cursor*100;s.boostCaptures??=0;
   const status=s.session.status;
   if(action.type==='dispose'){reduce(s,'dispose');return s;}
   if(action.type==='speed'){if(!snakeSpeeds[action.value])return previous;s.speed=action.value;if(s.session.config.memoryDifficulty)s.session.config.motorDifficulty={slow:'relaxed',steady:'normal',brisk:'arcade'}[action.value];return s;}
   if(action.type==='start'&&status==='ready'){reduce(s,'start');s.message='Follow the trail. Say each collected word aloud.';return s;}
   if(action.type==='pause'){reduce(s,'pause');return s;}
   if(action.type==='resume'){reduce(s,'resume');return s;}
-  if(action.type==='retry'&&status==='lost'){s.score=s.session.config.chainMode==='classic'?0:Math.max(0,s.score-s.cursor*100);reduce(s,'retry');s.motorPause=false;freshSector(s);s.message='Fresh trail. Your learning records are safe.';return s;}
+  if(action.type==='retry'&&status==='lost'){s.score=s.session.config.chainMode==='classic'?0:Math.max(0,s.score-(s.sectorScore??s.cursor*100));reduce(s,'retry');s.boost={remainingMs:0,cooldownMs:0};s.motorPause=false;freshSector(s);s.message='Fresh trail. Your learning records are safe.';return s;}
   if(status!=='playing')return previous;
   if(action.type==='assist'){reduce(s,'assist',{kind:action.kind});return s;}
   if(action.type==='recover'&&s.motorPause){resetBody(s);populate(s);s.motorPause=false;s.message='A fresh safe route. Word progress and memory strikes are unchanged.';return s;}
   if(s.motorPause)return previous;
+  if(action.type==='boost'){
+    if(s.boost.remainingMs||s.boost.cooldownMs)return previous;
+    s.boost.remainingMs=SNAKE_BOOST.durationMs;s.message='Boost! Correct words and phrases earn 150 arcade points.';return s;
+  }
+  if(action.type==='advance'){
+    if(!Number.isFinite(action.dt)||action.dt<=0||action.dt>200)return previous;
+    let dt=action.dt;
+    if(s.boost.remainingMs>0){const used=Math.min(dt,s.boost.remainingMs);s.boost.remainingMs-=used;dt-=used;if(s.boost.remainingMs===0)s.boost.cooldownMs=SNAKE_BOOST.cooldownMs;}
+    s.boost.cooldownMs=Math.max(0,s.boost.cooldownMs-dt);return s;
+  }
   if(action.type==='direction'){
     const delta=DIRECTIONS[action.value],current=DIRECTIONS[s.direction];
     if(!delta||s.queued||delta.x===current.x&&delta.y===current.y||delta.x===-current.x&&delta.y===-current.y)return previous;
@@ -96,12 +109,12 @@ export function stepSnake(previous,action){
   if(!inside(head)||tail.some(p=>same(p,head))){
     reduce(s,'motor-error');s.motorPause=true;s.queued=null;s.message='Wall or tail bump — no memory strike. Continue on a safe route.';return s;
   }
-  s.body.unshift(head);if(!correct||s.session.config.visualWindows&&s.body.length>15)s.body.pop();s.steps++;s.elapsed+=snakeSpeeds[s.speed]/1000;
+  s.body.unshift(head);if(!correct||s.session.config.visualWindows&&s.body.length>15)s.body.pop();s.steps++;s.elapsed+=snakeStepMs(s)/1000;
   if(s.portal&&same(s.portal,head)){
     reduce(s,'checkpoint');s.score+=200;freshSector(s);s.message='Portal crossed! A new ayah trail begins.';return s;
   }
   if(correct){
-    s.captured.push(sector.words[s.cursor]);s.cursor++;s.score+=100;s.message='Correct word! Your tail grows. Repeat it aloud.';
+    s.captured.push(sector.words[s.cursor]);s.cursor++;const points=s.boost.remainingMs>0?SNAKE_BOOST.correctPoints:100;s.score+=points;s.sectorScore+=points;if(points>100)s.boostCaptures++;s.message='Correct word! Your tail grows. Repeat it aloud.';
     if(s.cursor===sector.words.length&&s.session.checkpoint===s.sectors.length-1){reduce(s,'checkpoint');s.score+=200;s.food=[];s.message='Trail complete! Recognition practice is separate from spoken recall.';return s;}
     if(!populate(s)){s.motorPause=true;reduce(s,'motor-error');s.message='Let’s open a safe route. Your words and strikes are unchanged.';}
     if(s.portal)s.message='Ayah assembled! Steer into the glowing portal to continue.';

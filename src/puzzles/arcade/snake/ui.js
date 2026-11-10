@@ -1,6 +1,6 @@
 import {annotateDifficulty,snakeMotor} from '../difficulty.js';
 import {outsideGameDialog} from '../input-scope.js';
-import {createSnake,stepSnake,buildSnakeSectors,snakeSpeeds,GRID,foodSize} from './engine.js';
+import {createSnake,stepSnake,buildSnakeSectors,snakeStepMs,GRID,foodSize} from './engine.js';
 import {createAudioManager,motionSettings} from '../services.js';
 import {esc} from '../../../ui/dom.js';
 import {successCue} from '../../../ui/encouragement.js';
@@ -10,14 +10,21 @@ export function mountSnake({root,adapter,config,id,speed='slow',muted=()=>false,
   config=annotateDifficulty(config,'beginner',speed);if(config.difficultySchema===1)speed=snakeMotor(config);
  let state=createSnake({id,config,sectors:buildSnakeSectors(adapter,config),speed}),disposed=false,frame=0,last=0,accumulator=0,audioMode=initialAudio,saveState='pending',saveError='',guidance=null,navigating=false,pendingAudio=false;
   const audio=createAudioManager({owner:'snake',initialVolume:volume()}),motion=motionSettings();
-  root.innerHTML=`<section class="ayah-snake ${motion.reducedMotion?'snake-reduced':''}" aria-label="Ayah Serpent"><div class="snake-heading"><span aria-hidden="true">❧</span><div><span class="eyebrow">GROW YOUR MEMORY TRAIL</span><h3>Ayah Serpent</h3><p>Steer, collect, speak — one word at a time. ${config.visualWindows?"Long-ayah study keeps your tail at a safe length; every source word is still required.":""}</p></div></div><div class="snake-toolbar"><label>Movement<select data-snake-speed><option value="slow">Slow · room to think</option><option value="steady">Steady</option><option value="brisk">Brisk</option></select></label><label>Recitation<select data-snake-audio><option value="listen">Continuous ayah recitation</option><option value="echo">Listen before moving</option><option value="silent">Pause recitation · this ayah</option></select></label><button class="text-button" data-snake-action="listen">♫ Replay ayah</button><button class="text-button" data-snake-action="pause">Pause trail</button></div><div class="snake-hud"><span data-snake-sector></span><span data-snake-strikes></span><span data-snake-score></span><span data-snake-motors></span></div><div class="snake-sequence" dir="rtl" lang="ar" aria-label="Assembled ayah"><span class="snake-empty">Collected words appear here</span></div><div class="snake-board" tabindex="0" role="region" aria-label="Snake garden. Arrow keys or WASD steer. P pauses. Collect the next word and avoid your tail and the walls."><div class="snake-board-items"></div><div class="snake-overlay"><div data-snake-panel tabindex="-1"></div></div></div><div class="snake-direction-pad" aria-label="Steer the snake">${[['up','↑'],['left','←'],['down','↓'],['right','→']].map(([d,label])=>`<button data-snake-direction="${d}" aria-label="Steer ${d}">${label}</button>`).join('')}</div><p class="snake-status" role="status" aria-live="polite"></p><details class="snake-guide"><summary>How to play &amp; memorization tips</summary><p>The snake keeps moving. Use arrows or WASD, the large direction pad, or swipe the garden to turn. Reverse turns are ignored; one turn is queued per step. Choose Slow or pause whenever you need time to read.</p><p>Collect the next word in order. Correct words grow your tail and give arcade points. Incorrect words cost one memory strike. A wall or tail bump pauses the trail, records only a motor event and offers a safe route with your collected words, tail length and strikes intact. Collisions never cost learning XP or a memory strike.</p><p>Speak each collected word aloud and repeat with the verified reciter. Enter the glowing portal to continue a chain. Arcade points and recognition success are separate from XP caps, independent recall and memorization mastery.</p></details></section>`;
+  root.innerHTML=`<section class="ayah-snake ${motion.reducedMotion?'snake-reduced':''}" aria-label="Ayah Serpent"><div class="snake-heading"><span aria-hidden="true">❧</span><div><span class="eyebrow">GROW YOUR MEMORY TRAIL</span><h3>Ayah Serpent</h3><p>Steer, collect, speak — one word at a time. ${config.visualWindows?"Long-ayah study keeps your tail at a safe length; every source word is still required.":""}</p></div></div><div class="snake-toolbar"><label>Movement<select data-snake-speed><option value="slow">Slow · room to think</option><option value="steady">Steady</option><option value="brisk">Brisk</option></select></label><label>Recitation<select data-snake-audio><option value="listen">Continuous ayah recitation</option><option value="echo">Listen before moving</option><option value="silent">Pause recitation · this ayah</option></select></label><button class="text-button" data-snake-action="listen">♫ Replay ayah</button><button class="text-button" data-snake-action="pause">Pause trail</button></div><div class="snake-hud"><span data-snake-sector></span><span data-snake-strikes></span><span data-snake-score></span><span data-snake-motors></span></div><div class="snake-sequence" dir="rtl" lang="ar" aria-label="Assembled ayah"><span class="snake-empty">Collected words appear here</span></div><div class="snake-board" tabindex="0" role="region" aria-label="Snake garden. Arrow keys or WASD steer. P pauses. Space boosts for five seconds. Collect the next word and avoid your tail and the walls."><div class="snake-board-items"></div><div class="snake-overlay"><div data-snake-panel tabindex="-1"></div></div></div><div class="snake-direction-pad" aria-label="Steer the snake">${[['up','↑'],['left','←'],['down','↓'],['right','→']].map(([d,label])=>`<button data-snake-direction="${d}" aria-label="Steer ${d}">${label}</button>`).join('')}</div><button class="snake-boost-button" data-snake-action="boost" aria-label="Boost speed">Boost · Space</button><p class="snake-status" role="status" aria-live="polite"></p><details class="snake-guide"><summary>How to play &amp; memorization tips</summary><p>The snake keeps moving. Use arrows or WASD, the large direction pad, or swipe the garden to turn. Reverse turns are ignored; one turn is queued per step. Choose Slow or pause whenever you need time to read. Press Space or tap Boost for 60% faster movement for five seconds, followed by a two-second cooldown. Boosted correct words or phrases earn 150 arcade points instead of 100; learning XP limits stay the same.</p><p>Collect the next word in order. Correct words grow your tail and give arcade points. Incorrect words cost one memory strike. A wall or tail bump pauses the trail, records only a motor event and offers a safe route with your collected words, tail length and strikes intact. Collisions never cost learning XP or a memory strike.</p><p>Speak each collected word aloud and repeat with the verified reciter. Enter the glowing portal to continue a chain. Arcade points and recognition success are separate from XP caps, independent recall and memorization mastery.</p></details></section>`;
   const view=root.querySelector('.ayah-snake'),board=root.querySelector('.snake-board'),items=root.querySelector('.snake-board-items'),overlay=root.querySelector('.snake-overlay'),panel=root.querySelector('[data-snake-panel]'),status=root.querySelector('.snake-status');
   const sector=()=>state.sectors[state.session.checkpoint];
   const resetClock=()=>{last=0;accumulator=0;};
   const position=(p,w=1,h=1)=>`left:${p.x/GRID.columns*100}%;top:${p.y/GRID.rows*100}%;width:${w/GRID.columns*100}%;height:${h/GRID.rows*100}%`;
+  function paintBoost(){
+    const button=root.querySelector('[data-snake-action=boost]'),b=state.boost;
+    const label=b.remainingMs>0?`Boosting · ${Math.ceil(b.remainingMs/1000)}s`:b.cooldownMs>0?`Boost cooling · ${Math.ceil(b.cooldownMs/1000)}s`:'Boost · Space';
+    if(button.textContent!==label)button.textContent=label;
+    button.disabled=state.session.status!=='playing'||state.motorPause||b.remainingMs>0||b.cooldownMs>0;
+    view.classList.toggle('snake-boosting',b.remainingMs>0);
+  }
   function paint(){
     if(disposed)return;
-    const session=state.session;board.dataset.direction=state.direction;
+    paintBoost();const session=state.session;board.dataset.direction=state.direction;
     root.querySelector('[data-snake-sector]').textContent=`Garden ${session.checkpoint+1}/${config.keys.length} · ${sector().key}`;
     root.querySelector('[data-snake-strikes]').textContent=`${3-session.strikes}/3 memory strikes remaining · ${config.chainMode==='classic'?'whole chain':'per ayah'}`;
     root.querySelector('[data-snake-score]').textContent=`${state.score} arcade points`;
@@ -44,7 +51,7 @@ export function mountSnake({root,adapter,config,id,speed='slow',muted=()=>false,
   }
   function save(){
     if(saveState==='saved')return true;
-    try{onComplete({...state.session,config:annotateDifficulty(state.session.config,'beginner',state.speed),arcadeStats:{score:state.score,steps:state.steps,speed:state.speed}});saveState='saved';saveError='';state.message='Trail saved. Choose your next step.';}
+    try{onComplete({...state.session,config:annotateDifficulty(state.session.config,'beginner',state.speed),arcadeStats:{score:state.score,steps:state.steps,speed:state.speed,boostCaptures:state.boostCaptures}});saveState='saved';saveError='';state.message='Trail saved. Choose your next step.';}
     catch(e){saveState='failed';saveError=e.message;state.message='Retry saving before starting another trail.';}
     paint();return saveState==='saved';
   }
@@ -88,9 +95,10 @@ export function mountSnake({root,adapter,config,id,speed='slow',muted=()=>false,
   const keydown=e=>{if(root.closest("[inert]")||outsideGameDialog(root,e))return;
     if(e.altKey||e.ctrlKey||e.metaKey||e.target.closest?.('input,select,textarea,button,a,[contenteditable=true],.snake-overlay'))return;
     if(directionKeys[e.code]){e.preventDefault();send({type:'direction',value:directionKeys[e.code]});}
+    if(e.code==='Space'){e.preventDefault();if(!e.repeat)send({type:'boost'});}
     if(e.code==='KeyP'&&!e.repeat){e.preventDefault();send({type:'pause'});}
   };
-  const click=e=>{const direction=e.target.closest('[data-snake-direction]'),button=e.target.closest('[data-snake-action]');if(direction){send({type:'direction',value:direction.dataset.snakeDirection});board.focus({preventScroll:true});}else if(button)send({type:button.dataset.snakeAction});};
+  const click=e=>{const direction=e.target.closest('[data-snake-direction]'),button=e.target.closest('[data-snake-action]');if(direction){send({type:'direction',value:direction.dataset.snakeDirection});board.focus({preventScroll:true});}else if(button){send({type:button.dataset.snakeAction});if(button.dataset.snakeAction==='boost')board.focus({preventScroll:true});}};
   let touch=null;
   const down=e=>{if(board.contains(e.target)&&!e.target.closest('.snake-overlay')){touch={x:e.clientX,y:e.clientY};try{board.setPointerCapture(e.pointerId);}catch{}board.focus({preventScroll:true});}};
   const up=e=>{if(!touch)return;const dx=e.clientX-touch.x,dy=e.clientY-touch.y;touch=null;if(Math.max(Math.abs(dx),Math.abs(dy))<18)return;send({type:'direction',value:Math.abs(dx)>Math.abs(dy)?dx>0?'right':'left':dy>0?'down':'up'});};
@@ -104,7 +112,7 @@ export function mountSnake({root,adapter,config,id,speed='slow',muted=()=>false,
     if(disposed)return;
     const elapsed=last?time-last:0;last=time;
     if(state.session.status==='playing'&&!state.motorPause){
-      if(elapsed>0&&elapsed<=200){accumulator+=elapsed;if(accumulator>=snakeSpeeds[state.speed]){accumulator=0;send({type:'tick'});}}else accumulator=0;
+      if(elapsed>0&&elapsed<=200){state=stepSnake(state,{type:'advance',dt:elapsed});paintBoost();accumulator+=elapsed;if(accumulator>=snakeStepMs(state)){accumulator=0;send({type:'tick'});}}else accumulator=0;
     }
     frame=requestAnimationFrame(tick);
   }

@@ -56,3 +56,7 @@ The tests cover deterministic source provenance, queued controls, growth, walls/
 [Desktop preview](snake-previews/desktop.png) · [Mobile preview](snake-previews/mobile.png). The screenshots show real local play with the first Al-Fatihah word collected, not fabricated account progress. Reproduce with Vite on port 5183 and `node scripts/snake-screenshots.mjs`.
 
 Validation: the full Playwright suite passed **247 tests**, including the existing Ayah Blocks and Asteroids suites. After refining held-direction handling, all **14 focused Snake tests** passed again. The final production Vite build passed. No hosted configuration, database migration or canonical Qur'anic data changed.
+
+## Boost
+
+Press **Space** while the board is focused, or tap **Boost** on mobile. Movement becomes 60% faster for five active seconds, then the button cools down for two active seconds. Pause and safe-route motor recovery freeze both timers; repeated key presses do not extend or retrigger an active boost. Correct words or grouped phrases collected during boost earn **150 arcade points** instead of 100. Learning XP caps, review grading and FSRS remain unchanged. Checkpoint retry removes the actual current-sector points, including boost bonuses, while retaining completed Practice checkpoints.
