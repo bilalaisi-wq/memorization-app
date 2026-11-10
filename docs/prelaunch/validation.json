@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-10",
+  "baselineCommit": "d4597e4",
+  "fullSuite": {
+    "command": "npx playwright test --config=playwright.regression.config.js --workers=4",
+    "passed": 916,
+    "failed": 0,
+    "minutes": 14.5
+  },
+  "focusedRecoveryPassed": 32,
+  "backend": {
+    "billing": 7,
+    "content": 6,
+    "recitation": 5,
+    "coach": 5,
+    "chronicles": 6,
+    "total": 29,
+    "failed": 0
+  },
+  "edgeTypeChecks": "passed",
+  "productionBuild": {
+    "passed": true,
+    "seconds": 7.49
+  },
+  "responsive": {
+    "checks": 24,
+    "renderedPublicLabCases": 18,
+    "hiddenChroniclesChecks": 6,
+    "documentOverflowCases": 0,
+    "maxLocalEntryMs": 1317
+  },
+  "gitDiffCheck": "passed",
+  "productionReady": false,
+  "realAuthenticatedAB": "not performed",
+  "stripeTransactions": "not performed",
+  "physicalDevicesAndScreenReaders": "not performed"
+}

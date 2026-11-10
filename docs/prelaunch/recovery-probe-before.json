@@ -1,0 +1,17 @@
+{
+  "environment": "Synthetic in-memory records only; no real account or browser progress modified",
+  "cases": [
+    {
+      "initialBackup": "absent",
+      "originalMalformedLegacyRetainedSomewhere": true,
+      "legacyRawAfter": "{\"1:1\":0}",
+      "warning": "Some older progress could not be read. Original data is preserved in the migration backup."
+    },
+    {
+      "initialBackup": "empty string",
+      "originalMalformedLegacyRetainedSomewhere": false,
+      "legacyRawAfter": "{\"1:1\":0}",
+      "warning": "Some older progress could not be read. Original data is preserved in the migration backup."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "environment": "Synthetic in-memory records only; no learner data modified",
+  "cases": [
+    {
+      "initialBackup": "absent",
+      "originalMalformedLegacyRetainedSomewhere": true,
+      "legacyRawAfter": "{unreadable precious legacy marker",
+      "writeRejected": false,
+      "warning": "Learning progress was saved, but legacy mirrors need recovery or could not be refreshed. Original unreadable legacy data has not been overwritten; export device progress."
+    },
+    {
+      "initialBackup": "empty string",
+      "originalMalformedLegacyRetainedSomewhere": true,
+      "legacyRawAfter": "{unreadable precious legacy marker",
+      "writeRejected": true,
+      "warning": "Saved legacy migration backup needs recovery. Original progress and backup have not been overwritten; export device data before recovery."
+    }
+  ]
+}

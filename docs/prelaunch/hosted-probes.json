@@ -1,0 +1,17 @@
+[
+  {
+    "check": "Public website",
+    "status": 200,
+    "response": "HTML received"
+  },
+  {
+    "check": "Anonymous private Quran bundle",
+    "status": 401,
+    "response": "{\"error\":\"Sign in required\"}"
+  },
+  {
+    "check": "Chronicles availability",
+    "status": 404,
+    "response": "{\"code\":\"NOT_FOUND\",\"message\":\"Requested function was not found\"}"
+  }
+]

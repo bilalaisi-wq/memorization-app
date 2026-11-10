@@ -1,0 +1,251 @@
+{
+  "environment": "Local Chromium, mocked guest services, reduced motion; no published lesson fixture",
+  "cases": [
+    {
+      "width": 320,
+      "theme": "simple",
+      "lab": "memorization",
+      "openMs": 517,
+      "overflow": 0,
+      "headings": [
+        "Small pieces. Big discoveries.",
+        "Al-Fatihah الفاتحة"
+      ]
+    },
+    {
+      "width": 320,
+      "theme": "simple",
+      "lab": "puzzle",
+      "openMs": 305,
+      "overflow": 0,
+      "headings": [
+        "Puzzle Lab",
+        "Al-Fatihah · Ayah 1"
+      ]
+    },
+    {
+      "width": 320,
+      "theme": "simple",
+      "lab": "revision",
+      "openMs": 342,
+      "overflow": 0,
+      "headings": [
+        "Revision Lab",
+        "Chart your ayah journey"
+      ]
+    },
+    {
+      "width": 320,
+      "theme": "simple",
+      "lab": "comprehension",
+      "availability": "coming-soon/developer-only",
+      "learnerEntryHidden": true
+    },
+    {
+      "width": 320,
+      "theme": "night-sky",
+      "lab": "memorization",
+      "openMs": 856,
+      "overflow": 0,
+      "headings": [
+        "Small pieces. Big discoveries.",
+        "Al-Fatihah constellation",
+        "Al-Fatihah الفاتحة"
+      ]
+    },
+    {
+      "width": 320,
+      "theme": "night-sky",
+      "lab": "puzzle",
+      "openMs": 221,
+      "overflow": 0,
+      "headings": [
+        "Puzzle Lab",
+        "Al-Fatihah constellation",
+        "Al-Fatihah · Ayah 1"
+      ]
+    },
+    {
+      "width": 320,
+      "theme": "night-sky",
+      "lab": "revision",
+      "openMs": 148,
+      "overflow": 0,
+      "headings": [
+        "Revision Lab",
+        "Chart your ayah journey"
+      ]
+    },
+    {
+      "width": 320,
+      "theme": "night-sky",
+      "lab": "comprehension",
+      "availability": "coming-soon/developer-only",
+      "learnerEntryHidden": true
+    },
+    {
+      "width": 390,
+      "theme": "simple",
+      "lab": "memorization",
+      "openMs": 607,
+      "overflow": 0,
+      "headings": [
+        "Small pieces. Big discoveries.",
+        "Al-Fatihah الفاتحة"
+      ]
+    },
+    {
+      "width": 390,
+      "theme": "simple",
+      "lab": "puzzle",
+      "openMs": 267,
+      "overflow": 0,
+      "headings": [
+        "Puzzle Lab",
+        "Al-Fatihah · Ayah 1"
+      ]
+    },
+    {
+      "width": 390,
+      "theme": "simple",
+      "lab": "revision",
+      "openMs": 195,
+      "overflow": 0,
+      "headings": [
+        "Revision Lab",
+        "Chart your ayah journey"
+      ]
+    },
+    {
+      "width": 390,
+      "theme": "simple",
+      "lab": "comprehension",
+      "availability": "coming-soon/developer-only",
+      "learnerEntryHidden": true
+    },
+    {
+      "width": 390,
+      "theme": "night-sky",
+      "lab": "memorization",
+      "openMs": 638,
+      "overflow": 0,
+      "headings": [
+        "Small pieces. Big discoveries.",
+        "Al-Fatihah constellation",
+        "Al-Fatihah الفاتحة"
+      ]
+    },
+    {
+      "width": 390,
+      "theme": "night-sky",
+      "lab": "puzzle",
+      "openMs": 192,
+      "overflow": 0,
+      "headings": [
+        "Puzzle Lab",
+        "Al-Fatihah constellation",
+        "Al-Fatihah · Ayah 1"
+      ]
+    },
+    {
+      "width": 390,
+      "theme": "night-sky",
+      "lab": "revision",
+      "openMs": 255,
+      "overflow": 0,
+      "headings": [
+        "Revision Lab",
+        "Chart your ayah journey"
+      ]
+    },
+    {
+      "width": 390,
+      "theme": "night-sky",
+      "lab": "comprehension",
+      "availability": "coming-soon/developer-only",
+      "learnerEntryHidden": true
+    },
+    {
+      "width": 1440,
+      "theme": "simple",
+      "lab": "memorization",
+      "openMs": 715,
+      "overflow": 0,
+      "headings": [
+        "Small pieces. Big discoveries.",
+        "Al-Fatihah الفاتحة"
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "simple",
+      "lab": "puzzle",
+      "openMs": 323,
+      "overflow": 0,
+      "headings": [
+        "Puzzle Lab",
+        "Al-Fatihah · Ayah 1"
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "simple",
+      "lab": "revision",
+      "openMs": 252,
+      "overflow": 0,
+      "headings": [
+        "Revision Lab",
+        "Chart your ayah journey"
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "simple",
+      "lab": "comprehension",
+      "availability": "coming-soon/developer-only",
+      "learnerEntryHidden": true
+    },
+    {
+      "width": 1440,
+      "theme": "night-sky",
+      "lab": "memorization",
+      "openMs": 1317,
+      "overflow": 0,
+      "headings": [
+        "Small pieces. Big discoveries.",
+        "Al-Fatihah constellation",
+        "Al-Fatihah الفاتحة"
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "night-sky",
+      "lab": "puzzle",
+      "openMs": 343,
+      "overflow": 0,
+      "headings": [
+        "Puzzle Lab",
+        "Al-Fatihah constellation",
+        "Al-Fatihah · Ayah 1"
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "night-sky",
+      "lab": "revision",
+      "openMs": 174,
+      "overflow": 0,
+      "headings": [
+        "Revision Lab",
+        "Chart your ayah journey"
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "night-sky",
+      "lab": "comprehension",
+      "availability": "coming-soon/developer-only",
+      "learnerEntryHidden": true
+    }
+  ]
+}

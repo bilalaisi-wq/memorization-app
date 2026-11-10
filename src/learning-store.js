@@ -105,7 +105,7 @@ export function createLearningStore(
     try {
       return JSON.parse(raw);
     } catch {
-      warning =
+      if (!readOnly) warning =
         "Some older progress could not be read. Original data is preserved in the migration backup.";
       return fallback;
     }
@@ -207,6 +207,21 @@ export function createLearningStore(
     }
   }
   if (!data) {
+    // An existing migration backup is itself user data. Never assume an empty,
+    // malformed or unsupported backup safely contains the legacy originals.
+    const backupRaw = safeGet(LEGACY_BACKUP_KEY);
+    if (!readOnly && backupRaw !== null) {
+      try {
+        const backup = JSON.parse(backupRaw);
+        if (!backup?.keys || typeof backup.keys !== "object" || Array.isArray(backup.keys) ||
+            !["ayah-mastery", "ayah-quiz", "ayah-completed"].every(key =>
+              Object.hasOwn(backup.keys, key) && (backup.keys[key] === null || typeof backup.keys[key] === "string")))
+          throw Error("Unsupported migration backup");
+      } catch {
+        readOnly = true;
+        warning = "Saved legacy migration backup needs recovery. Original progress and backup have not been overwritten; export device data before recovery.";
+      }
+    }
     const quiz = parseLegacy("ayah-quiz", {}),
       mastery = parseLegacy("ayah-mastery", {}),
       completed = parseLegacy("ayah-completed", []);
@@ -282,30 +297,29 @@ export function createLearningStore(
   }
   function mirror() {
     try {
-      const quiz = parseLegacy("ayah-quiz", {});
+      const readMirror = (key, fallback, isArray = false) => {
+        const raw = storage.getItem(key);
+        if (raw === null) return fallback;
+        const value = JSON.parse(raw);
+        if (!value || typeof value !== "object" || Array.isArray(value) !== isArray)
+          throw Error("Legacy mirror needs recovery");
+        return value;
+      };
+      // Validate every original before any mirror write. Canonical learning may
+      // save, but unreadable legacy bytes must remain available in raw exports.
+      const quiz = readMirror("ayah-quiz", {}),
+        legacy = readMirror("ayah-mastery", {}),
+        completed = readMirror("ayah-completed", [], true);
       storage.setItem("ayah-quiz", JSON.stringify({ ...quiz, ...data.wallet }));
-      const legacy = parseLegacy("ayah-mastery", {});
-      storage.setItem(
-        "ayah-mastery",
-        JSON.stringify({
-          ...legacy,
-          ...Object.fromEntries(
-            Object.values(data.records).map((r) => [r.key, r.game.puzzleWins]),
-          ),
-        }),
-      );
-      const completed = parseLegacy("ayah-completed", []);
-      const keys = new Set(
-        Array.isArray(completed)
-          ? completed.map((k) => (typeof k === "number" ? `1:${k + 1}` : k))
-          : [],
-      );
-      for (const r of Object.values(data.records))
-        if (r.game.completed) keys.add(r.key);
+      storage.setItem("ayah-mastery", JSON.stringify({
+        ...legacy,
+        ...Object.fromEntries(Object.values(data.records).map(r => [r.key, r.game.puzzleWins])),
+      }));
+      const keys = new Set(completed.map(k => typeof k === "number" ? `1:${k + 1}` : k));
+      for (const r of Object.values(data.records)) if (r.game.completed) keys.add(r.key);
       storage.setItem("ayah-completed", JSON.stringify([...keys]));
     } catch {
-      warning =
-        "Learning progress was saved, but legacy progress mirrors could not be refreshed.";
+      warning = "Learning progress was saved, but legacy mirrors need recovery or could not be refreshed. Original unreadable legacy data has not been overwritten; export device progress.";
     }
   }
   function transact(fn) {
