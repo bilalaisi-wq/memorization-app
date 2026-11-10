@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "edition": {
+    "id": "existing-quran-com-v4-uthmani",
+    "providerField": "text_uthmani",
+    "numbering": "Existing Quran.com chapter/juz catalog: 6236 ayahs",
+    "riwayah": "Hafs (existing project convention; independent edition attestation pending)",
+    "editionAttestation": "not-documented",
+    "normalizationPolicy": "Compare only; never rewrite displayed canonical bytes"
+  },
+  "sources": [
+    {
+      "id": "quran-com-metadata",
+      "provider": "Quran.com API v4",
+      "edition": "chapters + juzs",
+      "url": "https://api.quran.com/api/v4/",
+      "version": "v4; response pins in existing catalog",
+      "assets": [
+        "references"
+      ],
+      "rights": {
+        "status": "not-documented",
+        "commercialUse": null,
+        "attribution": "Quran.com; exact terms/edition evidence pending",
+        "evidence": []
+      },
+      "review": "existing pinned catalog; independent external cross-check not performed"
+    },
+    {
+      "id": "quran-com-uthmani",
+      "provider": "Quran.com API v4",
+      "edition": "text_uthmani",
+      "url": "https://api.quran.com/api/v4/quran/verses/uthmani",
+      "version": "Existing source/bundle pins; no refetch",
+      "assets": [
+        "arabic",
+        "wordPositions"
+      ],
+      "rights": {
+        "status": "not-documented",
+        "commercialUse": null,
+        "attribution": "Underlying Quranic Arabic distinguished from API/edition distribution terms; verify exact reuse basis",
+        "evidence": []
+      },
+      "review": "local source/word alignment only; no internal-stop approval"
+    },
+    {
+      "id": "saheeh-international-20",
+      "provider": "Quran.com API v4 / Saheeh International",
+      "edition": "English translation resource 20 (existing private importer and free-library declaration)",
+      "url": "https://api.quran.com/api/v4/",
+      "version": "Existing bundle/source pins",
+      "assets": [
+        "translation"
+      ],
+      "rights": {
+        "status": "not-documented",
+        "commercialUse": null,
+        "attribution": "Saheeh International; exact commercial redistribution permission/terms pending",
+        "evidence": []
+      },
+      "review": "presence/source declaration is not editorial or commercial clearance"
+    },
+    {
+      "id": "quran-com-word-aids",
+      "provider": "Quran.com API v4",
+      "edition": "Existing English word translations and transliterations",
+      "url": "https://api.quran.com/api/v4/",
+      "version": "Existing source/bundle pins",
+      "assets": [
+        "wordMeanings",
+        "transliteration"
+      ],
+      "rights": {
+        "status": "not-documented",
+        "commercialUse": null,
+        "attribution": "Quran.com word resources; identify underlying translators/licenses",
+        "evidence": []
+      },
+      "review": "alignment/presence only; no invented aids"
+    },
+    {
+      "id": "alafasy-full-ayah",
+      "provider": "Quran.com recitation hosting",
+      "edition": "Mishary Rashid Alafasy full-ayah MP3s (existing provider declaration)",
+      "url": "https://verses.quran.com/Alafasy/mp3/",
+      "version": "Existing private audio SHA-256 pins; measured free-file hashes",
+      "assets": [
+        "fullAyahAudio"
+      ],
+      "rights": {
+        "status": "not-documented",
+        "commercialUse": null,
+        "attribution": "Reciter and recording/distribution rights must be verified separately",
+        "evidence": []
+      },
+      "review": "local hash/header checks; no new teacher/audio-semantic attestation"
+    },
+    {
+      "id": "quran-com-word-audio",
+      "provider": "Quran.com word-by-word hosting",
+      "edition": "Existing free wbw clips; private alignment unreviewed",
+      "url": "https://audio.qurancdn.com/",
+      "version": "Existing free local files and source ordinal references",
+      "assets": [
+        "wordAudio"
+      ],
+      "rights": {
+        "status": "not-documented",
+        "commercialUse": null,
+        "attribution": "Identify exact reciter/recording/redistribution terms before extending distribution",
+        "evidence": []
+      },
+      "review": "existing free source association; private references are not validated word audio"
+    },
+    {
+      "id": "legacy-fatihah-english",
+      "provider": "Original application data",
+      "edition": "Al-Fatihah English strings in src/data.js; exact translation edition not documented",
+      "url": null,
+      "version": "Measured src/data.js/content hashes; no inferred resource 20 attribution",
+      "assets": [
+        "translation"
+      ],
+      "rights": {
+        "status": "not-documented",
+        "commercialUse": null,
+        "attribution": "Identify the actual translator/edition before asserting attribution or reuse clearance",
+        "evidence": []
+      },
+      "review": "not-attested; do not infer private-importer translation source for these strings"
+    },
+    {
+      "id": "legacy-fatihah-word-aids",
+      "provider": "Original application data",
+      "edition": "Hard-coded Al-Fatihah transliteration and mnemonic/meaning aids in src/data.js",
+      "url": null,
+      "version": "Measured per-asset hashes",
+      "assets": [
+        "wordMeanings",
+        "transliteration"
+      ],
+      "rights": {
+        "status": "not-documented",
+        "commercialUse": null,
+        "attribution": "Legacy editorial/source basis not documented",
+        "evidence": []
+      },
+      "review": "No verbatim API provenance or human editorial review inferred"
+    },
+    {
+      "id": "legacy-uthmanic-hafs-font",
+      "provider": "Existing public font asset",
+      "edition": "public/fonts/UthmanicHafs.woff2; exact upstream version not documented",
+      "url": null,
+      "version": "Measured file hash in manifest input pins",
+      "assets": [
+        "font"
+      ],
+      "rights": {
+        "status": "not-documented",
+        "commercialUse": null,
+        "attribution": "Verify exact font distribution license and required notices",
+        "evidence": []
+      },
+      "review": "Filename does not establish textual riwayah or scholarly approval"
+    }
+  ],
+  "reviewPolicy": "No license grant, reviewer identity, publication approval or recitation-stop ruling is inferred from availability, filenames, source hashes or this registry. Missing evidence stays explicit."
+}

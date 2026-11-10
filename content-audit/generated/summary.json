@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "manifestSha256": "e8d7c4c0f59cef201095eb8e4a5643cdb6d8f066a969d6a6aad1d8536fd2af6a",
+  "surahs": 114,
+  "juzs": 30,
+  "references": 6236,
+  "local": 1210,
+  "validated": 1210,
+  "free": 571,
+  "registeredPrivate": 639,
+  "missing": 5026,
+  "issues": 0,
+  "releaseApproved": false
+}

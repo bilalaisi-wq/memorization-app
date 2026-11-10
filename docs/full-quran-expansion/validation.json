@@ -1,0 +1,40 @@
+{
+  "phase": 1,
+  "baselineCommit": "fdda670",
+  "branch": "full-quran-phase1-manifest",
+  "fullTests": {
+    "passed": 922,
+    "failed": 0,
+    "minutes": 14.5
+  },
+  "backendTests": {
+    "passed": 29,
+    "failed": 0
+  },
+  "edgeTypeChecks": "passed",
+  "buildSeconds": 8.55,
+  "audit": {
+    "schemaVersion": 1,
+    "manifestSha256": "e8d7c4c0f59cef201095eb8e4a5643cdb6d8f066a969d6a6aad1d8536fd2af6a",
+    "surahs": 114,
+    "juzs": 30,
+    "references": 6236,
+    "local": 1210,
+    "validated": 1210,
+    "free": 571,
+    "registeredPrivate": 639,
+    "missing": 5026,
+    "issues": 0,
+    "releaseApproved": false
+  },
+  "checkSnapshot": "passed",
+  "existingJuz29Validator": "passed",
+  "availabilityChanged": false,
+  "existingSourceFilesChanged": false,
+  "progressFormatsChanged": false,
+  "importsPerformed": false,
+  "uploadsPerformed": false,
+  "mobileProjectsCreated": false,
+  "storeSubmissionsPerformed": false,
+  "releaseApproved": false
+}

@@ -1,0 +1,5 @@
+{
+  "samplePrivateBodiesFound": [],
+  "auditDirectoryInBuild": false,
+  "scope": "Two existing long-ayah samples and top-level build paths; not exhaustive secret/content scanning"
+}
