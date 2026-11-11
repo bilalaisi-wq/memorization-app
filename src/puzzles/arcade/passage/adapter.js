@@ -4,7 +4,7 @@ import {wordIdentity} from '../../../distractors.js';
 // Grouped tokens retain exact source words/IDs. They never authorize audio cuts.
 export function stageAdapter(bundle,stage,library,{audio='',memoryDifficulty='guided',seed=1}={}){
  const base=createContentAdapter(library),source=contentView(bundle,'words').map(w=>({...w,key:bundle.key,surah:bundle.surah,ayah:bundle.ayah}));
- const targets=stage.units.map(unit=>{const words=unit.positions.map(p=>source[p-1]);return {...words[0],text:words.map(w=>w.text).join(' '),id:words[0].id,index:words[0].index,audio,sourceWordIds:words.map(w=>w.id),sourcePositions:[...unit.positions],sourceWords:words,unitKind:unit.kind,stopApproved:unit.stopApproved,reviewId:unit.reviewId||null};});
+ const targets=stage.units.map(unit=>{const words=unit.positions.map(p=>source[p-1]);return {...words[0],text:words.map(w=>w.text).join(' '),transliteration:words.map(w=>w.transliteration||'').join(' '),id:words[0].id,index:words[0].index,audio,sourceWordIds:words.map(w=>w.id),sourcePositions:[...unit.positions],sourceWords:words,unitKind:unit.kind,stopApproved:unit.stopApproved,reviewId:unit.reviewId||null};});
  const words=key=>key===bundle.key?targets:base.words(key);
  return {...base,words,audio:key=>key===bundle.key?audio:base.audio(key),choices(key,{count=3,seed:choiceSeed=seed}={}){
   const target=words(key);if(key!==bundle.key)return base.choices(key,{count,seed:choiceSeed});if(!Number.isInteger(count)||count<0||count>20)throw Error('Invalid choice count.');

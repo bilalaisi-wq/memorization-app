@@ -19,11 +19,8 @@ async function defend(page){
 }
 test('entire surah expedition plays all activities, resumes after leaving and finishes with genuine native recall assessment',async({page})=>{
   await plan(page);await page.clock.install();await page.clock.pauseAt(new Date(await page.evaluate(()=>Date.now()+1000)));
-  for(let round=0;round<3;round++){
-    await page.locator('[data-exp-resume]').click();await page.getByRole('button',{name:'Start flight',exact:true}).click();await flyTo(page);
-    if(round===0){await page.locator('#nav-learn').click();await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Resume saved expedition/}).click();await expect(page.locator('[data-exp-resume]')).toContainText('Star Runner');await expect(page.locator('.cosmic-expedition')).toContainText('round 2/3');}
-    else await page.getByRole('button',{name:'Continue expedition',exact:true}).click();
-  }
+  await page.locator('[data-exp-resume]').click();await page.getByRole('button',{name:'Start flight',exact:true}).click();await flyTo(page);
+  await page.locator('#nav-learn').click();await page.locator('#nav-revision-lab').click();await page.getByRole('button',{name:/Resume saved expedition/}).click();
   await expect(page.locator('[data-exp-resume]')).toContainText('Meteor Defense');await page.locator('[data-exp-resume]').click();await page.getByRole('button',{name:'Start Meteor Defense',exact:true}).click();await expect(page.locator('.meteor-defense')).toHaveAttribute('data-defense-state','running');
   await expect.poll(()=>page.evaluate(()=>window.expeditionAudio.filter(a=>a.active).length)).toBe(1);await defend(page);await page.getByRole('button',{name:'Continue expedition',exact:true}).click();
   await expect(page.locator('[data-exp-resume]')).toContainText('Ayah Link');await page.locator('[data-exp-resume]').click();await page.getByRole('button',{name:'Start Ayah Link',exact:true}).click();

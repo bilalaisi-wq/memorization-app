@@ -13,7 +13,7 @@ import {appearanceAccount} from '../../../learner/accounts.js';
 import {createFlightController} from '../controller.js';
 import {prepareLinkPlans} from '../link-content.js';
 import {createLinkEvidence,weakLinkCandidates} from '../link-evidence.js';
-import {createExpeditionStore,expeditionTasks,expeditionCoverage} from './store.js';
+import {createExpeditionStore,expeditionTasks,activeExpeditionTasks,expeditionCoverage} from './store.js';
 import {bossQuestions} from './boss.js';
 import {createFinalRecall} from './recall.js';
 import {createAudioManager} from '../../../puzzles/arcade/services.js';
@@ -23,7 +23,7 @@ import {createPassageMemory} from '../../../passage/memory.js';
 import {reportStudyExposure} from '../../../study-exposure.js';
 import './expedition.css';
 const labels={runner:'Star Runner',defense:'Meteor Defense',link:'Ayah Link',boss:'Weak-Link Sentinel'};
-export async function mountExpedition(root,mission,{rounds=3,slow=false,guidance=true,pickupMode='mixed',onExit=()=>{},isCurrent=()=>true}={}){
+export async function mountExpedition(root,mission,{rounds=1,slow=false,guidance=true,pickupMode='mixed',onExit=()=>{},isCurrent=()=>true}={}){
   const owner=activeProfileId(),store=createExpeditionStore(),adaptive=createAdaptiveStore(),abort=new AbortController();let disposed=false,generation=0,child=null,director=null,unsubscribe=()=>{},recall=null,warning='',recallAudio=null,audioEpoch=0,controls=null;
   const opened=await store.open(mission,rounds,{slow,guidance,pickupMode});
   if(opened.settings)({slow,guidance,pickupMode}=opened.settings);
@@ -34,13 +34,13 @@ export async function mountExpedition(root,mission,{rounds=3,slow=false,guidance
   function note(error){warning=error.message||String(error);const n=root.querySelector('[data-exp-warning]');if(n)n.textContent=warning;}
   function shell(){controls?.dispose();root.innerHTML=`<section class="cosmic-expedition"><div class="runner-heading"><div><span class="cosmic-eyebrow">COSMIC RUSH · SAVED EXPEDITION</span><h3>${esc(freeAyah(mission.refs[0]).name)} · ${mission.first}–${mission.last}</h3></div><button class="cosmic-secondary" data-exp-exit>Save and return to mission</button></div><p data-exp-warning role="alert">${esc(warning)}</p><div data-exp-host></div></section>`;root.querySelector('[data-exp-exit]').onclick=()=>{dispose();onExit();};controls=mountCosmicControls(root.querySelector('.cosmic-expedition'));return root.querySelector('[data-exp-host]');}
   function overview(){
-    clear();if(!current())return;const r=saved(),tasks=expeditionTasks(mission,r.rounds),coverage=expeditionCoverage(mission,r),task=tasks[r.completed.length],host=shell();
+    clear();if(!current())return;const r=saved(),tasks=activeExpeditionTasks(mission,r),coverage=expeditionCoverage(mission,r),task=tasks[r.completed.length],host=shell();
     host.innerHTML=`<h4 tabindex="-1">Your constellation route</h4><p>${coverage.stages} / ${coverage.totalStages} stages saved · ${coverage.refs.length} / ${mission.refs.length} ayahs accounted for · ${coverage.links.length} / ${Math.max(0,mission.refs.length-1)} internal links practiced</p><div class="exp-stage-map" role="list">${mission.stages.map((s,i)=>{const done=tasks.filter(t=>t.stageIndex===i).every(t=>r.completed.includes(t.id));return `<article role="listitem" class="exp-stage ${done?'is-complete':task?.stageIndex===i?'is-current':''}"><span aria-hidden="true">${done?'✦':'✧'}</span><h4>Stage ${i+1}</h4><p>Ayahs ${s.first}–${s.last}</p><p>${done?'Saved checkpoint':task?.stageIndex===i?'Current stage':'Ahead on your route'}</p><small>Runner → Defense → Link → Sentinel</small></article>`;}).join('')}</div><p>Stages group approximately five ayahs. Mission grouping does not prescribe recitation stops. Completed activities stay saved; an interrupted activity restarts safely.</p>${task?`<p>Next: stage ${task.stageIndex+1} · ${labels[task.activity]}${task.activity==='runner'?` · round ${task.roundIndex+1}/${r.rounds}`:''}</p><button class="cosmic-primary" data-exp-resume>Resume expedition · ${labels[task.activity]}</button>`:`<h4>Gameplay route complete</h4><p>${r.final?.result?'A self-assessed recall result is recorded separately below.':'Final oral recall is still pending. Gameplay does not certify memorization.'}</p><button class="cosmic-primary" data-exp-final>${r.final?.result?'View recall assessment':'Continue to final oral recall'}</button>`}`;
     if(coverage.gameplayComplete)mountConstellationReveal(host,mission,coverage);
     host.querySelector('[data-exp-resume]')?.addEventListener('click',()=>launch().catch(note));host.querySelector('[data-exp-final]')?.addEventListener('click',()=>final().catch(note));host.querySelector('h4').focus({preventScroll:true});
   }
   async function launch(){
-    clear();const epoch=generation,run=saved(),task=expeditionTasks(mission,run.rounds)[run.completed.length];if(!task){await final();return;}const host=shell(),valid=()=>current()&&epoch===generation;
+    clear();const epoch=generation,run=saved(),task=activeExpeditionTasks(mission,run)[run.completed.length];if(!task){await final();return;}const host=shell(),valid=()=>current()&&epoch===generation;
     host.innerHTML='<p role="status">Preparing verified passage and checkpoint…</p>';
     const evidence=createLinkEvidence(mission);let weak=[];try{weak=await weakLinkCandidates(evidence.snapshot(),{refs:mission.refs});weak=await expeditionWeakLinks(mission,store.snapshot(),weak);}catch(e){note(e);}if(!valid())return;
     const decision=store.decision(mission,task.id,difficultyModels(mission.stages[task.stageIndex].refs,adaptive.snapshot(),createPassageMemory(profileStorage).snapshot(),weak));
@@ -57,7 +57,8 @@ export async function mountExpedition(root,mission,{rounds=3,slow=false,guidance
       child=mountWeakBoss(host,{questions:pinned,cleared:old?.cleared||[],save:event=>store.boss(mission,task.id,event),onEvent:event=>{try{adaptive.record({...event,type:`boss:${event.type}`,runId:run.runId,stageIndex:task.stageIndex,roundIndex:0});}catch(e){note(e);}if(event.type==='correct')bonuses.record({type:'boss:memory-correct',targetRef:event.refs.at(-1),stageIndex:task.stageIndex,roundIndex:0,questionId:event.questionId}).catch(note);},onExit:overview,evidenceStrength:`${decision.memory.level} memory demand · ${decision.memory.reason}`,onComplete:s=>{if(s.status==='checkpoint')complete();}});return;
     }
     root.querySelector('[data-exp-warning]').textContent=`Arcade: ${decision.arcade.reason} Memory: ${decision.memory.reason}`;
-    const next=await createFlightController(mission,{initialStage:task.stageIndex,initialRound:task.roundIndex,activity:task.activity,pickupMode:task.activity==='runner'?pickupMode:null,rounds:run.rounds,slow:effectiveSlow,defenseConfig:decision.arcade.configuration,linkMode:decision.memory.linkMode,compact:matchMedia('(max-width:600px)').matches,reducedMotion:cosmicReducedMotion()});
+    const stageRounds=Math.max(1,...activeExpeditionTasks(mission,run).filter(t=>t.activity==='runner'&&t.stageIndex===task.stageIndex).map(t=>t.roundIndex+1));
+    const next=await createFlightController(mission,{initialStage:task.stageIndex,initialRound:task.roundIndex,activity:task.activity,pickupMode:task.activity==='runner'?pickupMode:null,rounds:stageRounds,slow:effectiveSlow,defenseConfig:decision.arcade.configuration,linkMode:decision.memory.linkMode,compact:matchMedia('(max-width:600px)').matches,reducedMotion:cosmicReducedMotion()});
     if(!valid()){next.dispose();return;}director=next;
     if(task.activity==='link'){await director.prepareLink(appearanceAccount().client);if(!valid())return;}
     // Save immediately on genuine engine completion, before the learner leaves the screen.

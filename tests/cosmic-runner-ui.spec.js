@@ -40,7 +40,7 @@ test('real keyboard flight steers, dodges, gathers Quran pickups and reaches a s
   await expect(page.locator('[data-stars]')).toContainText('1 ayahs connected');
   const progress=await page.locator('[data-flight-progress]').evaluate(n=>n.value);await page.clock.runFor(3000);expect(await page.locator('[data-flight-progress]').evaluate(n=>n.value)).toBe(progress);
   const after=await page.evaluate(()=>Object.fromEntries(Object.entries(localStorage).filter(([k])=>/learning|puzzle-lab|rewards/.test(k))));expect(after).toEqual(before);
-  await page.getByRole('button',{name:'Fly this stage again',exact:true}).click();
+  await page.getByRole('button',{name:'Replay this ayah set',exact:true}).click();
   await expect(page.locator('.star-runner')).toHaveAttribute('data-flight-state','running');
   await expect(page.locator('[data-stars]')).toContainText('0 ayahs connected');
   await page.locator('[data-flight-exit]').click();await expect(page.locator('#cosmic-stage-title')).toBeVisible();
@@ -93,12 +93,12 @@ test('mission stages advance only from safe checkpoints and restart retains the 
   await page.getByRole('button',{name:'Launch Star Runner',exact:true}).click();await page.getByRole('button',{name:'Start flight',exact:true}).click();
   await pilot(page);await expect(page.locator('.star-runner')).toHaveAttribute('data-flight-state','checkpoint');
   await expect(page.locator('[data-flight-stage]')).toHaveText('Stage 1 / 2');
-  await page.getByRole('button',{name:'Continue to next flight stage',exact:true}).click();
+  await page.getByRole('button',{name:'Next ayah set →',exact:true}).click();
   await expect(page.locator('[data-flight-stage]')).toHaveText('Stage 2 / 2');
   await page.getByRole('button',{name:'Restart stage',exact:true}).click();
   await expect(page.locator('[data-flight-stage]')).toHaveText('Stage 2 / 2');
   await expect(page.locator('[data-shield]')).toContainText('3/3');
-  await pilot(page);await expect(page.getByRole('button',{name:'Fly this stage again',exact:true})).toBeVisible();
+  await pilot(page);await expect(page.getByRole('button',{name:'Replay this ayah set',exact:true})).toBeVisible();
   await expect(page.locator('.runner-overlay')).toContainText('not independent memorization mastery');
 });
 

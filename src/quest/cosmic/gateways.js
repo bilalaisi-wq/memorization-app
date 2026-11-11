@@ -1,3 +1,4 @@
+import {answerOrder} from './answer-order.js';
 import { cosmicSurahs } from './mission.js';
 import { verseAudio } from '../../data.js';
 
@@ -6,7 +7,7 @@ export function freeAyah(ref) {
   const [surah,ayah]=ref.split(':').map(Number),chapter=cosmicSurahs.find(s=>s.id===surah);
   const verse=chapter?.verses.find(v=>v.id===ayah);
   if(!verse||ref!==`${surah}:${ayah}`)throw Error('Gateway content must be Al-Fatihah or Juz Amma.');
-  return {ref,surah,ayah,name:chapter.name,text:verse.text,audio:verseAudio(ayah,surah)};
+  return {ref,surah,ayah,name:chapter.name,text:verse.text,transliteration:verse.roman.join(' '),audio:verseAudio(ayah,surah)};
 }
 // Equivalence only; never normalize the Arabic displayed or played to the learner.
 export const comparableAyah = text => text.normalize('NFKD').replace(/[\p{M}\u0640\u06dd\u06de\u06e9]/gu,'').replace(/[أإآٱ]/g,'ا').replace(/\s+/g,' ').trim();
@@ -28,9 +29,9 @@ export function gatewayCandidates(targetRef,seed=1) {
     candidates.push(candidate);seen.add(key);if(candidates.length===3)break;
   }
   if(candidates.length!==3)throw Error('Three unambiguous verified gateways are unavailable.');
-  return shuffle(candidates,seed+47);
+  return answerOrder(candidates,seed+47);
 }
-export function createGatewaySession(mission,{onEvent=()=>{}}={}) {
+export function createGatewaySession(mission,{onEvent=()=>{},seed=crypto.getRandomValues(new Uint32Array(1))[0]}={}) {
   const plan=mission.refs.map((ref,i)=>{
     const target=freeAyah(ref),previous=target.ayah>1?freeAyah(`${target.surah}:${target.ayah-1}`):null;
     if(i&&mission.refs[i-1]!==previous?.ref)throw Error('Gateway route must be contiguous.');
@@ -41,7 +42,7 @@ export function createGatewaySession(mission,{onEvent=()=>{}}={}) {
   const current=()=>plan[cursor];
   const candidates=()=>{
     if(!current())return [];
-    if(cachedCursor!==cursor){cachedCandidates=gatewayCandidates(current().target.ref,parseInt(mission.sourceHash.slice(0,8),16)+cursor);cachedCursor=cursor;}
+    if(cachedCursor!==cursor){cachedCandidates=gatewayCandidates(current().target.ref,seed+parseInt(mission.sourceHash.slice(0,8),16)+cursor);cachedCursor=cursor;}
     return cachedCandidates;
   };
   function emit(type,detail={}){const g=current();onEvent({type:`gateway:${type}`,gatewayId:g?.id,targetRef:g?.target.ref,fromRef:g?.previous?.ref||null,stageIndex:g?.stageIndex,assisted,...detail});}

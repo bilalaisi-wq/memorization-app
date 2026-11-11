@@ -1,13 +1,13 @@
 import {versionedStore} from '../../ui/versioned-store.js';
-import {validateRefs} from '../../passage-context/model.js';
+import {campaignRefs as validateRefs} from './model.js';
 export const REVISION_MISSIONS_KEY='ayah-revision-missions-v1';
-const games=['snake','asteroids','maze','falling','bubble','sirat','link'];
+const games=['snake','asteroids','maze','falling','bubble','sirat','link','runner'];
 const object=x=>x&&typeof x==='object'&&!Array.isArray(x);
 const str=x=>typeof x==='string'&&x.length>0&&x.length<=2048;
 const grade=x=>object(x)&&str(x.attemptId)&&['Again','Hard','Good','Easy'].includes(x.grade)&&typeof x.independent==='boolean'&&(x.nextReview==null||Number.isFinite(Date.parse(x.nextReview)));
 const safeMetadata=x=>{if(Array.isArray(x))return x.every(safeMetadata);if(object(x))return Object.entries(x).every(([k,v])=>!['text','textUthmani','words','translation','audio','audioUrl','access_token','refresh_token'].includes(k)&&safeMetadata(v));return x===null||['string','number','boolean'].includes(typeof x);};
 export function validMissions(d){try{return d?.version===1&&object(d.runs)&&Object.keys(d.runs).length<=2000&&Object.entries(d.runs).every(([id,r])=>
- /^[a-f0-9]{64}$/.test(id)&&r.id===id&&validateRefs(r.refs)&&r.refs.every(k=>k.split(':')[0]===r.refs[0].split(':')[0])&&games.includes(r.game)&&['ayah','passage'].includes(r.recallScheduler)&&
+ /^[a-f0-9]{64}$/.test(id)&&r.id===id&&validateRefs(r.refs)&&games.includes(r.game)&&['ayah','passage'].includes(r.recallScheduler)&&
  (r.reason===null||typeof r.reason==='string'&&r.reason.length<=20000)&&Array.isArray(r.done)&&new Set(r.done).size===r.done.length&&r.done.every(str)&&
  object(r.pins)&&Object.entries(r.pins).every(([k,p])=>r.refs.includes(k)&&object(p)&&/^[a-f0-9]{64}$/.test(p.source)&&/^[a-f0-9]{64}$/.test(p.review))&&
  object(r.assessments)&&Object.entries(r.assessments).every(([t,a])=>r.done.includes(t)&&t.endsWith(':recall')&&grade(a))&&

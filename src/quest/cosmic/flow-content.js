@@ -1,14 +1,15 @@
+import {answerOrder} from './answer-order.js';
 import {cosmicSurahs} from './mission.js';
 import {freeAyah,comparableAyah} from './gateways.js';
 import {createContentAdapter,seededShuffle} from '../../puzzles/arcade/content.js';
 const adapter=createContentAdapter(cosmicSurahs);
 let wordPool,ayahPool,chunkPool;
 export const MIX_WEIGHTS=Object.freeze({chunk:5,ayah:1,word:4});
-function chunk(ref,start,end) {
-  const words=adapter.words(ref);
-  return {id:`chunk:${ref}:${start}-${end}`,key:ref,text:words.slice(start,end).map(w=>w.text).join(' '),kind:'chunk',index:start,endIndex:end,last:end===words.length};
+function chunk(ref,start,end,source=null) {
+  const words=source?source.words(ref):adapter.words(ref);
+  return {id:`chunk:${ref}:${start}-${end}`,key:ref,text:words.slice(start,end).map(w=>w.text).join(' '),kind:'chunk',index:start,endIndex:end,last:end===words.length,...(source?{sourcePositions:words.slice(start,end).map(w=>w.index+1),sourceWordIds:words.slice(start,end).map(w=>w.id),stopApproved:false}:{} )};
 }
-export function createFlowUnits(refs,mode='mixed',mixOffset=0) {
+export function createFlowUnits(refs,mode='mixed',mixOffset=0,source=null) {
   if(!['words','ayahs','mixed'].includes(mode)||!refs.length)throw Error('Choose a supported pickup style.');
   // Deficit-balanced mix: carry unavailable whole-ayah slots to the next ayah.
   // Chunks are contiguous visual groups only, never certified recitation stops.
@@ -18,24 +19,25 @@ export function createFlowUnits(refs,mode='mixed',mixOffset=0) {
   // Shift the balancing phase between revision rounds, including one-ayah sets.
   for(;total<mixOffset;total++)counts[Object.keys(counts).sort(deficit)[0]]++;
   return refs.flatMap(ref=>{
-    const ayah=freeAyah(ref),words=adapter.words(ref),result=[];
+    const ayah=source?source.ayah(ref):freeAyah(ref),words=source?source.words(ref):adapter.words(ref),result=[];
     for(let index=0;index<words.length;){
-      const eligible=mode==='ayahs'?['ayah']:mode==='words'?['word']:
-        ['chunk','ayah','word'].filter(kind=>kind==='word'||kind==='ayah'&&index===0||kind==='chunk'&&words.length-index>=2);
+      const eligible=mode==='ayahs'&&(!source||words.length<=12)?['ayah']:mode==='words'?['word']:
+        ['chunk','ayah','word'].filter(kind=>kind==='word'||kind==='ayah'&&index===0&&(!source||words.length<=12)||kind==='chunk'&&words.length-index>=2);
       const kind=eligible.sort(deficit)[0];
       let unit;
       if(kind==='ayah'){unit={id:`ayah:${ref}`,key:ref,text:ayah.text,audio:ayah.audio,kind,index:0,last:true};index=words.length;}
-      else if(kind==='chunk'){const size=Math.min(words.length-index,counts.chunk%2?3:2);unit=chunk(ref,index,index+size);index+=size;}
+      else if(kind==='chunk'){const size=Math.min(words.length-index,counts.chunk%2?3:2);unit=chunk(ref,index,index+size,source);index+=size;}
       else {unit={...words[index],kind:'word',last:index===words.length-1};index++;}
       counts[kind]++;total++;result.push(unit);
     }
     return result;
   });
 }
-export function flowChoices(unit,seed) {
-  const source=freeAyah(unit.key);
-  const canonical=unit.kind==='word'?adapter.words(unit.key).find(w=>w.id===unit.id):unit.kind==='chunk'?
-    (Number.isInteger(unit.index)&&Number.isInteger(unit.endIndex)&&unit.index>=0&&unit.endIndex<=adapter.words(unit.key).length&&[2,3].includes(unit.endIndex-unit.index)?chunk(unit.key,unit.index,unit.endIndex):null):unit.kind==='ayah'?{id:`ayah:${unit.key}`,text:source.text}:null;
+export function flowChoices(unit,seed,source=null) {
+  const ayah=source?source.ayah(unit.key):freeAyah(unit.key);
+  const sourceWords=source?source.words(unit.key):adapter.words(unit.key);
+  const canonical=unit.kind==='word'?sourceWords.find(w=>w.id===unit.id):unit.kind==='chunk'?
+    (Number.isInteger(unit.index)&&Number.isInteger(unit.endIndex)&&unit.index>=0&&unit.endIndex<=sourceWords.length&&[2,3].includes(unit.endIndex-unit.index)?chunk(unit.key,unit.index,unit.endIndex,source):null):unit.kind==='ayah'?{id:`ayah:${unit.key}`,text:ayah.text}:null;
   if(!canonical||canonical.id!==unit.id||canonical.text!==unit.text)throw Error('Pickup must preserve verified source wording.');
   const pool=unit.kind==='chunk'
     ?(chunkPool||=cosmicSurahs.flatMap(s=>s.verses.flatMap(v=>{const ref=`${s.id}:${v.id}`;return v.words.flatMap((_,i)=>[2,3].filter(n=>i+n<=v.words.length).map(n=>chunk(ref,i,i+n)));})))
@@ -51,7 +53,7 @@ export function flowChoices(unit,seed) {
     chosen.push(candidate);seen.add(identity);if(chosen.length===3)break;
   }
   if(chosen.length!==3)throw Error('Distinct authentic pickups are unavailable.');
-  return seededShuffle(chosen,seed+29);
+  return answerOrder(chosen,seed+29);
 }
 
 // Read only the existing source transliteration at the same canonical positions.

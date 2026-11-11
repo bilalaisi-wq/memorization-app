@@ -11,19 +11,19 @@ export function targetCueSources(unit){
   if(!['word','chunk'].includes(unit.kind)||unit.id!==id||unit.text!==selected.map(w=>w.text).join(' ')||unit.kind==='chunk'&&![2,3].includes(selected.length))throw Error('Target audio must match verified words.');
   return selected.map(w=>w.audio);
 }
-export function createTargetCuePlayer(audio){
+export function createTargetCuePlayer(audio,{sourcesFor=targetCueSources,wholeAyahOnly=false}={}){
   let generation=0,disposed=false,timer=null;
   const clear=()=>{if(timer!==null)clearTimeout(timer);timer=null;};
   return {
-    play(unit,{onComplete=()=>{},onFailure=()=>{}}={}){
+    async play(unit,{onComplete=()=>{},onFailure=()=>{}}={}){
       const token=++generation;clear();audio.stop();let sources,index=0;
-      try{sources=targetCueSources(unit);}catch(error){onFailure(error);return;}
+      try{sources=sourcesFor(unit);if(sources?.then)sources=await sources;if(disposed||token!==generation)return;}catch(error){onFailure(error);return;}
       const next=async()=>{
         if(disposed||token!==generation)return;
         if(index===sources.length){onComplete();return;}
         let settled=false;
         const fail=()=>{if(settled||disposed||token!==generation)return;settled=true;clear();audio.stop();onFailure(Error('Target recitation could not play. Retry audio or continue silently.'));};
-        timer=setTimeout(fail,unit.kind==='ayah'?180000:30000);
+        timer=setTimeout(fail,wholeAyahOnly||unit.kind==='ayah'?180000:30000);
         try{const ok=await audio.play(sources[index++],{onEnded:()=>{if(settled||disposed||token!==generation)return;settled=true;clear();next();},onError:fail});if(!ok)fail();}catch{fail();}
       };next();
     },

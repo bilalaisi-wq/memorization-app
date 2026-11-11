@@ -1,7 +1,7 @@
 import {profileStorage,activeProfileId} from '../../learner/profile-storage.js';
-import {freeAyah} from './gateways.js';
+import {reference} from '../../content/library.js';
 export const GATEWAY_KEY='ayah-cosmic-gateways-v1';
-const validRef=ref=>{try{return !!freeAyah(ref);}catch{return false;}};
+const validRef=ref=>{try{const r=reference(ref);return `${r.surah}:${r.ayah}`===ref;}catch{return false;}};
 function validate(data){
   return data?.version===1&&data.runs&&typeof data.runs==='object'&&!Array.isArray(data.runs)&&Object.values(data.runs).every(r=>
     r&&typeof r==='object'&&typeof r.missionId==='string'&&typeof r.sourceHash==='string'&&Array.isArray(r.refs)&&r.refs.every(validRef)&&Array.isArray(r.completed)&&r.completed.every(ref=>r.refs.includes(ref))&&Array.isArray(r.events)&&r.events.every(e=>e&&typeof e==='object'&&typeof e.type==='string'&&typeof e.id==='string'&&r.refs.includes(e.targetRef)&&(!e.fromRef||validRef(e.fromRef))&&(!e.selectedRef||validRef(e.selectedRef))));

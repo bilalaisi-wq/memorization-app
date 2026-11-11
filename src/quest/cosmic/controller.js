@@ -15,10 +15,10 @@ import {createMission} from './mission.js';
 import {createRunner} from '../../puzzles/arcade/cosmic/runner.js';
 
 // One mission director. Arcade checkpoints never certify independent recall or mastery.
-export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=3,activity='runner',defenseConfig='balanced',defenseMode=null,defenseMotor='relaxed',linkMode='guided',linkChainMode='practice',reducedMotion=false,initialStage=0,initialRound=0,compact=false}={}){
+export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=1,activity='runner',defenseConfig='balanced',defenseMode=null,defenseMotor='relaxed',linkMode='guided',linkChainMode='practice',reducedMotion=false,initialStage=0,initialRound=0,compact=false}={}){
   const canonical=await createMission({surahId:manifest.surah,selection:'custom',start:manifest.first,end:manifest.last});
   if(JSON.stringify(manifest)!==JSON.stringify(canonical))throw Error('Mission configuration changed. Rebuild the briefing.');
-  if(!Number.isInteger(rounds)||rounds<3||rounds>10)throw Error('Choose between 3 and 10 revision rounds.');
+  if(!Number.isInteger(rounds)||rounds<1||rounds>10)throw Error('Choose between 1 and 10 revision rounds.');
   if(!['runner','defense','link'].includes(activity)||!Object.hasOwn(DEFENSE_CONFIGS,defenseConfig)||!Object.hasOwn(LINK_MODES,linkMode))throw Error('Choose an available Cosmic activity and defense configuration.');
   if(!Number.isInteger(initialStage)||initialStage<0||initialStage>=canonical.stages.length||!Number.isInteger(initialRound)||initialRound<0||initialRound>=(pickupMode?rounds:1))throw Error('Invalid saved flight checkpoint.');
   const runId=crypto.randomUUID();
@@ -33,6 +33,7 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
   const savedCapture=captureStore?.snapshot().routes?.[captureRouteId];if(savedCapture){if(savedCapture.stage>=canonical.stages.length||savedCapture.round>=roundCount){defenseContent.dispose();throw Error('Saved capture route needs recovery.');}index=savedCapture.stage;roundIndex=savedCapture.round;}
   let boundaryReviewed=false;
   let boundaryStrikes=0;const boundaryConnections=new Set();
+  const skippedRounds=new Set();
   const engines=new Map(),checkpoints=new Set(),activityClears=new Set(),scoreReceipts=new Set();
   const gateway=memoryGateways?createGatewaySession(canonical,{onEvent:e=>emit({...e,missionId:canonical.id,sourceHash:canonical.sourceHash})}):null;
   function event(event){
@@ -52,7 +53,7 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
   function mount(){
     stageGates=0;
     const stage=canonical.stages[index],seed=parseInt(canonical.sourceHash.slice(0,8),16)+index+roundIndex*3571;
-    if(currentActivity==='link')engine=createAyahLink({refs:stage.refs,allRefs:canonical.refs,plans:linkPlans,stageId:stage.id,seed,mode:linkMode,boundaryContent,chainMode:linkChainMode,initialStrikes:linkChainMode==='classic'?boundaryStrikes:0,cumulativeAll:index===canonical.stages.length-1&&roundIndex===roundCount-1,reducedMotion,onEvent:event});
+    if(currentActivity==='link')engine=createAyahLink({refs:stage.refs,allRefs:canonical.refs,plans:linkPlans,stageId:stage.id,seed:seed^parseInt(runId.replace(/-/g,'').slice(0,8),16),mode:linkMode,boundaryContent,chainMode:linkChainMode,initialStrikes:linkChainMode==='classic'?boundaryStrikes:0,cumulativeAll:index===canonical.stages.length-1,reducedMotion,onEvent:event});
     else if(currentActivity==='defense'&&defenseMode){engine=captureRuntimes.get(`${index}:${roundIndex}`);if(captureOwner!==activeProfileId())throw Error('Account changed.');captureStore.transact(s=>{s.routes??={};s.routes[captureRouteId]={stage:index,round:roundIndex};});}
     else if(currentActivity==='defense')engine=createMeteorDefense({refs:stage.refs,stageId:stage.id,sourceHash:canonical.sourceHash,seed,revisionLoop:true,configuration:defenseConfig,difficulty:index+roundIndex,slow,carrierMode:defenseMode,captureContent:defenseContent,motorDifficulty:defenseMotor,onEvent:event});
     else engine=(pickupMode?createFlowRunner:createRunner)({...(pickupMode?{units:createFlowUnits(stage.refs,pickupMode,roundIndex),roundIndex}:{}),stageId:stage.id,seed,difficulty:index,slow,compact,onEvent:event});
@@ -85,10 +86,11 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
     },
     getSnapshot(){
       const s=engine.getSnapshot(),g=currentActivity==='runner'?gateway?.getSnapshot():null;
-      const atRouteEnd=roundIndex===roundCount-1&&index===canonical.stages.length-1&&s.status==='checkpoint'&&!pending();
-      const activityCompletedCount=[...activityClears].filter(key=>key.startsWith(`${currentActivity}:`)).length,activityRequiredCount=canonical.stages.length*roundCount;
+      const roundsFinished=roundIndex===roundCount-1||Array.from({length:roundCount-roundIndex-1},(_,i)=>`${currentActivity}:${index}:${roundIndex+i+1}`).every(k=>skippedRounds.has(k));
+      const atRouteEnd=roundsFinished&&index===canonical.stages.length-1&&s.status==='checkpoint'&&!pending();
+      const activityCompletedCount=[...activityClears].filter(key=>key.startsWith(`${currentActivity}:`)).length,activityRequiredCount=canonical.stages.length*roundCount-[...skippedRounds].filter(k=>k.startsWith(`${currentActivity}:`)).length;
       return {...s,...(s.boundaryVersion===2?{routeConnections:[...boundaryConnections],routePairs:canonical.refs.slice(1).map((toRef,i)=>({fromRef:canonical.refs[i],toRef,pairKey:`${canonical.refs[i]}>${toRef}`}))}:{}),status:g&&!['idle','disposed'].includes(g.state)?'gateway':s.status,gateway:g||s.gateway||null,activity:currentActivity,runId,arcadeScore,stageIndex:index,stageCount:canonical.stages.length,roundIndex,roundCount,completedCheckpoints:[...checkpoints],
-        atRouteEnd,activityCompletedCount,activityRequiredCount,routeComplete:atRouteEnd&&activityCompletedCount===activityRequiredCount};
+        atRouteEnd,skippedOptionalRounds:skippedRounds.size,activityCompletedCount,activityRequiredCount,routeComplete:atRouteEnd&&activityCompletedCount===activityRequiredCount};
     },
     async prepareLink(client,next=false){
       if(disposed)return false;
@@ -111,10 +113,12 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
       currentActivity=next;if(engines.has(next))engine=engines.get(next);else mount();
       emit({type:'mission:activity-changed',activity:currentActivity,missionId:canonical.id,runId,stageIndex:index,roundIndex});return true;
     },
-    nextStage(){
-      if(disposed||engine.getSnapshot().status!=='checkpoint'||pending()||index>=canonical.stages.length-1&&roundIndex>=roundCount-1)return false;
+    nextStage({skipRounds=false}={}){
+      if(disposed||engine.getSnapshot().status!=='checkpoint'||pending())return false;
+      if(skipRounds){for(let r=roundIndex+1;r<roundCount;r++)skippedRounds.add(`${currentActivity}:${index}:${r}`);if(index>=canonical.stages.length-1)return false;}
+      if(index>=canonical.stages.length-1&&roundIndex>=roundCount-1)return false;
       for(const e of new Set(engines.values()))if(![...captureRuntimes.values()].includes(e))e.dispose();engines.clear();
-      if(roundIndex<roundCount-1)roundIndex++;else{index++;roundIndex=0;}mount();engine.start();return true;
+      if(!skipRounds&&roundIndex<roundCount-1)roundIndex++;else{index++;roundIndex=0;}mount();engine.start();return true;
     },
     dispose(){if(disposed)return;disposed=true;for(const e of new Set(engines.values()))e.dispose();engines.clear();captureRuntimes.forEach(g=>g.dispose());captureRuntimes.clear();boundaryContent?.dispose();defenseContent?.dispose();gateway?.dispose();listeners.clear();},
   };

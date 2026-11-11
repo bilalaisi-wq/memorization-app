@@ -39,13 +39,13 @@ test('flowing Quran text fails closed when study assistance cannot be recorded, 
   await expect(page.locator('.runner-pickup')).toHaveCount(3);await expect(page.locator('.star-runner')).toHaveAttribute('data-flight-state','running');
 });
 
-test('round selector starts at three and chunk revision advances through four increasingly demanding rounds',async({page})=>{
+test('round selector starts at one and chunk revision advances through four increasingly demanding rounds',async({page})=>{
   test.setTimeout(180000);
   await page.goto('/');await page.locator('#nav-revision-lab').click();await expect(page.locator('.cosmic-form')).toBeVisible();
   await page.locator('[name=selection]').selectOption('custom');await page.locator('[name=start]').fill('3');await page.locator('[name=end]').fill('3');
   await page.getByRole('button',{name:'View mission briefing →'}).click();
-  await expect(page.locator('[data-flight-rounds]')).toHaveValue('3');
-  expect(await page.locator('[data-flight-rounds] option').evaluateAll(nodes=>nodes.map(n=>Number(n.value)))).toEqual([3,4,5,6,7,8,9,10]);
+  await expect(page.locator('[data-flight-rounds]')).toHaveValue('1');
+  expect(await page.locator('[data-flight-rounds] option').evaluateAll(nodes=>nodes.map(n=>Number(n.value)))).toEqual([1,2,3,4,5,6,7,8,9,10]);
   await page.locator('[data-flight-rounds]').selectOption('4');await page.locator('[data-flow-guidance]').uncheck();await page.clock.install();
   await page.locator('[data-launch-runner]').click();await page.getByRole('button',{name:'Start flight',exact:true}).click();
   await expect(page.locator('.star-runner')).toHaveAttribute('data-expected-unit',/^chunk:1:3:/);
@@ -54,10 +54,10 @@ test('round selector starts at three and chunk revision advances through four in
     await expect(page.locator('[data-flight-round]')).toContainText(`${Math.round((1+i*.07)*70)}% normal speed`);
     await expect(page.locator('[data-flight-round]')).toContainText(`${i+1} asteroid`);
     await flyTo(page);
-    if(i<3)await page.getByRole('button',{name:`Continue to round ${i+2} / 4`,exact:true}).click();
+    if(i<3)await page.getByRole('button',{name:`Replay this set · optional round ${i+2} / 4`,exact:true}).click();
   }
   await expect(page.locator('.runner-overlay')).toContainText('Revision rounds complete');
-  await expect(page.getByRole('button',{name:'Fly this stage again',exact:true})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Replay this ayah set',exact:true})).toBeVisible();
   const rounds=await page.evaluate(()=>Object.values(JSON.parse(localStorage.getItem('ayah-cosmic-gateways-v1')).runs)[0].events.filter(e=>e.type==='runner:pickup-correct').map(e=>e.roundIndex));
   expect([...new Set(rounds)]).toEqual([0,1,2,3]);
 });

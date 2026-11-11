@@ -1,3 +1,4 @@
+import {romanHTML} from '../transliteration.js';
 import {mountCosmicControls} from '../preferences.js';
 import {captureCosmicFocus,restoreCosmicFocus} from '../focus.js';
 import {esc} from '../../../ui/dom.js';
@@ -13,7 +14,7 @@ export function mountWeakBoss(root,{questions,cleared,save,onComplete,onExit,onE
   const game=createWeakLinkBoss({questions,cleared,save,onEvent});
   const stop=()=>{token++;audio.stop();};
   function send(action){if(disposed)return;const focus=captureCosmicFocus(root),before=game.getSnapshot().question.id,draft=root.querySelector('[data-boss-text]')?.value;stop();try{game.dispatch(action);}catch(e){warning=e.message;}paint();if(before===game.getSnapshot().question.id&&draft!==undefined&&root.querySelector('[data-boss-text]'))root.querySelector('[data-boss-text]').value=draft;restoreCosmicFocus(root,focus,{draft:before===game.getSnapshot().question.id});}
-  const verse=ref=>`<p class="exp-arabic" lang="ar" dir="rtl">${esc(freeAyah(ref).text)} <small>${esc(ref)}</small></p>`;
+  const verse=ref=>`<p class="exp-arabic" lang="ar" dir="rtl">${esc(freeAyah(ref).text)}${romanHTML(freeAyah(ref))} <small>${esc(ref)}</small></p>`;
   function paint(){
     if(disposed)return;const s=game.getSnapshot(),q=s.question;
     let exposed=[];if(q.previous)exposed.push(q.previous);if(s.status==='choices')exposed.push(...q.choices.flatMap(c=>c.refs));if(s.hints||s.revealed)exposed.push(...q.refs);
@@ -31,8 +32,8 @@ export function mountWeakBoss(root,{questions,cleared,save,onComplete,onExit,onE
       body.innerHTML=`<h4>${titles[q.kind]}</h4><p>Assigned references: ${esc(q.refs.join(', '))}</p>${q.previous?`<div class="exp-context"><strong>Preceding ayah · ${esc(q.previous)}</strong>${q.kind==='connection'?`<p class="exp-arabic" lang="ar" dir="rtl">${esc(canonicalLinkAyah(q.previous).words.at(-1).text)}</p>`:verse(q.previous)}</div>`:''}`;
       if(s.status==='prompt')body.innerHTML+='<p>Recall aloud before revealing the activity. There is no timer.</p><button class="cosmic-primary" data-boss-ready>Ready · open challenge</button>';
       if(s.status==='choices'){
-        if(['next','connection'].includes(q.kind)&&!q.response)body.innerHTML+=`<div class="boss-choices">${q.choices.map(c=>`<button class="cosmic-secondary exp-arabic" lang="ar" dir="rtl" data-boss-choice="${esc(c.id)}">${esc(c.text)}</button>`).join('')}</div>`;
-        if(['missing','repair'].includes(q.kind))body.innerHTML+=`<p>${q.kind==='repair'?'Published visual phrases; grouping does not certify recitation stops.':q.choices.length===1?'Whole-ayah reconstruction fallback for a long ayah.':'Canonical word tiles; word boundaries are not recitation stops.'}</p><div class="boss-assembly" aria-label="Selected reactor order" dir="rtl">${s.order.map(id=>`<button class="cosmic-secondary exp-arabic" data-boss-tile="${esc(id)}" lang="ar">${esc(q.choices.find(c=>c.id===id).text)}</button>`).join('')}</div><div class="boss-bank" dir="rtl">${q.choices.filter(c=>!s.order.includes(c.id)).map(c=>`<button class="cosmic-secondary exp-arabic" data-boss-tile="${esc(c.id)}" lang="ar">${esc(c.text)}</button>`).join('')}</div><button class="cosmic-primary" data-boss-check>Check reconstruction</button>`;
+        if(['next','connection'].includes(q.kind)&&!q.response)body.innerHTML+=`<div class="boss-choices">${q.choices.map(c=>`<button class="cosmic-secondary exp-arabic" lang="ar" dir="rtl" data-boss-choice="${esc(c.id)}">${esc(c.text)}${romanHTML(c)}</button>`).join('')}</div>`;
+        if(['missing','repair'].includes(q.kind))body.innerHTML+=`<p>${q.kind==='repair'?'Published visual phrases; grouping does not certify recitation stops.':q.choices.length===1?'Whole-ayah reconstruction fallback for a long ayah.':'Canonical word tiles; word boundaries are not recitation stops.'}</p><div class="boss-assembly" aria-label="Selected reactor order" dir="rtl">${s.order.map(id=>`<button class="cosmic-secondary exp-arabic" data-boss-tile="${esc(id)}" lang="ar">${esc(q.choices.find(c=>c.id===id).text)}</button>`).join('')}</div><div class="boss-bank" dir="rtl">${q.choices.filter(c=>!s.order.includes(c.id)).map(c=>`<button class="cosmic-secondary exp-arabic" data-boss-tile="${esc(c.id)}" lang="ar">${esc(c.text)}${romanHTML(c)}</button>`).join('')}</div><button class="cosmic-primary" data-boss-check>Check reconstruction</button>`;
         if(q.kind==='opening'||q.response==='typed-ayah')body.innerHTML+='<form data-boss-form><label>Recall answer<input lang="ar" dir="rtl" data-boss-text autocomplete="off"></label><button class="cosmic-primary">Check opening</button></form>';
         if(q.kind==='multi')body.innerHTML+='<p>Quran text is hidden. Recite the assigned complete ayahs, respecting their boundaries.</p><button class="cosmic-primary" data-boss-declared>I recited · reveal for comparison</button>';
       }

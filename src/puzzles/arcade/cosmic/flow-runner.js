@@ -7,19 +7,20 @@ export const NORMAL_FLIGHT_RATE=.7;
 // Absolute boosted flight rate: 50% above the previous 3.234x rate.
 export const BOOST_MULTIPLIER=4.851;
 // Arabic pickups are intact capsules, separate from unlabeled environmental rocks.
-export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0,slow=false,compact=false,onEvent=()=>{}}) {
+export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0,slow=false,compact=false,onEvent=()=>{},choices=flowChoices}) {
+  const choose=choices;
   if(!units?.length)throw Error('Verified flow units required.');
   if(!Number.isInteger(roundIndex)||roundIndex<0||roundIndex>9)throw Error('Invalid revision round.');
   // Prepare relevant verified candidate pools before interactive flight, avoiding
   // first-use work when the pickup type changes mid-wave.
-  for(const kind of new Set(units.map(u=>u.kind)))if(!preparedKinds.has(kind)){flowChoices(units.find(u=>u.kind===kind),seed);preparedKinds.add(kind);}
+  for(const kind of new Set(units.map(u=>u.kind)))if(!preparedKinds.has(kind)){choose(units.find(u=>u.kind===kind),seed);preparedKinds.add(kind);}
   const speedMultiplier=1+roundIndex*.07,asteroidCount=1+roundIndex;
   let state,wave,round=0,shots=[],effects=[],shotId=0;
   const scoreReceipts=new Set();
   function points(receipt,value){if(scoreReceipts.has(receipt))return 0;scoreReceipts.add(receipt);state.score+=value;return value;}
   function emit(type,detail={}){onEvent({type:`runner:${type}`,stageId,elapsed:state.elapsed,...detail});}
   function spawn(){
-    const target=units[state.cursor],choices=flowChoices(target,(seed+round*7919+state.cursor*101)>>>0);
+    const target=units[state.cursor],choices=choose(target,(seed+round*7919+state.cursor*101)>>>0);
     const ribbon=target.kind==='ayah'||compact&&choices.some(c=>c.text.split(/\s+/).some(w=>w.replace(/\p{M}/gu,'').length>=7)),level=Math.min(6,difficulty),speed=((ribbon?(slow?32:42):(slow?65:85))+level*2)*speedMultiplier;
     const longest=Math.max(...choices.map(c=>c.text.split(/\s+/).length));
     const readTime=Math.max((ribbon?Math.max(slow?8:6,longest*.65):slow?7:5.8)/speedMultiplier,2.5+(asteroidCount-1)*1.1+1.8);

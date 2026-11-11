@@ -46,7 +46,7 @@ test('pair evidence is source-pinned, profile-isolated, recoverable and suitable
   owner='b';await expect(store.record({...event,evidenceId:'4'})).rejects.toThrow('Account changed');owner='a';data.set(LINK_EVIDENCE_KEY,'original broken data');await expect(store.record({...event,evidenceId:'5'})).rejects.toThrow();expect(data.get(LINK_EVIDENCE_KEY)).toBe('original broken data');
 });
 test('director includes the cross-stage adjacent pair, keeps activities separate and never changes native FSRS',async()=>{
-  const m=await createMission({surahId:1,selection:'entire'}),g=await createFlightController(m,{activity:'link',pickupMode:'ayahs',linkMode:'opening'});g.start();
+  const m=await createMission({surahId:1,selection:'entire'}),g=await createFlightController(m,{activity:'link',pickupMode:'ayahs',linkMode:'opening',rounds:3});g.start();
   for(let i=0;i<3;i++){finish(g);expect(g.nextStage()).toBe(true);}
   expect(g.getSnapshot().pair).toMatchObject({fromRef:'1:5',toRef:'1:6'});for(let i=0;i<3;i++){finish(g);if(i<2)g.nextStage();}expect(g.getSnapshot().routeComplete).toBe(true);g.switchActivity('runner');expect(g.getSnapshot().status).toBe('ready');g.dispose();
 });

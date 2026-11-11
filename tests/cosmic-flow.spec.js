@@ -47,7 +47,7 @@ test('all pickup styles remain solvable and pause/retry preserve earned sequence
 });
 test('continuous controller needs every pickup before advancing and optionally reviews at stage end',async()=>{
   const m=await createMission({surahId:1,selection:'entire'}),g=await createFlightController(m,{pickupMode:'ayahs'});g.start();
-  expect(g.nextStage()).toBe(false);for(let i=0;i<6;i++){pilot(g);expect(g.getSnapshot().routeComplete).toBe(i===5);expect(g.nextStage()).toBe(i<5);}
+  expect(g.nextStage()).toBe(false);for(let i=0;i<2;i++){pilot(g);expect(g.getSnapshot().routeComplete).toBe(i===1);expect(g.nextStage()).toBe(i<1);}
 });
 
 
@@ -56,7 +56,7 @@ test('word flow plus optional reviews preserve exact boundary evidence across st
   const data=new Map(),storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
   const m=await createMission({surahId:1,selection:'entire'}),recorder=createGatewayRecorder(m,{storage,getOwner:()=>null,runId:'boundaries'});
   const game=await createFlightController(m,{pickupMode:'words',memoryGateways:true,onEvent:e=>recorder.record(e)});
-  game.start();for(let i=0;i<6;i++){pilot(game);expect(game.nextStage()).toBe(i<5);}expect(game.getSnapshot().routeComplete).toBe(true);
+  game.start();for(let i=0;i<2;i++){pilot(game);expect(game.nextStage()).toBe(i<1);}expect(game.getSnapshot().routeComplete).toBe(true);
   const run=JSON.parse(data.get(GATEWAY_KEY)).runs.boundaries;
   expect(run.completed).toEqual(m.refs);
   const words=run.events.filter(e=>e.type==='runner:pickup-correct'&&e.targetRef==='1:6');
@@ -93,7 +93,7 @@ test('mixed pickups target 5 chunks : 1 ayah : 4 words with lossless canonical c
 test('revision rounds enforce minimum, escalate safely and retain round evidence without duplicate receipts',async()=>{
   const {createGatewayRecorder,GATEWAY_KEY}=await import('../src/quest/cosmic/gateway-store.js');
   const mission=await createMission({surahId:112,selection:'custom',start:2,end:2});
-  for(const rounds of [1,2,11,3.5,NaN])await expect(createFlightController(mission,{pickupMode:'mixed',rounds})).rejects.toThrow();
+  for(const rounds of [0,-1,11,3.5,NaN])await expect(createFlightController(mission,{pickupMode:'mixed',rounds})).rejects.toThrow();
   const data=new Map(),storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
   const recorder=createGatewayRecorder(mission,{storage,getOwner:()=>null,runId:'rounds'}),events=[];
   const game=await createFlightController(mission,{pickupMode:'words',rounds:4,onEvent:e=>{events.push(e);recorder.record(e);}});

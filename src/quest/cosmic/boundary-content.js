@@ -1,3 +1,4 @@
+import {answerOrder} from './answer-order.js';
 import {loadBundle,loadAudio,freeReference,catalog} from '../../content/library.js';
 import {activeProfileId} from '../../learner/profile-storage.js';
 import {fingerprints,validateRefs} from '../../passage-context/model.js';
@@ -17,5 +18,5 @@ export async function prepareBoundaryContent(refs,client=null){
 }
 let freePool;
 function pool(){return freePool||=(cosmicSurahs.flatMap(s=>s.verses.map(v=>canonicalLinkAyah(`${s.id}:${v.id}`))));}
-export function endpoint(ayah,side,length=1){const first=side==='ending'?Math.max(0,ayah.words.length-length):0,last=side==='ending'?ayah.words.length-1:Math.min(ayah.words.length,length)-1;return {id:`${ayah.ref}:${first}-${last}`,ref:ayah.ref,side,first,last,text:ayah.text.slice(ayah.spans[first].start,ayah.spans[last].end)};}
-export function boundaryChoices(ayah,side,{length=1,seed=1,single=false}={}){const answer=endpoint(ayah,side,length),seen=new Set([comparableAyah(answer.text)]),result=[answer];if(!single)for(const a of seededShuffle(pool(),seed)){const e=endpoint(a,side,length),identity=comparableAyah(e.text);if(a.ref===ayah.ref||seen.has(identity))continue;seen.add(identity);result.push(e);if(result.length===3)break;}if(!single&&result.length!==3)throw Error('No unambiguous source-backed endpoints are available.');return seededShuffle(result,seed+33);}
+export function endpoint(ayah,side,length=1){const first=side==='ending'?Math.max(0,ayah.words.length-length):0,last=side==='ending'?ayah.words.length-1:Math.min(ayah.words.length,length)-1;return {id:`${ayah.ref}:${first}-${last}`,ref:ayah.ref,side,first,last,transliteration:ayah.words.slice(first,last+1).map(w=>w.transliteration||'').join(' '),text:ayah.text.slice(ayah.spans[first].start,ayah.spans[last].end)};}
+export function boundaryChoices(ayah,side,{length=1,seed=1,single=false}={}){const answer=endpoint(ayah,side,length),seen=new Set([comparableAyah(answer.text)]),result=[answer];if(!single)for(const a of seededShuffle(pool(),seed)){const e=endpoint(a,side,length),identity=comparableAyah(e.text);if(a.ref===ayah.ref||seen.has(identity))continue;seen.add(identity);result.push(e);if(result.length===3)break;}if(!single&&result.length!==3)throw Error('No unambiguous source-backed endpoints are available.');return answerOrder(result,seed+33);}

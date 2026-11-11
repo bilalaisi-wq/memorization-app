@@ -26,7 +26,8 @@
     "test:quran-import": "playwright test tests/quran-import-pipeline.spec.js --config=playwright.regression.config.js --workers=1",
     "validate:quran-release": "node scripts/validate-quran-release.mjs",
     "audit:quran-release": "node scripts/quran-release-status.mjs",
-    "stage:quran-batch": "python3 scripts/stage-quran-batches.py"
+    "stage:quran-batch": "python3 scripts/stage-quran-batches.py",
+    "postbuild": "node scripts/write-build-info.mjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.10",

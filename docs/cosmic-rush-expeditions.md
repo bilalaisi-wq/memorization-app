@@ -6,7 +6,7 @@ Phase 7 update: [Private cloud sync and adaptive revision](cosmic-rush-phase7.md
 
 Revision Lab → Cosmic Rush → choose a free passage → **Start or resume full expedition**. The existing 5/10/15/20 presets, contiguous custom ranges and entire-surah selections are retained. Al-Fatihah and Juz Amma are the only eligible content, irrespective of developer/subscription status.
 
-Each stage contains at most five ayahs and follows Star Runner (the selected 3–10 revision rounds), Meteor Defense, Ayah Link and the Weak-Link Sentinel. The ship, aiming, collisions, audio and gateway mechanics reuse the existing actual game engines. This is a coordinated route, not replacement quizzes for the arcade portions. Later stages cannot be skipped through the expedition UI.
+Each stage contains at most five ayahs and follows Star Runner (the selected 1–10 revision rounds, default one), Meteor Defense, Ayah Link and the Weak-Link Sentinel. The ship, aiming, collisions, audio and gateway mechanics reuse the existing actual game engines. This is a coordinated route, not replacement quizzes for the arcade portions. Later stages cannot be skipped through the expedition UI.
 
 Ayah Link receives the full global selected reference list even when resuming a later stage, preserving the N→N+1 seam across stage boundaries. Every selected ayah is covered by flight and defense, and every internal transition is covered by Link. A single-ayah selection has no invented internal link. Pickup style, guidance and pace are saved with the route, so resuming does not silently change the selected learning settings. The route summary distinguishes fully saved stages, ayah coverage, practiced links and final assessment.
 

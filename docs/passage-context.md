@@ -183,3 +183,5 @@ claim a new live Supabase deployment or live paid-content certification.
 ## Revision missions
 
 [Memory Rescue and Long-Surah Marathon](revision-missions.md) use the same authorized selection in Revision Lab. The original free-only Cosmic Rush mission policy remains unchanged; premium marathon stages use authenticated source adapters and reauthorize on resume. See that guide for checkpoint, assessment and local/export persistence contracts.
+
+Phase 4 integration and precise engine limits are documented in [shared full-Qur’an labs](full-quran-phase4-labs.md). Selected free and authorized private sources use the same bounded lab surfaces; staged Revision campaigns can span canonical chapter/juz ranges without inventing cross-chapter Ayah Link pairs.

@@ -203,7 +203,7 @@ export function openPassageStudio(ctx = {}) {
       layout = ["grouped","legacy"].includes(work.layoutPreference) ? work.layoutPreference : work.current?.key === key && ["grouped","legacy"].includes(work.current.layout) ? work.current.layout : "grouped";
       if (!work.layoutPreference && !work.records[workKey()]) { layout="legacy";if(!work.records[workKey()])layout="grouped"; }
       restoreWork();
-      draw();
+      draw();if(requestedMode){const mode=requestedMode;requestedMode=null;activateMode(mode);}
       ctx.onReferenceSelected?.(key);
       note(
         workWarning || "Repeat aloud after the reciter. Visual workspace boundaries are not recitation stops.",
@@ -914,6 +914,8 @@ export function openPassageStudio(ctx = {}) {
   } else draw();
   if (memory.warning || workWarning) note(memory.warning || workWarning, true);
   if(ctx.initialRefs){try{const refs=ctx.initialRefs.map(k=>reference(k).key);if(!refs.length||refs.length>10||new Set(refs).size!==refs.length)throw Error("Choose up to ten canonical passage references.");selectedRefs=refs;}catch(e){note(e.message,true);}}
+  let requestedMode=null;
+  function activateMode(mode){if(!['practice','quiz','recall','sequence'].includes(mode))throw Error('Unknown Memorization Lab mode.');if(!bundle){requestedMode=mode;return;}stop();if(mode!=='recall'){navigation++;assessmentView++;const active=memory.snapshot().active;if(active&&!active.graded)memory.cancel(active.id);assessmentBundles=null;}if(mode==='recall'){void beginRecall([bundle]).catch(e=>note(e.message,true));return;}if(mode==='sequence'){root.querySelector('[data-chain]')?.click();root.querySelector('[data-chain-cards]')?.scrollIntoView({block:'nearest'});return;}level=mode==='quiz'?1:0;draw();}
   if (ctx.initialReference) select(ctx.initialReference);
 
   if (ctx.coachTarget) (async () => {
@@ -945,7 +947,7 @@ export function openPassageStudio(ctx = {}) {
     } catch (e) { if (d.isConnected && request === navigation) note(e.message, true); }
   })();
 
-  return {close,listen:()=>play()};
+  return {close,listen:()=>play(),activateMode};
 }
 
 // Phase-2 integration seam; callers opt in, no campaign screen is mounted here.

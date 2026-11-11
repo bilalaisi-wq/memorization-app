@@ -1,6 +1,6 @@
 import {catalog,reference,availableReference} from '../../../supabase/functions/_shared/content-policy.js';
 import {sha256} from '../../content/library.js';
-import {validateRefs} from '../../passage-context/model.js';
+import {passageRefs,validateRefs} from '../../passage-context/model.js';
 import {repairAnalysis} from '../../quest/repair/model.js';
 import {validLinkEvidence} from '../../quest/cosmic/link-evidence.js';
 export const LENGTHS=[5,10,15,20,30];
@@ -14,14 +14,14 @@ export function marathonRange({surah,selection='5',first=1,last}) {
  return validateRefs(Array.from({length:last-first+1},(_,i)=>`${surah}:${first+i}`));
 }
 export async function marathonPlan(refs,{game='snake',reason=null,evidence=[],recallTarget=null,recallScheduler='passage'}={}) {
- validateRefs(refs);
- if(refs.some(k=>reference(k).surah!==reference(refs[0]).surah))throw Error('Choose a contiguous range within one surah for this marathon.');
- if(!['snake','asteroids','maze','falling','bubble','sirat','link'].includes(game))throw Error('Choose an implemented bounded game.');
+ campaignRefs(refs);
+
+ if(!['snake','asteroids','maze','falling','bubble','sirat','link','runner'].includes(game))throw Error('Choose an implemented bounded game.');
  if(game==='link'&&refs.length<2)throw Error('Ayah Link requires two real adjacent ayahs.');
  const config={version:1,refs:[...refs],game,reason,evidence,recallTarget,recallScheduler};
  const id=await sha256(JSON.stringify(config));
  const stages=[];
- for(let i=0;i<refs.length;i+=5){const keys=refs.slice(i,i+5),links=i?[refs[i-1],...keys]:keys;stages.push({id:`${id}:${stages.length}`,refs:keys,links,tasks:game==='link'?['study','link','repeat-link','recall','summary']:['study','game','repeat',...(links.length>1?['link']:[]),'recall','summary']});}
+ for(let i=0;i<refs.length;){const surah=reference(refs[i]).surah;let end=i;while(end<refs.length&&end<i+5&&reference(refs[end]).surah===surah)end++;const keys=refs.slice(i,end),links=i&&reference(refs[i-1]).surah===surah?[refs[i-1],...keys]:keys;i=end;stages.push({id:`${id}:${stages.length}`,refs:keys,links,tasks:game==='link'?['study','link','repeat-link','recall','summary']:['study','game','repeat',...(links.length>1?['link']:[]),'recall','summary']});}
  return {...config,id,stages};
 }
 export function rescueRecommendations({lab={},memory={},learning={},links={},capture={},now=new Date()}={}) {
@@ -34,3 +34,8 @@ export function rescueRecommendations({lab={},memory={},learning={},links={},cap
  for(const [id,r] of Object.entries(capture.runs||{}))for(const [i,e] of (r.memoryMistakes||[]).entries())if(e.key&&Array.isArray(e.expectedIds)&&Array.isArray(e.selectedIds))results.push({id:`carrier:${id}:${i}`,refs:[e.key],category:'word-selection',game:'asteroids',reason:'A deliberately captured carrier did not match the expected source unit. This is recognition evidence, not spoken recall.',evidence:[{id:`${id}:${i}`,source:'observed-carrier'}]});
  return results.filter(r=>{try{return r.refs.every(k=>availableReference(reference(k).key));}catch{return false;}}).sort((a,b)=>a.id.localeCompare(b.id));
 }
+
+export function revisionRange(options){if(options.scope==='range'){const first=reference(options.from),last=reference(options.to),keys=canonicalCampaignKeys(),start=keys.indexOf(first.key),end=keys.indexOf(last.key);if(start<0||end<start)throw Error('Choose a forward canonical range.');return campaignRefs(keys.slice(start,end+1));}if(options.scope==='juz'){const juz=catalog.juzs.find(j=>j.id===options.juz);if(!juz)throw Error('Choose a canonical juz.');const refs=juz.ranges.flatMap(r=>Array.from({length:r.last-r.first+1},(_,i)=>`${r.surah}:${r.first+i}`));return campaignRefs(refs);}return marathonRange(options);}
+
+export const canonicalCampaignKeys=()=>catalog.chapters.flatMap(c=>Array.from({length:c.verseCount},(_,i)=>`${c.id}:${i+1}`));
+export function campaignRefs(refs){if(!Array.isArray(refs)||!refs.length||refs.length>6236)throw Error('Choose a bounded canonical campaign.');const all=canonicalCampaignKeys(),start=all.indexOf(refs[0]);if(start<0||all.slice(start,start+refs.length).join('|')!==refs.join('|'))throw Error('Campaign references must be unique, canonical and consecutive.');return [...refs];}

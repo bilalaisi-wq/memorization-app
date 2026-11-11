@@ -29,7 +29,7 @@ export async function flyTo(page,stop='checkpoint') {
 export async function flyStageRounds(page){
   for(let i=0;i<10;i++){
     await flyTo(page);
-    const next=page.getByRole('button',{name:/^Continue to round/});
+    const next=page.getByRole('button',{name:/^Replay this set · optional round/});
     if(!await next.count())return;
     await next.click();
   }

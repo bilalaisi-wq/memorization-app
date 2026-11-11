@@ -53,7 +53,7 @@ test('neutral core damage, charged abilities, retries, pause and lag never masqu
 });
 test('same mission director switches activities only at checkpoints and restores runner progress',async()=>{
   const mission=await createMission({surahId:112,selection:'custom',start:2,end:2});const events=[];
-  const g=await createFlightController(mission,{pickupMode:'ayahs',onEvent:e=>events.push(e)});g.start();expect(g.switchActivity('defense')).toBe(false);pilot(g);
+  const g=await createFlightController(mission,{pickupMode:'ayahs',rounds:3,onEvent:e=>events.push(e)});g.start();expect(g.switchActivity('defense')).toBe(false);pilot(g);
   const before=g.getSnapshot();expect(g.switchActivity('defense')).toBe(true);expect(g.getSnapshot().status).toBe('ready');pilot(g);const defenseScore=g.getSnapshot().arcadeScore;expect(defenseScore).toBeGreaterThan(before.arcadeScore);
   g.dispatch({type:'restart'});pilot(g);expect(g.getSnapshot().arcadeScore).toBe(defenseScore);
   expect(g.switchActivity('runner')).toBe(true);expect(g.getSnapshot().status).toBe('checkpoint');expect(g.getSnapshot().collected).toEqual(before.collected);expect(g.getSnapshot().cursor).toBe(before.cursor);
@@ -90,7 +90,7 @@ test('quota-only failure cannot waste a Repair Beam on an unwinnable empty wave'
 });
 
 test('a final-sector handover cannot falsely complete the other activity route',async()=>{
-  const mission=await createMission({surahId:112,selection:'custom',start:2,end:2}),g=await createFlightController(mission,{activity:'defense',pickupMode:'ayahs'});
+  const mission=await createMission({surahId:112,selection:'custom',start:2,end:2}),g=await createFlightController(mission,{activity:'defense',pickupMode:'ayahs',rounds:3});
   pilot(g);g.nextStage();pilot(g);g.nextStage();pilot(g);expect(g.getSnapshot().routeComplete).toBe(true);
   g.switchActivity('runner');pilot(g);
   expect(g.getSnapshot()).toMatchObject({atRouteEnd:true,routeComplete:false,activityCompletedCount:1,activityRequiredCount:3});

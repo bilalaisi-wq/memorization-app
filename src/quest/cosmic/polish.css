@@ -19,3 +19,4 @@
 .cosmic-rush[data-cosmic-effects=minimal] .runner-thruster::after{display:none;}
 .cosmic-rush[data-cosmic-effects=minimal] :is(.link-luminous path,.gateway-constellation){animation:none!important;}
 .cosmic-rush[data-cosmic-effects=minimal] .link-verse-marker{transition:none!important;}
+.cosmic-roman{display:block;direction:ltr;text-align:start;font:500 14px/1.5 system-ui,sans-serif;white-space:normal;overflow-wrap:anywhere;color:inherit;opacity:.9;margin-top:5px;letter-spacing:0;word-spacing:normal}.boundary-endpoint .cosmic-roman,.capture-carrier .cosmic-roman{font-size:13px}.capture-carrier{height:auto;min-height:64px}.link-ayah-card>.cosmic-roman{padding:4px 10px}

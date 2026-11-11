@@ -4,9 +4,9 @@ const implemented=new Set(['falling','asteroids','snake','maze','bubble','sirat'
 export function compatibility({game,refs,units='words',wordCount=0,approved=false,registered=null,unitCount=0,groupWords=0}){
  try{validateRefs(refs);}catch{return {available:false,reason:'Select a valid contiguous passage.',fallback:'practice'};}
  const cross=refs.some(r=>r.split(':')[0]!==refs[0]?.split(':')[0]);
- if(cross&&['bridge','cosmic','runner','defense','link'].includes(game))return {available:false,reason:'This engine requires a same-surah route. Use individual ayah workspaces for this cross-surah passage.',fallback:'maze'};
- if(game==='chronicles')return {available:false,reason:'Comprehension Lab is planned; no game is registered yet.',fallback:'practice'};
- if(['cosmic','runner','defense','link'].includes(game))return {available:allFree(refs),reason:allFree(refs)?'Verified free Cosmic mission.':'Cosmic Rush currently supports Al-Fatihah and Juz Amma. Use bounded sequence practice or self-assessed revision for this passage.',fallback:'maze'};
+ if(cross&&['bridge','defense','link'].includes(game))return {available:false,reason:'This engine requires a same-surah route. Use individual ayah workspaces for this cross-surah passage.',fallback:'maze'};
+ if(game==='chronicles')return {available:false,reason:'A source-matched, independently approved published comprehension lesson is required; an imported ayah alone is insufficient.',fallback:'practice'};
+ if(['cosmic','runner','defense','link'].includes(game))return {available:true,reason:'Source-backed revision uses authorized bounded stages. Loading and every resume require server authorization.',fallback:'maze'};
  if(game==='practice'||game==='recall')return {available:true,reason:'Existing whole-ayah practice and assessment workflow.'};
  if(!implemented.has(game)||registered&&!registered.includes(game))return {available:false,reason:'This game is not registered and playable.',fallback:'practice'};
  if(game==='bridge'&&refs.length<2)return {available:false,reason:'Bridge Builder needs two adjacent ayahs.',fallback:'maze'};

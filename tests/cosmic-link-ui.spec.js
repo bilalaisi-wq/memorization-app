@@ -63,7 +63,7 @@ test('published approved visual phrases form a real draggable reactor without ap
   for(const group of [...groups].reverse())await page.locator('.link-reactor-bank .link-reactor-tile').filter({hasText:group.text}).click();
   await page.locator('[data-link-check-reactor]').click();await expect(page.locator('.link-reactor')).toContainText('Adjust the reactor');
   // Native drag corrects the first position without clearing the reactor.
-  const last=page.locator('[data-zone=selected]').filter({hasText:groups[0].text}),first=page.locator('[data-zone=selected]').filter({hasText:groups.at(-1).text});await last.dragTo(first);await expect(page.locator('[data-zone=selected]').first()).toHaveText(groups[0].text);
+  const last=page.locator('[data-zone=selected]').filter({hasText:groups[0].text}),first=page.locator('[data-zone=selected]').filter({hasText:groups.at(-1).text});await last.dragTo(first);await expect.poll(()=>page.locator('[data-zone=selected]').first().evaluate(n=>n.firstChild.textContent)).toBe(groups[0].text);
   // Restore the exact canonical arrangement through the same exposed component controls.
   for(const group of groups){const piece=page.locator('[data-zone=selected]').filter({hasText:group.text});if(await piece.count())await piece.click();}
   for(const group of groups)await page.locator('.link-reactor-bank .link-reactor-tile').filter({hasText:group.text}).click();

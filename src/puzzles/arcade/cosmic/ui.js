@@ -1,3 +1,4 @@
+import {assertRunnerContent} from '../../../quest/cosmic/authorized-runner.js';
 import {mountCosmicControls,readCosmicPreferences} from '../../../quest/cosmic/preferences.js';
 import {createTargetCuePlayer} from '../../../quest/cosmic/target-cues.js';
 import {BOOST_CAPACITY} from './flow-runner.js';
@@ -14,7 +15,11 @@ import { createFlightController } from '../../../quest/cosmic/controller.js';
 import { activeProfileId } from '../../../learner/profile-storage.js';
 import './runner.css';
 
-export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>{},slow=false,pickupMode='mixed',rounds=3,memoryGateways=false,guidance=true,controller=null,onDefense=null,onLink=null,onCheckpoint=null,isCurrent=()=>true}={}) {
+export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>{},slow=false,pickupMode='mixed',rounds=1,memoryGateways=false,guidance=true,controller=null,onDefense=null,onLink=null,onCheckpoint=null,isCurrent=()=>true,content=null,disposeController=false}={}) {
+  if(content)assertRunnerContent(content);
+  const ayahFor=ref=>content?content.ayah(ref):freeAyah(ref);
+  const unitsFor=(refs,mode)=>createFlowUnits(refs,mode,0,content);
+  const romanFor=unit=>content?content.transliteration(unit):flowTransliteration(unit);
   const owner=activeProfileId();
   let saveWarning='',exposureWarning='',bonusWarning='',cueWarning='',bonusXP=0;const assistedRefs=new Set();
   let recorder;const bonuses=createFlightBonuses(mission);
@@ -27,15 +32,15 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
   const game=controller||await createFlightController(mission,{slow,pickupMode,rounds,memoryGateways,compact:matchMedia('(max-width:600px)').matches});
   recorder=createGatewayRecorder(mission,{runId:game.getSnapshot().runId});
   const unsubscribe=game.subscribe(receive);
-  if(!root.isConnected||activeProfileId()!==owner||!isCurrent()){unsubscribe();if(!controller)game.dispose();return null;}
+  if(!root.isConnected||activeProfileId()!==owner||!isCurrent()){unsubscribe();if(!controller||disposeController)game.dispose();return null;}
   const abort=new AbortController();
   let raf=0,last=0,lastStatus='',pointer=null,warmup=0;
   root.innerHTML=`<section class="star-runner" aria-label="Star Runner flight"><div class="runner-heading"><div><span class="cosmic-eyebrow">COSMIC RUSH · STAR RUNNER</span><h3>Fly your constellation</h3></div><button class="cosmic-secondary" data-flight-exit>Return to mission</button></div><p>Steer into the next correct wording. Avoid other words and asteroids; missed pieces return.</p><div class="runner-hud"><span data-flight-stage></span><span data-flight-round></span><span data-shield></span><span data-stars></span><span data-arcade-score></span><span data-bonus-xp></span></div><div class="runner-boost-meter"><label>Boost fuel <progress data-boost-energy max="4" value="4"></progress></label><span>Blaster +10 points · correct pickup +20 · boosted correct pickup +40. Bonus XP has daily limits.</span></div><section class="runner-learning" aria-label="Your ayah sequence"><p data-flow-prompt></p><p data-flow-feedback role="status" aria-live="polite"></p><div data-flow-built class="flow-built" lang="ar" dir="rtl"></div><button class="cosmic-secondary" data-flow-cue>Replay target cue</button><p data-cue-note role="status"></p><button class="cosmic-secondary" data-flow-listen>Listen to current ayah · pauses flight</button><button class="cosmic-secondary" data-flow-stop>Stop recitation</button><label>Recitation volume<input data-flow-volume type="range" min="0" max="100" value="50"></label></section><progress data-flight-progress max="1" value="0" aria-label="Flight stage progress"></progress><div class="runner-field" tabindex="0" role="group" aria-label="Three lane Quran flight. Left and Right arrows or A and D to steer. Space fires blasters. Hold B to boost. P or Escape pauses."><div class="runner-nebula" aria-hidden="true"></div><div class="runner-spark-field" aria-hidden="true"></div><div class="runner-lanes" aria-hidden="true"><i></i><i></i><i></i></div><div data-flight-objects aria-hidden="true"></div><div class="runner-ship" data-ship aria-hidden="true"><div class="runner-shield"></div><div class="runner-thruster"></div><svg viewBox="0 0 60 80"><path d="M30 4 48 49 58 67 38 61 30 72 22 61 2 67 12 49Z" fill="#c9f4ff" stroke="#80efe5" stroke-width="2"/><path d="M30 12 38 45 30 52 22 45Z" fill="#7478ef"/><path d="M12 49 22 55 16 63 4 66Z M48 49 38 55 44 63 56 66Z" fill="#7c80df"/></svg></div><div class="runner-portals" data-runner-portals hidden aria-hidden="true"><div class="runner-portal">1</div><div class="runner-portal">2</div><div class="runner-portal">3</div></div><div class="runner-overlay" data-flight-overlay></div></div><div class="runner-controls"><button class="cosmic-primary" data-steer="-1" aria-label="Steer left">← Left lane</button><button class="cosmic-secondary" data-flight-pause>Pause</button><button class="cosmic-primary" data-steer="1" aria-label="Steer right">Right lane →</button><button class="cosmic-primary" data-flight-fire aria-keyshortcuts="Space">Blaster</button><button class="cosmic-primary" data-flight-boost aria-keyshortcuts="B" aria-pressed="false">Boost</button><button class="cosmic-secondary" data-flight-restart>Restart stage</button></div><p data-gateway-save-warning role="status"></p><p data-flight-status role="status" aria-live="polite"></p><details class="cosmic-brief-instructions runner-help"><summary>How to fly · keyboard and touch</summary><p>Arrow keys / A D · swipe left or right · Space: fire blaster · hold B: boost · tap Boost to toggle on touch · P / Escape: pause. Collect the words or ayahs in canonical order. Wrong text repeats the same target and never costs shields. Asteroid collisions are motor errors. Words and chunks are visual study units, not approved recitation stops. Expedition checkpoints are saved; standalone flight restarts when you leave.</p></details></section>`;
   const view=root.querySelector('.star-runner'), field=root.querySelector('.runner-field'), ship=root.querySelector('[data-ship]'), layer=root.querySelector('[data-flight-objects]'), overlay=root.querySelector('[data-flight-overlay]');
   const flowAudio=createAudioManager({owner:'cosmic-flow',initialVolume:readLabVolume(profileStorage)});
   let exposureWave='',builtKey='',flowAudioToken=0,cue=null,cueEpoch=0;
-  const heard=new Set(),cuePlayer=createTargetCuePlayer(flowAudio);
-  const cueKey=s=>`${s.stageIndex}:${s.roundIndex}:${s.unit?.id}`;
+  const heard=new Set(),cuePlayer=createTargetCuePlayer(flowAudio,content?{sourcesFor:async unit=>[await content.audio(unit.key)],wholeAyahOnly:true}:{});
+  const cueKey=s=>`${s.stageIndex}:${s.roundIndex}:${content?s.unit?.key:s.unit?.id}`;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)'), nodes=new Map();let preferences=readCosmicPreferences(),controls;
   const isReduced=()=>reduced.matches||preferences.lowEffects||document.documentElement.dataset.celestialMotion==='reduced';
   const texts=new Map();const setText=(selector,value)=>{const el=texts.get(selector)||root.querySelector(selector);texts.set(selector,el);if(el.textContent!==String(value))el.textContent=String(value);};
@@ -56,11 +61,11 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
         catch(error){exposureBlocked=true;builtKey='';game.pause('Study assistance could not be saved. Export or recover progress, then resume.');s=game.getSnapshot();exposureWarning=error.message;}
       }
       if(exposureBlocked)setText('[data-flow-built]','');
-      setText('[data-flow-prompt]',s.unit?`${freeAyah(s.unit.key).name} · Ayah ${s.unit.key.split(':')[1]} · ${s.unit.kind==='ayah'?'Next ayah':s.unit.kind==='chunk'?'Next chunk · words '+(s.unit.index+1)+'–'+s.unit.endIndex:'Next word '+(s.unit.index+1)} · ${s.cursor} / ${s.totalUnits} pieces collected`:'Stage sequence complete');
+      setText('[data-flow-prompt]',s.unit?`${ayahFor(s.unit.key).name} · Ayah ${s.unit.key.split(':')[1]} · ${s.unit.kind==='ayah'?'Next ayah':s.unit.kind==='chunk'?'Next chunk · words '+(s.unit.index+1)+'–'+s.unit.endIndex:'Next word '+(s.unit.index+1)} · ${s.cursor} / ${s.totalUnits} pieces collected`:'Stage sequence complete');
       if(!exposureBlocked&&builtKey!==`${s.stageIndex}:${s.roundIndex}:${s.cursor}:${s.unit?.key}`){
         builtKey=`${s.stageIndex}:${s.roundIndex}:${s.cursor}:${s.unit?.key}`;
-        const a=s.unit?freeAyah(s.unit.key):null;
-        setText('[data-flow-built]',a&&s.unit.kind!=='ayah'?(s.unit.index?createFlowUnits([a.ref],'words').slice(0,s.unit.index).map(w=>w.text).join(' '):builtRef?freeAyah(builtRef).text:''):builtRef?freeAyah(builtRef).text:'');
+        const a=s.unit?ayahFor(s.unit.key):null;
+        setText('[data-flow-built]',a&&s.unit.kind!=='ayah'?(s.unit.index?unitsFor([a.ref],'words').slice(0,s.unit.index).map(w=>w.text).join(' '):builtRef?ayahFor(builtRef).text:''):builtRef?ayahFor(builtRef).text:'');
       }
     }
     setText('[data-flow-feedback]',s.flow?s.reason:'');
@@ -103,7 +108,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
       if(!el){
         el=document.createElement('div');el.className=`runner-object runner-${o.kind}`;
         el.dataset.objectId=o.id;el.dataset.kind=o.kind;
-        if(o.kind==='pickup'){el.lang='ar';el.dir='rtl';el.dataset.unitId=o.unit.id;el.dataset.pickupLane=String(o.lane);const arabic=document.createElement("span");arabic.className="runner-pickup-arabic";arabic.textContent=o.unit.text;const roman=document.createElement("small");roman.className="runner-pickup-roman";roman.lang="en";roman.dir="ltr";roman.textContent=flowTransliteration(o.unit);el.append(arabic,roman);el.setAttribute('aria-label',`${['Left','Middle','Right'][o.lane]} lane: ${o.unit.text}`);}
+        if(o.kind==='pickup'){el.lang='ar';el.dir='rtl';el.dataset.unitId=o.unit.id;el.dataset.pickupLane=String(o.lane);const arabic=document.createElement("span");arabic.className="runner-pickup-arabic";arabic.textContent=o.unit.text;const roman=document.createElement("small");roman.className="runner-pickup-roman";roman.lang="en";roman.dir="ltr";roman.textContent=romanFor(o.unit);el.append(arabic,roman);el.setAttribute('aria-label',`${['Left','Middle','Right'][o.lane]} lane: ${o.unit.text}`);}
         else {if(o.kind==='starburst'){for(let i=0;i<8;i++){const star=document.createElement('i');star.textContent='✦';star.style.setProperty('--ray',`${i*45}deg`);el.append(star);}}else el.textContent=o.kind==='star'?'✦':'';el.setAttribute('aria-hidden','true');}
         el.classList.toggle('runner-ribbon',!!o.ribbon);
         el.style.width=o.kind==='pickup'?(o.ribbon?'92%':'28%'):`${o.radius*2/600*100}%`;
@@ -112,7 +117,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
       el.style.left=`${o.ribbon?50:o.x/600*100}%`;el.style.top=`${o.y/720*100}%`;
     }
     for(const [id,el] of nodes)if(!ids.has(id)){el.remove();nodes.delete(id);}
-    setText('[data-cue-note]',cue?(cue.failed?'Target audio unavailable. Use Replay target cue to retry.':'Listen to the target. Flight is moving at a gentle 25% pace.'):(guidance?'A target cue plays once before each new word, chunk or ayah. Chunk cues use the original word recordings in sequence.':'Target cues are off. Replay a cue whenever you need it.'));
+    setText('[data-cue-note]',cue?(cue.failed?'Target audio unavailable. Use Replay target cue to retry.':'Listen to the target. Flight is moving at a gentle 25% pace.'):(guidance?content?'Full-ayah audio supports each target. Visual groups are not recitation stops.':'A target cue plays once before each new word, chunk or ayah. Chunk cues use the original word recordings in sequence.':'Target cues are off. Replay a cue whenever you need it.'));
     if(s.status!==lastStatus){
       lastStatus=s.status;
       overlay.hidden=s.status==='running'||s.status==='gateway';
@@ -127,8 +132,9 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
       if(s.status==='recovery'){button.textContent='Retry · keep collected pieces';button.onclick=()=>send({type:s.flow?'retry':'restart'});}
       if(s.status==='checkpoint'){
         message.textContent=s.routeComplete?'Revision rounds complete. Your selected ayahs were covered. This is supported practice, not independent memorization mastery.':s.atRouteEnd?'This Runner checkpoint is complete. Earlier Runner checkpoints were not all played in this mixed route. Return to mission to select them.':s.roundIndex<s.roundCount-1?`Round ${s.roundIndex+1} complete. Shield restored. Repeat this ayah set with slightly faster flight and one more asteroid per wave.`:'All rounds for this set complete. Shield restored. Continue to the next flight stage when ready.';
-        button.dataset.flightContinue='';button.textContent=s.atRouteEnd?'Fly this stage again':s.roundIndex<s.roundCount-1?`Continue to round ${s.roundIndex+2} / ${s.roundCount}`:'Continue to next flight stage';button.onclick=()=>{if(s.atRouteEnd)send({type:'restart'});else{game.nextStage();last=0;warmup=3;paint();schedule();field.focus({preventScroll:true});}};
+        button.dataset.flightContinue='';button.textContent=s.atRouteEnd?'Replay this ayah set':s.roundIndex<s.roundCount-1?`Replay this set · optional round ${s.roundIndex+2} / ${s.roundCount}`:'Next ayah set →';button.onclick=()=>{if(s.atRouteEnd)send({type:'restart'});else{game.nextStage();last=0;warmup=3;paint();schedule();field.focus({preventScroll:true});}};
       }
+      if(s.status==='checkpoint'&&!onCheckpoint&&(!s.atRouteEnd&&s.roundIndex<s.roundCount-1)){const next=document.createElement('button');next.className='cosmic-primary';next.dataset.flightNextSet='';next.textContent=s.stageIndex<s.stageCount-1?'Next ayah set →':'Finish this set · skip optional repeats';next.onclick=()=>{game.nextStage({skipRounds:true});last=0;warmup=3;lastStatus='';paint();schedule();field.focus({preventScroll:true});};overlay.append(next);}
       if(s.status==='checkpoint'&&onCheckpoint){button.textContent='Continue expedition';button.onclick=()=>onCheckpoint(s);}
       if(s.status!=='disposed')overlay.append(button);
       if(s.status==='checkpoint'&&onLink){const link=document.createElement('button');link.className='cosmic-secondary';link.dataset.enterLink='';link.textContent='Connect ayahs · Ayah Link';link.onclick=onLink;overlay.append(link);}
@@ -211,7 +217,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
   root.querySelector('[data-flow-listen]').onclick=async()=>{
     const s=game.getSnapshot();if(!s.unit)return;assistedRefs.add(s.unit.key);
     send({type:'pause'});const token=++flowAudioToken;
-    try{reportStudyExposure([s.unit.key]);const ok=await flowAudio.play(freeAyah(s.unit.key).audio);if(!ok&&token===flowAudioToken&&!disposed){saveWarning='Recitation could not play. Resume whenever you are ready.';paint();}}
+    try{reportStudyExposure([s.unit.key]);const ok=await flowAudio.play(content?await content.audio(s.unit.key):ayahFor(s.unit.key).audio);if(!ok&&token===flowAudioToken&&!disposed){saveWarning='Recitation could not play. Resume whenever you are ready.';paint();}}
     catch(error){saveWarning=error.message;paint();}
   };
   root.querySelector('[data-flight-pause]').onclick=()=>send({type:'toggle'});
@@ -220,7 +226,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
   // Cleanup also covers DOM replacement by navigation outside the runner.
   const observer=new MutationObserver(()=>{if(!root.isConnected)dispose();});
   observer.observe(document.body,{childList:true,subtree:true});
-  function dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(raf);abort.abort();observer.disconnect();pointer=null;controls?.dispose();nodes.clear();cuePlayer.dispose();gatewayPanel.dispose();flowAudioToken++;flowAudio.dispose();unsubscribe();if(!controller)game.dispose();}
+  function dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(raf);abort.abort();observer.disconnect();pointer=null;controls?.dispose();nodes.clear();cuePlayer.dispose();gatewayPanel.dispose();flowAudioToken++;flowAudio.dispose();unsubscribe();if(!controller||disposeController)game.dispose();}
   controls=mountCosmicControls(view);paint();
   return {start:()=>send({type:'start'}),pause:()=>send({type:'pause'}),resume:()=>send({type:'resume'}),dispatch:send,getSnapshot:()=>game.getSnapshot(),dispose};
 }
