@@ -83,6 +83,7 @@ const icon = (name) =>
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.grid}</svg>`;
 await initializeAccounts();
 initializeAppearance(appearanceAccount());
+if(import.meta.env.PROD)void import("./offline/shell.js").then(m=>m.initializeOffline()).catch(()=>{});
 const learning = createLearningStore(profileStorage, surahs);
 const gallery = createMasteryStore(profileStorage, surahs);
 const progressLibrary=catalog.chapters.map(c=>({id:c.id,verses:Array.from({length:c.verseCount},(_,i)=>({id:i+1}))}));
@@ -343,6 +344,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
 
     gallery: memoryCallbacks.onGallery,
   });
+  const downloads=document.createElement("button");downloads.className="text-button";downloads.dataset.downloadManager="";downloads.textContent="Downloads & offline settings";downloads.onclick=()=>{stop();void import("./offline/ui.js").then(m=>m.openDownloadManager());};document.querySelector(".explore-nav").append(downloads);
   mountSiteMenu(document.querySelector("main"));
   if(["practice","quiz","recall","sequence"].includes(mode)&&!passageSession.has())mountAdaptivePractice(document.querySelector("main"),{reference:key(),ctx:passageSession.clientContext});
   if(['practice','quiz','recall','sequence','lab','revision','review'].includes(mode))mountPassageNavigation(document.querySelector('main'),{session:passageSession,current:key(),lab:labName(),onSelect:openSharedPassage,onClear:clearSharedPassage,onLab:lab=>{mode=lab==='revision'?'revision':lab==='puzzle'?'lab':'practice';reset();}});
