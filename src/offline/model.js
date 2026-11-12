@@ -226,7 +226,7 @@ export async function readDownloaded(key) {
     throw Error("Downloaded text is corrupt; remove and retry the download.");
   }
   const current = await canonicalText(key);
-  if (current.contentRevision !== row.bundle.contentRevision) {
+  if (current.contentRevision !== row.bundle.contentRevision || await sha256(JSON.stringify(current))!==row.sha256) {
     throw Error(
       "The source revision changed. Update this download before studying it.",
     );

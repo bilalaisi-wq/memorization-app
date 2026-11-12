@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+// Dev intentionally does not install a production worker or emit an offline manifest.
+test.beforeEach(({baseURL})=>{test.skip(!baseURL?.includes(':5185'),'Run production worker cases with playwright.offline.config.js.');});
 async function manager(page) {
   await page.goto("/");
   await page.evaluate(async () => {

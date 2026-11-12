@@ -195,3 +195,5 @@ test("corrupt or stale text stays preserved for recovery and premium/off-account
     freeOnly: true,
   });
 });
+
+test('source metadata changes are rejected even when Arabic and a rewritten local checksum are unchanged',async({page})=>{await setup(page);const result=await page.evaluate(async()=>{const {m,db,manifest}=window.offlineTest;await m.createDownloadService().download(await m.planDownload({surah:112},{manifest,audio:false}));const row=await db.dbRead('texts','112:1');row.bundle.translation='OUTDATED TEST FIXTURE TRANSLATION';row.sha256=await (await import('/src/content/library.js')).sha256(JSON.stringify(row.bundle));await db.dbWrite('texts',row);try{await m.readDownloaded('112:1');return false;}catch(e){return /revision changed/.test(e.message)&&(await db.dbRead('texts','112:1')).bundle.translation==='OUTDATED TEST FIXTURE TRANSLATION';}});expect(result).toBe(true);});

@@ -6,12 +6,13 @@ import { surahs } from "../src/data.js";
 import { freeReference } from "../supabase/functions/_shared/content-policy.js";
 const digest = (value) => createHash("sha256").update(value).digest("hex");
 export function offlineManifestPlugin() {
-  let root;
+  let root,write=true;
   return {
     name: "free-offline-manifest",
     enforce: "post",
     configResolved(config) {
       root = config.root;
+      write=config.build.write!==false;
     },
     async writeBundle(options) {
       const directory = options.dir || resolve(root, "dist"),
@@ -27,6 +28,7 @@ export function offlineManifestPlugin() {
       await writeFile(path, JSON.stringify(manifest));
     },
     async generateBundle(_options, bundle) {
+      if(!write)return; // In-memory policy builds do not prepare deployable app downloads.
       const shell = [], audio = {}, texts = {};
       for (const [file, asset] of Object.entries(bundle)) {
         if (!/^(?:assets\/[\w.-]+\.(?:js|css|woff2)|index\.html)$/.test(file)) {

@@ -344,7 +344,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
 
     gallery: memoryCallbacks.onGallery,
   });
-  const downloads=document.createElement("button");downloads.className="text-button";downloads.dataset.downloadManager="";downloads.textContent="Downloads & offline settings";downloads.onclick=()=>{stop();void import("./offline/ui.js").then(m=>m.openDownloadManager());};document.querySelector(".explore-nav").append(downloads);
+  const downloads=document.createElement("button");downloads.className="text-button";downloads.dataset.downloadManager="";downloads.textContent="Downloads & offline settings";downloads.onclick=()=>{stop({preserveLab:true});void import("./offline/ui.js").then(m=>m.openDownloadManager());};document.querySelector(".explore-nav").append(downloads);
   mountSiteMenu(document.querySelector("main"));
   if(["practice","quiz","recall","sequence"].includes(mode)&&!passageSession.has())mountAdaptivePractice(document.querySelector("main"),{reference:key(),ctx:passageSession.clientContext});
   if(['practice','quiz','recall','sequence','lab','revision','review'].includes(mode))mountPassageNavigation(document.querySelector('main'),{session:passageSession,current:key(),lab:labName(),onSelect:openSharedPassage,onClear:clearSharedPassage,onLab:lab=>{mode=lab==='revision'?'revision':lab==='puzzle'?'lab':'practice';reset();}});
@@ -356,7 +356,7 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
   }
 }
 function stop({preserveLab = false} = {}) {
-  if(!preserveLab){disposeAdaptivePractice();contextSurface?.dispose();contextSurface=null;}
+  if(!preserveLab){disposeAdaptivePractice();contextSurface?.dispose();contextSurface=null;}else contextSurface?.pause?.();
   if (preserveLab) pauseChroniclesLab(); else stopChroniclesLab();
   if (preserveLab) pauseRevisionLab(); else stopRevisionLab();
   stopPieceDrag();

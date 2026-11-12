@@ -947,7 +947,7 @@ export function openPassageStudio(ctx = {}) {
     } catch (e) { if (d.isConnected && request === navigation) note(e.message, true); }
   })();
 
-  return {close,listen:()=>play(),activateMode};
+  return {close,listen:()=>play(),activateMode,pause:()=>{stop();gameHost?.pause?.();}};
 }
 
 // Phase-2 integration seam; callers opt in, no campaign screen is mounted here.
