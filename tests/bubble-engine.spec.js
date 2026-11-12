@@ -24,7 +24,7 @@ test('result receipts are capped, idempotent, account-bound and never schedule r
 
 test('mixed seeded positions are balanced in both axes, vary per question, and retain unaffected bubbles',()=>{
  const counts=[0,0,0],heights=new Set();
- for(let seed=0;seed<600;seed++){let s=begin(ready({seed}));counts[s.targetSlot]++;heights.add(correct(s).y);const oldIds=s.bubbles.map(b=>b.id),slot=s.targetSlot;s=fire(s,correct(s));expect(s.targetSlot).not.toBe(slot);expect(s.bubbles.some(b=>oldIds.includes(b.id))).toBe(true);expect(s.lastDetached.length).toBeGreaterThan(0);expect(s.neutrals.every(n=>s.bubbles.some(b=>b.id===n.support))).toBe(true);expect(s.score).toBeGreaterThan(200);}
+ for(let seed=0;seed<600;seed++){let s=begin(ready({seed}));counts[s.targetSlot]++;heights.add(correct(s).y);expect(new Set(s.bubbles.map(b=>b.piece.words.map(w=>w.text).join(' '))).size).toBe(3);const oldIds=s.bubbles.map(b=>b.id),slot=s.targetSlot;s=fire(s,correct(s));expect(s.targetSlot).not.toBe(slot);expect(s.bubbles.some(b=>oldIds.includes(b.id))).toBe(true);expect(s.lastDetached.length).toBeGreaterThan(0);expect(s.neutrals.every(n=>s.bubbles.some(b=>b.id===n.support))).toBe(true);expect(s.score).toBeGreaterThan(200);}
  expect(heights.size).toBe(3);for(const n of counts)expect(n).toBeGreaterThan(155);for(const n of counts)expect(n).toBeLessThan(245);
 });
 test('shot-based descent is disabled in Relaxed and safe recovery retains words and memory charges',()=>{

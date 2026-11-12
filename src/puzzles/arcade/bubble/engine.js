@@ -10,7 +10,7 @@ const identity=p=>p.words.map(w=>wordIdentity(w.text)).join(' ');
 export function buildFormations(adapter,config,library,options={}) {
   options={...options,difficulty:memoryLevel(config,options.difficulty)};
   const phraseLibrary=options.difficulty==='expert'&&!config.contextVersion?library.map(chapter=>({...chapter,verses:chapter.verses.filter(verse=>verse.words.length<=4)})):library;
-  const sectors=buildSectors(adapter,config,phraseLibrary,options);
+  const sectors=buildSectors(adapter,options.difficulty==='beginner'&&config.difficultySchema===1?{...config,memoryDifficulty:'standard'}:config,phraseLibrary,{...options,difficulty:options.difficulty==='beginner'?'standard':options.difficulty});
   if(sectors.some(s=>s.targets.some(p=>p.words.length>4)))throw Error('Bubble phrase targets must fit four words. Choose Beginner/Standard word mode or smaller published reviewed phrases; no boundaries are generated.');
   return sectors;
 
@@ -47,7 +47,8 @@ function populate(s,previousSlot=null) {
     s.bubbles=slots.flatMap((n,i)=>fillSlot(s,n,n===slot?expected:distractors[i%distractors.length]));
   }else{
     s.bubbles=s.bubbles.filter(b=>b.slot!==slot&&b.slot!==previousSlot);
-    s.bubbles.push(...fillSlot(s,slot,expected),...fillSlot(s,previousSlot,distractors[0]));
+    const spare=distractors.find(p=>!s.bubbles.some(b=>identity(b.piece)===identity(p)))||distractors[0];
+    s.bubbles.push(...fillSlot(s,slot,expected),...fillSlot(s,previousSlot,spare));
   }
   const affected=previousSlot===null?[0,1,2]:[slot,previousSlot];
   s.neutrals=s.neutrals.filter(n=>!affected.includes(n.slot));
