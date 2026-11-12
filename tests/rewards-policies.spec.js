@@ -144,3 +144,59 @@ test("Every-mode receipts publish automatically after opt-in; inventory spending
     await db.close();
   }
 });
+
+test("New companions append safely, atomic adoption survives retries and preserves private account ownership", async () => {
+  const db = new PGlite();
+  const read = file => readFileSync(new URL(`../supabase/${file}`, import.meta.url), "utf8");
+  const animals = [
+    ["penguin", 100], ["beaver", 140], ["otter", 160],
+    ["capybara", 180], ["red-panda", 220], ["quokka", 240],
+  ];
+  try {
+    await db.exec(`create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create table auth.users(id uuid primary key);create function auth.uid()returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to anon,authenticated,service_role;`);
+    await db.exec(read("SETUP_ACCOUNTS.sql"));
+    await db.exec(read("SETUP_REWARDS_SHOP.sql"));
+    await db.exec(`insert into auth.users values('${A}'),('${B}');set role authenticated;set request.jwt.claim.sub='${A}';`);
+    await db.query("select public.sync_learning_rewards('[]',4000,4000,0)");
+    await db.query("select public.buy_nature_item('fox',120)");
+    await db.query("select public.equip_nature_item('fox')");
+    const before = (await db.query("select public.my_nature_profile() p")).rows[0].p;
+    await db.exec("reset role;update public.avatar_catalog set price=81 where id='owl'");
+    const migration = read("SETUP_COMPANION_ADOPTIONS.sql");
+    expect(migration).toBe(read("migrations/20261112_companion_adoptions.sql"));
+    await db.exec(migration);
+    await db.exec(migration);
+    expect((await db.query("select price from public.avatar_catalog where id='owl'")).rows[0].price).toBe(81);
+    const check = (await db.query(read("VERIFY_COMPANION_ADOPTIONS.sql"))).rows[0];
+    expect(check).toMatchObject({new_companions:6,catalog_items:19,profile_rls_enabled:true,catalog_rls_enabled:true,direct_wallet_update_allowed:false,direct_catalog_update_allowed:false,anonymous_purchase_allowed:false,authenticated_purchase_allowed:true});
+    await db.exec(`set role authenticated;set request.jwt.claim.sub='${A}'`);
+    expect((await db.query("select public.my_nature_profile() p")).rows[0].p).toEqual(before);
+    let spent = before.spent;
+    for (const [id, price] of animals) {
+      const adopted = (await db.query("select public.buy_nature_item($1,$2,$3) p", [id, price, A])).rows[0].p;
+      spent += price;
+      expect(adopted).toMatchObject({creature:id,spent,balance:4000-spent});
+      expect(adopted.owned.filter(x=>x===id)).toHaveLength(1);
+      // A later deliberate choice cannot be undone by a retried purchase receipt.
+      await db.query("select public.equip_nature_item('fox')");
+      const duplicate = (await db.query("select public.buy_nature_item($1,$2,$3) p", [id, price, A])).rows[0].p;
+      expect(duplicate).toMatchObject({creature:"fox",spent});
+    }
+    const outfit = (await db.query("select public.buy_nature_item('scarf-lilac',35) p")).rows[0].p;
+    expect(outfit.creature).toBe("fox");
+    expect(outfit.outfit).toBeNull();
+    await db.exec(`set request.jwt.claim.sub='${B}'`);
+    await expect(db.query("select public.buy_nature_item('quokka',240,$1)",[A])).rejects.toThrow();
+    await expect(db.query("select public.buy_nature_item('quokka',240,$1)",[B])).rejects.toThrow();
+    await expect(db.query("select public.equip_nature_item('penguin')")).rejects.toThrow();
+    const other = (await db.query("select public.my_nature_profile() p")).rows[0].p;
+    expect(other).toMatchObject({creature:"sprout",balance:0,spent:0});
+    expect(other.owned).toEqual(["sprout","garden"]);
+    for (const q of ["update public.nature_profiles set creature='quokka'", "update public.avatar_catalog set price=0", "select * from public.nature_profiles"]) await expect(db.query(q)).rejects.toThrow();
+    await db.exec("reset role;update public.avatar_catalog set price=101,active=false where id='penguin'");
+    await db.exec(migration);
+    expect((await db.query("select price,active from public.avatar_catalog where id='penguin'")).rows[0]).toEqual({price:101,active:false});
+    await db.exec(`set role anon;set request.jwt.claim.sub=''`);
+    await expect(db.query("select public.buy_nature_item('penguin')")).rejects.toThrow();
+  } finally { await db.close(); }
+});
