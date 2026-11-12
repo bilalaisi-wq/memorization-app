@@ -1,3 +1,4 @@
+import {rememberVerifiedDevice,offlineDeviceOwner,forgetDeviceIdentity} from "../offline/identity.js";
 import {createLocalNatureStore} from "../rewards/shop.js";
 import {companionDetails,validCompanion} from "../rewards/companion.js";
 import {CosmicCloud} from '../quest/cosmic/cloud.js';
@@ -35,6 +36,7 @@ function drawAccountAvatar(){
 }
 window.addEventListener('ayahnaturechange',event=>{if(event.detail?.owner!==activeProfileId()||event.detail?.identityRevision!==profileRevision()||!validCompanion(event.detail))return;natureRequest++;natureProfile=event.detail;drawAccountAvatar();});
 window.addEventListener('ayahprofilechange',()=>{natureRequest++;natureProfile=null;natureLoaded=false;drawAccountAvatar();});
+let offlineOwner=null;
 let client = null,
   user = null,
   accountError = "",
@@ -69,6 +71,12 @@ export async function initializeAccounts(config = {}) {
         }
       } catch {}
     }
+    if(navigator.onLine===false){
+      offlineOwner=offlineDeviceOwner(url);client=null;user=null;configureDeveloperClient(null);setDeveloperUser(null);selectProfile(offlineOwner);
+      accountError=offlineOwner?'Offline device profile: saved learning is available; reconnect to verify your account.':'Offline guest study: connect to sign in.';
+      if(offlineOwner){cloud=new CloudProgress(null,offlineOwner,scopedStorage(offlineOwner),()=>{});await cloud.initialize();onProfileChange(id=>{if(id===offlineOwner)cloud?.changed();});}
+      window.addEventListener('online',()=>location.reload(),{once:true});return;
+    }
     const { createClient } = await import("@supabase/supabase-js");
     client = createClient(url, key, {
       global: {
@@ -101,6 +109,7 @@ export async function initializeAccounts(config = {}) {
       const result = await client.auth.getUser();
       if (result.error) throw result.error;
       user = result.data.user;
+      rememberVerifiedDevice(user,url);
     }
     configureDeveloperClient(client);
     setDeveloperUser(user);
@@ -131,6 +140,7 @@ export async function initializeAccounts(config = {}) {
         rewardPublisher?.dispose();
         setDeveloperUser(null);
         selectProfile(null);
+        forgetDeviceIdentity();
         user=null;natureProfile=null;
         document.querySelector('.avatar')?.replaceChildren(document.createTextNode('✦'));
         document.querySelectorAll('dialog[open]').forEach(d=>{d.querySelector('[data-close]')?.click();if(d.isConnected){d.close();d.remove();}});
@@ -155,7 +165,7 @@ window.addEventListener('focus',()=>{if(user)void refreshNatureProfile();});
 export function mountAccountControls(main, learning, callbacks = {}) {
   const nav = main.querySelector(".explore-nav");
   if (!nav) return;
-  if(!natureLoaded){natureLoaded=true;if(client&&user)void refreshNatureProfile();else try{natureProfile=createLocalNatureStore().snapshot();}catch{}}
+  if(!natureLoaded){natureLoaded=true;if(client&&user)void refreshNatureProfile();else if(!offlineOwner)try{natureProfile=createLocalNatureStore().snapshot();}catch{}}
   drawAccountAvatar();
   if(client&&user&&!rewardPublisher){
     rewardPublisher=new RewardPublisher(client,learning,scopedStorage(user.id),user.id,{getUserId:activeProfileId});
@@ -165,8 +175,8 @@ export function mountAccountControls(main, learning, callbacks = {}) {
     window.addEventListener("online",()=>rewardPublisher.schedule());
   }
   for (const [label, action] of [
-    ["My companion & shop", () => import("../rewards/shop.js").then(m=>m.openNatureShop({client,user,learning,publisher:rewardPublisher}))],
-    [user ? "My account" : "Sign in", () => showAccount(learning)],
+    ["My companion & shop", () => offlineOwner?showAccount(learning):import("../rewards/shop.js").then(m=>m.openNatureShop({client,user,learning,publisher:rewardPublisher}))],
+    [user||offlineOwner ? "My account" : "Sign in", () => showAccount(learning)],
     ["Leaderboard", () => showLeaderboard(learning)],
   ]) {
     const button = document.createElement("button");
@@ -197,12 +207,13 @@ function dialogShell(title) {
 }
 function showAccount(learning) {
   if(user)void refreshNatureProfile();
-  const dialog = dialogShell(user ? "My account" : "Sign in to Ayah"),
+  const dialog = dialogShell(offlineOwner?"Offline device profile":user ? "My account" : "Sign in to Ayah"),
     area = dialog.querySelector("[data-content]"),
     status = dialog.querySelector("[data-account-status]");
-  mountAccountPhoto(dialog,{client,user});
+  if(!offlineOwner)mountAccountPhoto(dialog,{client,user});
   const companion=document.createElement('section');companion.className='my-companion';companion.setAttribute('aria-label','My Companion');companion.innerHTML='<span class="eyebrow">MY COMPANION</span><div data-my-companion-preview></div><button class="text-button" data-change-companion>Change Companion</button><button class="primary small" data-open-companion-shop>Open Companion Shop</button>';area.before(companion);drawAccountAvatar();
-  companion.querySelectorAll('button').forEach(b=>b.onclick=()=>{dialog.querySelector('[data-close]').click();void import('../rewards/shop.js').then(m=>m.openNatureShop({client,user,learning,publisher:rewardPublisher}));});
+  companion.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(offlineOwner)return;dialog.querySelector('[data-close]').click();void import('../rewards/shop.js').then(m=>m.openNatureShop({client,user,learning,publisher:rewardPublisher}));});
+  if(offlineOwner){companion.innerHTML='<h3>MY COMPANION</h3><p>Reconnect to load your authoritative account wardrobe. No Seeds can be spent offline for this account.</p>';}
   const run = async (action) => {
     const buttons = [...dialog.querySelectorAll("button")];
     buttons.forEach((b) => (b.disabled = true));
@@ -218,6 +229,12 @@ function showAccount(learning) {
   };
   if(!user){
     const exportButton=document.createElement('button');exportButton.className='text-button';exportButton.textContent='Download device progress';exportButton.dataset.exportDevice='';exportButton.onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(profileBackup(),null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='ayah-device-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};dialog.insertBefore(exportButton,area);
+  }
+  if(offlineOwner){
+    area.innerHTML='<p>You are studying the saved progress for this device profile. This is local access only: premium content, developer access, account purchases and private account services require online verification.</p><p data-sync-status></p><button class="text-button" data-offline-verify>Reconnect and verify account</button><button class="text-button" data-offline-guest>Use guest mode · sign out on this device</button>';
+    area.querySelector('[data-sync-status]').textContent=cloud?.status||accountError;
+    area.querySelector('[data-offline-verify]').onclick=()=>location.reload();
+    area.querySelector('[data-offline-guest]').onclick=()=>{forgetDeviceIdentity();const key=`sb-${new URL(projectUrl).hostname.split('.')[0]}-auth-token`;localStorage.removeItem(key);sessionStorage.removeItem(key);location.reload();};return;
   }
   if (!client) {
     area.innerHTML = `<p>Keep learning as a guest. Your goals and progress stay in this browser.</p><p>Online accounts and shared rankings are not activated yet. A secure account service must be configured by the site owner first.</p><p>${esc(accountError)}</p><p>Microphone recordings stay in your current tab and are never uploaded.</p><button class="text-button" data-privacy>Privacy information</button>`;
