@@ -38,7 +38,8 @@ export function openDownloadManager() {
     busy = false,
     readerAudio = null,
     readerURL = null,
-    readerEpoch = 0;
+    readerEpoch = 0,
+    estimateEpoch = 0;
   const cleanMedia = () => {
     readerEpoch++;
     readerAudio?.pause();
@@ -76,6 +77,7 @@ export function openDownloadManager() {
     },
   });
   const change = () => {
+    estimateEpoch++;
     plan = null;
     start.disabled = true;
     dialog.querySelector("[data-offline-size]").textContent =
@@ -220,17 +222,30 @@ export function openDownloadManager() {
   estimate.onclick = async () => {
     if (busy) return;
     busy = true;
+    const epoch = ++estimateEpoch,
+      selection = select.value,
+      audioChoice = audio.value;
     estimate.disabled = true;
     start.disabled = true;
+    select.disabled = audio.disabled = true;
     try {
       const manifest = await fetchManifest(),
-        [kind, n] = select.value.split(":"),
+        [kind, n] = selection.split(":"),
         quota = await navigator.storage?.estimate?.();
       const next = await planDownload(
         kind === "juz" ? { juz: Number(n) } : { surah: Number(n) },
-        { audio: audio.value === "audio", manifest, quota },
+        { audio: audioChoice === "audio", manifest, quota },
       );
       if (disposed) return;
+      if (
+        epoch !== estimateEpoch || select.value !== selection ||
+        audio.value !== audioChoice
+      ) {
+        plan = null;
+        status.textContent =
+          "Selection changed. Check the download size again before downloading.";
+        return;
+      }
       plan = next;
       dialog.querySelector("[data-offline-size]").textContent = `Up to ${
         size(plan.bytes)
@@ -243,7 +258,10 @@ export function openDownloadManager() {
       if (!disposed) status.textContent = e.message;
     } finally {
       busy = false;
-      if (!disposed) estimate.disabled = false;
+      if (!disposed) {
+        estimate.disabled = false;
+        select.disabled = audio.disabled = false;
+      }
     }
   };
   start.onclick = async () => {

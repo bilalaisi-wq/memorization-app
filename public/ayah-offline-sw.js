@@ -178,7 +178,9 @@ self.addEventListener("fetch", (e) => {
   const path = url.pathname;
   if (/^\/audio\/(?:\d{6}|\d{3}_\d{3}_\d{3})\.mp3$/.test(path)) {
     e.respondWith(
-      downloadedAudio(path, request).then((found) => found || fetch(request)),
+      downloadedAudio(path, request).catch(() => null).then((found) =>
+        found || fetch(request)
+      ),
     );
     return;
   }

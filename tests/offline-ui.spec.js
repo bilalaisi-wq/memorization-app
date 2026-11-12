@@ -130,3 +130,74 @@ test("text-only mobile download, account-safe removal, retry controls and privat
   });
   expect(denied).toBe(true);
 });
+test("size estimation locks selection and rejects stale programmatic changes before allowing Download", async ({ page }) => {
+  await manager(page);
+  await page.locator("[data-offline-selection]").selectOption("surah:112");
+  await page.evaluate(() =>
+    Object.defineProperty(navigator.storage, "estimate", {
+      configurable: true,
+      value: () =>
+        new Promise((resolve) => {
+          window.finishOfflineQuota = resolve;
+        }),
+    })
+  );
+  await page.locator("[data-offline-estimate]").click();
+  await page.waitForFunction(() =>
+    typeof window.finishOfflineQuota === "function"
+  );
+  await expect(page.locator("[data-offline-selection]")).toBeDisabled();
+  await expect(page.locator("[data-offline-audio]")).toBeDisabled();
+  await expect(page.locator("[data-offline-start]")).toBeDisabled();
+  await page.evaluate(() => {
+    const select = document.querySelector("[data-offline-selection]");
+    select.value = "surah:114";
+    select.dispatchEvent(new Event("change"));
+    window.finishOfflineQuota({ quota: 1e9, usage: 0 });
+  });
+  await expect(page.locator("[data-offline-status]")).toContainText(
+    "Selection changed",
+  );
+  await expect(page.locator("[data-offline-start]")).toBeDisabled();
+  await expect(page.locator("[data-offline-selection]")).toBeEnabled();
+  await expect(page.locator("[data-offline-audio]")).toBeEnabled();
+  await page.evaluate(() => {
+    window.finishOfflineQuota = null;
+  });
+  await page.locator("[data-offline-estimate]").click();
+  await page.waitForFunction(() =>
+    typeof window.finishOfflineQuota === "function"
+  );
+  await page.evaluate(() =>
+    window.finishOfflineQuota({ quota: 1e9, usage: 0 })
+  );
+  await expect(page.locator("[data-offline-start]")).toBeEnabled();
+  await expect(page.locator("[data-offline-size]")).toContainText("6 ayahs");
+  await page.locator("[data-offline-start]").click();
+  await expect(page.locator('[data-package="surah:114"]')).toContainText(
+    "ready",
+  );
+  await expect(page.locator('[data-package="surah:112"]')).toHaveCount(0);
+});
+test("online recitation falls back to verified network audio when IndexedDB is unavailable", async ({ page, context }) => {
+  await page.goto("/");
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+  const before = await page.evaluate(async () => {
+    const r = await fetch("/audio/112001.mp3");
+    return { status: r.status, bytes: (await r.arrayBuffer()).byteLength };
+  });
+  expect(before.status).toBe(200);
+  expect(before.bytes).toBeGreaterThan(0);
+  const worker = context.serviceWorkers()[0];
+  await worker.evaluate(() => {
+    indexedDB.open = () => {
+      throw Error("TEST ONLY IndexedDB unavailable");
+    };
+  });
+  const after = await page.evaluate(async () => {
+    const r = await fetch("/audio/112001.mp3");
+    return { status: r.status, bytes: (await r.arrayBuffer()).byteLength };
+  });
+  expect(after).toEqual(before);
+});
