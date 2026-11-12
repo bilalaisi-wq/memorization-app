@@ -1,5 +1,6 @@
+import {publishCompanion} from "./companion.js";
 import { versionedStore } from "../ui/versioned-store.js";
-import { profileStorage } from "../learner/profile-storage.js";
+import { profileStorage,activeProfileId,profileRevision } from "../learner/profile-storage.js";
 export const REWARDS_KEY = "ayah-rewards-v1";
 export const rewardModes = [
   "practice",
@@ -85,7 +86,8 @@ export function awardStudy(input) {
     return { xp: 0, unavailable: true };
   }
 }
-export function receiveRemoteRewards(profile) {
+export function receiveRemoteRewards(profile, scope = {}) {
+  if(Object.hasOwn(scope,"owner")&&scope.owner!==activeProfileId()||Object.hasOwn(scope,"revision")&&scope.revision!==profileRevision())return;
   if (
     !profile || !Number.isFinite(profile.lifetimeXp) ||
     !Number.isFinite(profile.lifetimeStars)
@@ -97,6 +99,7 @@ export function receiveRemoteRewards(profile) {
   window.dispatchEvent(
     new CustomEvent("ayahrewardsremote", { detail: profile }),
   );
+  publishCompanion(profile,scope);
 }
 export function rewardSummary(learning, storage = profileStorage) {
   const main = learning.snapshot(),

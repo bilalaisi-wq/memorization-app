@@ -1,7 +1,9 @@
+import {createLocalNatureStore} from "../rewards/shop.js";
+import {companionDetails,validCompanion} from "../rewards/companion.js";
 import {CosmicCloud} from '../quest/cosmic/cloud.js';
 import {mountAccountPhoto} from "../rewards/account-photo.js";
 import {receiveRemoteRewards} from "../rewards/store.js";
-import { avatarSvg } from "../rewards/catalog.js";
+import { avatarSvg,items } from "../rewards/catalog.js";
 import { RewardPublisher } from "../rewards/publisher.js";
 import { mountBillingControls } from "../billing/ui.js";
 import { leaderboardMarkup } from "./leaderboard.js";
@@ -15,17 +17,24 @@ import {
   progressKeys,
   scopedStorage,
   activeProfileId,
+  profileRevision,
   exportKeys,
   onProfileChange,
 } from "./profile-storage.js";
 import { esc } from "../ui/dom.js";
-let rewardPublisher=null, rewardReady=null, natureProfile=null, natureLoaded=false;
+let rewardPublisher=null, rewardReady=null, natureProfile=null, natureLoaded=false,natureRequest=0;
 function drawAccountAvatar(){
- const node=document.querySelector('.avatar');if(!node||!natureProfile)return;
- const photo=natureProfile.photo;
- if(typeof photo==='string'&&photo.length<=70000&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(photo)){node.replaceChildren();const img=document.createElement('img');img.src=photo;img.alt='Your private profile picture';node.append(img);}else node.innerHTML=avatarSvg(natureProfile,'header-companion');
+ const node=document.querySelector('.avatar');if(!node)return;
+ const photo=natureProfile?.photo;
+ if(typeof photo==='string'&&photo.length<=70000&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(photo)){node.replaceChildren();const img=document.createElement('img');img.src=photo;img.alt='Your private profile picture';node.append(img);}else node.textContent='Y';
+ let mascot=document.querySelector('[data-header-companion]');
+ if(!mascot){mascot=document.createElement('span');mascot.dataset.headerCompanion='';mascot.className='profile-companion';node.after(mascot);}
+ mascot.innerHTML=validCompanion(natureProfile)?avatarSvg(natureProfile,'header-companion'):'';
+ mascot.hidden=!validCompanion(natureProfile);mascot.dataset.creature=validCompanion(natureProfile)?natureProfile.creature:'';mascot.title=validCompanion(natureProfile)?(items.find(i=>i.id===natureProfile.creature)?.name||'Your companion'):'';if(mascot.firstElementChild)mascot.firstElementChild.setAttribute('aria-label',mascot.title);
+ document.querySelectorAll('[data-my-companion-preview]').forEach(el=>el.innerHTML=companionDetails(natureProfile));
 }
-window.addEventListener('ayahnaturechange',event=>{natureProfile=event.detail;drawAccountAvatar();});
+window.addEventListener('ayahnaturechange',event=>{if(event.detail?.owner!==activeProfileId()||event.detail?.identityRevision!==profileRevision()||!validCompanion(event.detail))return;natureRequest++;natureProfile=event.detail;drawAccountAvatar();});
+window.addEventListener('ayahprofilechange',()=>{natureRequest++;natureProfile=null;natureLoaded=false;drawAccountAvatar();});
 let client = null,
   user = null,
   accountError = "",
@@ -138,10 +147,15 @@ export async function initializeAccounts(config = {}) {
     selectProfile(null);
   }
 }
+async function refreshNatureProfile(){
+ if(!client||!user||user.id!==activeProfileId())return;const owner=activeProfileId(),revision=profileRevision(),request=++natureRequest;
+ try{const {data,error}=await client.rpc('my_nature_profile',{expected_user:owner});if(!error&&data&&owner===activeProfileId()&&revision===profileRevision()&&request===natureRequest){natureProfile=data;receiveRemoteRewards(data,{owner,revision});drawAccountAvatar();}}catch{}
+}
+window.addEventListener('focus',()=>{if(user)void refreshNatureProfile();});
 export function mountAccountControls(main, learning, callbacks = {}) {
   const nav = main.querySelector(".explore-nav");
   if (!nav) return;
-  if(!natureLoaded){natureLoaded=true;if(client&&user)client.rpc("my_nature_profile",{expected_user:user.id}).then(({data})=>{if(data&&activeProfileId()===user?.id){natureProfile=data;receiveRemoteRewards(data);drawAccountAvatar();}}).catch(()=>{});else try{natureProfile=JSON.parse(profileStorage.getItem("ayah-nature-profile-v1"));}catch{}}
+  if(!natureLoaded){natureLoaded=true;if(client&&user)void refreshNatureProfile();else try{natureProfile=createLocalNatureStore().snapshot();}catch{}}
   drawAccountAvatar();
   if(client&&user&&!rewardPublisher){
     rewardPublisher=new RewardPublisher(client,learning,scopedStorage(user.id),user.id,{getUserId:activeProfileId});
@@ -182,10 +196,13 @@ function dialogShell(title) {
   return dialog;
 }
 function showAccount(learning) {
+  if(user)void refreshNatureProfile();
   const dialog = dialogShell(user ? "My account" : "Sign in to Ayah"),
     area = dialog.querySelector("[data-content]"),
     status = dialog.querySelector("[data-account-status]");
   mountAccountPhoto(dialog,{client,user});
+  const companion=document.createElement('section');companion.className='my-companion';companion.setAttribute('aria-label','My Companion');companion.innerHTML='<span class="eyebrow">MY COMPANION</span><div data-my-companion-preview></div><button class="text-button" data-change-companion>Change Companion</button><button class="primary small" data-open-companion-shop>Open Companion Shop</button>';area.before(companion);drawAccountAvatar();
+  companion.querySelectorAll('button').forEach(b=>b.onclick=()=>{dialog.querySelector('[data-close]').click();void import('../rewards/shop.js').then(m=>m.openNatureShop({client,user,learning,publisher:rewardPublisher}));});
   const run = async (action) => {
     const buttons = [...dialog.querySelectorAll("button")];
     buttons.forEach((b) => (b.disabled = true));

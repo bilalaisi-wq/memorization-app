@@ -1,3 +1,5 @@
+import {publishCompanion} from "./companion.js";
+import {activeProfileId,profileRevision} from "../learner/profile-storage.js";
 import { avatarSvg, items, starter } from "./catalog.js";
 import { receiveRemoteRewards, rewardSummary } from "./store.js";
 import { profileStorage } from "../learner/profile-storage.js";
@@ -65,6 +67,8 @@ export function createLocalNatureStore(){
   );
 }
 export function openNatureShop({ client, user, learning, publisher }) {
+  const owner=activeProfileId(),revision=profileRevision();
+  if(user&&owner!==user.id)throw Error("Account changed. Reopen your companion shop.");
   const dialog = document.createElement("dialog");
   dialog.className = "account-dialog nature-shop";
   dialog.innerHTML =
@@ -74,12 +78,16 @@ export function openNatureShop({ client, user, learning, publisher }) {
     pending = false,
     disposed = false,
     filter = "all",
-    market = items;
+    market = items,
+    ownership = "all",
+    adopted = null;
+  const valid=()=>!disposed&&activeProfileId()===owner&&profileRevision()===revision;
   const local = createLocalNatureStore();
   const status = (text) =>
     dialog.querySelector("[data-shop-status]").textContent = text;
   const close = () => {
     disposed = true;
+    window.removeEventListener("ayahprofilechange",close);
     dialog.close();
     dialog.remove();
   };
@@ -95,8 +103,11 @@ export function openNatureShop({ client, user, learning, publisher }) {
       balance: Math.max(0, summary.xp + 5 * summary.stars - p.spent),
     };
   };
+  window.addEventListener("ayahprofilechange",close);
   const rpc = async (name, args) => {
+    if(!valid())throw Error("Account changed. Reopen the shop.");
     const r = await client.rpc(name, { ...args, expected_user: user.id });
+    if(!valid())throw Error("Account changed. Reopen the shop.");
     if (r.error) {
       throw Error(
         ["PGRST202", "42883"].includes(r.error.code)
@@ -108,17 +119,17 @@ export function openNatureShop({ client, user, learning, publisher }) {
     return r.data;
   };
   async function action(fn) {
-    if (pending) return;
+    if (pending||!valid()) return;
     pending = true;
     root.querySelectorAll("button,input").forEach((b) => b.disabled = true);
     try {
       await fn();
-      if (!disposed) {
+      if (valid()) {
         draw();
-        status("Your companion is ready. Keep growing at your own pace.");
+        status(adopted?`${items.find(i=>i.id===adopted)?.name||"Companion"} adopted and equipped! Look beside your profile picture.`:"Your companion is ready. Keep growing at your own pace.");
       }
     } catch (e) {
-      if (!disposed) {
+      if (valid()) {
         draw();
         status(e.message);
       }
@@ -127,15 +138,13 @@ export function openNatureShop({ client, user, learning, publisher }) {
     }
   }
   function draw() {
-    if (disposed) return;
-    if (user) receiveRemoteRewards(profile);
-    window.dispatchEvent(
-      new CustomEvent("ayahnaturechange", { detail: profile }),
-    );
+    if (!valid()) return;
+    if (user) receiveRemoteRewards(profile,{owner,revision});
+    else publishCompanion(profile,{owner,revision});
     root.innerHTML =
       `<header class="shop-heading"><span class="eyebrow">A LITTLE GARDEN OF REWARDS</span><h2>Nature Companions</h2><p>Grow a companion with the practice you already do. No purchases with money, random prizes, or expiring ownership.</p></header><section class="companion-home">${
         avatarSvg(profile)
-      }<div><h3>Your space to grow</h3><strong class="seed-balance">✿ ${profile.balance} Seeds</strong><p>1 earned XP = 1 Seed · 1 earned star = 5 Seeds. Spending Seeds never removes XP, stars or memorization progress.</p><button class="text-button" data-no-outfit>Remove outfit</button>${
+      }<div><h3>Current Companion · ${esc(items.find(i=>i.id===profile.creature)?.name||"Little Sprout")}</h3>${adopted?`<p class="adoption-reveal" role="status">✦ Welcome, ${esc(items.find(i=>i.id===adopted)?.name||"companion")}!</p>`:""}<strong class="seed-balance">✿ ${profile.balance} Seeds</strong><p>1 earned XP = 1 Seed · 1 earned star = 5 Seeds. Spending Seeds never removes XP, stars or memorization progress.</p><button class="text-button" data-no-outfit>Remove outfit</button>${
         user
           ? '<button class="primary small" data-sync-earnings>Sync my earned rewards</button><p>The displayed balance is your synced account balance. Tap Sync to include learning saved on this device. Syncing sends dated XP receipts without ayah references to your private account. Your chosen companion appears beside your alias only if you opt into the leaderboard.</p>'
           : "<p>Guest customization stays in this browser. Sign in to keep a separate account wardrobe across devices.</p>"
@@ -148,10 +157,10 @@ export function openNatureShop({ client, user, learning, publisher }) {
             filter === id
           }">${label}</button>`
         ).join("")
-      }</div><div class="shop-items">${
+      }</div><label class="shop-ownership">Show <select data-ownership><option value="all">All companions & treasures</option><option value="owned">Owned</option><option value="unowned">Not owned yet</option></select></label><div class="shop-items">${
         market.filter((i) =>
           i.available !== false || profile.owned.includes(i.id)
-        ).filter((i) => filter === "all" || i.kind === filter).map((item) => {
+        ).filter((i) => filter === "all" || i.kind === filter).filter(i=>ownership==="all"||(ownership==="owned"?profile.owned.includes(i.id):!profile.owned.includes(i.id))).map((item) => {
           const owned = profile.owned.includes(item.id),
             equipped = profile[
               item.kind === "creature"
@@ -173,7 +182,7 @@ export function openNatureShop({ client, user, learning, publisher }) {
           return `<article data-item="${item.id}">${avatarSvg(preview)}<h3>${
             esc(item.name)
           }</h3><p>${esc(item.description)}</p><strong>${
-            owned ? "In your wardrobe" : `${item.price} Seeds`
+            owned ? equipped?"Owned · Equipped":"Owned" : `${item.price} Seeds`
           }</strong><button class="${
             owned ? "text-button" : "primary small"
           }" data-shop-item="${item.id}" ${
@@ -193,6 +202,7 @@ export function openNatureShop({ client, user, learning, publisher }) {
           }</article>`;
         }).join("")
       }</div><footer><p>The collection can grow with new companions, outfits and homes. Items you already own stay yours.</p><p>Study XP rewards meaningful learning actions across every mode, with daily repeat limits. Opening menus, buying items and AI output do not prove memorization or earn extra XP.</p><button class="text-button" data-export-profile>Download my customization</button></footer>`;
+    const ownedFilter=root.querySelector("[data-ownership]");ownedFilter.value=ownership;ownedFilter.onchange=()=>{ownership=ownedFilter.value;draw();};
     root.querySelectorAll("[data-filter]").forEach((b) =>
       b.onclick = () => {
         filter = b.dataset.filter;
@@ -202,6 +212,7 @@ export function openNatureShop({ client, user, learning, publisher }) {
     root.querySelectorAll("[data-shop-item]").forEach((b) =>
       b.onclick = () =>
         action(async () => {
+          adopted=null;
           const id = b.dataset.shopItem,
             item = market.find((i) => i.id === id),
             owned = profile.owned.includes(id);
@@ -213,7 +224,7 @@ export function openNatureShop({ client, user, learning, publisher }) {
                 ...(!owned ? { expected_price: item.price } : {}),
               },
             );
-            if (!owned) {
+            if (!owned&&profile[item.kind==="creature"?"creature":item.kind==="outfit"?"outfit":"scene"]!==id) {
               profile = await rpc("equip_nature_item", { item_id: id });
             }
           } else {
@@ -236,6 +247,7 @@ export function openNatureShop({ client, user, learning, publisher }) {
             });
             profile = readLocal();
           }
+          if(!owned&&item.kind==="creature")adopted=id;
         })
     );
     root.querySelector("[data-no-outfit]").onclick = () =>
@@ -278,18 +290,19 @@ export function openNatureShop({ client, user, learning, publisher }) {
         const response = await client.from("avatar_catalog").select(
           "id,kind,price,active",
         );
+        if(!valid())return;
         if (response.error) {
           throw Error("The collection could not load. Retry when connected.");
         }
         market = items.map((i) => {
           const row = response.data.find((r) => r.id === i.id);
-          return { ...i, price: row?.price ?? i.price, available: !!row };
+          return { ...i, price: row?.price ?? i.price, available: !!row&&row.active!==false };
         });
       }
       draw();
       if (local.warning && !user) status(local.warning);
     } catch (e) {
-      if (!disposed) {
+      if (valid()) {
         root.innerHTML =
           "<h2>Nature Companions</h2><p>Account customization is temporarily unavailable. Learning rewards remain saved locally; please try again later.</p>";
         status(e.message);

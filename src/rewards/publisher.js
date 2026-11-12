@@ -1,3 +1,4 @@
+import {profileRevision} from "../learner/profile-storage.js";
 import { receiveRemoteRewards, rewardSummary } from "./store.js";
 const digest = async (value) =>
   [
@@ -20,6 +21,7 @@ export class RewardPublisher {
       client,
       getUserId,
       disposed: false,
+      identityRevision:profileRevision(),
       learning,
       storage,
       userId,
@@ -34,7 +36,7 @@ export class RewardPublisher {
   }
   validIdentity() {
     return (
-      !this.disposed && (!this.getUserId || this.getUserId() === this.userId)
+      !this.disposed && this.identityRevision===profileRevision() && (!this.getUserId || this.getUserId() === this.userId)
     );
   }
   schedule() {
@@ -143,7 +145,7 @@ export class RewardPublisher {
       summary.events.forEach((e) => this.sent.add(e.id));
       this.lastError = null;
       this.status = "Learning XP is up to date across modes.";
-      receiveRemoteRewards(data);
+      receiveRemoteRewards(data,{owner:this.userId,revision:this.identityRevision});
       return data;
     } catch (error) {
       this.lastError = error;
