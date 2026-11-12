@@ -1,5 +1,6 @@
 // Apply to development, preview and builds; do not serve or bundle operator data.
 import { defineConfig } from "vite";
+import {offlineManifestPlugin} from "./offline-vite-plugin.mjs";
 import { existsSync, realpathSync } from "node:fs";
 import { relative, resolve, sep } from "node:path";
 const protectedPath =
@@ -19,7 +20,7 @@ export default defineConfig({
       ],
     },
   },
-  plugins: [{
+  plugins: [offlineManifestPlugin(), {
     name: "private-learning-assets-boundary",
     enforce: "pre",
     configResolved(config) {

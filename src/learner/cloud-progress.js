@@ -37,6 +37,8 @@ export class CloudProgress {
       conflict: false,
       disposed: false,
       timer: null,
+      pendingSync: false,
+      needsRefresh: false,
       status: "Progress stays on this device until sync is enabled.",
     });
     try {
@@ -48,12 +50,16 @@ export class CloudProgress {
           typeof saved.enabled !== "boolean" ||
           !Number.isInteger(saved.revision) ||
           saved.revision < 0 ||
-          (saved.base !== null && typeof saved.base !== "string")
+          (saved.base !== null && typeof saved.base !== "string") ||
+          (saved.pendingSync !== undefined && typeof saved.pendingSync !== "boolean") ||
+          (saved.needsRefresh !== undefined && typeof saved.needsRefresh !== "boolean")
         )
           throw Error();
         this.enabled = saved.enabled;
         this.revision = saved.revision;
         this.base = saved.base;
+        this.pendingSync = saved.pendingSync || false;
+        this.needsRefresh = saved.needsRefresh || false;
       }
     } catch {
       this.metadataWarning =
@@ -81,6 +87,8 @@ export class CloudProgress {
         enabled: this.enabled,
         revision: this.revision,
         base: this.base,
+        pendingSync: this.pendingSync,
+        needsRefresh: this.needsRefresh,
       }),
     );
   }
@@ -196,6 +204,14 @@ export class CloudProgress {
     );
   }
   async initialize() {
+    if (this.disposed) return;
+    if (globalThis.navigator?.onLine === false && !this.metadataWarning) {
+      this.needsRefresh = true;
+      this.pendingSync = this.enabled || this.pendingSync;
+      try { this.remember(); } catch { this.notify("Progress is safe locally, but queue metadata could not be saved. Free device space and retry My account sync."); return; }
+      this.notify("Offline. Your progress is safe on this device; eligible changes are queued until reconnection.");
+      return;
+    }
     if (this.metadataWarning) {
       this.notify(this.metadataWarning);
       return;
@@ -203,6 +219,7 @@ export class CloudProgress {
     try {
       const remote = await this.remote();
       if (this.disposed) return;
+      this.needsRefresh = false;
       const local = this.snapshot(),
         localPrint = await fingerprint(local);
       if (this.disposed) return;
@@ -237,6 +254,7 @@ export class CloudProgress {
         if (localPrint !== remotePrint) this.apply(remote.payload);
         this.revision = remote.revision;
         this.base = remotePrint;
+        this.pendingSync = false;
         this.remember();
         this.notify(
           this.enabled
@@ -253,15 +271,30 @@ export class CloudProgress {
           "This device and the cloud have different progress. Choose which copy to keep in My account.",
         );
       }
-    } catch {
-      this.conflict = true;
-      this.notify(
-        "Cloud progress could not be loaded. Local progress is safe; reconnect and use My account to retry.",
-      );
+    } catch (error) {
+      const network = globalThis.navigator?.onLine === false || error instanceof TypeError || /offline|network|fetch|timed? ?out/i.test(error?.message || "");
+      if (network) {
+        this.needsRefresh = true;
+        this.pendingSync = this.enabled || this.pendingSync;
+        try { this.remember(); } catch { this.notify("Progress is safe locally, but queue metadata could not be saved. Free device space and retry My account sync."); return; }
+        this.notify("Connection unavailable. Local progress is safe and eligible changes are queued for reconnection.");
+      } else {
+        this.conflict = true;
+        this.notify("Cloud progress could not be loaded. Local progress is safe; reconnect and use My account to retry.");
+      }
     }
   }
   async save({ replace = false } = {}) {
     if (this.disposed) return;
+    if (globalThis.navigator?.onLine === false) {
+      this.pendingSync = true; this.needsRefresh = true; this.remember();
+      this.notify("Offline. Your progress is safe on this device and queued for later synchronization.");
+      throw Error("Offline: progress is saved on this device and queued for synchronization.");
+    }
+    if (this.needsRefresh && !replace) {
+      await this.initialize();
+      if (this.needsRefresh) throw Error("Reconnect before synchronizing queued progress.");
+    }
     if (this.conflict && !replace)
       throw new Error("Resolve the device/cloud difference before saving.");
     if (this.saving) {
@@ -292,10 +325,15 @@ export class CloudProgress {
         this.base = await fingerprint(payload);
         if (this.disposed) return;
         this.conflict = false;
+        this.pendingSync = false;
+        this.needsRefresh = false;
         this.metadataWarning = "";
         this.remember();
         this.notify("Core learning progress saved privately across devices.");
       } catch (error) {
+        this.pendingSync = true;
+        if (!this.conflict && (globalThis.navigator?.onLine === false || error instanceof TypeError || /offline|network|fetch/i.test(error?.message || ""))) this.needsRefresh = true;
+        this.remember();
         this.notify(
           this.conflict
             ? "Another device has newer progress. Resolve it in My account; both copies are safe."
@@ -342,8 +380,15 @@ export class CloudProgress {
   changed() {
     if (!this.enabled || this.conflict || this.disposed) return;
     clearTimeout(this.timer);
+    this.pendingSync = true;
+    if (globalThis.navigator?.onLine === false) this.needsRefresh = true;
+    try { this.remember(); } catch { this.notify("Learning progress is saved locally. Free device space before retrying sync."); return; }
+    if (globalThis.navigator?.onLine === false) {
+      this.notify("Offline. Eligible progress is queued on this device until reconnection.");
+      return;
+    }
     this.notify("Saving private progress…");
-    this.timer = setTimeout(() => this.save().catch(() => {}), 900);
+    this.timer = setTimeout(() => (this.needsRefresh ? this.initialize() : this.save()).catch(() => {}), 900);
   }
   dispose() {
     this.disposed = true;
