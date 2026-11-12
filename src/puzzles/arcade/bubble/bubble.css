@@ -13,3 +13,4 @@
 .ayah-bubble[data-state="won"] .bubble-arena{box-shadow:0 0 0 4px #e3c274,0 0 40px #e3c27455}.ayah-bubble[data-state="won"] .bubble-overlay h4{animation:bubble-arrival .5s ease-out}.ayah-bubble[data-state="lost"] .bubble-arena{border-color:#cca5bc}@keyframes bubble-arrival{from{transform:scale(.9);opacity:.5}to{transform:scale(1);opacity:1}}.bubble-reduced .bubble-overlay h4{animation:none}@media(prefers-reduced-motion:reduce){.bubble-overlay h4{animation:none!important}}
 
 .ayah-bubble[data-difficulty="expert"] .word-bubble .arabic{font-size:clamp(16px,2.2vw,28px)}
+.bubble-neutral{position:absolute;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;background:#ebce7b;color:#24354c;pointer-events:none}.word-bubble{transition:top .22s ease-out}.bubble-reduced .word-bubble{transition:none}@media(prefers-reduced-motion:reduce){.word-bubble{transition:none}}
