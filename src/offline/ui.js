@@ -1,3 +1,4 @@
+import {isNativeApp} from "../native/platform.js";
 import {
   createDownloadService,
   fetchManifest,
@@ -26,6 +27,7 @@ export function openDownloadManager() {
     }</select></label><label>Download type<select data-offline-audio><option value="text">Text only</option><option value="audio">Text + verified full-ayah and word audio</option></select></label><p>Text-only downloads support reading and compatible visual puzzles; audio requires a text + audio download. Distractor audio outside a downloaded surah may still need a connection.</p><div class="offline-actions"><button data-offline-estimate class="primary">Check download size</button><button data-offline-start class="primary" disabled>Download</button><button data-offline-cancel class="text-button" disabled>Pause download</button></div><p data-offline-size></p><progress data-offline-progress max="1" value="0" aria-label="Download progress"></progress><p data-offline-status role="status" aria-live="polite"></p><section data-offline-library aria-label="Downloaded materials"></section><section data-offline-reader hidden></section>`;
   document.body.append(dialog);
   dialog.showModal();
+  if(isNativeApp()){const note=document.createElement("p");note.textContent="Free text and recitation are bundled with this app. Managed downloads are optional cached copies; removing them does not delete the bundled files.";dialog.querySelector("h2").after(note);}
   const select = dialog.querySelector("[data-offline-selection]"),
     audio = dialog.querySelector("[data-offline-audio]"),
     start = dialog.querySelector("[data-offline-start]"),
@@ -234,7 +236,7 @@ export function openDownloadManager() {
         quota = await navigator.storage?.estimate?.();
       const next = await planDownload(
         kind === "juz" ? { juz: Number(n) } : { surah: Number(n) },
-        { audio: audioChoice === "audio", manifest, quota },
+        { audio: audioChoice === "audio", manifest, quota, includeShell: !isNativeApp() },
       );
       if (disposed) return;
       if (

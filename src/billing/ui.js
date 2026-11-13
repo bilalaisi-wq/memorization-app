@@ -1,3 +1,4 @@
+import {isNativeApp} from "../native/platform.js";
 import {activeProfileId} from "../learner/profile-storage.js";
 import {isDeveloperMode} from "../developer/access.js";
 import { mountSegmentReview } from "../passage/review-menu.js";
@@ -127,6 +128,7 @@ export function mountBillingControls(nav, context) {
 async function pricing(ctx, api) {
   const d = dialog("A plan for your memorization journey", "pricing-dialog"),
     root = d.querySelector("[data-billing-content]");
+  if(isNativeApp()){root.innerHTML="<p>Existing account subscriptions retain their server-verified access. New in-app subscriptions are not enabled in this build.</p>";return;}
   let annual = false, ent = null;
   root.textContent = "Loading plan availability…";
   try {
@@ -183,6 +185,7 @@ async function pricing(ctx, api) {
           return;
         }
         action(d, async () => {
+          if(isNativeApp())throw Error("In-app purchases are not enabled.");
           const result = await api.invoke("checkout", {
             plan: b.dataset.plan,
             cadence: annual ? "annual" : "monthly",
@@ -237,8 +240,10 @@ async function account(ctx, api) {
           }</div><button class="primary" data-save-juz>Save my five choices</button></fieldset>`
           : ""
       }`;
+    if(isNativeApp()){for(const selector of ['[data-portal]','[data-plans]','[data-close-billing]']){const control=root.querySelector(selector);if(control){control.hidden=true;control.disabled=true;control.style.display='none';}}const note=document.createElement('p');note.textContent='In-app purchases and payment management are not enabled in this build. Your existing account access is checked by the server.';root.querySelector('.billing-actions').append(note);}
     root.querySelector("[data-portal]").onclick = () =>
       action(d, async () => {
+        if(isNativeApp())throw Error("In-app billing management is not enabled.");
         const result = await api.invoke("portal");
         if(!d.isConnected||activeProfileId()!==(ctx.user?.id||null))return;
         location.assign(stripeRedirect(result.url, "portal"));

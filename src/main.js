@@ -1,3 +1,5 @@
+import {initializeNative} from "./native/runtime.js";
+import "./native/native.css";
 import {mountChroniclesLab,stopChroniclesLab,pauseChroniclesLab} from './chronicles/entry.js';
 import {mountAdaptivePractice,disposeAdaptivePractice,playAdaptiveRecitation} from './memorization/native.js';
 import {createPassageSession} from './passage-context/session.js';
@@ -81,6 +83,7 @@ const icons = {
 };
 const icon = (name) =>
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.grid}</svg>`;
+await initializeNative({onBack:()=>{if(document.querySelector("#nav-learn")&&typeof mode!=="undefined"&&mode!=="practice"){document.querySelector("#nav-learn").click();return true;}return false;}});
 await initializeAccounts();
 initializeAppearance(appearanceAccount());
 if(import.meta.env.PROD)void import("./offline/shell.js").then(m=>m.initializeOffline()).catch(()=>{});
@@ -852,3 +855,6 @@ async function recheckPassage(){if(contextBusy||!passageSession.private())return
 const contextLease=setInterval(()=>{void recheckPassage();},60000);
 window.addEventListener('pagehide',()=>{clearInterval(contextLease);passageSession.dispose();});
 const savedPassage=passageSession.saved();if(savedPassage.selection&&!savedPassage.warning)void openSharedPassage(savedPassage.selection.refs,savedPassage.selection.lab,{restore:true}).catch(e=>{const p=document.querySelector('[data-context-status]');if(p)p.textContent=e.message;});
+
+window.addEventListener('ayah-native-background',()=>{if(passageSession.private()){hiddenPrivate=passageSession.descriptor();passageSession.invalidate('Private passage paused in the background.');}});
+window.addEventListener('ayah-native-foreground',()=>{if(hiddenPrivate){const saved=hiddenPrivate;hiddenPrivate=null;void openSharedPassage(saved.refs,saved.lab,{restore:true}).catch(()=>{});}});

@@ -11,9 +11,9 @@ export function createStaticServer({root=resolve('dist')}={}){
    if(file!==root&&!file.startsWith(root+sep)){res.writeHead(403);res.end();return;}
    let target=file;
    try{if(!(await stat(target)).isFile())throw Error('not a file');}
-   catch{if(path.startsWith('/assets/')||extname(path)&&path!=='/'){res.writeHead(404,{'Cache-Control':'no-store','Content-Type':'text/plain'});res.end('Asset unavailable. Reload the latest app.');return;}target=resolve(root,'index.html');}
+   catch{if(path.startsWith('/assets/')||path.startsWith('/.well-known/')||extname(path)&&path!=='/'){res.writeHead(404,{'Cache-Control':'no-store','Content-Type':'text/plain'});res.end('Asset unavailable. Reload the latest app.');return;}target=resolve(root,'index.html');}
    const data=await readFile(target),hashed=path.startsWith('/assets/');
-   res.writeHead(200,{'Content-Type':types[extname(target)]||'application/octet-stream','Cache-Control':hashed?'public, max-age=31536000, immutable':'no-cache, no-store, must-revalidate','X-Content-Type-Options':'nosniff'});res.end(req.method==='HEAD'?undefined:data);
+   res.writeHead(200,{'Content-Type':(path==='/.well-known/apple-app-site-association'?'application/json':types[extname(target)])||'application/octet-stream','Cache-Control':hashed?'public, max-age=31536000, immutable':'no-cache, no-store, must-revalidate','X-Content-Type-Options':'nosniff'});res.end(req.method==='HEAD'?undefined:data);
   }catch{res.writeHead(400,{'Cache-Control':'no-store'});res.end('Unable to serve this request');}
  });
 }

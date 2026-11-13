@@ -217,3 +217,15 @@ Deno.test('provider fingerprints reject changed Quran wording, translation and w
  for(const kind of ['translation','word']){const variant=structuredClone(verse);if(kind==='translation')variant.translations[0].text+=' changed';else variant.words[0].text_uthmani=variant.words[1].text_uthmani;let rejected=false;try{await bundleFromProvider(variant,canonical,entry);}catch{rejected=true;}assert(rejected);}
  const reordered=structuredClone(verse);[reordered.words[0],reordered.words[1]]=[reordered.words[1],reordered.words[0]];let rejected=false;try{await bundleFromProvider(reordered,canonical,entry);}catch{rejected=true;}assert(rejected);
 });
+
+Deno.test('native WebView origins require explicit allowlisting and never bypass user authentication',async()=>{
+ const previous=Deno.env.get('BILLING_ALLOWED_ORIGINS');
+ const handler=quranHandler(()=>({auth:{getUser:async()=>({data:{user:null},error:true})}} as any));
+ const request=(origin:string,method='OPTIONS')=>new Request('https://api.example.test/functions/v1/quran-content',{method,headers:{origin},...(method==='POST'?{body:JSON.stringify({key:'2:282',asset:'bundle'})}:{})});
+ try{
+  Deno.env.delete('BILLING_ALLOWED_ORIGINS');assert((await handler(request('capacitor://localhost'))).status===403);
+  Deno.env.set('BILLING_ALLOWED_ORIGINS','capacitor://localhost,https://localhost');
+  for(const origin of ['capacitor://localhost','https://localhost']){const preflight=await handler(request(origin));assert(preflight.status===204);assert(preflight.headers.get('access-control-allow-origin')===origin);assert((await handler(request(origin,'POST'))).status===401);}
+  assert((await handler(request('null'))).status===403);assert((await handler(request('capacitor://evil.example'))).status===403);
+ }finally{if(previous===undefined)Deno.env.delete('BILLING_ALLOWED_ORIGINS');else Deno.env.set('BILLING_ALLOWED_ORIGINS',previous);}
+});

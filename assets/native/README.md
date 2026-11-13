@@ -1,0 +1,1 @@
+Original in-project SVG artwork for Ayah A Day. Rebuild PNG masters with npm run native:art, then regenerate platform icons/splashes with npm run native:icons. Artwork contains no Qur’anic text or external images.

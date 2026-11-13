@@ -27,17 +27,43 @@
     "validate:quran-release": "node scripts/validate-quran-release.mjs",
     "audit:quran-release": "node scripts/quran-release-status.mjs",
     "stage:quran-batch": "python3 scripts/stage-quran-batches.py",
-    "postbuild": "node scripts/write-build-info.mjs"
+    "postbuild": "node scripts/write-build-info.mjs",
+    "native:doctor": "node scripts/native-build.mjs doctor",
+    "native:art": "node scripts/native-assets.mjs",
+    "native:icons": "npm run native:art && capacitor-assets generate --ios --android",
+    "native:sync": "node scripts/native-build.mjs sync",
+    "native:check": "node scripts/native-build.mjs check",
+    "native:links": "node scripts/native-links.mjs",
+    "native:android:debug": "npm run native:sync && node scripts/native-build.mjs android-debug",
+    "native:android:release": "npm run native:sync && node scripts/native-build.mjs android-release",
+    "native:ios:debug": "npm run native:sync && node scripts/native-build.mjs ios-debug",
+    "native:ios:release": "npm run native:sync && node scripts/native-build.mjs ios-release"
   },
   "devDependencies": {
+    "@capacitor/assets": "4.0.0",
+    "@capacitor/cli": "8.6.2",
     "@electric-sql/pglite": "^0.5.10",
     "@playwright/test": "^1.56.0",
     "deno": "2.9.6",
+    "sharp": "0.35.5",
     "stripe": "23.0.0",
+    "typescript": "7.0.2",
     "vite": "^7.1.0"
   },
   "dependencies": {
+    "@capacitor/android": "8.6.2",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/browser": "8.0.5",
+    "@capacitor/core": "8.6.2",
+    "@capacitor/filesystem": "8.1.5",
+    "@capacitor/ios": "8.6.2",
+    "@capacitor/keyboard": "8.0.6",
+    "@capacitor/share": "8.0.3",
+    "@capacitor/splash-screen": "8.0.2",
     "@supabase/supabase-js": "^2.118.0",
     "ts-fsrs": "5.4.2"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Ayah A Day</string>
+    <string name="title_activity_main">Ayah A Day</string>
+    <string name="package_name">com.ayahaday.app</string>
+    <string name="custom_url_scheme">com.ayahaday.app</string>
+</resources>

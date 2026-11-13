@@ -57,7 +57,7 @@ export async function fetchManifest({ fetcher = fetch } = {}) {
 }
 export async function planDownload(
   selection,
-  { audio = false, manifest, quota = null } = {},
+  { audio = false, manifest, quota = null, includeShell = true } = {},
 ) {
   const chosen = offlineSelection(selection), texts = [];
   const paths = new Set();
@@ -85,7 +85,7 @@ export async function planDownload(
   });
   const contentBytes = texts.reduce((s, t) => s + t.bytes, 0) +
       assets.reduce((s, a) => s + a.bytes, 0),
-    shellBytes = manifest.shell.reduce((s, a) => s + a.bytes, 0),
+    shellBytes = includeShell ? manifest.shell.reduce((s, a) => s + a.bytes, 0) : 0,
     bytes = contentBytes + shellBytes;
   if (
     quota && Number.isFinite(quota.quota) && Number.isFinite(quota.usage) &&

@@ -12,3 +12,18 @@ test-results/
 # Operator Python importer caches.
 __pycache__/
 *.pyc
+
+# Native signing and operator-local configuration must never be committed.
+*.jks
+*.keystore
+*.p12
+*.p8
+*.mobileprovision
+*.provisionprofile
+native-signing/
+android/keystore.properties
+ios/ExportOptions.local.plist
+native-output/
+# Operator-generated public association files require real signing identities.
+public/.well-known/apple-app-site-association
+public/.well-known/assetlinks.json

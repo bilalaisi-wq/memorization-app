@@ -1,3 +1,5 @@
+import {isNativeApp,authRedirect} from "../native/platform.js";
+import {installNativeAuth,openNativeOAuth} from "../native/auth.js";
 import {rememberVerifiedDevice,offlineDeviceOwner,forgetDeviceIdentity} from "../offline/identity.js";
 import {createLocalNatureStore} from "../rewards/shop.js";
 import {companionDetails,validCompanion} from "../rewards/companion.js";
@@ -102,6 +104,7 @@ export async function initializeAccounts(config = {}) {
         autoRefreshToken: true,
       },
     });
+    await installNativeAuth(client);
     const {
       data: { session },
     } = await client.auth.getSession();
@@ -272,7 +275,7 @@ function showAccount(learning) {
           options: {
             shouldCreateUser: authMode === "signup",
             emailRedirectTo:
-              import.meta.env.VITE_AUTH_REDIRECT_URL || accountDefaults.siteUrl,
+              authRedirect(import.meta.env.VITE_AUTH_REDIRECT_URL || accountDefaults.siteUrl),
           },
         });
         if (error) throw error;
@@ -308,16 +311,18 @@ function showAccount(learning) {
           throw new Error(
             "Google sign-in is not enabled yet. Use email, or ask the site owner to enable Google in Supabase.",
           );
-        const { error } = await client.auth.signInWithOAuth({
+        const { data, error } = await client.auth.signInWithOAuth({
           provider: "google",
           options: {
             // Supabase supplies Google email/profile scopes. Avoid duplicate scopes.
             queryParams: { prompt: "select_account" },
+            ...(isNativeApp()?{skipBrowserRedirect:true}:{}),
             redirectTo:
-              import.meta.env.VITE_AUTH_REDIRECT_URL || accountDefaults.siteUrl,
+              authRedirect(import.meta.env.VITE_AUTH_REDIRECT_URL || accountDefaults.siteUrl),
           },
         });
         if (error) throw error;
+        if(isNativeApp())await openNativeOAuth(data.url,projectUrl);
       });
     area.querySelector("[data-privacy]").onclick = showPrivacy;
     return;
@@ -497,3 +502,5 @@ async function showLeaderboard(learning) {
 }
 
 export const appearanceAccount = () => ({client, userId:user?.id || null});
+
+window.addEventListener('ayah-native-auth-status',event=>{document.querySelectorAll('[data-account-status]').forEach(el=>el.textContent=event.detail.message);});

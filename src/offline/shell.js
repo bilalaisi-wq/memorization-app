@@ -1,5 +1,7 @@
+import {isNativeApp} from "../native/platform.js";
 let registration;
 export async function initializeOffline() {
+  if(isNativeApp())return null;
   if (!("serviceWorker" in navigator) || !window.isSecureContext) return null;
   if (!registration) {
     registration = navigator.serviceWorker.register("/ayah-offline-sw.js", {
@@ -12,6 +14,7 @@ export async function initializeOffline() {
   return registration;
 }
 export async function prepareOfflineShell() {
+  if(isNativeApp())return; // Frontend, fonts and verified free audio ship in the app.
   const registration = await initializeOffline();
   if (!registration) {
     throw Error("Offline reloads require HTTPS and service worker support.");
