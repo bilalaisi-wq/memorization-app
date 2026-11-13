@@ -12,7 +12,7 @@ export function offlineManifestPlugin() {
     enforce: "post",
     configResolved(config) {
       root = config.root;
-      write=config.build.write!==false;
+      write=config.build?.write!==false;
     },
     async writeBundle(options) {
       const directory = options.dir || resolve(root, "dist"),

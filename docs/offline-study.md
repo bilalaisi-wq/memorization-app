@@ -29,7 +29,7 @@ No queue includes microphone recordings. Existing recordings remain tab/device-l
 
 ## Premium policy and native boundaries
 
-**No offline premium license is issued in this phase.** Premium text/audio and comprehension materials require the existing online authenticated server authorization, including when returning from an offline session. The offline database rejects premium references. Thus there is no perpetual locally inferred premium entitlement, and no premium cache that could leak across accounts or survive a subscription downgrade. A future premium offline release must first implement signed, server-issued owner/device/source-scoped licenses, expiration/revocation behavior and an audited native encrypted-storage strategy. A client subscription flag is insufficient.
+**No offline premium license is issued in this phase.** Premium text/audio and comprehension materials require the existing online authenticated server authorization, including when returning from an offline session. The download and reader interfaces reject premium references. Thus there is no perpetual locally inferred premium entitlement, and no premium cache that could leak across accounts or survive a subscription downgrade. A future premium offline release must first implement signed, server-issued owner/device/source-scoped licenses, expiration/revocation behavior and an audited native encrypted-storage strategy. A client subscription flag is insufficient.
 
 This is a browser/PWA foundation, not an App Store/Play Store binary or a claim of native at-rest encryption. Browser IndexedDB and caches are origin-scoped and may be evicted by the browser, private browsing or device cleanup. Keep account backups or exported progress where desired. App-shell storage is retained for offline startup even after removing content packages; clearing the site's browser data removes it, along with other device data.
 
@@ -49,7 +49,7 @@ Check that `/offline-manifest.json` returns JSON, `/ayah-offline-sw.js` returns 
 
 Local fixture/browser tests do not replace physical iOS/Android, headset, background/resume, storage eviction and deployed-origin checks. Real Supabase authentication/network recovery and paid-account downgrade staging remain operator validation gates. Downloaded free assets have no premium expiration; protected material remains online-only.
 
-Latest scoped results: **9 Node checks passed**, **14 isolated IndexedDB/cloud-recovery browser checks passed**, **2 production offline browser checks passed**, and production build passed. The production-only tests intentionally skip in the ordinary Vite-dev suite; run their dedicated config to exercise an actual built app/service worker. Both dedicated production cases passed, rather than being counted as a skip. The ordinary full regression run is performed after integrating the other tasks.
+Initial implementation results: **9 Node checks passed**, **14 isolated IndexedDB/cloud-recovery browser checks passed**, **2 production offline browser checks passed**, and production build passed. The production-only tests intentionally skip in the ordinary Vite-dev suite; run their dedicated config to exercise an actual built app/service worker. Both dedicated production cases passed, rather than being counted as a skip. The ordinary full regression run is performed after integrating the other tasks.
 
 Additional hardening: size estimation now freezes its controls and rejects stale selection changes, preventing a surah/type switch from downloading an older plan. If browser IndexedDB is unavailable, the worker falls back to existing online audio instead of intercepting it with a failed request. A corrupt downloaded recording still produces an integrity failure rather than playing unchecked bytes. All **four** production offline cases passed after these fixes, including a deferred-quota race and simulated storage failure; build passed again.
 
@@ -58,3 +58,22 @@ Additional hardening: size estimation now freezes its controls and rejects stale
 After successful online `getUser()` verification, a device marker stores only the project origin and canonical account UUID. On an offline boot it must match the locally persisted session UUID before the existing account-scoped progress namespace is selected. This marker is **not authentication**: the public account client/user and developer identity remain null, premium content and server wardrobe actions stay unavailable, and no cached token/email grants access. The SDK is not asked to refresh expired sessions while offline. A reconnect reload performs actual server authentication before synchronization or private services resume. Explicit sign-out clears the marker; the offline My Account panel offers an export and device sign-out without deleting learning history. Devices lacking a matching verified marker/session safely use guest mode.
 
 Regression tests cover a signed-in device reloading offline, preserving its namespace/queued changes, unchanged guest data, disabled developer/premium services, mismatched project/session rejection and reconnection through the established sync path. The default regression suite uses a simulated offline navigator for these imported-source tests; dedicated production tests additionally exercise real airplane-mode app-shell/media behavior.
+
+
+## Phase 5 follow-up validation
+
+The existing feature set was re-audited rather than replaced. Two reproduced cache-cleanup defects are fixed: a successful text+audio → text-only update now releases unneeded recordings, and an interrupted update retains its previous media references so removal/retry remains safe. Package replacement/removal and public asset reclamation run in one IndexedDB transaction across the existing `packages`, `assets` and `texts` stores. Shared media is retained. Legacy unreferenced media is reclaimed during successful updates or explicit removal; unfamiliar/future package records disable reclamation until explicitly removed rather than guessing their references. Learning/FSRS stores are never part of the cleanup transaction.
+
+The manifest hook also accepts minimal test configurations while retaining its in-memory build exclusion and protected-content guards. No database schema/version change or Supabase migration is required.
+
+Changed files: `src/offline/model.js`, `src/offline/store.js`, `scripts/offline-vite-plugin.mjs`, `tests/offline-model.spec.js`, and this guide.
+
+Current local verification:
+
+- **18 passed**: IndexedDB download/interruption/checksum/source update/cleanup tests and existing cloud/recovery checks (`playwright.offline-model.config.js`).
+- **33 passed**: offline identity, Settings/game pause preservation, private-content build/access rules, account authentication, shared-passage entitlement changes, and Bubble/audio regressions.
+- **4 passed**: actual built-app worker tests, including airplane-mode reload, audio range requests, mobile text-only study, failed storage fallback, private endpoint exclusion and stale-selection prevention (`playwright.offline.config.js`).
+- **11 passed**: offline manifest, progress queue/conflict/duplicate synchronization, and build-version Node checks.
+- **Production build passed**; `git diff --check` passed. No new dependencies or hosted data writes.
+
+The complete site suite was not repeated for this bounded cleanup fix; the affected regression groups above were rerun. Live Supabase recovery/authorization and physical-device/headset verification remain staging checks. No premium offline permission, native encryption, live deployment or production-readiness certification is claimed.

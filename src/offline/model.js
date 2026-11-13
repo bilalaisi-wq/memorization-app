@@ -1,6 +1,6 @@
 import { surahs, verseAudio, wordAudio } from "../data.js";
 import { freeReference, localBundle, sha256 } from "../content/library.js";
-import { assetBytes, dbList, dbRead, dbRemove, dbWrite } from "./store.js";
+import { assetBytes, commitPackage, dbRead, dbWrite } from "./store.js";
 export const FREE_CHAPTERS = () =>
   surahs.filter((s) => s.id === 1 || s.id >= 78 && s.id <= 114);
 export function offlineSelection({ surah, juz } = {}) {
@@ -135,6 +135,9 @@ export function createDownloadService(
         updatedAt: clock().toISOString(),
       };
       try {
+        const previous = await dbRead("packages", record.id);
+        // Retain all previously owned media until this update actually succeeds.
+        record.paths = [...new Set([...(Array.isArray(previous?.paths) ? previous.paths : []), ...record.paths])];
         await dbWrite("packages", record);
         await prepareShell();
         for (const t of plan.texts) {
@@ -193,7 +196,8 @@ export function createDownloadService(
       } finally {
         running = false;
         record.updatedAt = clock().toISOString();
-        await dbWrite("packages", record);
+        if(record.status === "ready") record.paths = plan.assets.map(a => a.id);
+        await commitPackage(record, {cleanup: record.status === "ready"});
         onProgress({ ...record });
       }
       return record;
@@ -203,18 +207,7 @@ export function createDownloadService(
 export async function removeDownload(id) {
   const row = await dbRead("packages", id);
   if (!row) return;
-  await dbRemove("packages", id);
-  const others = await dbList("packages");
-  for (const path of row.paths || []) {
-    if (!others.some((p) => p.paths?.includes(path))) {
-      await dbRemove("assets", path);
-    }
-  }
-  for (const key of row.refs || []) {
-    if (!others.some((p) => p.refs?.includes(key))) {
-      await dbRemove("texts", key);
-    }
-  }
+  await commitPackage(null, { removeId: id, cleanup: true });
 }
 export async function readDownloaded(key) {
   if (!freeReference(key)) {

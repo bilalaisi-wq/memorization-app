@@ -197,3 +197,50 @@ test("corrupt or stale text stays preserved for recovery and premium/off-account
 });
 
 test('source metadata changes are rejected even when Arabic and a rewritten local checksum are unchanged',async({page})=>{await setup(page);const result=await page.evaluate(async()=>{const {m,db,manifest}=window.offlineTest;await m.createDownloadService().download(await m.planDownload({surah:112},{manifest,audio:false}));const row=await db.dbRead('texts','112:1');row.bundle.translation='OUTDATED TEST FIXTURE TRANSLATION';row.sha256=await (await import('/src/content/library.js')).sha256(JSON.stringify(row.bundle));await db.dbWrite('texts',row);try{await m.readDownloaded('112:1');return false;}catch(e){return /revision changed/.test(e.message)&&(await db.dbRead('texts','112:1')).bundle.translation==='OUTDATED TEST FIXTURE TRANSLATION';}});expect(result).toBe(true);});
+
+test('changing an audio package to text-only removes obsolete audio and preserves shared media and FSRS',async({page})=>{
+ await setup(page);
+ const result=await page.evaluate(async()=>{
+  const {m,db,plan,fetcher,manifest}=window.offlineTest;
+  await m.createDownloadService({fetcher}).download(plan);
+  const shared=plan.assets[0].id;
+  await db.dbWrite('packages',{...(await db.dbRead('packages',plan.id)),id:'shared-package',paths:[shared]});
+  localStorage.setItem('ayah-passage-recall-v1','UNCHANGED_REVIEW_HISTORY');
+  const textPlan=await m.planDownload({surah:112},{manifest,audio:false});
+  await m.createDownloadService({fetcher}).download(textPlan);
+  const assets=await db.dbList('assets'),record=await db.dbRead('packages',plan.id);
+  await m.removeDownload(plan.id);
+  const retained=!!await db.dbRead('assets',shared);
+  await m.removeDownload('shared-package');
+  return {paths:record.paths,assets:assets.map(a=>a.id),retained,remaining:(await db.dbList('assets')).length,history:localStorage.getItem('ayah-passage-recall-v1')};
+ });
+ expect(result).toEqual({paths:[],assets:['/audio/112001.mp3'],retained:true,remaining:0,history:'UNCHANGED_REVIEW_HISTORY'});
+});
+test('interrupted audio-to-text update retains old media references for explicit removal',async({page})=>{
+ await setup(page);
+ const result=await page.evaluate(async()=>{
+  const {m,db,plan,fetcher,manifest}=window.offlineTest;
+  await m.createDownloadService({fetcher}).download(plan);
+  const text=await m.planDownload({surah:112},{manifest,audio:false});
+  const interrupted=await m.createDownloadService({fetcher}).download(text,{prepareShell:async()=>{throw Error('TEST_ONLY_INTERRUPTED_UPDATE');}});
+  const readable=await m.readDownloaded('112:1');
+  await m.removeDownload(plan.id);
+  return {status:interrupted.status,paths:interrupted.paths.length,expected:plan.assets.length,key:readable.key,remaining:(await db.dbList('assets')).length};
+ });
+ expect(result.status).toBe('incomplete');expect(result.paths).toBe(result.expected);expect(result.key).toBe('112:1');expect(result.remaining).toBe(0);
+});
+test('cleanup preserves unfamiliar package records and reclaims legacy orphans only after explicit removal',async({page})=>{
+ await setup(page);
+ const result=await page.evaluate(async()=>{
+  const {m,db,plan,fetcher}=window.offlineTest;
+  await m.createDownloadService({fetcher}).download(plan);
+  const asset=await db.dbRead('assets',plan.assets[0].id);
+  await db.dbWrite('assets',{...asset,id:'TEST_ONLY_LEGACY_ORPHAN'});
+  const future={id:'future-package',version:999,unrecognized:'PRESERVE_EXACTLY'};
+  await db.dbWrite('packages',future);
+  await m.removeDownload(plan.id);
+  const preserved=JSON.stringify(await db.dbRead('packages',future.id))===JSON.stringify(future),held=!!await db.dbRead('assets',asset.id);
+  await m.removeDownload(future.id);
+  return {preserved,held,remaining:(await db.dbList('assets')).length,texts:(await db.dbList('texts')).length};
+ });expect(result).toEqual({preserved:true,held:true,remaining:0,texts:0});
+});

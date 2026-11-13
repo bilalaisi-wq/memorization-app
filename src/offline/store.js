@@ -88,3 +88,37 @@ export async function assetBytes(path) {
   }
   return a.blob;
 }
+
+// Commit ownership metadata and reclaim public download assets in one transaction.
+// Never touch learning stores; uncertain/future package schemas disable reclamation.
+export async function commitPackage(record, { removeId = null, cleanup = false } = {}) {
+  const db = await openOfflineDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(["packages", "assets", "texts"], "readwrite");
+    const packages = transaction.objectStore("packages");
+    const request = packages.getAll();
+    request.onsuccess = () => {
+      const id = record?.id || removeId;
+      const remaining = request.result.filter(p => p.id !== id);
+      if (record) { packages.put(record); remaining.push(record); }
+      else packages.delete(id);
+      const known = remaining.every(p => p?.version === 1 &&
+        Array.isArray(p.paths) && p.paths.every(k => typeof k === "string") &&
+        Array.isArray(p.refs) && p.refs.every(k => typeof k === "string"));
+      if (!cleanup || !known) return;
+      for (const [name, field] of [["assets", "paths"], ["texts", "refs"]]) {
+        const retained = new Set(remaining.flatMap(p => p[field]));
+        const cursor = transaction.objectStore(name).openCursor();
+        cursor.onsuccess = () => {
+          const row = cursor.result;
+          if (!row) return;
+          if (!retained.has(row.primaryKey)) row.delete();
+          row.continue();
+        };
+      }
+    };
+    transaction.oncomplete = () => resolve(record);
+    transaction.onerror = () => reject(transaction.error);
+    transaction.onabort = () => reject(transaction.error || Error("Download update interrupted."));
+  });
+}
