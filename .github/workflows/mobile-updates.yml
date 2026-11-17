@@ -1,0 +1,63 @@
+name: Website and mobile frontend validation
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: mobile-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: echo "PLAYWRIGHT_CHROMIUM_EXECUTABLE=$(node --input-type=module -e "import {chromium} from '@playwright/test'; console.log(chromium.executablePath())")" >> "$GITHUB_ENV"
+      - run: sudo mkdir -p /workspace/artifacts && sudo chmod 777 /workspace/artifacts
+      - run: sudo ln -sf "$PLAYWRIGHT_CHROMIUM_EXECUTABLE" /usr/bin/chromium
+      - run: npx playwright test --config=playwright.regression.config.js --workers=2
+      - run: npm run build
+      - run: npx playwright test --config=playwright.offline.config.js --workers=1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: validated-web-and-mobile-frontend
+          path: dist/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-failures
+          path: test-results/
+  mobile-update:
+    needs: validate
+    # Enable after native binaries contain the pinned public key and the baseline is recorded.
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.AYAH_CAPGO_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment: mobile-release
+    env:
+      AYAH_CAPGO_ENABLED: 'true'
+      AYAH_CAPGO_PUBLIC_KEY: ${{ secrets.AYAH_CAPGO_PUBLIC_KEY }}
+      CAPGO_API_KEY: ${{ secrets.CAPGO_API_KEY }}
+      CAPGO_PRIVATE_KEY: ${{ secrets.CAPGO_PRIVATE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node scripts/mobile-compatibility.mjs
+      - uses: actions/download-artifact@v4
+        with:
+          name: validated-web-and-mobile-frontend
+          path: dist/
+      - run: node scripts/mobile-upload.mjs

@@ -71,3 +71,9 @@ test('published approved visual phrases form a real draggable reactor without ap
   await expect(page.locator('[data-link-text=next]')).toHaveText(canonicalLinkAyah('1:7').text);
   await page.screenshot({path:'/workspace/artifacts/ayah-link-reactor.png',fullPage:true});
 });
+test('opening answers can be dragged into the gateway; abandoned drags are neutral and a valid drop crosses once',async({page})=>{
+ await open(page);await page.locator('[data-link-connect]').click();await page.clock.runFor(1500);await page.locator('[data-link-choices]').click();
+ const good=page.locator('[data-word-id="112:2:0"]'),gap=page.locator('[data-link-drop]');await expect(gap).toBeVisible();
+ const box=await good.boundingBox();await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();await page.mouse.move(5,5,{steps:8});await page.mouse.up();await expect(page.locator('.ayah-link')).toHaveAttribute('data-link-state','gateway');
+ await good.dragTo(gap);await expect(page.locator('.ayah-link')).toHaveAttribute('data-link-state','crossing');expect(await page.locator('.answer-drag-ghost').count()).toBe(0);
+});

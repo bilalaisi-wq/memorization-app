@@ -35,7 +35,8 @@ export function createAyahLink({refs,allRefs=refs,plans,stageId,seed=1,mode='gui
         if(a.type==='lane'&&[-1,1].includes(a.direction))state.choice=Math.max(0,Math.min(2,state.choice+a.direction));
         if(a.type==='select'&&Number.isInteger(a.choice)&&a.choice>=0&&a.choice<3)state.choice=a.choice;
         if(reducedMotion)state.shipX=[.2,.5,.8][state.choice];
-        if(a.type==='enter'&&Math.abs(state.shipX-[.2,.5,.8][state.choice])<.04){const selected=choices[state.choice];if(comparableAyah(selected.text)===comparableAyah(current().target.words[0].text))crossed('observed-opening-selection');else mistake('opening-word-selection',selected);}
+        if(a.type==='drop-choice'&&Number.isInteger(a.choice)&&a.choice>=0&&a.choice<choices.length){state.choice=a.choice;state.shipX=[.2,.5,.8][a.choice];}
+        if((a.type==='enter'&&Math.abs(state.shipX-[.2,.5,.8][state.choice])<.04)||(a.type==='drop-choice'&&Number.isInteger(a.choice)&&a.choice>=0&&a.choice<choices.length)){const selected=choices[state.choice];if(comparableAyah(selected.text)===comparableAyah(current().target.words[0].text))crossed('observed-opening-selection');else mistake('opening-word-selection',selected);}
       }
       if(a.type==='submit-text'&&state.status==='recall'&&['opening','extended'].includes(mode)){
         const expected=mode==='extended'?current().target.text:current().target.words[0].text;

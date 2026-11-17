@@ -99,7 +99,7 @@ The bundled existing free audio is approximately **182 MB** before packaging. Me
 
 Native WebViews have their own origin/app container; Safari/Chrome website guest storage is not silently copied. To carry progress, sign into the website, save the existing private cloud backup (and separate passage/Cosmic sync where applicable), then sign into the same account in the app. Preserve browser data and use existing recovery/export controls for records that are device-only. App updates keep the same IDs/origins and storage keys. Uninstall/site-data clearing can remove local data, as expected; this work never resets records.
 
-Android backup is disabled to avoid automatically copying sessions/private app data to generic device backups. No premium offline cache/license is introduced. Existing premium fetches are authenticated and rechecked after background/resume. No new custom native at-rest encryption or Keychain migration is claimed; the app retains the existing WebView storage semantics and OS sandbox. Native protected offline content would need a separately audited storage/license design.
+Android backup is disabled to avoid automatically copying sessions/private app data to generic device backups. No premium offline cache/license is introduced. Existing premium fetches are authenticated and rechecked after background/resume. Native Supabase sessions and PKCE verifiers now use OS secure storage with verified migration from old WebView credentials; learning stores retain their current semantics. See phase7-validation.md. Protected offline content still requires a separately audited storage/license design.
 
 ## Submission and physical-device release gates
 
@@ -115,3 +115,7 @@ This repository is **not mobile-ready/production-certified** until these checks 
 - Review Apple sign-in equivalence requirements if offering Google, and the applicable store digital-purchase/account-deletion rules (including actively billed accounts). Native IAP/Apple Sign In are not implemented here; payment links are gated rather than presumed store-compliant. Existing paid access works through server entitlements after setup.
 
 Physical checks, live OAuth/CORS setup, store review/signing and real-device builds have not been completed in the Linux workspace. See `validation.md` for measured evidence.
+
+## Phase 7 mobile experience
+
+See [phase7-validation.md](phase7-validation.md) for implemented native features, privacy behavior, automated evidence and the physical-device checklist. Settings → Mobile settings & updates provides reminder opt-in/quiet hours, haptics, downloads, app/version status and approved public achievement sharing. No physical-device or native compilation readiness is implied by the browser tests.

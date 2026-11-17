@@ -1,3 +1,4 @@
+import {backgroundFrames} from '../../../native/frames.js';
 import {annotateDifficulty,memoryLevel,motorLevel} from '../difficulty.js';
 import {reportStudyExposure} from "../../../study-exposure.js";
 import {createBubble,stepBubble,buildFormations,WORLD,trajectoryPreview} from './engine.js';
@@ -7,6 +8,7 @@ import {successCue} from '../../../ui/encouragement.js';
 export const bubbleRegistration={id:'bubble',title:'Ayah Bubble Burst',create:mountBubble};
 const text=p=>p.words.map(w=>w.text).join(' ');
 export function mountBubble({root,adapter,config,library,id,difficulty='beginner',reviews={},muted=()=>false,volume=()=>1,onComplete=()=>{},onExit=()=>{},onRecall=()=>{},initialAudio='listen'}) {
+ const frames=backgroundFrames(),requestAnimationFrame=frames.request,cancelAnimationFrame=frames.cancel;
  config=annotateDifficulty(config,difficulty);difficulty=memoryLevel(config,difficulty);
  reportStudyExposure([config.keys[0]]);
  let state=createBubble({id,config,difficulty,sectors:buildFormations(adapter,config,library,{difficulty,reviews})}),disposed=false,frame=0,last=0,saved=false,saveError='',audioMode=initialAudio,pendingAudio=false,mediaToken=0,paintedEffect=0,formationSignature='';
@@ -97,5 +99,5 @@ export function mountBubble({root,adapter,config,library,id,difficulty='beginner
  root.addEventListener('click',click);document.addEventListener('keydown',key);arena.addEventListener('pointerdown',down);arena.addEventListener('pointermove',move);arena.addEventListener('pointerup',up);arena.addEventListener('pointercancel',cancel);window.addEventListener('blur',blur);document.addEventListener('visibilitychange',visibility);
  slider.oninput=()=>send({type:'aim',angle:Number(slider.value)*Math.PI/180});const select=root.querySelector('[data-bubble-audio]');select.value=audioMode;select.onchange=()=>{audioMode=select.value;stopAudio();if(audioMode!=='silent'&&state.session.status==='playing')listen();};
  function tick(time){if(disposed)return;if(last&&state.projectile&&state.session.status==='playing')send({type:'tick',dt:(time-last)/1000});last=time;frame=requestAnimationFrame(tick);}paint();frame=requestAnimationFrame(tick);
- return {start:()=>send({type:'start'}),pause:()=>{if(state.session.status==='playing')send({type:'pause'});},resume:()=>send({type:'resume'}),dispatch:send,getSnapshot:()=>structuredClone(state),listen:()=>listen(),mute:()=>audio.mute(muted()),setVolume:v=>audio.setVolume(v),dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(frame);stopAudio();audio.dispose();state=stepBubble(state,{type:'dispose'});root.removeEventListener('click',click);document.removeEventListener('keydown',key);arena.removeEventListener('pointerdown',down);arena.removeEventListener('pointermove',move);arena.removeEventListener('pointerup',up);arena.removeEventListener('pointercancel',cancel);window.removeEventListener('blur',blur);document.removeEventListener('visibilitychange',visibility);root.replaceChildren();}};
+ return {start:()=>send({type:'start'}),pause:()=>{if(state.session.status==='playing')send({type:'pause'});},resume:()=>send({type:'resume'}),dispatch:send,getSnapshot:()=>structuredClone(state),listen:()=>listen(),mute:()=>audio.mute(muted()),setVolume:v=>audio.setVolume(v),dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(frame);frames.dispose();stopAudio();audio.dispose();state=stepBubble(state,{type:'dispose'});root.removeEventListener('click',click);document.removeEventListener('keydown',key);arena.removeEventListener('pointerdown',down);arena.removeEventListener('pointermove',move);arena.removeEventListener('pointerup',up);arena.removeEventListener('pointercancel',cancel);window.removeEventListener('blur',blur);document.removeEventListener('visibilitychange',visibility);root.replaceChildren();}};
 }

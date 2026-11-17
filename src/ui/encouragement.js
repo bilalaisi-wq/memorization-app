@@ -93,12 +93,15 @@ export function stopEncouragement() {
   document.querySelector(".success-celebration")?.remove();
 }
 export function studyAudioStart(id) {
+  const idle = busy.size === 0;
   busy.add(id);
+  if (idle) window.dispatchEvent(new Event("ayah-study-audio-start"));
   stopEncouragement();
   cancelTransitions();
 }
 export function studyAudioStop(id) {
-  busy.delete(id);
+  const playing = busy.delete(id);
+  if (playing && !busy.size) window.dispatchEvent(new Event("ayah-study-audio-stop"));
 }
 export function cancelTransitions() {
   document.querySelector(".mode-transition")?.remove();
@@ -124,6 +127,7 @@ export function successCue(id, message = "Beautiful work — keep growing!") {
   receipts.add(id);
   if (receipts.size > 500) receipts.delete(receipts.values().next().value);
   if (isRecording()) return;
+  if (!busy.size) window.dispatchEvent(new Event("ayah-native-success"));
   stopEncouragement();
   const run = generation;
   const toast = document.createElement("div");

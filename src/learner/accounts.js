@@ -1,3 +1,4 @@
+import {authStorage} from '../native/credentials.js';
 import {isNativeApp,authRedirect} from "../native/platform.js";
 import {installNativeAuth,openNativeOAuth} from "../native/auth.js";
 import {rememberVerifiedDevice,offlineDeviceOwner,forgetDeviceIdentity} from "../offline/identity.js";
@@ -73,8 +74,10 @@ export async function initializeAccounts(config = {}) {
         }
       } catch {}
     }
+    const sessionStore=await authStorage(authStorageKey);
     if(navigator.onLine===false){
-      offlineOwner=offlineDeviceOwner(url);client=null;user=null;configureDeveloperClient(null);setDeveloperUser(null);selectProfile(offlineOwner);
+      const offlineSession=await sessionStore.getItem(authStorageKey);
+      offlineOwner=offlineDeviceOwner(url, {getItem:k=>k===authStorageKey?offlineSession:localStorage.getItem(k)});client=null;user=null;configureDeveloperClient(null);setDeveloperUser(null);selectProfile(offlineOwner);
       accountError=offlineOwner?'Offline device profile: saved learning is available; reconnect to verify your account.':'Offline guest study: connect to sign in.';
       if(offlineOwner){cloud=new CloudProgress(null,offlineOwner,scopedStorage(offlineOwner),()=>{});await cloud.initialize();onProfileChange(id=>{if(id===offlineOwner)cloud?.changed();});}
       window.addEventListener('online',()=>location.reload(),{once:true});return;
@@ -99,7 +102,7 @@ export async function initializeAccounts(config = {}) {
       auth: {
         flowType: "pkce",
         persistSession: true,
-        storage: localStorage,
+        storage: sessionStore,
         detectSessionInUrl: true,
         autoRefreshToken: true,
       },

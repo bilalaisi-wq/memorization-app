@@ -1,3 +1,4 @@
+import {backgroundFrames} from '../../../native/frames.js';
 import {annotateDifficulty,memoryLevel,motorLevel} from '../difficulty.js';
 import {profileStorage,activeProfileId} from '../../../learner/profile-storage.js';
 import {createSiratStore,restoreSirat,SIRAT_KEY} from './checkpoints.js';
@@ -11,6 +12,7 @@ import {reportStudyExposure} from '../../../study-exposure.js';
 export const siratRegistration={id:'sirat',title:'Sirat Quest',create:mountSirat};
 const phrase=p=>p.words.map(w=>w.text).join(' ');
 export function mountSirat({root,adapter,config,library,id,difficulty='beginner',reviews={},muted=()=>false,volume=()=>1,initialAudio='listen',onComplete=()=>{},onExit=()=>{},onRecall=()=>{},storage=profileStorage}){
+ const frames=backgroundFrames(),requestAnimationFrame=frames.request,cancelAnimationFrame=frames.cancel;
  config=annotateDifficulty(config,difficulty);difficulty=memoryLevel(config,difficulty);
  const owner=activeProfileId(),store=createSiratStore(storage);
  let sectors=buildSiratSections(adapter,config,library,{difficulty,reviews});
@@ -112,6 +114,6 @@ export function mountSirat({root,adapter,config,library,id,difficulty='beginner'
  function tick(t){if(disposed)return;if(last&&state.session.status==='playing'&&!state.awaitingNext&&!state.quest.finalActive)send({type:'tick',dt:(t-last)/1000});last=t;frame=requestAnimationFrame(tick);}if(state.session.status==='won')save();paint();frame=requestAnimationFrame(tick);
  const resize=()=>{const width=stage.clientWidth/(parseFloat(getComputedStyle(world).zoom)||1);send({type:'viewport',width:Math.max(240,Math.min(1400,width))});};const observer=globalThis.ResizeObserver?new ResizeObserver(resize):null;observer?.observe(stage);resize();
  const identityChanged=()=>dispose();window.addEventListener('ayahprofilechange',identityChanged,{signal:scope.signal});
- function dispose(){if(disposed)return;persist(true);disposed=true;observer?.disconnect();clearTimeout(echoTimer);scope.abort();held.clear();pointerMoves.clear();cancelAnimationFrame(frame);stopAudio();audio.dispose();state=stepSirat(state,{type:'dispose'});root.replaceChildren();}
+ function dispose(){if(disposed)return;persist(true);disposed=true;observer?.disconnect();clearTimeout(echoTimer);scope.abort();held.clear();pointerMoves.clear();cancelAnimationFrame(frame);frames.dispose();stopAudio();audio.dispose();state=stepSirat(state,{type:'dispose'});root.replaceChildren();}
  return {start:()=>send({type:'start'}),pause:()=>{held.clear();pointerMoves.clear();if(state.session.status==='playing')send({type:'pause'});stopAudio();},resume:()=>send({type:'resume'}),dispatch:send,getSnapshot:()=>structuredClone(state),listen:()=>listen(true),mute:()=>audio.mute(muted()),setVolume:v=>audio.setVolume(v),dispose};
 }

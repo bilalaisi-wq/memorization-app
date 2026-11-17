@@ -1,3 +1,4 @@
+import {backgroundFrames} from '../../../native/frames.js';
 import {annotateDifficulty,snakeMotor} from '../difficulty.js';
 import {outsideGameDialog} from '../input-scope.js';
 import {createSnake,stepSnake,buildSnakeSectors,snakeStepMs,GRID,foodSize} from './engine.js';
@@ -7,6 +8,7 @@ import {successCue} from '../../../ui/encouragement.js';
 export const snakeRegistration={id:'snake',title:'Ayah Serpent',create:mountSnake};
 const wordsHTML=words=>words.map(w=>`<span>${esc(w.text)}</span>`).join(' ');
 export function mountSnake({root,adapter,config,id,speed='slow',muted=()=>false,volume=()=>1,initialAudio='listen',onComplete=()=>{},onRecall=()=>{},onPractice=()=>{},onJourney=()=>{},onExit=()=>{},getNextSteps=()=>({})}){
+ const frames=backgroundFrames(),requestAnimationFrame=frames.request,cancelAnimationFrame=frames.cancel;
   config=annotateDifficulty(config,'beginner',speed);if(config.difficultySchema===1)speed=snakeMotor(config);
  let state=createSnake({id,config,sectors:buildSnakeSectors(adapter,config),speed}),disposed=false,frame=0,last=0,accumulator=0,audioMode=initialAudio,saveState='pending',saveError='',guidance=null,navigating=false,pendingAudio=false;
   const audio=createAudioManager({owner:'snake',initialVolume:volume()}),motion=motionSettings();
@@ -117,5 +119,5 @@ export function mountSnake({root,adapter,config,id,speed='slow',muted=()=>false,
     frame=requestAnimationFrame(tick);
   }
   paint();frame=requestAnimationFrame(tick);
-  return {start:()=>send({type:'start'}),pause:()=>{if(state.session.status==='playing')send({type:'pause'});},resume:()=>send({type:'resume'}),dispatch:send,getSnapshot:()=>structuredClone(state),listen:()=>send({type:'listen'}),mute:()=>audio.mute(muted()),setVolume:value=>audio.setVolume(value),dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(frame);audio.dispose();state=stepSnake(state,{type:'dispose'});root.removeEventListener('click',click);board.removeEventListener('pointerdown',down);board.removeEventListener('pointerup',up);board.removeEventListener('pointercancel',cancel);document.removeEventListener('keydown',keydown);window.removeEventListener('blur',blur);document.removeEventListener('visibilitychange',visibility);root.replaceChildren();}};
+  return {start:()=>send({type:'start'}),pause:()=>{if(state.session.status==='playing')send({type:'pause'});},resume:()=>send({type:'resume'}),dispatch:send,getSnapshot:()=>structuredClone(state),listen:()=>send({type:'listen'}),mute:()=>audio.mute(muted()),setVolume:value=>audio.setVolume(value),dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(frame);frames.dispose();audio.dispose();state=stepSnake(state,{type:'dispose'});root.removeEventListener('click',click);board.removeEventListener('pointerdown',down);board.removeEventListener('pointerup',up);board.removeEventListener('pointercancel',cancel);document.removeEventListener('keydown',keydown);window.removeEventListener('blur',blur);document.removeEventListener('visibilitychange',visibility);root.replaceChildren();}};
 }

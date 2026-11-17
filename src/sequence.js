@@ -1,3 +1,5 @@
+import {createPieceColors,colorDifficulty,pieceColorClass} from './ui/piece-colors.js';
+import {profileStorage} from './learner/profile-storage.js';
 import {bindPieceDrag,stopPieceDrag} from './ui/piece-drag.js';
 import {resolvePlaybackSource} from "./content/private-audio.js";
 import { awardStudy } from "./rewards/store.js";
@@ -34,6 +36,7 @@ export function mountSequence(main, surah, initialAyahs = null) {
       chosen: initialAyahs || [1, 2],
       wordOrder: {},
       banks: {},
+      colors: {},
       chain: [],
       cards: [],
       showReference: true,
@@ -66,6 +69,7 @@ function start() {
   state.wordOrder = {};
   state.banks = {};
   for (const id of state.chosen) {
+    state.colors[id] = createPieceColors(verse(id).words.length,state.colors[id]);
     state.wordOrder[id] = [];
     state.banks[id] = scrambledBank(verse(id).words.length);
   }
@@ -77,7 +81,8 @@ function wordPiece(id, i) {
   const v = verse(id),
     [meaning, art] = v.meanings[i],
     built = state.wordOrder[id].includes(i);
-  return `<div class="piece-wrap"><button class="piece color-${i % 9} ${art === "gold" ? "divine-gold" : ""} ${state.active === id + ":" + i ? "sounding" : ""}" data-chain-word="${id}:${i}" data-word="${i}" data-zone="${built ? "selected" : "bank"}" aria-label="${built ? "Return" : "Add"} ${v.roman[i]}" draggable="true"><svg class="puzzle-outline" viewBox="0 0 180 140" preserveAspectRatio="none" aria-hidden="true"><path d="${outline(i, v.words.length)}"/></svg>${art === "gold" ? '<span class="gold-sparkles" aria-hidden="true">✧</span>' : illustration(art)}<span class="arabic" lang="ar" dir="rtl">${v.words[i]}</span><span class="roman">${v.roman[i]}</span><span class="word-meaning">${meaning}</span></button><button class="piece-listen" data-chain-listen="${id}:${i}" aria-label="Listen to this piece">♫</button></div>`;
+  const colorMode=colorDifficulty(profileStorage);
+  return `<div class="piece-wrap"><button class="piece ${pieceColorClass(state.colors[id],i,colorMode)} ${art === "gold" && colorMode!=="neutral" ? "divine-gold" : ""} ${state.active === id + ":" + i ? "sounding" : ""}" data-chain-word="${id}:${i}" data-word="${i}" data-zone="${built ? "selected" : "bank"}" aria-label="${built ? "Return" : "Add"} ${v.roman[i]}" draggable="true"><svg class="puzzle-outline" viewBox="0 0 180 140" preserveAspectRatio="none" aria-hidden="true"><path d="${outline(i, v.words.length)}"/></svg>${art === "gold" ? '<span class="gold-sparkles" aria-hidden="true">✧</span>' : illustration(art)}<span class="arabic" lang="ar" dir="rtl">${v.words[i]}</span><span class="roman">${v.roman[i]}</span><span class="word-meaning">${meaning}</span></button><button class="piece-listen" data-chain-listen="${id}:${i}" aria-label="Listen to this piece">♫</button></div>`;
 }
 function draw() {
   if (!root?.isConnected) return;
@@ -258,6 +263,7 @@ function bind() {
         const id = +b.dataset.chainReset;
         state.wordOrder[id] = [];
         state.banks[id] = scrambledBank(verse(id).words.length);
+        state.colors[id] = createPieceColors(verse(id).words.length,state.colors[id]);
         state.feedback = "";
         draw();
       }),

@@ -3036,3 +3036,17 @@ main .text-button, main .primary, .lab-game button, .lab-settings label { font-s
 @media (max-width: 600px) { .reference-card::after { display: none; } }
 
 #nav-comprehension-lab[hidden]{display:none!important}
+
+.brand-name { font-size: .68em; letter-spacing: -1px; }
+
+/* Randomized practice cues; neutral mode deliberately removes all hue-based help. */
+.color-9 {--piece-fill:#f9d4cf;--piece-stroke:#cf8f88;color:#773d39}
+.color-10 {--piece-fill:#e7d9cb;--piece-stroke:#b49b80;color:#664c34}
+.color-11 {--piece-fill:#ffe0b3;--piece-stroke:#d9ab69;color:#795221}
+.piece.piece-neutral {--piece-fill:#eeeeec;--piece-stroke:#868b89;color:#303a36;filter:grayscale(1);}
+.piece-neutral .gold-sparkles {display:none}
+.piece-color-control {display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 20px;font-size:14px}
+.piece-color-control select {min-height:44px;padding:8px;border-radius:10px;max-width:100%;font:inherit}
+html[data-theme="night-sky"] .piece.color-9 {--piece-fill:#4b3033;--piece-stroke:#e9aaa0;color:#ffe2dc}
+html[data-theme="night-sky"] .piece.color-10 {--piece-fill:#40352d;--piece-stroke:#cbb39b;color:#f3e2ce}
+html[data-theme="night-sky"] .piece.color-11 {--piece-fill:#473821;--piece-stroke:#dfb577;color:#ffe7bf}

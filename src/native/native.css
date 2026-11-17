@@ -4,3 +4,8 @@ html[data-native=true] body{padding-top:var(--native-top);padding-bottom:var(--n
 html[data-native=true] dialog{max-height:calc(100dvh - var(--native-top) - var(--native-bottom) - 32px)}
 html[data-native=true] input,html[data-native=true] select,html[data-native=true] textarea{font-size:max(16px,1em)}
 html[data-native=true][data-keyboard=open] dialog{max-height:75dvh}
+
+html[data-native=true] button{min-height:44px;min-width:44px}
+html[data-native=true] :focus-visible{outline:3px solid #f3cf77;outline-offset:3px}
+.answer-drag-ghost{transform:translate(-50%,-50%)}
+@media(prefers-reduced-motion:reduce){.answer-drag-ghost{transition:none!important;animation:none!important}}

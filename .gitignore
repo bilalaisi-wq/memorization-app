@@ -27,3 +27,7 @@ native-output/
 # Operator-generated public association files require real signing identities.
 public/.well-known/apple-app-site-association
 public/.well-known/assetlinks.json
+
+# Capgo private keys and local signing environment
+.capgo_key*
+*.private.pem
