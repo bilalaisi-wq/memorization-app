@@ -1,3 +1,4 @@
+import {readingGuide,mountReadingSetting,readingHTML,readingSequence} from '../../../ui/reading-aids.js';
 import {backgroundFrames} from '../../../native/frames.js';
 import {annotateDifficulty,memoryLevel,motorLevel} from '../difficulty.js';
 import {reportStudyExposure} from "../../../study-exposure.js";
@@ -19,7 +20,8 @@ export function mountBubble({root,adapter,config,library,id,difficulty='beginner
  const sector=()=>state.sectors[state.session.checkpoint];
  const place=b=>`left:${b.x/9}%;top:${b.y/8.2}%;width:${b.radius*2/9}%;height:${b.radius*2/8.2}%`;
  function paint(){
-  if(disposed)return;const s=state.session;
+  if(disposed)return;
+  mountReadingSetting(root);readingSequence(root.querySelector('.bubble-sequence'),state.captured);readingGuide(root,state.bubbles.map(b=>b.piece),{before:arena});const s=state.session;
   view.dataset.state=s.status;arena.dataset.cursor=state.cursor;arena.dataset.angle=state.angle;arena.dataset.bounces=state.bounces;
   root.querySelector('.bubble-hud').textContent=`Formation ${s.checkpoint+1}/${config.keys.length} · ${sector().key} · ${3-s.strikes}/3 memory charges · ${s.motorErrors.length} motor shots · ${state.score} arcade points${state.combo?` · ✦ ${state.combo}-bubble cascade`:""}`;
   const sequence=root.querySelector('.bubble-sequence'),sequenceKey=`${sector().key}:${state.captured.length}`;

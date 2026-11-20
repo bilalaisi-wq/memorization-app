@@ -22,7 +22,7 @@ export function createContentAdapter(library) {
     const source = verses.get(key);
     if (!source) throw Error('Verified reference unavailable');
     const {s,v} = source;
-    return v.words.map((text,index) => ({id:`${key}:${index}`, key, surah:s.id, ayah:v.id, index, text, audio:wordAudio(v.id,index,s.id)}));
+    return v.words.map((text,index) => ({id:`${key}:${index}`, key, surah:s.id, ayah:v.id, index, text, transliteration:v.roman?.[index]||'', audio:wordAudio(v.id,index,s.id)}));
   };
   return {
     words,

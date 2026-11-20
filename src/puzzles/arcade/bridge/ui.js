@@ -1,3 +1,4 @@
+import {readingGuide,mountReadingSetting,readingHTML} from '../../../ui/reading-aids.js';
 import {annotateDifficulty,memoryLevel,motorLevel} from '../difficulty.js';
 import {mountBridgeTutorial} from './tutorial.js';
 import {createBridge,stepBridge,buildCrossings,bridgeTransition} from './engine.js';
@@ -29,7 +30,8 @@ export function mountBridge({root,adapter,config,library,id,difficulty='beginner
  function persist(){if(blocked||activeProfileId()!==owner)return;try{checkpoints.save(state);warning='';}catch(e){warning=e.message;}}
  function save(){if(saved)return true;try{onComplete({...state.session,config:annotateDifficulty(state.session.config,difficulty),bridgeVersion:2,transitions:state.sectors.map(t=>({id:t.id,from:t.from,to:t.to})),transitionErrors:state.transitionErrors,arcadeStats:{score:state.score}});saved=true;saveError='';}catch(e){saveError=e.message;}return saved;}
  function paint(){
-  if(disposed)return;const s=state.session,t=transition(),choose=s.status==='playing'&&['choose','gate-choose'].includes(state.phase)&&!blocked;
+  if(disposed)return;
+  mountReadingSetting(root);const s=state.session,t=transition(),choose=s.status==='playing'&&['choose','gate-choose'].includes(state.phase)&&!blocked;
   view.dataset.state=s.status;stage.dataset.phase=state.phase;stage.dataset.transition=t.id;stage.dataset.progress=state.crossing;
   stage.style.setProperty('--crossing',state.crossing);if(config.difficultySchema===1)stage.style.setProperty('--connector-duration',config.motorDifficulty==='arcade'?'2.5s':'6s');stage.classList.toggle('bridge-moving',motorLevel(config,difficulty)!=='beginner'&&!motion.reducedMotion&&choose);
   root.querySelector('.bridge-hud').innerHTML=`<span class="bridge-strikes" aria-hidden="true">${[0,1,2].map(i=>`<i class="${i<3-s.strikes?'charged':'spent'}">✦</i>`).join('')}</span> ${state.gate?'Bridge Gate · '+(state.gate.cursor+1)+'/2 · ':''}Boundary ${Math.min(s.checkpoint+1,state.sectors.length)}/${state.sectors.length} · ${3-s.strikes}/3 memory charges · ${state.bridges.length} bridges linked`;
@@ -37,7 +39,7 @@ export function mountBridge({root,adapter,config,library,id,difficulty='beginner
   root.querySelector('[data-bridge-from]').textContent=t.from;root.querySelector('[data-bridge-to]').textContent=t.to;
   root.querySelector('[data-bridge-ending]').textContent=phrase(t.ending);root.querySelector('[data-bridge-opening]').textContent=['crossing','gate-crossing'].includes(state.phase)||!state.gate&&state.bridges.includes(t.id)?phrase(t.opening):'؟';
   const sig=JSON.stringify([t.id,state.phase,s.status,state.selection,blocked]);
-  if(sig!==signature){signature=sig;yard.innerHTML=['recall','gate-recall'].includes(state.phase)?`<div class="bridge-recall"><strong>${state.gate?"Bridge Gate · recall two consecutive connections":"Cold Crossing"}</strong><p>Say the next opening aloud before revealing choices.</p><p>This attempt is not automatically verified.</p><button class="primary" data-bridge-action="ready">I have recalled it · show connectors</button></div>`:t.choices.map((c,i)=>`<button class="bridge-connector ${i===state.selection?'bridge-selected':''}" data-bridge-choice="${i}" ${choose?'':'disabled'}><b>Connector ${i+1}</b><span class="arabic" dir="rtl" lang="ar">${esc(phrase(c.words))}</span></button>`).join('');}
+  if(sig!==signature){signature=sig;yard.innerHTML=['recall','gate-recall'].includes(state.phase)?`<div class="bridge-recall"><strong>${state.gate?"Bridge Gate · recall two consecutive connections":"Cold Crossing"}</strong><p>Say the next opening aloud before revealing choices.</p><p>This attempt is not automatically verified.</p><button class="primary" data-bridge-action="ready">I have recalled it · show connectors</button></div>`:t.choices.map((c,i)=>`<button class="bridge-connector ${i===state.selection?'bridge-selected':''}" data-bridge-choice="${i}" ${choose?'':'disabled'}><b>Connector ${i+1}</b><span class="arabic" dir="rtl" lang="ar">${esc(phrase(c.words))}</span>${readingHTML({sourceWords:c.words})}</button>`).join('');}
   const status=root.querySelector('.bridge-status');if(status.textContent!==(warning||state.message))status.textContent=warning||state.message;
   // Preserve a stable reading view while the traveler animates.
   const full=root.querySelector('[data-bridge-full]');if(full.dataset.pair!==t.id){full.dataset.pair=t.id;full.innerHTML=`<p>${esc(phrase(t.previous))} ﴿${esc(t.from)}﴾</p><p>${esc(phrase(t.next))} ﴿${esc(t.to)}﴾</p>`;}

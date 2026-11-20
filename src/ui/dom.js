@@ -10,6 +10,7 @@ export function clearLearningView(main) {
   for (const selector of [
     ".reference-card",
     ".mode-row",
+    ".piece-color-control",
     ".memory-summary",
     ".surah-heading",
   ])

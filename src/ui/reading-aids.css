@@ -1,0 +1,10 @@
+.reading-toggle{display:inline-flex;align-items:center;gap:9px;min-height:44px;font:14px/1.4 system-ui;margin:8px 12px 8px 0}.reading-toggle input{width:20px;height:20px;flex:0 0 20px}
+.reading-roman{display:block;font:15px/1.5 system-ui,sans-serif;letter-spacing:normal;word-spacing:normal;direction:ltr;unicode-bidi:isolate;overflow-wrap:anywhere;white-space:normal;color:inherit}
+html[data-transliteration=off] :where(.reading-roman,.cosmic-roman,.flow-roman,.runner-pickup-roman){visibility:hidden}
+html[data-transliteration=off] .reading-guide{display:none}
+.reading-guide{padding:12px;margin:12px 0;border:1px solid #82a3b3;border-radius:14px;background:#f0f5f3;color:#263e40;max-width:100%;min-width:0;overflow:auto;max-height:min(40dvh,300px)}
+.reading-guide summary{min-height:32px;cursor:pointer;font:600 15px/1.5 system-ui}.reading-candidates{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr));gap:10px}.reading-candidate{padding:8px;min-width:0;border:1px solid #aabcb7;border-radius:12px}.reading-candidate .arabic{display:block;font:26px/1.9 Uthmanic,serif;white-space:normal;overflow-wrap:normal;word-break:normal}.reading-unavailable{font:13px/1.5 system-ui}
+[data-theme=night-sky] .reading-guide{background:#12223b;color:#e5f1f4}.reading-guide .reading-roman{visibility:visible}
+@media(max-height:550px){.reading-guide{max-height:55dvh}}
+
+.runner-reading-guide{display:none}@media(max-width:700px){html[data-transliteration=on] .runner-reading-guide{display:block}.cosmic-rush .runner-pickup-roman{visibility:hidden}}

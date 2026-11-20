@@ -1,3 +1,7 @@
+import './ui/reading-aids.css';
+import {initializeReadingAids,readingControl} from './ui/reading-aids.js';
+import {showAnswerFeedback} from './ui/answer-feedback.js';
+import './ui/learning-layout.css';
 import {createPieceColors,colorDifficulty,setColorDifficulty,pieceColorClass} from './ui/piece-colors.js';
 import {initializeMobileExperience,mountMobileSettings} from './native/experience.js';
 import {initializeNative} from "./native/runtime.js";
@@ -87,6 +91,7 @@ const icon = (name) =>
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.grid}</svg>`;
 await initializeNative({onBack:()=>{if(document.querySelector("#nav-learn")&&typeof mode!=="undefined"&&mode!=="practice"){document.querySelector("#nav-learn").click();return true;}return false;}});
 await initializeAccounts();
+initializeReadingAids();
 initializeAppearance(appearanceAccount());
 if(import.meta.env.PROD)void import("./offline/shell.js").then(m=>m.initializeOffline()).catch(()=>{});
 const learning = createLearningStore(profileStorage, surahs);
@@ -100,7 +105,7 @@ let chapter = 0,
   peeking = false,
   roundLevel = 1,
   roundId = 0;
-let pieceColors = [];
+let pieceColors = [],answerState=null,focusAnswer=false,practiceChecked=false;
 let mastery = Object.fromEntries(
   Object.values(learning.snapshot().records).map((r) => [
     r.key,
@@ -152,6 +157,7 @@ function clearSharedPassage(){try{passageSession.clear();cosmicContext=false;res
 async function rememberCosmic(refs){if(passageSession.has()&&passageSession.descriptor().refs.join('|')!==refs.join('|'))await openSharedPassage(refs,'revision',{cosmic:true});}
 
 function reset() {
+  answerState=null;practiceChecked=false;
   if(contextClassic&&passageSession.has()){const r=referenceForContext(passageSession.descriptor().active);if(freeReference(r.key)){chapter=surahs.findIndex(s=>s.id===r.surah);verses=surahs[chapter].verses;ayah=verses.findIndex(v=>v.id===r.ayah);}}
   stop();
   clearTimeout(peekTimer);
@@ -230,7 +236,7 @@ function render() {
     surah = surahs[chapter],
     count = chapterCompleted();
   app.innerHTML = `
-<aside class="sidebar"><a class="brand" href="#" aria-label="Ayah Quest home"><span class="brand-mark">۞</span><span class="brand-name">Ayah Quest:</span></a><div class="sidebar-sub">A quest for an Ayah everyday</div><div class="nav-label">YOUR SPACE</div><button class="nav-item active" id="nav-learn">${icon("grid")} Memorization Lab <span class="nav-pill">${totalAyahs}</span></button><button class="nav-item" id="nav-puzzle-lab">${icon("grid")} Puzzle Lab</button><button class="nav-item" id="nav-revision-lab">${icon("repeat")} Revision Lab</button><button class="nav-item" id="nav-comprehension-lab" data-developer-only ${isDeveloperMode()?"":"hidden disabled"}>${icon("book")} QUR'AN CHRONICLES · Coming soon</button><button class="nav-item" id="nav-daily">${icon("repeat")} Daily quests</button><button class="nav-item" id="nav-progress">${icon("book")} My progress</button><div class="surah-label">CHOOSE A SURAH</div><label class="surah-picker-label">Your surah<select id="surah-picker">${surahs.filter(s=>!s.developerOnly||isDeveloperMode()).map((s, i) => `<option value="${i}" ${chapter === i ? "selected" : ""}>${s.name} · ${s.verses.length} ayahs</option>`).join("")}${isDeveloperMode()?catalog.chapters.filter(c=>previewSurahs.includes(c.id)&&!surahs.some(s=>s.id===c.id)).map(c=>`<option value="private:${c.id}">⌘ ${c.name} · ${c.verseCount} ayahs · Developer</option>`).join(''):''}</select></label><p data-private-load-status role="status"></p><div class="surah-side"><span class="surah-symbol">${String(surah.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d])}</span><div><strong>${surah.name}</strong><small>${surah.meaning} · ${verses.length} ayahs</small></div></div><div class="ayah-nav">${verses.map((x, i) => `<button data-ayah="${i}" class="ayah-item ${i === ayah ? "current" : ""}"><span class="ayah-number">${completed.has(surah.id + ":" + (i + 1)) ? "✓" : i + 1}</span><span>Ayah ${i + 1}</span>${i === ayah ? '<span class="current-dot"></span>' : ""}</button>`).join("")}</div><div class="sidebar-bottom"><span class="small-flower">✧</span><p>“And We have certainly made<br>the Quran easy to remember.”</p><small>AL-QAMAR · 54:17</small></div></aside>
+<aside class="sidebar"><a class="brand" href="#" aria-label="iRDA home"><span class="brand-mark">۞</span><span class="brand-name">iRDA</span></a><div class="sidebar-sub">A quest for an Ayah everyday</div><div class="nav-label">YOUR SPACE</div><button class="nav-item active" id="nav-learn">${icon("grid")} Memorization Lab <span class="nav-pill">${totalAyahs}</span></button><button class="nav-item" id="nav-puzzle-lab">${icon("grid")} Puzzle Lab</button><button class="nav-item" id="nav-revision-lab">${icon("repeat")} Revision Lab</button><button class="nav-item" id="nav-comprehension-lab" data-developer-only ${isDeveloperMode()?"":"hidden disabled"}>${icon("book")} QUR'AN CHRONICLES · Coming soon</button><button class="nav-item" id="nav-daily">${icon("repeat")} Daily quests</button><button class="nav-item" id="nav-progress">${icon("book")} My progress</button><div class="surah-label">CHOOSE A SURAH</div><label class="surah-picker-label">Your surah<select id="surah-picker">${surahs.filter(s=>!s.developerOnly||isDeveloperMode()).map((s, i) => `<option value="${i}" ${chapter === i ? "selected" : ""}>${s.name} · ${s.verses.length} ayahs</option>`).join("")}${isDeveloperMode()?catalog.chapters.filter(c=>previewSurahs.includes(c.id)&&!surahs.some(s=>s.id===c.id)).map(c=>`<option value="private:${c.id}">⌘ ${c.name} · ${c.verseCount} ayahs · Developer</option>`).join(''):''}</select></label><p data-private-load-status role="status"></p><div class="surah-side"><span class="surah-symbol">${String(surah.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d])}</span><div><strong>${surah.name}</strong><small>${surah.meaning} · ${verses.length} ayahs</small></div></div><div class="ayah-nav">${verses.map((x, i) => `<button data-ayah="${i}" class="ayah-item ${i === ayah ? "current" : ""}"><span class="ayah-number">${completed.has(surah.id + ":" + (i + 1)) ? "✓" : i + 1}</span><span>Ayah ${i + 1}</span>${i === ayah ? '<span class="current-dot"></span>' : ""}</button>`).join("")}</div><div class="sidebar-bottom"><span class="small-flower">✧</span><p>“And We have certainly made<br>the Quran easy to remember.”</p><small>AL-QAMAR · 54:17</small></div></aside>
 <div class="main-shell"><header><div class="breadcrumb">My learning <span>/</span> <strong>${surah.name}</strong></div><div class="header-right"><span class="daily">✧ <b>${completed.size}</b> ayahs practiced</span><span class="study-xp" data-learning-xp>${xp} XP</span><button class="header-theme" data-header-theme aria-label="Choose theme" title="Choose theme">◐ <span>Theme</span></button><span class="avatar">Y</span></div></header><main><div class="page-heading"><div class="eyebrow">MEMORIZE, PIECE BY PIECE</div><h1>Small pieces. Big discoveries.</h1><p>A colorful little adventure, one ayah at a time.</p></div><nav class="explore-nav" aria-label="Explore learning tools"><button class="text-button" id="nav-gallery">Mastery Gallery</button><button class="text-button" id="nav-lab">Puzzle Lab</button></nav><div class="surah-heading"><div><span class="surah-tag">SURAH ${String(surah.id).padStart(3, "0")}</span><h2>${surah.name} <span lang="ar" class="surah-arabic">${surah.arabic}</span></h2><p>${surah.meaning} <span>•</span> ${surah.origin} <span>•</span> ${verses.length} ayahs</p></div><div class="progress-summary"><span>Your progress <b>${count} / ${verses.length} ayahs</b></span><div class="progress-track"><i style="width:${(count / verses.length) * 100}%"></i></div></div></div>
 <section class="reference-card"><div class="reference-top"><span class="section-label"><span class="tiny-dot"></span> AYAH ${v.id} <span class="muted">OF ${verses.length}</span></span><button class="text-button" id="full-audio">${icon(playing ? "pause" : "headphones")} ${playing ? "Stop audio" : "Listen to full ayah"}</button></div><div class="full-verse ${reference ? "" : "reference-hidden"}" lang="ar" dir="rtl">${reference ? v.text + ' <span class="verse-end">' + String(v.id).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]) + "</span>" : '<span class="hidden-reference">The ayah is hidden for your challenge</span>'}</div><p class="translation">${reference ? v.translation : "Build from memory. Reveal the ayah whenever you need a little help."}</p>${mode !== "practice" ? `<button class="reference-toggle" id="reference-toggle">${icon("eye")} ${reference ? "Hide" : "Reveal"} ayah</button>` : ""}</section>
 ${surah.developerOnly?'<aside class="developer-study-note"><strong>Developer preview · private source-validated content</strong><p>Piece audio currently plays the continuous full ayah; isolated word clips await alignment review. Visual workspaces are not approved recitation stops.</p><button class="text-button" id="developer-passage">Open long-ayah Passage Studio</button></aside>':''}<div class="mode-row"><div class="tabs" role="tablist" aria-label="Learning mode">${[
@@ -262,6 +268,8 @@ ${mode === "quiz" ? `<section class="quest-banner"><span class="quest-mascot" ar
     modeRow.after(label);const selector=label.querySelector('select');selector.value=colorDifficulty(profileStorage);
     selector.onchange=()=>{try{setColorDifficulty(profileStorage,selector.value);render();document.querySelector('[data-piece-color-mode]')?.focus();}catch{selector.value=colorDifficulty(profileStorage);}};
   }
+  if(answerState!==null){showAnswerFeedback(document.querySelector('.builder'),answerState,{detail:feedback,focus:focusAnswer});focusAnswer=false;const legacy=document.querySelector('.feedback');legacy?.setAttribute('aria-live','off');}
+  if(['lab','revision'].includes(mode)){const controls=document.createElement('div');controls.className='lab-reading-settings';controls.innerHTML=readingControl();document.querySelector('.surah-heading').after(controls);}
   bind();
   document
     .querySelector("#nav-learn")
@@ -443,6 +451,7 @@ async function play(full, single = null) {
   }
 }
 function add(i) {
+  answerState=null;
   if (quizSolved) return;
   stop();
   if (!selected.includes(i)) selected.push(i);
@@ -615,6 +624,7 @@ function bind() {
     .forEach((b) => (b.onclick = () => play(false, +b.dataset.listen)));
   document.querySelectorAll("[data-word]").forEach((b) => {
     b.onclick = () => {
+      answerState=null;
       const i = +b.dataset.word;
       if (quizSolved) return;
       if (b.dataset.zone === "bank") add(i);
@@ -632,6 +642,7 @@ function bind() {
     locked: () => quizSolved,
     change(next, id) {
       stop();
+      answerState=null;
       selected = next;
       feedback = "";
       render();
@@ -644,6 +655,7 @@ function bind() {
   document.querySelector("#full-audio").onclick = () => {if(!playAdaptiveRecitation())play(true);};
   document.querySelector("#practice-audio").onclick = () => play(false);
   document.querySelector("#build-all").onclick = () => {
+    answerState=null;
     stop();
     if (mode === "practice") selected = workspace?workspace.indices():verses[ayah].words.map((_, i) => i);
     else {
@@ -670,19 +682,24 @@ function bind() {
     render();
   });
   document.querySelector("#next").onclick = () => {
+    focusAnswer=true;
     if (quizSolved) {
       reset();
       return;
     }
     if (mode === "practice") {
       if (!quizCorrect(workspace?workspace.all(selected):selected, verses[ayah].words, extras)) {
+        answerState=false;
         feedback =
           "Build all the words in the correct order before marking this ayah complete. You can keep practicing a smaller part.";
         render();
         return;
       }
+      if(practiceChecked){answerState=true;feedback="Beautiful work. Your word order is correct. Choose what to practice next.";render();return;}
       if (!complete()) return;
-      awardStudy({mode:"practice",unit:key(),action:"complete",xp:8});
+      const reward=awardStudy({mode:"practice",unit:key(),action:"complete",xp:8});
+      practiceChecked=!reward.unavailable;
+      answerState=true;
       const successId = `${puzzleSessionId}:practice:${key()}`;
       feedback = "Beautiful work. Your word order is correct. Choose what to practice next.";
       render();
@@ -691,6 +708,7 @@ function bind() {
     } else {
       if (quizCorrect(workspace?workspace.all(selected):selected, verses[ayah].words, extras)) {
         if (!complete()) return;
+        answerState=true;
         quizSolved = mode === "quiz";
         let earned = 0,
           earnedXP = 0,
@@ -730,6 +748,7 @@ function bind() {
         stop();
         successCue(`${puzzleSessionId}:${mode}:${key()}`);
       } else {
+        answerState=false;
         attempts++;
         feedback = selected.some((i) => i >= verses[ayah].words.length)
           ? "Some words belong to another ayah. Return them to the word bank and try again."
@@ -740,9 +759,9 @@ function bind() {
       render();
     }
   };
-  document.querySelector('#workspace-check')?.addEventListener('click',()=>{const v=verses[ayah],wanted=workspace.indices();workspace.save(selected);const correct=selected.length===wanted.length&&selected.every((id,i)=>id<v.words.length&&v.words[id]===v.words[wanted[i]]);feedback=correct?'This workspace is correct. Continue through the visual workspaces, then check the full ayah. This is practice, not independent recall.':'Check the order in this workspace and leave extra words in the bank.';if(correct)awardStudy({mode:'practice',unit:key(),action:`workspace:${workspace.page}`,xp:1});render();});
+  document.querySelector('#workspace-check')?.addEventListener('click',()=>{const v=verses[ayah],wanted=workspace.indices();workspace.save(selected);const correct=selected.length===wanted.length&&selected.every((id,i)=>id<v.words.length&&v.words[id]===v.words[wanted[i]]);answerState=correct;focusAnswer=true;feedback=correct?'This workspace is correct. Continue through the visual workspaces, then check the full ayah. This is practice, not independent recall.':'Check the order in this workspace and leave extra words in the bank.';if(correct)awardStudy({mode:'practice',unit:key(),action:`workspace:${workspace.page}`,xp:1});render();});
   document.querySelector('#developer-passage')?.addEventListener('click',()=>{if(isDeveloperMode())import('./passage/ui.js').then(m=>m.openPassageStudio({...appearanceAccount(),user:appearanceAccount().userId?{id:appearanceAccount().userId}:null,initialReference:key()}));});
-  document.querySelectorAll('[data-workspace-step]').forEach(b=>b.onclick=()=>{stop();selected=workspace.go(workspace.page+Number(b.dataset.workspaceStep),selected);feedback='Workspace saved locally in this round. Complete every workspace before checking the full ayah.';render();});
+  document.querySelectorAll('[data-workspace-step]').forEach(b=>b.onclick=()=>{answerState=null;stop();selected=workspace.go(workspace.page+Number(b.dataset.workspaceStep),selected);feedback='Workspace saved locally in this round. Complete every workspace before checking the full ayah.';render();});
   document.querySelector("#surah-picker").onchange = async (e) => {
     if(passageSession.has())passageSession.clear();cosmicContext=false;
     if(e.target.value.startsWith('private:')){

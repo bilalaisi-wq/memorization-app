@@ -1,3 +1,4 @@
+import {showAnswerFeedback} from './ui/answer-feedback.js';
 import {createPieceColors,colorDifficulty,pieceColorClass} from './ui/piece-colors.js';
 import {profileStorage} from './learner/profile-storage.js';
 import {bindPieceDrag,stopPieceDrag} from './ui/piece-drag.js';
@@ -40,7 +41,7 @@ export function mountSequence(main, surah, initialAyahs = null) {
       chain: [],
       cards: [],
       showReference: true,
-      feedback: "",
+      feedback: "",answerState:null,rewarded:false,
       repeat: 1,
       speed: 1,
       playing: false,
@@ -64,7 +65,8 @@ export function mountSequence(main, surah, initialAyahs = null) {
 const verse = (id) => state.surah.verses.find((v) => v.id === id);
 function start() {
   stopSequence();
-  state.started = true;
+  state.answerState=null;
+  state.started = true;state.rewarded=false;
   state.chain = [];
   state.wordOrder = {};
   state.banks = {};
@@ -74,7 +76,7 @@ function start() {
     state.banks[id] = scrambledBank(verse(id).words.length);
   }
   state.cards = scrambledBank(state.chosen.length).map((i) => state.chosen[i]);
-  state.feedback = "";
+  state.feedback = ""; state.answerState=null;
   draw();
 }
 function wordPiece(id, i) {
@@ -114,6 +116,7 @@ ${s.surah.developerOnly?`<label>Active word puzzle<select id="chain-active-puzzl
       }</div>`
     : ""
 }<div class="feedback ${s.feedback.startsWith("Beautiful") ? "success" : ""}" role="status" aria-live="polite">${s.feedback}</div>`;
+  if(s.answerState!==null)showAnswerFeedback(root,s.answerState,{detail:s.feedback,focus:true});
   bind();
 }
 async function play(items) {
@@ -127,7 +130,7 @@ async function play(items) {
   const run = token;
   state.playing = true;
   studyAudioStart("sequence");
-  state.feedback = "";
+  state.feedback = ""; state.answerState=null;
   draw();
   try {
     for (let repeat = 0; repeat < state.repeat; repeat++)
@@ -172,6 +175,7 @@ function changeWords(id, i, addOnly = false) {
     state.chain.includes(id)
   )
     return;
+  state.answerState=null;
   const words = state.wordOrder[id];
   state.wordOrder[id] = words.includes(i)
     ? addOnly
@@ -179,7 +183,7 @@ function changeWords(id, i, addOnly = false) {
       : words.filter((x) => x !== i)
     : [...words, i];
   if(state.surah.developerOnly)state.wordOrder[id].sort((a,b)=>Math.floor(a/12)-Math.floor(b/12));
-  state.feedback = "";
+  state.feedback = ""; state.answerState=null;
   draw();
 }
 function bind() {
@@ -195,7 +199,7 @@ function bind() {
           ? [...state.chosen, id].sort((a, b) => a - b)
           : state.chosen.filter((x) => x !== id);
         state.started = false;
-        state.feedback = "";
+        state.feedback = ""; state.answerState=null;
         draw();
       }),
   );
@@ -216,7 +220,7 @@ function bind() {
     const id=Number(puzzle.dataset.puzzle);
     puzzle.querySelectorAll('[data-chain-word]').forEach(b=>b.onclick=()=>changeWords(id,Number(b.dataset.word)));
     bindPieceDrag(puzzle,{scope:`${state.surah.id}:${id}`,selection:()=>state.wordOrder[id],count:verse(id).words.length,
-      locked:()=>state.chain.includes(id),change(next){stopSequence();state.wordOrder[id]=next;state.feedback='';draw();}});
+      locked:()=>state.chain.includes(id),change(next){stopSequence();state.wordOrder[id]=next;state.feedback='';state.answerState=null;draw();}});
   });
   root
     .querySelectorAll("[data-chain-listen]")
@@ -246,13 +250,16 @@ function bind() {
         stopSequence();
         const id = +b.dataset.chainAdd;
         if (!quizCorrect(state.wordOrder[id], verse(id).words, [])) {
+          state.answerState=false;
           state.feedback =
             "A few words in that puzzle are out of order. Return and replace them before adding the ayah.";
           draw();
           return;
         }
+        state.answerState=true;
         state.chain.push(id);
-        state.feedback = "";
+        state.feedback = "Ayah connected. Keep building your sequence.";
+        successCue(`chain-piece:${state.surah.id}:${id}`,"Ayah connected!");
         draw();
       }),
   );
@@ -264,7 +271,7 @@ function bind() {
         state.wordOrder[id] = [];
         state.banks[id] = scrambledBank(verse(id).words.length);
         state.colors[id] = createPieceColors(verse(id).words.length,state.colors[id]);
-        state.feedback = "";
+        state.feedback = ""; state.answerState=null;
         draw();
       }),
   );
@@ -273,7 +280,7 @@ function bind() {
       (b.onclick = () => {
         stopSequence();
         state.chain = state.chain.filter((x) => x !== +b.dataset.chainRemove);
-        state.feedback = "";
+        state.feedback = ""; state.answerState=null;
         draw();
       }),
   );
@@ -286,7 +293,7 @@ function bind() {
           j = i + offset;
         if (j < 0 || j >= state.chain.length) return;
         [state.chain[i], state.chain[j]] = [state.chain[j], state.chain[i]];
-        state.feedback = "";
+        state.feedback = ""; state.answerState=null;
         draw();
       }),
   );
@@ -304,7 +311,7 @@ function bind() {
       stopSequence();
       const [id] = state.chain.splice(from, 1);
       state.chain.splice(to, 0, id);
-      state.feedback = "";
+      state.feedback = ""; state.answerState=null;
       draw();
     };
   });
@@ -322,6 +329,7 @@ function bind() {
     .querySelector("#chain-reference-audio")
     ?.addEventListener("click", () => play(state.chosen.map((id) => [id, -1])));
   root.querySelector("#chain-check")?.addEventListener("click", () => {
+    state.answerState=state.chain.length===state.chosen.length&&state.chain.every((id,i)=>id===state.chosen[i]);
     state.feedback =
       state.chain.length !== state.chosen.length
         ? "Add all your chosen ayahs to the chain first."
@@ -333,7 +341,7 @@ function bind() {
       state.chain.every((id, i) => id === state.chosen[i])
     ) {
       stopSequence();
-      awardStudy({mode:"chain",unit:`${state.surah.id}:${state.chosen.join("-")}`,action:"completion",xp:8});
+      if(!state.rewarded){const reward=awardStudy({mode:"chain",unit:`${state.surah.id}:${state.chosen.join("-")}`,action:"completion",xp:8});state.rewarded=!reward.unavailable;}
       successCue(
         `chain:${state.surah.id}:${state.chosen.join(",")}`,
         "Your ayahs connect beautifully!",

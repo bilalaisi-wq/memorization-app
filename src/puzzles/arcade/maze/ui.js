@@ -1,3 +1,4 @@
+import {readingGuide,mountReadingSetting,readingHTML,readingSequence} from '../../../ui/reading-aids.js';
 import {annotateDifficulty,memoryLevel,motorLevel} from '../difficulty.js';
 import {profileStorage,activeProfileId} from '../../../learner/profile-storage.js';
 import {reportStudyExposure} from '../../../study-exposure.js';
@@ -30,17 +31,18 @@ export function mountMaze({root,adapter,config,library,id,difficulty='beginner',
 
  function paint(){
   if(disposed)return;
+  mountReadingSetting(root);readingSequence(root.querySelector('.maze-sequence'),state.captured);readingGuide(root,state.choices,{before:root.querySelector('.maze-stage')});
   const s=state.session,visible=mazeProfiles[state.difficulty].visible||state.mapRevealed,seen=new Set(state.seen);
   root.querySelector('[data-maze-chamber]').textContent=`Chamber ${s.checkpoint+1}/${config.keys.length} · ${chamber().key} · Doorway ${Math.min(state.cursor+1,chamber().targets.length)}/${chamber().targets.length}`;
   root.querySelector('[data-maze-strikes]').textContent=`${3-s.strikes}/3 memory strikes remaining · ${config.chainMode==='classic'?'whole journey':'per ayah'}`;
   root.querySelector('[data-maze-score]').textContent=`${state.score} arcade points`;
-  root.querySelector('.maze-sequence').innerHTML=state.captured.length?state.captured.map(w=>`<span>${esc(w.text)}</span>`).join(' '):'<span class="maze-empty" dir="ltr">Your assembled ayah appears here</span>';
+  root.querySelector('.maze-sequence').innerHTML=state.captured.length?state.captured.slice(-12).map(w=>`<span>${esc(w.text)}</span>`).join(' '):'<span class="maze-empty" dir="ltr">Your assembled ayah appears here</span>';
   view.dataset.reference=chamber().key;view.dataset.phrases=String(chamber().phrases);view.dataset.portal=String(state.portal);view.dataset.nextRef=state.chambers[s.checkpoint+1]?.key||'';
   questHud.innerHTML=keyTypes.map(k=>`<span class="${state.quest.keys.includes(k)?'maze-key-earned':''}">${state.quest.keys.includes(k)?'🔑':'◇'} ${k}</span>`).join('');
   const question=state.quest.challenge?quiz(state):null,room=currentRoom(state);
   roomPanel.hidden=!room&&!state.quest.challenge&&!state.quest.crystalVisible;
   if(state.quest.crystalVisible)roomPanel.innerHTML=`<strong>◆ Memory crystal · remember this source piece</strong><p class="arabic" dir="rtl" lang="ar">${chamber().targets[0].words.map(w=>esc(w.text)).join(' ')}</p><button data-maze-action="conceal">Conceal crystal · ready</button>`;
-  else if(question){roomPanel.innerHTML=`<p data-maze-question data-kind="${question.kind}" data-repair-piece="${(state.quest.corrections[0]?.index||0)+1}">${esc(question.prompt)}</p>${question.context.length?`<p class="arabic" dir="rtl" lang="ar">${question.context.map(w=>esc(w.text)).join(' ')}</p>`:''}<div class="maze-room-choices">${question.choices.map((c,i)=>`<button data-maze-answer="${i}"><span class="arabic" dir="rtl" lang="ar">${c.words.map(w=>esc(w.text)).join(' ')}</span></button>`).join('')}</div><button data-maze-action="leave-room">Return to exploration</button>`;}
+  else if(question){roomPanel.innerHTML=`<p data-maze-question data-kind="${question.kind}" data-repair-piece="${(state.quest.corrections[0]?.index||0)+1}">${esc(question.prompt)}</p>${question.context.length?`<p class="arabic" dir="rtl" lang="ar">${question.context.map(w=>esc(w.text)).join(' ')}</p>`:''}<div class="maze-room-choices">${question.choices.map((c,i)=>`<button data-maze-answer="${i}"><span class="arabic" dir="rtl" lang="ar">${c.words.map(w=>esc(w.text)).join(' ')}</span>${readingHTML({sourceWords:c.words})}</button>`).join('')}</div><button data-maze-action="leave-room">Return to exploration</button>`;}
   else if(room)roomPanel.innerHTML=`<strong>${room==='correction'?'Optional correction room':room==='crystal'?'Crystal chamber':room==='switch'?'Secret-path switch':room==='landmark'?'Moon Garden landmark':room+' key room'}</strong><button data-maze-action="interact">Interact · E</button>`;
   grid.style.setProperty('--maze-cols',state.layout.width);grid.style.setProperty('--maze-zoom',zoom);
   grid.innerHTML=state.layout.cells.flatMap((row,y)=>row.map((floor,x)=>{

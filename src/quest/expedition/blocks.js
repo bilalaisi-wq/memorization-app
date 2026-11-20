@@ -19,7 +19,7 @@ export const blocksRegistration = {
     const entries = source.map((w) => ({
       ...w,
       text: w.text,
-      roman: "",
+      roman: w.transliteration||"",
       meaning: "",
       position: w.index,
       audio: w.audio,
@@ -30,8 +30,11 @@ export const blocksRegistration = {
     const verse = {
       id: ayah,
       words: words.map((w) => w.text),
-      roman: words.map(() => ""),
+      roman: words.map(w=>w.transliteration||""),
       meanings: words.map(() => ["", "name"]),
+      groups: words.map(w=>w.sourcePositions||[w.index]),
+      grouped: words.some(w=>w.sourcePositions?.length>1),
+      sourceWordCount: words.reduce((n,w)=>n+(w.sourcePositions?.length||1),0),
     };
     const view = mountFalling(root, {
       surah: { id: surah, name: `Source ${key}`, verses: [verse] },

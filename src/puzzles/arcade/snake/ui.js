@@ -1,3 +1,4 @@
+import {readingGuide,mountReadingSetting,readingHTML,readingSequence} from '../../../ui/reading-aids.js';
 import {backgroundFrames} from '../../../native/frames.js';
 import {annotateDifficulty,snakeMotor} from '../difficulty.js';
 import {outsideGameDialog} from '../input-scope.js';
@@ -26,13 +27,14 @@ export function mountSnake({root,adapter,config,id,speed='slow',muted=()=>false,
   }
   function paint(){
     if(disposed)return;
+  mountReadingSetting(root);readingSequence(root.querySelector('.snake-sequence'),state.captured);readingGuide(root,state.food.map(f=>f.word),{before:board});
     paintBoost();const session=state.session;board.dataset.direction=state.direction;
     root.querySelector('[data-snake-sector]').textContent=`Garden ${session.checkpoint+1}/${config.keys.length} · ${sector().key}`;
     root.querySelector('[data-snake-strikes]').textContent=`${3-session.strikes}/3 memory strikes remaining · ${config.chainMode==='classic'?'whole chain':'per ayah'}`;
     root.querySelector('[data-snake-score]').textContent=`${state.score} arcade points`;
     root.querySelector('[data-snake-motors]').textContent=`${session.motorErrors.length} motor bumps · no memory penalty`;
     root.querySelector('[data-snake-action=pause]').textContent=session.status==='paused'?'Resume trail':'Pause trail';
-    root.querySelector('.snake-sequence').innerHTML=state.captured.length?wordsHTML(state.captured):'<span class="snake-empty" dir="ltr">Collected words appear here</span>';
+    root.querySelector('.snake-sequence').innerHTML=state.captured.length?state.captured.slice(-12).map(w=>`<span>${esc(w.text)}</span>`).join(' '):'<span class="snake-empty" dir="ltr">Collected words appear here</span>';
     const rotation={up:0,right:90,down:180,left:270}[state.direction];
     items.innerHTML=state.body.map((p,i)=>`<div data-snake-x="${p.x}" data-snake-y="${p.y}" class="snake-segment ${i===0?'snake-head':''}" style="${position(p)}" ${i===0?'aria-label="Snake head"':'aria-hidden="true"'}>${i===0?`<svg viewBox="0 0 40 40" style="transform:rotate(${rotation}deg)" aria-hidden="true"><path d="M20 1C2 1 2 14 3 28Q20 40 37 28C38 14 38 1 20 1" fill="#e7e9a5"/><circle cx="12" cy="12" r="5" fill="#fff"/><circle cx="28" cy="12" r="5" fill="#fff"/><circle cx="12" cy="10" r="2.5" fill="#244b40"/><circle cx="28" cy="10" r="2.5" fill="#244b40"/></svg>`:''}</div>`).join('')+state.food.map(f=>`<div class="snake-word" style="${position(f,foodSize(f).width,foodSize(f).height)}" data-snake-food="${f.id}" data-x="${f.x}" data-y="${f.y}" aria-label="Word from ${f.word.key}"><span class="arabic" dir="rtl" lang="ar">${esc(f.word.text)}</span></div>`).join('')+(state.portal?`<div class="snake-portal" style="${position(state.portal)}" data-portal-x="${state.portal.x}" data-portal-y="${state.portal.y}" aria-label="Portal to the next ayah">✧</div>`:'');
     const mode=session.status==='playing'&&state.motorPause?'motor':session.status;

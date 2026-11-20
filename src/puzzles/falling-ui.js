@@ -1,3 +1,7 @@
+import {towerVerse} from './tower-units.js';
+import {profileStorage} from '../learner/profile-storage.js';
+import {towerCheckpoints} from './tower-checkpoints.js';
+import {readingHTML,mountReadingSetting,readingGuide} from '../ui/reading-aids.js';
 import {outsideGameDialog} from './arcade/input-scope.js';
 import {resolvePlaybackSource} from "../content/private-audio.js";
 import {createAudioLevel} from "./audio-level.js";
@@ -6,6 +10,7 @@ import {
   stepFalling,
   cells,
   landing,
+  restoreFallingCheckpoint,
 } from "./falling-engine.js";
 import { wordChoices } from "./lab-choices.js";
 import { shuffled, verseAudio } from "../data.js";
@@ -38,6 +43,7 @@ export function mountFalling(
     animation = "",
     usedAudio = false,
     recordedErrors = 0;
+  const checkpointStore=towerCheckpoints(profileStorage);let inspectedSection=null,ghostVisible=true,followTower=true;
   const speeds = { slow: 1300, normal: 700, fast: 300 };
   let started = false,
     awaitingChoice = false,
@@ -47,6 +53,9 @@ export function mountFalling(
   const root = area.querySelector(".tower-game"),
     form = area.querySelector("form");
   const audioLevel=createAudioLevel({initialVolume:volume()});
+  function followActive(){if(followTower){const rail=root.querySelector('.tower-section-rail');if(rail){rail.scrollTop=rail.scrollHeight;rail.scrollLeft=rail.scrollWidth;}}positionLabel();}
+  function positionLabel(){const label=root.querySelector('.falling-block'),board=root.querySelector('.tower-board');if(label&&board?.clientHeight){const maximum=Math.max(0,100-label.offsetHeight/board.clientHeight*100-1);label.style.top=`${Math.min(labelPosition(),maximum)}%`;}}
+  const resizeObserver=new ResizeObserver(followActive);resizeObserver.observe(area);
   function stopAudio() {
     audioLevel.detach();
     audioToken++;
@@ -109,13 +118,15 @@ export function mountFalling(
     if (config.audio === "echo")
       play(questOptions?.audioSource ?? verseAudio(selected[floor].id, surah.id), { before: true });
   }
+  const currentVerse=()=>questOptions?selected[floor]:towerVerse(selected[floor]);
   let usedInitialStrikes=false;
   function newFloor(strikes = 0) {
+    inspectedSection=null;
     if(floor>0&&config.audio==="silent")config.audio="listen";
     stopAudio();
     failedSaved = false;
-    const v = selected[floor];
-    const entries = questOptions?.entries || wordChoices(surah, v, 3);
+    const v = currentVerse();
+    const entries = questOptions?.entries || wordChoices(surah, v, 3).map((e,i)=>v.grouped&&i<v.words.length?{...e,audio:verseAudio(v.id,surah.id),sourcePositions:v.groups[i].map(p=>p+1),sourceWords:v.groups[i].map(p=>({text:v.sourceVerse.words[p],transliteration:v.sourceVerse.roman?.[p]||'',id:`${surah.id}:${v.id}:${p}`}))}:e);
     state = createFalling({
       words: v.words,
       entries,
@@ -186,6 +197,7 @@ export function mountFalling(
       animation = "correct";
       say("That word fits!");
     }
+    if(state.floorComplete){try{checkpointStore.save(`${surah.id}:${selected[floor].id}`,currentVerse().words,state,runErrors);}catch{say(checkpointStore.warning);}animation='floor';}
     if (state.status === "lost") {
       stopAudio();
       if (!failedSaved) {
@@ -198,6 +210,7 @@ export function mountFalling(
     }
     if (state.status === "won") {
       stopAudio();
+      try{checkpointStore.clear(`${surah.id}:${selected[floor].id}`);}catch{}
       floors.push({
         reference: `${surah.id}:${selected[floor].id}`,
         words: [...state.accepted],
@@ -228,6 +241,8 @@ export function mountFalling(
       references: selected.map((v) => `${surah.id}:${v.id}`),
       floors: floors.map((f) => f.reference),
       wordVisibility: "always",
+      grouping:currentVerse().grouped?"visual-groups":"words",sourceWordCount:currentVerse().sourceWordCount||currentVerse().words.length,
+      towerVersion:2,towerSections:state?.sections?.length||0,gateErrors:state?.gateErrors||0,gatesCompleted:state?.gatesCompleted||0,maxCombo:state?.maxCombo||0,
       score: floor * 1000 + (state?.score || 0),
       errors: [...runErrors],
     };
@@ -262,15 +277,16 @@ export function mountFalling(
     const label = root.querySelector(".falling-block");
     if (label) {
       label.dataset.lane = String(state.current.x);
-      label.style.top = `${labelPosition()}%`;
+      positionLabel();
     }
   }
   function paint() {
     if (disposed || !state) return;
     const keepFocus =
       root.querySelector(".falling-stage") === document.activeElement;
+    mountReadingSetting(area);
     const e = state.current?.entry,
-      v = selected[floor],
+      v = currentVerse(),
       over = state.status === "lost",
       won = state.status === "won",
       busy = listening || echo;
@@ -304,7 +320,16 @@ export function mountFalling(
       .filter((p) => p.kind === "side")
       .map((p) => `<span lang="ar" dir="rtl">${esc(p.entry.text)}</span>`)
       .join("");
-    root.innerHTML = `<div class="tower-hud"><strong>${esc(surah.name)} · Ayah ${v.id}</strong><span>Floor ${floor + 1} / ${selected.length}</span><span>Arcade ${metadata(false).score} · separate from XP</span><span class="tower-strikes" aria-label="${state.strikes} of 3 strikes">Strikes ${[0, 1, 2].map((i) => `<b class="${i < state.strikes ? "used" : ""}">${i < state.strikes ? "✕" : "○"}</b>`).join("")}</span></div><div class="tower-layout ${animation}"><aside class="tower-floors" aria-label="Completed tower floors">${floors.map((f) => `<div><span>✦ ${f.reference}</span><p lang="ar" dir="rtl">${esc(f.words.join(" "))}</p></div>`).join("") || "<p>Your completed ayahs become tower floors.</p>"}<div class="tower-parking-words"><strong>Side parking · words kept visible</strong>${parkedWords || "<p>No words parked yet.</p>"}</div><div class="tower-hold"><strong>Hold · C</strong><p lang="ar" dir="rtl">${state.hold ? esc(state.hold.text) : "—"}</p></div></aside><div class="falling-stage tower-board" tabindex="0" role="region" aria-label="Falling word board" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown B N X Space C P">${locked}${settled}${!over && !won && state.status !== "transition" ? drawCells(landing(state), "ghost") + drawCells(state.current, "active") : ""}<div role="status" aria-live="polite" class="falling-block tower-label arabic shape-${e?.shape}" data-index="${e?.index}" data-lane="${state.current.x}" data-shape="${e?.shape}" lang="ar" dir="rtl" style="left:5%;top:${labelY}%" ${over || won || state.status === "transition" ? "hidden" : ""}>${esc(e?.text || "")}</div>${!started ? '<div class="tower-overlay">Press Start above to begin</div>' : busy ? '<div class="tower-overlay">Listening · motion paused</div>' : ""}${state.status === "transition" ? '<div class="tower-overlay">✦ Ayah complete · rising to the next floor</div>' : ""}</div></div><div class="falling-controls tower-controls"><div class="blocks-touch-pad" role="group" aria-label="Ayah Blocks movement controls"><button id="fall-left" aria-label="Move block left"><span aria-hidden="true">←</span><small>Left</small></button><button id="fall-rotate" aria-label="Rotate block · B or N" aria-keyshortcuts="B N ArrowUp X"><span aria-hidden="true">↻</span><small>Rotate · B/N</small></button><button id="fall-right" aria-label="Move block right"><span aria-hidden="true">→</span><small>Right</small></button><button id="fall-down" aria-label="Lower block"><span aria-hidden="true">↓</span><small>Lower</small></button><button id="fall-place" aria-label="Drop block · Space"><span aria-hidden="true">⇩</span><small>Drop · Space</small></button></div><div class="blocks-support-controls"><button id="fall-hold">Hold · C</button><button id="fall-pause">${state.paused || busy ? "Resume" : "Pause"}</button><button id="fall-listen">${questOptions ? "♫ Hear full ayah" : "♫ Hear this word"}</button><button id="fall-ayah">♫ Listen & review ayah</button><button id="fall-stop-listening">Continue / stop listening</button></div></div><p class="falling-counter" role="status">${state.accepted.length} / ${v.words.length} words placed · ${state.paused || busy ? "Paused" : "Ready"}</p><div class="tower-construction"><h4>${questOptions ? "Your source workspace · right to left" : "Your constructed ayah · right to left"}</h4><p class="arabic" lang="ar" dir="rtl">${esc(state.accepted.join(" ")) || "—"}</p><div class="falling-slots" dir="rtl">${v.words.map((w,i)=>({w,i})).filter(({i})=>!surah.developerOnly||v.words.length<=24||i>=Math.floor(state.accepted.length/12)*12&&i<Math.floor(state.accepted.length/12)*12+12).map(({w,i}) => `<button data-slot="${i}" class="${i < state.accepted.length ? "slot-filled" : ""}" aria-label="Place in position ${i + 1} from the right">${i < state.accepted.length ? esc(w) : i + 1}</button>`).join("")}</div></div><p>←/→ move · B/N or ↑/X rotate · ↓ lower · Space drop · C hold · P pause. Say the word aloud after the reciter. The emerald middle builds your ayah; side lanes are safe parking. Blocks lock automatically on landing.</p>${over ? `<dialog class="tower-game-over" aria-label="Game Over"><h3>✕ ✕ ✕ · Game Over</h3><p>${config.rules === "practice" ? "Retry this ayah; your completed floors stay." : "Three strikes used. Listen, review, and try a fresh journey."}</p><button id="fall-retry">Retry</button><button id="fall-review">Listen & Review</button><button id="fall-exit">Exit</button></dialog>` : won && floor + 1 === selected.length ? `<section class="tower-victory" role="status"><h3>✦ Tower complete!</h3><p>${questOptions ? 'This source-word study workspace is connected. It is not an approved recitation stop or independent recall.' : 'Every selected ayah is in order. Try independent recall when you feel ready.'}</p></section>` : ""}`;
+    const sectionRail=state.sections.map((section,i)=>`<button type="button" data-tower-section="${i}" aria-pressed="${inspectedSection===i}">✦ Floor ${i+1} · pieces ${section.first+1}–${section.last}</button>`).join('');
+    root.innerHTML = `<div class="tower-options"><label><input type="checkbox" data-tower-ghost ${ghostVisible?'checked':''}> Ghost landing preview</label><label><input type="checkbox" data-tower-follow ${followTower?'checked':''}> Follow active floor</label></div>${checkpointStore.warning?`<p role="alert">${esc(checkpointStore.warning)} Original data remains available in account export.</p>`:''}${!started&&checkpointStore.read(`${surah.id}:${v.id}`,v.words)?'<button type="button" data-tower-resume>Resume saved tower section</button>':''}<div class="tower-section-rail" aria-label="Constellation tower floors">${sectionRail||'<p>Each four connected pieces illuminate a new floor.</p>'}</div>${inspectedSection!==null&&state.sections[inspectedSection]?`<section class="tower-inspection"><h4>Completed floor ${inspectedSection+1}</h4><p class="arabic" lang="ar" dir="rtl">${esc(v.words.slice(state.sections[inspectedSection].first,state.sections[inspectedSection].last).join(' '))}</p>${readingHTML({roman:v.roman.slice(state.sections[inspectedSection].first,state.sections[inspectedSection].last)})}<p>Visual study excerpt, not a recitation stop.</p><button data-tower-return>Return to active floor</button></section>`:''}<div class="tower-hud"><strong>${esc(surah.name)} · Ayah ${v.id}</strong><span>Journey ayah ${floor + 1} / ${selected.length}</span><span>Arcade ${metadata(false).score} · separate from XP</span><span class="tower-strikes" aria-label="${state.strikes} of 3 strikes">Strikes ${[0, 1, 2].map((i) => `<b class="${i < state.strikes ? "used" : ""}">${i < state.strikes ? "✕" : "○"}</b>`).join("")}</span></div><div class="tower-layout ${animation}"><aside class="tower-floors" aria-label="Completed tower floors">${floors.map((f) => `<div><span>✦ ${f.reference}</span><p lang="ar" dir="rtl">${esc(f.words.join(" "))}</p></div>`).join("") || "<p>Your completed ayahs become tower floors.</p>"}<div class="tower-parking-words"><strong>Side parking · words kept visible</strong>${parkedWords || "<p>No words parked yet.</p>"}</div><div class="tower-hold"><strong>Hold · C</strong><p lang="ar" dir="rtl">${state.hold ? esc(state.hold.text) : "—"}</p></div></aside><div class="falling-stage tower-board ${ghostVisible?'':'tower-no-ghost'}" tabindex="0" role="region" aria-label="Falling word board" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown B N X Space C P">${locked}${settled}${!over && !won && state.status !== "transition" ? drawCells(landing(state), "ghost") + drawCells(state.current, "active") : ""}<div role="status" aria-live="polite" class="falling-block tower-label arabic shape-${e?.shape}" data-index="${e?.index}" data-lane="${state.current.x}" data-shape="${e?.shape}" lang="ar" dir="rtl" style="left:5%;top:${labelY}%" ${over || won || state.gate || state.status === "transition" ? "hidden" : ""}>${esc(e?.text || "")}</div>${!started ? '<div class="tower-overlay">Press Start above to begin</div>' : busy ? '<div class="tower-overlay">Listening · motion paused</div>' : ""}${state.status === "transition" ? '<div class="tower-overlay">✦ Ayah complete · rising to the next floor</div>' : ""}</div></div>${state.gate&&!over?`<section class="tower-memory-gate" role="group" aria-label="Untimed memory gate"><h3>✦ Constellation Gate</h3><p>Which source piece continues your sequence? Take your time; falling is paused.</p>${state.gate.choices.map(c=>`<button type="button" data-tower-gate="${c.index}"><span class="arabic" lang="ar" dir="rtl">${esc(c.text)}</span>${readingHTML(c)}</button>`).join('')}</section>`:''}<div class="falling-controls tower-controls"><div class="blocks-touch-pad" role="group" aria-label="Ayah Blocks movement controls"><button id="fall-left" aria-label="Move block left"><span aria-hidden="true">←</span><small>Left</small></button><button id="fall-rotate" aria-label="Rotate block · B or N" aria-keyshortcuts="B N ArrowUp X"><span aria-hidden="true">↻</span><small>Rotate · B/N</small></button><button id="fall-right" aria-label="Move block right"><span aria-hidden="true">→</span><small>Right</small></button><button id="fall-down" aria-label="Lower block"><span aria-hidden="true">↓</span><small>Lower</small></button><button id="fall-place" aria-label="Drop block · Space"><span aria-hidden="true">⇩</span><small>Drop · Space</small></button></div><div class="blocks-support-controls"><button id="fall-hold">Hold · C</button><button id="fall-pause">${state.paused || busy ? "Resume" : "Pause"}</button><button id="fall-listen">${questOptions || v.grouped ? "♫ Hear full ayah" : "♫ Hear this word"}</button><button id="fall-ayah">♫ Listen & review ayah</button><button id="fall-stop-listening">Continue / stop listening</button></div></div><p class="falling-counter" role="status">${state.accepted.length} / ${v.words.length} ${v.grouped?"pieces":"words"} placed${v.grouped?` · Source words ${v.groups.slice(0,state.accepted.length).flat().length} / ${v.sourceWordCount}`:""} · ${state.gate?"Memory gate · descent paused":state.paused || busy ? "Paused" : "Ready"}</p><div class="tower-construction"><h4>${questOptions ? "Your source workspace · right to left" : "Your constructed ayah · right to left"}</h4><p class="arabic" lang="ar" dir="rtl">${esc(state.accepted.join(" ")) || "—"}</p>${state.accepted.length?readingHTML({roman:v.roman.slice(0,state.accepted.length)}):""}<div class="falling-slots" dir="rtl">${v.words.map((w,i)=>({w,i})).filter(({i})=>v.words.length<=12||i>=Math.floor(Math.min(state.accepted.length,v.words.length-1)/12)*12&&i<Math.floor(Math.min(state.accepted.length,v.words.length-1)/12)*12+12).map(({w,i}) => `<button data-slot="${i}" class="${i < state.accepted.length ? "slot-filled" : ""}" aria-label="Place in position ${i + 1} from the right">${i < state.accepted.length ? esc(w) : i + 1}</button>`).join("")}</div></div><p>←/→ move · B/N or ↑/X rotate · ↓ lower · Space drop · C hold · P pause. Say the word aloud after the reciter. The emerald middle builds your ayah; side lanes are safe parking. Blocks lock automatically on landing.</p>${over ? `<dialog class="tower-game-over" aria-label="Game Over"><h3>✕ ✕ ✕ · Game Over</h3><p>${config.rules === "practice" ? "Retry this ayah; your completed floors stay." : "Three strikes used. Listen, review, and try a fresh journey."}</p><button id="fall-retry">Retry</button><button id="fall-review">Listen & Review</button><button id="fall-exit">Exit</button></dialog>` : won && floor + 1 === selected.length ? `<section class="tower-victory" role="status"><h3>✦ Tower complete!</h3><p>${questOptions ? 'This source-word study workspace is connected. It is not an approved recitation stop or independent recall.' : 'Every selected ayah is in order. Try independent recall when you feel ready.'}</p></section>` : ""}`;
+    root.querySelector('[data-tower-ghost]').onchange=event=>{ghostVisible=event.target.checked;root.querySelector('.tower-board').classList.toggle('tower-no-ghost',!ghostVisible);};
+    root.querySelector('[data-tower-follow]').onchange=event=>followTower=event.target.checked;
+    root.querySelectorAll('[data-tower-section]').forEach(b=>b.onclick=()=>{inspectedSection=Number(b.dataset.towerSection);followTower=false;paint();});
+    root.querySelector('[data-tower-return]')?.addEventListener('click',()=>{inspectedSection=null;followTower=true;paint();});
+    root.querySelectorAll('[data-tower-gate]').forEach(b=>b.onclick=()=>send({type:'answer-gate',index:Number(b.dataset.towerGate)}));
+    root.querySelector('[data-tower-resume]')?.addEventListener('click',()=>{const saved=checkpointStore.read(`${surah.id}:${v.id}`,v.words);if(!saved)return;started=true;runErrors=(saved.errors||[]).map(e=>({...e,reference:e.reference||`${surah.id}:${v.id}`,floor:0,source:'restored-local-evidence'}));state=restoreFallingCheckpoint(state,saved);paint();});
+    readingGuide(root,state.gate?state.gate.choices:[e].filter(Boolean),{before:root.querySelector('.tower-layout')});
+    followActive();
     animation = "";
     const bind = (id, fn) => {
       const b = root.querySelector("#" + id);
@@ -499,6 +524,7 @@ export function mountFalling(
       !state ||
       state.status !== "playing" ||
       state.paused ||
+      state.gate ||
       listening ||
       echo
     )
@@ -533,6 +559,7 @@ export function mountFalling(
     setVolume(value) {audioLevel.setVolume(value);},
     dispose() {
       disposed = true;
+      resizeObserver.disconnect();
       audioLevel.dispose();
       document.removeEventListener("keydown", key);
       clearInterval(timer);

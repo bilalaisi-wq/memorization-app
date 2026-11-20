@@ -1,3 +1,4 @@
+import {readingGuide,mountReadingSetting,readingHTML,readingSequence} from '../../../ui/reading-aids.js';
 import {backgroundFrames} from '../../../native/frames.js';
 import {annotateDifficulty,memoryLevel,motorLevel} from '../difficulty.js';
 import {outsideGameDialog} from '../input-scope.js';
@@ -23,12 +24,13 @@ export function mountAsteroids({root,adapter,config,library,id,difficulty='begin
   const sector=()=>sectors[state.session.checkpoint];
   function paint() {
     if(disposed)return;
+  mountReadingSetting(root);readingSequence(root.querySelector('.astro-sequence'),state.captured);readingGuide(root,state.objects.filter(o=>!o.redirected).map(o=>o.piece),{before:stage});
     const session=state.session,target=aimedObject(state);
     root.querySelector('[data-sector]').textContent=`Sector ${session.checkpoint+1} / ${sectors.length} · ${sector().key}`;
     root.querySelector('[data-strikes]').textContent=`${3-session.strikes} / 3 strikes remaining · ${config.chainMode==='classic'?'whole run':'per ayah'}`;
     root.querySelector('[data-action=assist]').setAttribute('aria-pressed',String(state.assistedNavigation));
     root.querySelector('[data-action=pause]').textContent=session.status==='paused'?'Resume flight':'Pause flight';
-    const sequenceHTML=state.captured.length?wordsHTML(state.captured):'<span class="astro-empty">Captured words appear here · right to left</span>';
+    const sequenceHTML=state.captured.length?state.captured.slice(-12).map(w=>`<span>${esc(w.text)}</span>`).join(' '):'<span class="astro-empty">Captured words appear here · right to left</span>';
     if(sequence.innerHTML!==sequenceHTML)sequence.innerHTML=sequenceHTML;
     cue.innerHTML=asteroidProfiles[difficulty].cue && !state.sectorReady && session.status!=='won'?`Next signal: <span class="arabic" dir="rtl" lang="ar">${wordsHTML(sector().targets[state.cursor]?.words||[])}</span>`:'All wording stays visible. Read, listen and capture in order.';
     const bounds=stage.getBoundingClientRect(),visualAngle=Math.atan2(Math.sin(state.ship.angle)*bounds.height/600,Math.cos(state.ship.angle)*bounds.width/1000);

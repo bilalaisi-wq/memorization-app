@@ -1,0 +1,16 @@
+/* Container reflow only: world/canvas coordinate systems and collision boxes stay owned by games. */
+main,.main-shell,.lab-content,.lab-game,.context-lab-content,.passage-studio,.passage-studio [data-studio-body],.quest-surface,.chronicles,.revision-lab{min-width:0;max-width:100%}
+:where(.lab-game,.cosmic-rush,.passage-studio,.chronicles,.expedition,.constellation-rescue,.repair-workshop,.advanced-revision) :where(h2,h3,h4,p,label,fieldset){min-width:0;overflow-wrap:anywhere}
+:where(.tower-hud,.tower-settings,.astro-toolbar,.snake-toolbar,.maze-tools,.sirat-toolbar,.bubble-toolbar,.bridge-tools,.cosmic-toolbar,.cosmic-hud,.exp-header,.cr-header){flex-wrap:wrap;min-width:0;max-width:100%}
+:where(.tower-settings,.lab-game,.passage-studio,.cosmic-rush,.chronicles) select{max-width:100%;min-height:44px}
+:where(.tower-controls,.astro-pad,.snake-direction-pad,.maze-pad,.sirat-pad,.bubble-controls,.bridge-controls,.cosmic-controls) button{min-height:44px;touch-action:manipulation}
+:where(.astro-overlay,.snake-overlay,.maze-overlay,.bubble-overlay,.sirat-overlay,.bridge-overlay,.cosmic-overlay){overflow:auto;overscroll-behavior:contain;max-width:100%;scrollbar-gutter:stable}
+:where(.astro-overlay,.snake-overlay,.maze-overlay,.bubble-overlay,.sirat-overlay,.bridge-overlay,.cosmic-overlay)>*{min-width:0;max-width:100%;margin-block:auto}
+dialog{max-width:calc(100vw - 24px);max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 24px);overflow:auto;overscroll-behavior:contain}
+.answer-feedback{display:flex;gap:14px;align-items:center;padding:18px;margin:12px 0;border:2px solid;border-radius:18px;font:16px/1.5 system-ui;position:relative;isolation:isolate}
+.answer-symbol{font-size:38px;font-weight:800;flex:0 0 45px}.answer-feedback strong{font-size:20px}.answer-feedback p{margin:5px 0!important;font-size:14px!important;color:inherit!important}.answer-correct{background:#e4f4df;color:#215332;border-color:#458259}.answer-incorrect{background:#fff0ee;color:#852d30;border-color:#bc555a;animation:answer-pulse .26s ease-out}.answer-stars{margin-inline-start:auto;color:#a77c12;font-size:25px;animation:answer-stars .6s ease-out;pointer-events:none}
+[data-theme=night-sky] .answer-correct{background:#17382e;color:#d8ffe2}[data-theme=night-sky] .answer-incorrect{background:#482936;color:#ffe4df}
+@keyframes answer-pulse{25%{transform:translateX(3px)}75%{transform:translateX(-3px)}}@keyframes answer-stars{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+@media(max-width:600px){.answer-feedback{padding:12px;gap:8px}.answer-feedback strong{font-size:17px}.answer-symbol{font-size:30px;flex-basis:32px}.tower-layout{grid-template-columns:minmax(0,1fr)!important}.tower-settings{display:flex;flex-wrap:wrap}.tower-settings label{flex:1 1 125px;max-width:100%}}
+@media(max-height:550px){:where(.lab-game,.cosmic-rush,.passage-studio) {scroll-margin-top:8px}dialog{max-height:92dvh}}
+@media(prefers-reduced-motion:reduce){.answer-feedback,.answer-stars{animation:none!important;transition:none!important}}

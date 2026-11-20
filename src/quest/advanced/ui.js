@@ -1,3 +1,4 @@
+import {readingHTML,mountReadingSetting} from '../../ui/reading-aids.js';
 import { reportStudyExposure } from "../../study-exposure.js";
 import { canonicalSlice } from "../../../supabase/functions/_shared/segmentation.js";
 import { esc } from "../../ui/dom.js";
@@ -471,7 +472,7 @@ export function openAdvancedRevision(ctx = {}) {
         .map((key, i) => {
           const b = v.all.find((b) => b.key === key),
             words = b.words.slice(0, 12);
-          return `<button data-rv-choice="${esc(key)}" aria-label="Choose continuation ${i + 1}"><span class="arabic" dir="rtl" lang="ar">${esc(canonicalSlice(b, 1, words.length))}</span><small>Words 1–${words.length}${b.words.length > 12 ? " of " + b.words.length + " (opening preview)" : ""}</small></button>`;
+          return `<button data-rv-choice="${esc(key)}" aria-label="Choose continuation ${i + 1}"><span class="arabic" dir="rtl" lang="ar">${esc(canonicalSlice(b, 1, words.length))}</span>${readingHTML({sourceWords:words})}<small>Words 1–${words.length}${b.words.length > 12 ? " of " + b.words.length + " (opening preview)" : ""}</small></button>`;
         })
         .join("")}</div>`;
       task.querySelectorAll("[data-rv-choice]").forEach(
@@ -535,7 +536,8 @@ export function openAdvancedRevision(ctx = {}) {
     reportStudyExposure([bundles[supportPage].key]);
     const panel = root.querySelector("[data-rv-support-panel]"),
       b = bundles[supportPage];
-    panel.innerHTML = `<section class="rv-support"><h4>Supported study · ${esc(b.key)}</h4><p class="arabic" dir="rtl" lang="ar">${esc(b.textUthmani)}</p><p>Complete verified ayah. Visual workspaces are not guidance about recitation stops.</p><button data-rv-listen>Listen to full ayah</button><button data-rv-support-prev ${supportPage === 0 ? "disabled" : ""}>Previous ayah</button><button data-rv-support-next ${supportPage === bundles.length - 1 ? "disabled" : ""}>Next ayah</button><button data-rv-hide>Hide study panel</button></section>`;
+    mountReadingSetting(panel.parentElement);
+    panel.innerHTML = `<section class="rv-support"><h4>Supported study · ${esc(b.key)}</h4><p class="arabic" dir="rtl" lang="ar">${esc(b.textUthmani)}</p>${readingHTML({sourceWords:b.words})}<p>Complete verified ayah. Visual workspaces are not guidance about recitation stops.</p><button data-rv-listen>Listen to full ayah</button><button data-rv-support-prev ${supportPage === 0 ? "disabled" : ""}>Previous ayah</button><button data-rv-support-next ${supportPage === bundles.length - 1 ? "disabled" : ""}>Next ayah</button><button data-rv-hide>Hide study panel</button></section>`;
     bind("[data-rv-listen]", async () => {
       const token = ++request;
       stop();

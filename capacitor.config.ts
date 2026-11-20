@@ -6,7 +6,7 @@ const otaEnabled = process.env.AYAH_CAPGO_ENABLED === 'true';
 if (otaEnabled && !/^-----BEGIN (?:RSA )?PUBLIC KEY-----/.test(otaKey || '')) throw Error('Signed updates require the public Capgo key.');
 const config: CapacitorConfig = {
   appId: 'com.ayahaday.app',
-  appName: 'Ayah A Day',
+  appName: 'iRDA',
   webDir: 'dist',
   loggingBehavior: 'none',
   server: { hostname: 'localhost', iosScheme: 'capacitor', androidScheme: 'https', cleartext: false },

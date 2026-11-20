@@ -1,3 +1,4 @@
+import {readingGuide} from '../../../ui/reading-aids.js';
 import {assertRunnerContent} from '../../../quest/cosmic/authorized-runner.js';
 import {mountCosmicControls,readCosmicPreferences} from '../../../quest/cosmic/preferences.js';
 import {createTargetCuePlayer} from '../../../quest/cosmic/target-cues.js';
@@ -69,6 +70,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
       }
     }
     setText('[data-flow-feedback]',s.flow?s.reason:'');
+    if(s.flow){readingGuide(root,!exposureBlocked&&['running','paused'].includes(s.status)?s.objects.filter(o=>o.kind==='pickup').map(o=>({...o.unit,transliteration:romanFor(o.unit),readingLabel:['Left lane','Middle lane','Right lane'][o.lane]})):[],{before:field,label:'Lane reading guide'});root.querySelector('[data-reading-guide]')?.classList.add('runner-reading-guide');}
     layer.removeAttribute('aria-hidden');
     data(view,'cueSlow',String(!!s.cueSlow));data(view,'flightState',s.status);data(view,'lane',String(s.status==='gateway'?s.gateway.lane:s.lane));
     const inOrbit=s.status==='gateway',choosing=inOrbit&&s.gateway.state==='choices';
@@ -108,7 +110,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
       if(!el){
         el=document.createElement('div');el.className=`runner-object runner-${o.kind}`;
         el.dataset.objectId=o.id;el.dataset.kind=o.kind;
-        if(o.kind==='pickup'){el.lang='ar';el.dir='rtl';el.dataset.unitId=o.unit.id;el.dataset.pickupLane=String(o.lane);const arabic=document.createElement("span");arabic.className="runner-pickup-arabic";arabic.textContent=o.unit.text;const roman=document.createElement("small");roman.className="runner-pickup-roman";roman.lang="en";roman.dir="ltr";roman.textContent=romanFor(o.unit);el.append(arabic,roman);el.setAttribute('aria-label',`${['Left','Middle','Right'][o.lane]} lane: ${o.unit.text}`);}
+        if(o.kind==='pickup'){el.lang='ar';el.dir='rtl';el.dataset.unitId=o.unit.id;el.dataset.pickupLane=String(o.lane);const arabic=document.createElement("span");arabic.className="runner-pickup-arabic";arabic.textContent=o.unit.text;const roman=document.createElement("small");roman.className="runner-pickup-roman";roman.lang="ar-Latn";roman.dir="ltr";roman.textContent=romanFor(o.unit);el.append(arabic,roman);el.setAttribute('aria-label',`${['Left','Middle','Right'][o.lane]} lane: ${o.unit.text}`);}
         else {if(o.kind==='starburst'){for(let i=0;i<8;i++){const star=document.createElement('i');star.textContent='✦';star.style.setProperty('--ray',`${i*45}deg`);el.append(star);}}else el.textContent=o.kind==='star'?'✦':'';el.setAttribute('aria-hidden','true');}
         el.classList.toggle('runner-ribbon',!!o.ribbon);
         el.style.width=o.kind==='pickup'?(o.ribbon?'92%':'28%'):`${o.radius*2/600*100}%`;

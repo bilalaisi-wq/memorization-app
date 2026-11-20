@@ -64,11 +64,20 @@ export function landing(state) {
   return p;
 }
 const empty = () => Array.from({ length: ROWS }, () => Array(COLS).fill(null));
+function archiveSection(s){
+ if(s.accepted.length>s.sectionStart){s.sections.push({first:s.sectionStart,last:s.accepted.length});s.sectionStart=s.accepted.length;s.floorComplete=true;if(s.combo>=4)s.score+=25;}
+ s.board=empty();s.boardEpoch++;
+}
+function memoryGate(s){
+ const expected=s.candidates.find(e=>e.index===s.accepted.length),choices=[expected];
+ for(const e of s.candidates){if(choices.length>=3)break;if(!choices.some(c=>c.text===e.text))choices.push(e);}
+ const offset=(s.sections.length+s.boardEpoch)%choices.length;
+ return {expected:s.accepted.length,choices:[...choices.slice(offset),...choices.slice(0,offset)]};
+}
 function spawn(s, entry) {
   s.current = { entry, shape: entry?.shape || "T", rotation: 0, x: 3, y: 0,...(s.motorSafe?{controlled:false}:{}) };
   if (entry && collides(s.board, s.current)) {
-    s.board = empty();
-    s.boardEpoch++;
+    archiveSection(s);
   }
 }
 export function createFalling({
@@ -106,6 +115,7 @@ export function createFalling({
   const s = {
     ...(motorSafe?{motorSafe:true,motorErrors:0}:{}),
     words: [...words],
+    candidates:pool,sections:[],sectionStart:0,combo:0,maxCombo:0,floorComplete:false,gate:null,gateErrors:0,gatesCompleted:0,
     queue: queue.slice(1),
     current: null,
     hold: null,
@@ -145,11 +155,19 @@ export function stepFalling(state, action) {
   if (state.status !== "playing") return state;
   const s = structuredClone(state);
   s.event = "";
+  s.floorComplete=false;
   if (action.type === "pause") {
     s.paused = !s.paused;
     return s;
   }
   if (s.paused || !s.current?.entry) return state;
+  if(s.gate){
+    if(action.type!=='answer-gate')return state;
+    const choice=s.gate.choices.find(e=>e.index===action.index);if(!choice)return state;
+    if(choice.text===s.words[s.gate.expected]){s.gate=null;s.gatesCompleted++;s.score+=25;s.event='gate-correct';}
+    else{s.strikes++;s.gateErrors++;s.combo=0;s.errors.push({kind:'continuation-gate',position:choice.index,expectedPosition:s.accepted.length,word:choice.text});s.event='mistake';if(s.strikes>=3)s.status='lost';}
+    return s;
+  }
   const p = s.current;
   if (action.type === "move") {
     const q = { ...p, x: p.x + action.delta };
@@ -205,6 +223,7 @@ export function stepFalling(state, action) {
     e.text !== s.words[next] ||
     (action.slot !== undefined && action.slot !== next);
   if (wrong) {
+    s.combo=0;
     s.strikes++;
     s.errors.push({
       kind: e.target ? "sequence" : "distractor-placed",
@@ -233,12 +252,22 @@ export function stepFalling(state, action) {
   for (const [x, y] of cells(landed)) s.board[y][x] = e.shape;
   s.accepted.push(s.words[next]);
   s.locks++;
+  s.combo++;s.maxCombo=Math.max(s.maxCombo,s.combo);
   s.score += 100;
   s.event = "correct";
   if (s.accepted.length === s.words.length) {
     s.status = "won";
     return s;
   }
+  if(s.accepted.length-s.sectionStart>=4)archiveSection(s);
   advance(s);
+  if(s.accepted.length>0&&s.accepted.length%8===0)s.gate=memoryGate(s);
   return s;
+}
+
+export function restoreFallingCheckpoint(state,checkpoint){
+ if(!Number.isInteger(checkpoint?.accepted)||checkpoint.accepted<0||checkpoint.accepted>=state.words.length||!Number.isInteger(checkpoint.strikes)||checkpoint.strikes<0||checkpoint.strikes>=3)throw Error('Invalid tower checkpoint');
+ const s=structuredClone(state);s.accepted=s.words.slice(0,checkpoint.accepted);s.sectionStart=s.accepted.length;s.strikes=checkpoint.strikes;s.locks=checkpoint.locks??checkpoint.accepted;s.score=checkpoint.score??checkpoint.accepted*100;s.gatesCompleted=checkpoint.gatesCompleted??0;s.gateErrors=checkpoint.gateErrors??0;s.maxCombo=checkpoint.maxCombo??0;
+ s.sections=Array.from({length:Math.ceil(s.accepted.length/4)},(_,i)=>({first:i*4,last:Math.min((i+1)*4,s.accepted.length)}));
+ const pool=s.candidates.filter(e=>!e.target||e.index>=s.accepted.length);const targets=pool.filter(e=>e.target).sort((a,b)=>a.index-b.index);let at=0;s.queue=pool.map(e=>e.target?targets[at++]:e);advance(s);if(s.accepted.length&&s.accepted.length%8===0)s.gate=memoryGate(s);s.paused=true;s.event='restored';return s;
 }

@@ -1,3 +1,5 @@
+import {readingHTML,mountReadingSetting} from '../ui/reading-aids.js';
+import {showAnswerFeedback} from '../ui/answer-feedback.js';
 import {mountExpansion} from '../memorization/ui.js';
 import {reviewedAnchors} from '../memorization/model.js';
 import {PASSAGE_GAMES,validatePractice,practiceProgress,recordPracticeXP,acknowledgePracticeRecall,recommendPassageGame} from './practice-plan.js';
@@ -16,6 +18,7 @@ import {
   referenceOptions,
 } from "../content/library.js";
 import {
+  sha256,
   reviewedSegments,
   segmentAudioReviewed,
 } from "../../supabase/functions/_shared/content-policy.js";
@@ -203,7 +206,7 @@ export function openPassageStudio(ctx = {}) {
       layout = ["grouped","legacy"].includes(work.layoutPreference) ? work.layoutPreference : work.current?.key === key && ["grouped","legacy"].includes(work.current.layout) ? work.current.layout : "grouped";
       if (!work.layoutPreference && !work.records[workKey()]) { layout="legacy";if(!work.records[workKey()])layout="grouped"; }
       restoreWork();
-      draw();if(requestedMode){const mode=requestedMode;requestedMode=null;activateMode(mode);}
+      loading=false;const desired=requestedMode;requestedMode=null;if(desired==='sequence'){draw();activateMode(desired);}else if(desired)activateMode(desired);else draw();
       ctx.onReferenceSelected?.(key);
       note(
         workWarning || "Repeat aloud after the reciter. Visual workspace boundaries are not recitation stops.",
@@ -287,6 +290,14 @@ export function openPassageStudio(ctx = {}) {
   function trackAward(result) {
     if(result?.event&&result.xp>0) {recordPracticeXP(work,practiceRefs(),{id:result.event.id,xp:result.xp});persistWork();mountGamePicker();if(practiceProgress(work,practiceRefs()).due)root.querySelector('[data-required-recall]')?.focus({preventScroll:false});}
   }
+  async function awardCheck(kind,unit,identity){
+    const view=assessmentView,day=new Date().toISOString().slice(0,10),pin=workKey();
+    const receiptId=`quest:${await sha256(JSON.stringify(['passage-check',day,pin,kind,identity]))}`;
+    if(closed||activeProfileId()!==owner||!d.isConnected||assessmentView!==view)return null;
+    const result=awardStudy({mode:'passage',unit,action:kind==='chain'?'chain':'completion',xp:8,receiptId});
+    if(!closed&&activeProfileId()===owner)trackAward(result);
+    return result;
+  }
   async function recallPractice() {
     gameHost?.dispose();gameHost=null;
     const token=++navigation;stop();
@@ -328,6 +339,7 @@ export function openPassageStudio(ctx = {}) {
     panel.querySelector('h3').tabIndex=-1;panel.querySelector('h3').focus({preventScroll:true});
   }
   function draw() {
+    mountReadingSetting(d);
     expansion?.dispose();expansion=null;
     pendingControl();
     assessmentView++;
@@ -357,7 +369,8 @@ export function openPassageStudio(ctx = {}) {
       groups = w.groups || w.words.map(x=>({id:x.position,positions:[x.position]})),
       selectedPieces = groups.filter(g=>g.positions.every(id=>selected.includes(id))).sort((a,b)=>selected.indexOf(a.id)-selected.indexOf(b.id)).map(g=>g.id),
       pieceFor = id => groups.find(g=>g.id===id),
-      textAt = id => pieceFor(id).positions.map(p=>hiddenWord(p,level)?'✧':bundle.words.find(x=>x.position===p).text).join(' ');
+      textAt = id => pieceFor(id).positions.map(p=>hiddenWord(p,level)?'✧':bundle.words.find(x=>x.position===p).text).join(' '),
+      romanAt = id => pieceFor(id).positions.some(p=>hiddenWord(p,level))?'':readingHTML({sourceWords:pieceFor(id).positions.map(p=>bundle.words.find(x=>x.position===p))});
     root.innerHTML =
       `<p>Work a few words at a time, reconstruct the full ayah, then recite independently. <strong>Visual pages are not approved recitation stops.</strong> Full-ayah audio continues across visual pages.</p><div class="passage-toolbar"><label>Ayah<select data-reference>${
         options.map((o) =>
@@ -416,13 +429,13 @@ export function openPassageStudio(ctx = {}) {
           `<span class="passage-token"><button draggable="true" data-word="${id}" aria-label="Return piece ${
             i + 1
           }">${
-            `<span lang="ar" dir="rtl">${esc(textAt(id))}</span>`
+            `<span lang="ar" dir="rtl">${esc(textAt(id))}</span>${romanAt(id)}`
           }</button><button class="text-button" data-move="${id}:-1" aria-label="Move piece earlier">→</button><button class="text-button" data-move="${id}:1" aria-label="Move piece later">←</button></span>`
         ).join("") || "<p>Move words here in order.</p>"
       }</div><div class="passage-piece-zone passage-word-bank" data-place="bank" dir="rtl">${
         bank.map((id) =>
           `<button class="passage-token" draggable="true" data-word="${id}" aria-label="Add word piece">${
-            `<span lang="ar" dir="rtl">${esc(textAt(id))}</span>`
+            `<span lang="ar" dir="rtl">${esc(textAt(id))}</span>${romanAt(id)}`
           }</button>`
         ).join("")
       }</div><button class="primary" data-check-window>Check workspace</button><h3>Full-ayah reconstruction</h3><p>Arrange completed visual workspaces in ayah order, then check the whole ayah. Each card is an excerpt, not a recitation stop.</p><div class="workspace-chain">${
@@ -568,8 +581,9 @@ export function openPassageStudio(ctx = {}) {
         draw();
       }
     );
-    root.querySelector("[data-check-window]").onclick = () => {
+    root.querySelector("[data-check-window]").onclick = async () => {
       const good = correct(selected, w.words);
+      showAnswerFeedback(root,good,{focus:true});
       note(
         good
           ? "Workspace correct. Keep connecting the ayah."
@@ -577,7 +591,7 @@ export function openPassageStudio(ctx = {}) {
         !good,
       );
       if (good) {
-        trackAward(awardStudy({mode:"passage",unit:bundle.key,action:"completion",xp:8}));
+        if(!await awardCheck('workspace',bundle.key,page))return;
         successCue(
           `passage-window-${bundle.key}-${page}`,
           "Beautiful work. Connect what you remember.",
@@ -596,7 +610,7 @@ export function openPassageStudio(ctx = {}) {
         draw();
       }
     );
-    root.querySelector("[data-check-whole]").onclick = () => {
+    root.querySelector("[data-check-whole]").onclick = async () => {
       const whole = windowSequence.flatMap((p) => orders[p] || []),
         target = bundle.words.slice(
           (segmentId === "full" ? 1 : currentSegment().firstWord) - 1,
@@ -605,6 +619,7 @@ export function openPassageStudio(ctx = {}) {
             : currentSegment().lastWord,
         ),
         good = correct(whole, target);
+      showAnswerFeedback(root,good,{focus:true});
       note(
         good
           ? "Reconstruction correct. Now try reciting independently."
@@ -612,7 +627,7 @@ export function openPassageStudio(ctx = {}) {
         !good,
       );
       if (good) {
-        trackAward(awardStudy({mode:"passage",unit:bundle.key,action:"completion",xp:8}));
+        if(!await awardCheck('whole',bundle.key,segmentId))return;
         successCue(
           `passage-whole-${bundle.key}`,
           "Ayah connected. Keep growing.",
@@ -693,15 +708,16 @@ export function openPassageStudio(ctx = {}) {
         drawChain(all);
       }
     );
-    area.querySelector("[data-check-chain]").onclick = () => {
+    area.querySelector("[data-check-chain]").onclick = async () => {
       const good = chain.every((k, i) => k === selectedRefs[i]);
+      showAnswerFeedback(area,good,{focus:true});
       note(
         good
           ? "Passage Chain correct. Try independent passage recall next."
           : "The ayah sequence needs another look.",
         !good,
       );
-      if (good) { trackAward(awardStudy({mode:"passage",unit:selectedRefs.join("|"),action:"chain",xp:8}));successCue("passage-chain", "Your passage is connected."); }
+      if (good&&await awardCheck("chain",selectedRefs.join("|"),[...selectedRefs])) {successCue("passage-chain", "Your passage is connected."); }
     };
   }
   async function beginRecall(all, segment = null) {
@@ -852,7 +868,7 @@ export function openPassageStudio(ctx = {}) {
             ).join(" ")
             : b.textUthmani,
         )
-      }</p><p>${
+      }</p>${readingHTML({sourceWords:unit.type==='segment'?b.words.slice(unit.firstWord-1,unit.lastWord):b.words})}<p>${
         unit.type === "segment"
           ? "Excerpt of the referenced ayah; see the full ayah in practice."
           : esc(b.translation)
@@ -915,7 +931,7 @@ export function openPassageStudio(ctx = {}) {
   if (memory.warning || workWarning) note(memory.warning || workWarning, true);
   if(ctx.initialRefs){try{const refs=ctx.initialRefs.map(k=>reference(k).key);if(!refs.length||refs.length>10||new Set(refs).size!==refs.length)throw Error("Choose up to ten canonical passage references.");selectedRefs=refs;}catch(e){note(e.message,true);}}
   let requestedMode=null;
-  function activateMode(mode){if(!['practice','quiz','recall','sequence'].includes(mode))throw Error('Unknown Memorization Lab mode.');if(!bundle){requestedMode=mode;return;}stop();if(mode!=='recall'){navigation++;assessmentView++;const active=memory.snapshot().active;if(active&&!active.graded)memory.cancel(active.id);assessmentBundles=null;}if(mode==='recall'){void beginRecall([bundle]).catch(e=>note(e.message,true));return;}if(mode==='sequence'){root.querySelector('[data-chain]')?.click();root.querySelector('[data-chain-cards]')?.scrollIntoView({block:'nearest'});return;}level=mode==='quiz'?1:0;draw();}
+  function activateMode(mode){if(!['practice','quiz','recall','sequence'].includes(mode))throw Error('Unknown Memorization Lab mode.');if(!bundle||loading){requestedMode=mode;return;}stop();if(mode!=='recall'){navigation++;assessmentView++;const active=memory.snapshot().active;if(active&&!active.graded)memory.cancel(active.id);assessmentBundles=null;}if(mode==='recall'){root.textContent='Preparing independent recall…';void beginRecall([bundle]).catch(e=>note(e.message,true));return;}if(mode==='sequence'){root.querySelector('[data-chain]')?.click();root.querySelector('[data-chain-cards]')?.scrollIntoView({block:'nearest'});return;}level=mode==='quiz'?1:0;draw();}
   if (ctx.initialReference) select(ctx.initialReference);
 
   if (ctx.coachTarget) (async () => {
