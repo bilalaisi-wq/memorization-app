@@ -13,6 +13,7 @@ const config: CapacitorConfig = {
   ios: { contentInset: 'never', preferredContentMode: 'mobile' },
   android: { allowMixedContent: false, webContentsDebuggingEnabled: false },
   plugins: {
+    NativePurchases: { autoFinishTransactions: false },
     CapacitorUpdater: { autoUpdate: otaEnabled ? 'onlyDownload' : 'off', publicKey: otaKey,
       defaultChannel: 'mobile', allowSetDefaultChannel: false, allowModifyUrl: false,
       statsUrl: '', appReadyTimeout: 30000, resetWhenUpdate: true },

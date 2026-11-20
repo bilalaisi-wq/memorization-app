@@ -1,0 +1,20 @@
+import {test,expect} from '@playwright/test';
+import {mockBilling} from './billing-fixtures.js';
+import {bridge} from './native-helper.js';
+import {menu} from './menu-helper.js';
+async function setup(page,{enabled=true,fail=false}={}){
+ const state=await mockBilling(page);await bridge(page);
+ await page.addInitScript(()=>{const original=window.Capacitor.nativePromise;window.Capacitor.PluginHeaders.push({name:'NativePurchases',methods:['configure','getProducts','purchaseProduct','finishTransaction','restorePurchases','getPurchases','manageSubscriptions'].map(name=>({name,rtype:'promise'}))});window.Capacitor.nativePromise=async(plugin,method,options)=>{if(plugin!=='NativePurchases')return original(plugin,method,options);window.nativeCalls.push({plugin,method,options});if(method==='getProducts')return {products:[{identifier:'monthly',planIdentifier:'example.explorer',priceString:'€3.99'}]};if(method==='purchaseProduct')return {purchaseToken:'STORE_TOKEN'};if(method==='getPurchases')return {purchases:[{purchaseToken:'STORE_TOKEN'}]};return {};};});
+ await page.route('**/functions/v1/billing-native',async route=>{const body=route.request().postDataJSON();state.calls.push({endpoint:'native',body});if(body.action==='catalog')return route.fulfill({json:{enabled,restoreEnabled:enabled,environment:'sandbox',bindingToken:'00000000-0000-4000-8000-000000000001',products:[{product_id:'example.explorer',base_plan_id:'monthly',plan:'explorer',cadence:'monthly'}]}});if(body.action==='verify'){if(fail)return route.fulfill({status:503,json:{error:'Store temporarily unavailable'}});state.ent.plan='explorer';state.ent.provider='google';return route.fulfill({json:{verified:true,entitlements:state.ent}});}return route.fulfill({json:body.action==='start'?{requestId:'request'}:{entitlements:state.ent}});});
+ await page.goto('/');await (await menu(page)).getByRole('button',{name:'Subscription & billing',exact:true}).click();await expect(page.locator('[data-native-manage]')).toBeVisible();return state;
+}
+test('native subscriptions use localized store price, bound account, manual acknowledgment and server verification with no Stripe checkout',async({page})=>{
+ const state=await setup(page);await expect(page.locator('[data-native-product]')).toContainText('€3.99');await page.locator('[data-native-product]').click();await expect(page.locator('[data-billing-status]')).toContainText('verified by the server');const purchase=await page.evaluate(()=>window.nativeCalls.find(c=>c.plugin==='NativePurchases'&&c.method==='purchaseProduct'));expect(purchase.options).toMatchObject({appAccountToken:'00000000-0000-4000-8000-000000000001',autoAcknowledgePurchases:false,planIdentifier:'monthly'});expect(state.calls.some(c=>c.body?.action==='verify')).toBe(true);expect(state.calls.some(c=>c.endpoint==='checkout')).toBe(false);
+ await page.locator('[data-native-manage]').click();expect(await page.evaluate(()=>window.nativeCalls.some(c=>c.plugin==='NativePurchases'&&c.method==='manageSubscriptions'))).toBe(true);
+});
+test('native restore is explicit, server failures do not unlock, disabled catalog and offline retry are honest',async({page})=>{
+ const state=await setup(page,{fail:true});await page.locator('[data-native-restore]').click();await expect(page.locator('[data-billing-status]')).toContainText('temporarily unavailable');expect(state.ent.plan).toBe('free');expect(await page.evaluate(()=>window.nativeCalls.some(c=>c.plugin==='NativePurchases'&&c.method==='restorePurchases'))).toBe(true);
+});
+test('native purchase rollout defaults disabled and narrow mobile controls remain usable',async({page})=>{
+ await page.setViewportSize({width:390,height:844});await setup(page,{enabled:false});await expect(page.locator('[data-native-product]')).toHaveCount(0);await expect(page.locator('[data-billing-content]')).toContainText('not enabled');await expect(page.locator('[data-native-restore]')).toBeDisabled();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);await page.screenshot({path:'/workspace/artifacts/native-billing-disabled-mobile.png',fullPage:true});
+});

@@ -119,3 +119,7 @@ Physical checks, live OAuth/CORS setup, store review/signing and real-device bui
 ## Phase 7 mobile experience
 
 See [phase7-validation.md](phase7-validation.md) for implemented native features, privacy behavior, automated evidence and the physical-device checklist. Settings → Mobile settings & updates provides reminder opt-in/quiet hours, haptics, downloads, app/version status and approved public achievement sharing. No physical-device or native compilation readiness is implied by the browser tests.
+
+## Phase 8 store subscriptions
+
+See [billing.md](billing.md) for the additive migration, Apple/Google setup, server-only secrets, sandbox test matrix and regional policy gates. Native purchases remain disabled until explicitly configured. This plugin addition requires new signed native builds; it cannot be shipped to an older runtime with a frontend-only update.

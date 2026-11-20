@@ -173,3 +173,7 @@
     padding: 18px 14px;
   }
 }
+[data-store-products]{display:grid;gap:12px;margin:14px 0}
+[data-store-products] button,[data-native-restore],[data-native-manage],[data-native-refresh]{min-height:44px;white-space:normal;max-width:100%;margin:6px 4px}
+[data-native-juz] fieldset{display:flex;flex-wrap:wrap;gap:10px}
+[data-native-juz] label{min-height:44px;display:inline-flex;align-items:center;gap:6px}

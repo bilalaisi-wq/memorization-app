@@ -28,3 +28,11 @@ verify_jwt = false
 # QUR'AN CHRONICLES verifies optional learner identity and mandatory editorial roles internally.
 [functions.chronicles-content]
 verify_jwt = false
+
+# Store purchase endpoints use auth.getUser; notifications verify Apple JWS / Google OIDC.
+[functions.billing-native]
+verify_jwt = false
+[functions.billing-apple-notifications]
+verify_jwt = false
+[functions.billing-google-notifications]
+verify_jwt = false

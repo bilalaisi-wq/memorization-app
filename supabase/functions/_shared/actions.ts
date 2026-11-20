@@ -48,6 +48,9 @@ export async function checkout(req: Request, s: Services, user: any) {
       );
       owner = { stripe_customer_id: created.id };
     }
+    if (!await db(s.admin.rpc('billing_native_checkout_guard',{p_user:user.id}))) {
+      throw new BillingError(409,'A native subscription or purchase is already active. Manage it with its original provider.');
+    }
     const subscriptions = await s.stripe.subscriptions.list({
       customer: owner.stripe_customer_id,
       status: "all",

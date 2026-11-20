@@ -105,6 +105,7 @@ async function fixture(fn: (calls: any[], state: any) => Promise<void>) {
         closed_at: state.closed ? "2026-01-01T00:00:00Z" : null,
       });
     }
+    if (path === "/rest/v1/rpc/billing_native_checkout_guard") return json(true);
     if (path === "/rest/v1/rpc/billing_acquire_lock") return json(true);
     if (path === "/rest/v1/rpc/billing_release_lock") return json(null);
     if (path === "/rest/v1/rpc/billing_entitlements_for") {
@@ -489,4 +490,14 @@ Deno.test('authenticated non-payment services can initialize without Stripe; pay
   const {services}=await import('./runtime.ts');const s=services();assert.ok(s.admin);assert.equal(s.site,'https://ayah.example.test');let rejected=false;try{void s.stripe;}catch{rejected=true;}assert.ok(rejected);
   Deno.env.set('STRIPE_SECRET_KEY','sk_live_wrong_environment_fixture');rejected=false;try{void services().stripe;}catch{rejected=true;}assert.ok(rejected);
  }finally{for(const n of names){if(before[n]===undefined)Deno.env.delete(n);else Deno.env.set(n,before[n]!);}}
+});
+
+Deno.test('native billing HTTP boundary rejects missing or forged accounts before invoking store APIs',async()=>{
+ const {nativeAction}=await import('./native-billing/service.ts');
+ await fixture(async(calls)=>{
+  for(const token of ['', 'forged-account']){
+   const r=await protectedEndpoint(nativeAction)(request('billing-native',{action:'verify',provider:'apple',reference:'arbitrary'},token));assert.equal(r.status,401);
+  }
+  assert.ok(!calls.some(c=>c.url.includes('itunes.apple.com')||c.url.includes('androidpublisher.googleapis.com')));
+ });
 });

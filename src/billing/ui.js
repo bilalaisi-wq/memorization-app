@@ -102,8 +102,9 @@ export function mountBillingControls(nav, context) {
     const b = document.createElement("button");
     b.className = "text-button";
     b.textContent = label;
-    b.dataset.developerOnly='true';b.hidden=!isDeveloperMode();b.disabled=!isDeveloperMode();
-    b.onclick = () => {if(isDeveloperMode())open();};
+    const nativeAccount=isNativeApp()&&label==='Subscription & billing';
+    if(!nativeAccount)b.dataset.developerOnly='true';b.hidden=!nativeAccount&&!isDeveloperMode();b.disabled=!nativeAccount&&!isDeveloperMode();
+    b.onclick = () => {if(isDeveloperMode()||nativeAccount)open();};
     nav.append(b);
   }
   if (
@@ -128,7 +129,10 @@ export function mountBillingControls(nav, context) {
 async function pricing(ctx, api) {
   const d = dialog("A plan for your memorization journey", "pricing-dialog"),
     root = d.querySelector("[data-billing-content]");
-  if(isNativeApp()){root.innerHTML="<p>Existing account subscriptions retain their server-verified access. New in-app subscriptions are not enabled in this build.</p>";return;}
+  if(isNativeApp()){
+    if(!ctx.user){root.innerHTML='<p>New in-app subscriptions are not enabled in this build. Sign in to restore or manage subscriptions. Free learning needs no subscription.</p>';return;}
+    await import('./native/ui.js').then(m=>m.mountNativeSubscriptions(d,root,ctx,api));return;
+  }
   let annual = false, ent = null;
   root.textContent = "Loading plan availability…";
   try {
@@ -211,6 +215,7 @@ async function account(ctx, api) {
     };
     return;
   }
+  if(isNativeApp()){await import('./native/ui.js').then(m=>m.mountNativeSubscriptions(d,root,ctx,api));return;}
   root.textContent = "Checking your server-verified subscription…";
   async function load(ent) {
     if (!d.isConnected) return;
@@ -229,7 +234,7 @@ async function account(ctx, api) {
               ? "Cancellation scheduled. Access continues until"
               : "Paid access through"
           } ${date(ent.accessUntil)}.`
-      }</p></section><div class="billing-actions"><button class="primary" data-portal>Manage billing in Stripe</button><button class="text-button" data-refresh>Refresh billing status</button><button class="text-button" data-plans>See plans</button></div><p>Update cards, change plans, or cancel through Stripe’s secure portal. Payment failures do not delete progress; premium access lasts only through the paid period. Your free features remain available.</p><details><summary>Before deleting your account</summary><p>Cancel in Stripe first. After the cancellation takes effect, close billing here before deleting your account in My account. Closing billing removes saved payment methods and cannot be undone here; it does not delete learning progress.</p><button class="text-button" data-close-billing>Close billing for account deletion</button></details>${
+      }</p></section><div class="billing-actions"><button class="primary" data-portal>Manage billing in Stripe</button><button class="text-button" data-refresh>Refresh billing status</button><button class="text-button" data-plans>See plans</button></div><p data-billing-management>Update cards, change plans, or cancel through Stripe’s secure portal. Payment failures do not delete progress; premium access lasts only through the paid period. Your free features remain available.</p><details><summary>Before deleting your account</summary><p>Cancel in Stripe first. After the cancellation takes effect, close billing here before deleting your account in My account. Closing billing removes saved payment methods and cannot be undone here; it does not delete learning progress.</p><button class="text-button" data-close-billing>Close billing for account deletion</button></details>${
         ent.plan === "explorer"
           ? `<fieldset class="juz-choices"><legend>Choose up to five additional juz</legend><p>These choices reserve access as content becomes available. Juz Amma is always free.</p><div>${
             Array.from({ length: 29 }, (_, i) => i + 1).map((j) =>
@@ -241,7 +246,13 @@ async function account(ctx, api) {
           : ""
       }`;
     if(isNativeApp()){for(const selector of ['[data-portal]','[data-plans]','[data-close-billing]']){const control=root.querySelector(selector);if(control){control.hidden=true;control.disabled=true;control.style.display='none';}}const note=document.createElement('p');note.textContent='In-app purchases and payment management are not enabled in this build. Your existing account access is checked by the server.';root.querySelector('.billing-actions').append(note);}
-    root.querySelector("[data-portal]").onclick = () =>
+    if(ent.provider==='apple'||ent.provider==='google'){
+      const portal=root.querySelector('[data-portal]');portal.textContent=ent.provider==='apple'?'Manage in App Store':'Manage in Google Play';
+      portal.onclick=()=>location.assign(ent.provider==='apple'?'https://apps.apple.com/account/subscriptions':'https://play.google.com/store/account/subscriptions');
+      root.querySelector('[data-close-billing]').closest('details').hidden=true;
+      root.querySelector('[data-billing-management]').textContent='Manage this subscription through its original app store. Cancellation and paid-period access are determined by that provider; learning progress stays unchanged.';
+    }
+    if(!['apple','google'].includes(ent.provider))root.querySelector("[data-portal]").onclick = () =>
       action(d, async () => {
         if(isNativeApp())throw Error("In-app billing management is not enabled.");
         const result = await api.invoke("portal");
@@ -250,7 +261,9 @@ async function account(ctx, api) {
       });
     root.querySelector("[data-refresh]").onclick = () =>
       action(d, async () => {
-        await api.invoke("refresh");
+        const providers=[...new Set((ent.providers||[]).map(p=>p.provider).filter(p=>['apple','google'].includes(p)))];
+        for(const provider of providers)await api.invoke('native',{provider,action:'refresh'});
+        if(!ent.provider||ent.provider==='stripe'||ent.providers?.some(p=>p.provider==='stripe'))await api.invoke("refresh");
         await load(await api.entitlements());
         status(d, "Billing status refreshed from the server.");
       });
