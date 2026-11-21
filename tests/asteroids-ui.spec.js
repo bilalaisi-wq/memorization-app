@@ -45,7 +45,7 @@ test('Chain travels to separate sectors and Echo failures do not trap or penaliz
  test.setTimeout(60000);
  await page.addInitScript(()=>{window.Audio=class{constructor(src){this.src=src;}play(){return Promise.reject(Error('blocked'));}pause(){}removeAttribute(){}load(){}};});
  await open(page,{end:2,rules:'practice',audio:'echo'});await expect(page.locator('.astro-overlay')).toBeHidden();await expect(page.locator('[data-strikes]')).toContainText('3 / 3');
- await page.locator('[data-astro-audio]').selectOption('silent');await solve(page,1);await expect(page.getByRole('button',{name:'Next sector →'})).toBeVisible();await page.getByRole('button',{name:'Next sector →'}).click();
+ await page.locator('[data-astro-audio]').selectOption('silent');await solve(page,1);await expect(page.getByRole('button',{name:'Next sector →'})).toHaveCount(0);
  await expect(page.locator('[data-sector]')).toContainText('1:2');await expect(page.locator('.astro-sequence')).toContainText('Captured words appear here');await solve(page,2);await expect(page.locator('.asteroids')).toHaveClass(/astro-victory/);
 });
 
@@ -98,8 +98,8 @@ test('victory offers the next short flight, configurable ayahs and an actual rec
  test.setTimeout(60000);await open(page);await solve(page,1);
  await expect(page.locator('[data-action=continue]')).toHaveText('Continue to ayah 2');
  await page.locator('[data-action=continue]').focus();await page.keyboard.press('Space');
- await expect(page.locator('[data-sector]')).toContainText('1:2');await expect(page.locator('.astro-overlay')).toBeHidden();await expect(page.locator('[data-astro-audio]')).toHaveValue('listen');
- await solve(page,2);await page.locator('[data-action=customize]').click();await expect(page.locator('[name=first]')).toBeFocused();
+ await expect(page.locator('[data-sector]')).toContainText('1:2');await expect(page.locator('.astro-overlay')).toBeHidden();await expect(page.locator('[data-astro-audio]')).toHaveValue('silent');
+ await solve(page,2);await page.locator('[data-action=customize]').click();await expect(page.locator('[name=first]')).toBeFocused();await page.locator('.gameplay-settings [data-game-command=resume]').click();
  await page.locator('[data-action=recall]').click();await expect(page.locator('.astro-stage')).toHaveCount(0);await expect(page.locator('main')).toContainText('SELF-ASSESSED RECITATION');
 });
 

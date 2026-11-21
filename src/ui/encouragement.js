@@ -1,6 +1,6 @@
 import { esc } from "./dom.js";
 export const EXPERIENCE_KEY = "ayah-experience-v1";
-let prefs = { sound: true, motion: true, volume: 0.25 },
+let prefs = { sound: true, motion: true, volume: 0.25, effects: "full" },
   context = null,
   custom = null,
   defaultSound = null,
@@ -24,11 +24,16 @@ try {
     typeof saved.volume === "number"
   )
     prefs = {
+      effects: ["full","minimal","off"].includes(saved.effects) ? saved.effects : saved.motion ? "full" : "minimal",
       sound: saved.sound,
       motion: saved.motion,
       volume: Math.max(0, Math.min(1, saved.volume)),
     };
 } catch {}
+if(typeof document!=='undefined'){
+ const syncEffects=()=>document.documentElement.dataset.encouragementEffects=experiencePreferences().effects;
+ document.addEventListener('ayahmotionchange',syncEffects);globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').addEventListener?.('change',syncEffects);syncEffects();
+}
 const openMedia = () =>
   new Promise((resolve, reject) => {
     const request = indexedDB.open("ayah-feedback-media-v1", 1);
@@ -109,7 +114,7 @@ export function cancelTransitions() {
 export function transitionCue() {
   cancelTransitions();
   if (
-    !prefs.motion ||
+    !prefs.motion || experiencePreferences().effects !== "full" ||
     matchMedia("(prefers-reduced-motion: reduce)").matches ||
     busy.size ||
     isRecording()
@@ -129,7 +134,7 @@ export function successCue(id, message = "Beautiful work — keep growing!") {
   if (isRecording()) return;
   if (!busy.size) window.dispatchEvent(new Event("ayah-native-success"));
   stopEncouragement();
-  const run = generation;
+  if (experiencePreferences().effects === "off") { playSuccessSound(); return; }
   const toast = document.createElement("div");
   toast.className = "success-celebration";
   toast.setAttribute("role", "status");
@@ -153,7 +158,14 @@ export function successCue(id, message = "Beautiful work — keep growing!") {
   const target = document.querySelector("dialog[open]") || (night ? document.querySelector(".recall-result, .puzzle-lab .lab-after, main .feedback") || document.querySelector("main") : null) || document.body;
   target.append(toast);
   setTimeout(() => toast.remove(), 2800);
-  if (busy.size || !prefs.sound || prefs.volume === 0) return;
+  playSuccessSound();
+}
+export function experiencePreferences() {
+  return {...prefs, effects: prefs.effects === "off" ? "off" : !prefs.motion || globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "minimal" : prefs.effects};
+}
+export function playSuccessSound() {
+  if (busy.size || isRecording() || !prefs.sound || prefs.volume === 0) return;
+  const run = generation;
   try {
     context ??= new (window.AudioContext || window.webkitAudioContext)();
     const play = async () => {
@@ -201,13 +213,15 @@ export function successCue(id, message = "Beautiful work — keep growing!") {
 export function showFeedbackSettings() {
   const dialog = document.createElement("dialog");
   dialog.className = "experience-dialog";
-  dialog.innerHTML = `<button class="text-button" data-close>Close ×</button><h2>Encouragement settings</h2><p>Choose your success sound and animations. These settings never change your learning progress.</p><label><input id="success-sound" type="checkbox" ${prefs.sound ? "checked" : ""}> Play a gentle success sound</label><label>Volume<input id="success-volume" type="range" min="0" max="1" step=".05" value="${prefs.volume}"></label><label><input id="experience-motion" type="checkbox" ${prefs.motion ? "checked" : ""}> Gentle celebrations and transitions</label><p>Reduced-motion preferences are always respected. Sounds and celebrations stop when recitation or recording begins.</p><label>Your encouragement sound<input id="success-upload" type="file" accept="audio/*"></label><p id="success-file">${custom ? esc(custom.name) : "Built-in chime"}</p><p>Upload an audio clip up to 5 MB and 10 seconds. It stays in this browser and is not uploaded to a server.</p><button class="text-button" id="reset-success-sound">Restore default sound</button><button class="primary small" id="preview-success">Preview encouragement</button><p data-settings-status role="status"></p>`;
+  dialog.innerHTML = `<button class="text-button" data-close>Close ×</button><h2>Encouragement settings</h2><p>Choose your success sound and animations. These settings never change your learning progress.</p><label><input id="success-sound" type="checkbox" ${prefs.sound ? "checked" : ""}> Play a gentle success sound</label><label>Volume<input id="success-volume" type="range" min="0" max="1" step=".05" value="${prefs.volume}"></label><label><input id="experience-motion" type="checkbox" ${prefs.motion ? "checked" : ""}> Gentle celebrations and transitions</label><label>Gameplay effects<select id="experience-effects"><option value="full">Full effects</option><option value="minimal">Minimal effects</option><option value="off">Effects off</option></select></label><p>Reduced-motion preferences are always respected. Sounds and celebrations stop when recitation or recording begins.</p><label>Your encouragement sound<input id="success-upload" type="file" accept="audio/*"></label><p id="success-file">${custom ? esc(custom.name) : "Built-in chime"}</p><p>Upload an audio clip up to 5 MB and 10 seconds. It stays in this browser and is not uploaded to a server.</p><button class="text-button" id="reset-success-sound">Restore default sound</button><button class="primary small" id="preview-success">Preview encouragement</button><p data-settings-status role="status"></p>`;
   document.body.append(dialog);
   dialog.showModal();
+  dialog.querySelector("#experience-effects").value = prefs.effects;
   const status = dialog.querySelector("[data-settings-status]");
   const save = () => {
     try {
       const next = {
+        effects: dialog.querySelector("#experience-effects").value,
         sound: dialog.querySelector("#success-sound").checked,
         motion: dialog.querySelector("#experience-motion").checked,
         volume: Number(dialog.querySelector("#success-volume").value),
@@ -223,7 +237,7 @@ export function showFeedbackSettings() {
         "Preferences could not be saved. Existing settings are preserved.";
     }
   };
-  for (const id of ["success-sound", "success-volume", "experience-motion"])
+  for (const id of ["success-sound", "success-volume", "experience-motion", "experience-effects"])
     dialog.querySelector("#" + id).onchange = save;
   dialog.querySelector("#preview-success").onclick = () =>
     successCue("preview-" + Date.now(), "A little progress, beautifully done.");

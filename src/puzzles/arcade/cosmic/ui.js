@@ -1,3 +1,5 @@
+import {mountCosmicGameplayFrame} from '../../../ui/cosmic-gameplay-frame.js';
+import {automaticContinuation} from '../../../ui/automatic-continuation.js';
 import {readingGuide} from '../../../ui/reading-aids.js';
 import {assertRunnerContent} from '../../../quest/cosmic/authorized-runner.js';
 import {mountCosmicControls,readCosmicPreferences} from '../../../quest/cosmic/preferences.js';
@@ -16,7 +18,7 @@ import { createFlightController } from '../../../quest/cosmic/controller.js';
 import { activeProfileId } from '../../../learner/profile-storage.js';
 import './runner.css';
 
-export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>{},slow=false,pickupMode='mixed',rounds=1,memoryGateways=false,guidance=true,controller=null,onDefense=null,onLink=null,onCheckpoint=null,isCurrent=()=>true,content=null,disposeController=false}={}) {
+export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>{},slow=false,pickupMode='mixed',rounds=1,memoryGateways=false,guidance=true,memoryDifficulty='guided',controller=null,onDefense=null,onLink=null,onCheckpoint=null,isCurrent=()=>true,content=null,disposeController=false}={}) {
   if(content)assertRunnerContent(content);
   const ayahFor=ref=>content?content.ayah(ref):freeAyah(ref);
   const unitsFor=(refs,mode)=>createFlowUnits(refs,mode,0,content);
@@ -24,8 +26,10 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
   const owner=activeProfileId();
   let saveWarning='',exposureWarning='',bonusWarning='',cueWarning='',bonusXP=0;const assistedRefs=new Set();
   let recorder;const bonuses=createFlightBonuses(mission);
-  let disposed=false;
+  let gameplayFrame=null;const continuation=automaticContinuation();
+ let disposed=false;
   const receive=event=>{
+    gameplayFrame?.event(event);
     try{recorder.record({...event,assisted:!!event.assisted||assistedRefs.has(event.targetRef)});}catch(error){saveWarning=error.message;}
     if(event.awardedPoints&&(event.type==='runner:asteroid-destroyed'||event.boosted))bonuses.record(event).then(result=>{if(disposed)return;if(result.xp&&!result.duplicate)bonusXP+=result.xp;bonusWarning='';paint();}).catch(error=>{if(!disposed){bonusWarning=`Bonus XP could not be saved: ${error.message}`;paint();}});
     onEvent(event);
@@ -49,6 +53,9 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
   const gatewayPanel=createGatewayPanel(root,send,{onNavigate:()=>field.focus({preventScroll:true})});
   const listen=(target,name,fn)=>target.addEventListener(name,fn,{signal:abort.signal});
   function paint() {
+    if(disposed)return;
+ gameplayFrame??=mountCosmicGameplayFrame({root,game,mission,surface:'.runner-field',sequence:'[data-flow-built]',send,onExit:()=>root.querySelector('[data-flight-exit]')?.click(),replay:()=>root.querySelector('[data-flow-listen]')?.click(),volume:{get:()=>readLabVolume(profileStorage),set:v=>flowAudio.setVolume(v)}});
+ gameplayFrame.update();
     let s=game.getSnapshot(),exposureBlocked=false;
     if(cue&&['checkpoint','recovery','gateway','disposed'].includes(s.status)){stopCue();s=game.getSnapshot();}
     field.classList.toggle('runner-flow',!!s.flow);
@@ -144,11 +151,13 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
       setText('[data-flight-status]',heading.textContent);
       if(['checkpoint','recovery','paused'].includes(s.status))heading.focus({preventScroll:true});
     }
-    if(!exposureBlocked&&guidance&&!preferences.muted&&s.status==='running'&&s.unit&&!heard.has(cueKey(s))&&(!cue||cue.key!==cueKey(s)))beginCue(s);
+    if(!exposureBlocked&&guidance&&memoryDifficulty!=='expert'&&(memoryDifficulty!=='standard'||s.unit?.index===0)&&!preferences.muted&&s.status==='running'&&s.unit&&!heard.has(cueKey(s))&&(!cue||cue.key!==cueKey(s)))beginCue(s);
   }
   function stopCue(){cueEpoch++;cuePlayer.stop();game.dispatch({type:'cue',active:false});cue=null;}
   function beginCue(snapshot){
     if(disposed||!snapshot.unit||preferences.muted)return;
+
+
     stopCue();cueWarning='';flowAudioToken++;gatewayPanel.stop();
     const epoch=cueEpoch,key=cueKey(snapshot);
     cue={key,failed:false};
@@ -228,7 +237,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
   // Cleanup also covers DOM replacement by navigation outside the runner.
   const observer=new MutationObserver(()=>{if(!root.isConnected)dispose();});
   observer.observe(document.body,{childList:true,subtree:true});
-  function dispose(){if(disposed)return;disposed=true;cancelAnimationFrame(raf);abort.abort();observer.disconnect();pointer=null;controls?.dispose();nodes.clear();cuePlayer.dispose();gatewayPanel.dispose();flowAudioToken++;flowAudio.dispose();unsubscribe();if(!controller||disposeController)game.dispose();}
+  function dispose(){if(disposed)return;disposed=true;gameplayFrame?.dispose();continuation.dispose();cancelAnimationFrame(raf);abort.abort();observer.disconnect();pointer=null;controls?.dispose();nodes.clear();cuePlayer.dispose();gatewayPanel.dispose();flowAudioToken++;flowAudio.dispose();unsubscribe();if(!controller||disposeController)game.dispose();}
   controls=mountCosmicControls(view);paint();
   return {start:()=>send({type:'start'}),pause:()=>send({type:'pause'}),resume:()=>send({type:'resume'}),dispatch:send,getSnapshot:()=>game.getSnapshot(),dispose};
 }

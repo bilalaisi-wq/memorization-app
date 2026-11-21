@@ -1,3 +1,4 @@
+import {setFallingOption} from './falling-helper.js';
 import { startFalling, parkExtra } from "./falling-helper.js";
 import { test, expect } from "@playwright/test";
 import { LAB_KEY } from "../src/puzzles/puzzle-store.js";
@@ -89,8 +90,11 @@ test("Classic and Practice chains retain floors and apply their strike budgets",
 }) => {
   await open(page);
   const form = page.locator(".tower-settings");
+  if(!await form.isVisible())await page.locator('.gameplay-toolbar [data-game-command=settings]').click();
   await form.locator("[name=mode]").selectOption("chain");
+  if(!await form.isVisible())await page.locator('.gameplay-toolbar [data-game-command=settings]').click();
   await form.locator("[name=last]").fill("2");
+  if(!await form.isVisible())await page.locator('.gameplay-toolbar [data-game-command=settings]').click();
   await form.locator("[name=rules]").selectOption("practice");
   await form.getByRole("button", { name: "Start", exact: true }).click();
   while (!(await page.locator(".tower-hud").textContent()).includes("Ayah 2")) {
@@ -126,7 +130,9 @@ test("Classic and Practice chains retain floors and apply their strike budgets",
   expect(h.arcade.floors).toEqual(["1:1", "1:2"]);
   await page.locator("#lab-restart").click();
   await startFalling(page);
+  if(!await form.isVisible())await page.locator('.gameplay-toolbar [data-game-command=settings]').click();
   await form.locator("[name=mode]").selectOption("chain");
+  if(!await form.isVisible())await page.locator('.gameplay-toolbar [data-game-command=settings]').click();
   await form.locator("[name=last]").fill("2");
   await form.getByRole("button", { name: "Start", exact: true }).click();
   await page.locator('[data-slot="3"]').click();
@@ -154,7 +160,7 @@ test("manual audio pauses gravity, switches safely, and touch/RTL/reduced motion
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await open(page);
-  await page.locator("[name=speed]").selectOption("fast");
+  await setFallingOption(page,'speed','fast');
   await page.locator("#fall-listen").click();
   await expect(page.locator(".falling-counter")).toContainText("Paused");
   const top = await page.locator(".falling-block").getAttribute("style");
@@ -208,7 +214,7 @@ test("Echo gates the opening, Listen loops safely and chain transitions stop pri
     };
   });
   const form = page.locator(".tower-settings");
-  await form.locator("[name=audio]").selectOption("echo");
+  await setFallingOption(page,'audio','echo');
   await expect(page.locator(".tower-overlay")).toContainText("Listening");
   const before = await page
     .locator(".falling-block")
@@ -220,14 +226,16 @@ test("Echo gates the opening, Listen loops safely and chain transitions stop pri
   );
   await page.evaluate(() => window.currentRecitation.onended());
   await expect(page.locator(".tower-overlay")).toHaveCount(0);
-  await form.locator("[name=audio]").selectOption("listen");
+  await setFallingOption(page,'audio','listen');
   await page.evaluate(() => window.currentRecitation.onended());
   expect(
     await page.evaluate(
       () => window.audioLog.filter((e) => e[0] === "play").length,
     ),
   ).toBeGreaterThanOrEqual(3);
+  if(!await form.isVisible())await page.locator('.gameplay-toolbar [data-game-command=settings]').click();
   await form.locator("[name=mode]").selectOption("chain");
+  if(!await form.isVisible())await page.locator('.gameplay-toolbar [data-game-command=settings]').click();
   await form.locator("[name=last]").fill("2");
   await form.getByRole("button", { name: "Start", exact: true }).click();
   await solve(page);
@@ -246,6 +254,7 @@ test("Single Ayah can select a later ayah without a chain end and uses its verif
   await open(page);
   const form = page.locator(".tower-settings");
   await expect(form.locator("[name=last]")).toBeHidden();
+  if(!await form.isVisible())await page.locator('.gameplay-toolbar [data-game-command=settings]').click();
   await form.locator("[name=first]").fill("5");
   await form.getByRole("button", { name: "Start", exact: true }).click();
   await expect(page.locator(".tower-hud")).toContainText("Ayah 5");

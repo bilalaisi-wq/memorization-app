@@ -1,3 +1,4 @@
+import {advancedRevision} from './revision-helper.js';
 import {test,expect} from '@playwright/test';
 import {createFlowRunner,BOOST_MULTIPLIER,NORMAL_FLIGHT_RATE} from '../src/puzzles/arcade/cosmic/flow-runner.js';
 import {createFlowUnits,flowTransliteration} from '../src/quest/cosmic/flow-content.js';
@@ -27,7 +28,7 @@ test('QUR\'AN CHRONICLES is hidden for learners, developer-only and labeled comi
  await page.evaluate(async()=>{(await import('/src/developer/access.js')).setDeveloperPreview(false);});await expect(page.locator('#nav-comprehension-lab')).toBeHidden();
 });
 test('mobile Star Runner pickups show Arabic and source transliteration together',async({page})=>{
- await page.setViewportSize({width:390,height:844});await page.goto('/');await page.locator('#nav-revision-lab').click();await page.locator('[name=selection]').selectOption('custom');await page.locator('[name=start]').fill('3');await page.locator('[name=end]').fill('3');await page.getByRole('button',{name:'View mission briefing →'}).click();await page.locator('[data-flow-guidance]').uncheck();await page.clock.install();await page.locator('[data-launch-runner]').click();await page.getByRole('button',{name:'Start flight',exact:true}).click();await page.clock.runFor(2000);await expect(page.locator('.runner-pickup-roman').first()).not.toBeEmpty();await expect(page.locator('.runner-pickup-arabic').first()).not.toBeEmpty();await page.screenshot({path:'/workspace/artifacts/runner-reading-mobile.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});await page.goto('/');await advancedRevision(page);await page.locator('[name=selection]').selectOption('custom');await page.locator('[name=start]').fill('3');await page.locator('[name=end]').fill('3');await page.getByRole('button',{name:'View mission briefing →'}).click();await page.locator('[data-flow-guidance]').uncheck();await page.clock.install();await page.locator('[data-launch-runner]').click();await page.getByRole('button',{name:'Start flight',exact:true}).click();await page.clock.runFor(2000);await expect(page.locator('.runner-pickup-roman').first()).not.toBeEmpty();await expect(page.locator('.runner-pickup-arabic').first()).not.toBeEmpty();await page.screenshot({path:'/workspace/artifacts/runner-reading-mobile.png',fullPage:true});
 });
 test('Ayah Chain rejects a word dragged from a different ayah workspace',async({page})=>{
  await page.goto('/');await page.locator('[data-mode=sequence]').click();await page.locator('#chain-start').click();

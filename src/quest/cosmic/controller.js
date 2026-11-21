@@ -15,7 +15,7 @@ import {createMission} from './mission.js';
 import {createRunner} from '../../puzzles/arcade/cosmic/runner.js';
 
 // One mission director. Arcade checkpoints never certify independent recall or mastery.
-export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=1,activity='runner',defenseConfig='balanced',defenseMode=null,defenseMotor='relaxed',linkMode='guided',linkChainMode='practice',reducedMotion=false,initialStage=0,initialRound=0,compact=false}={}){
+export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=1,activity='runner',defenseConfig='balanced',defenseMode=null,defenseMotor='relaxed',defenseMemory='standard',linkMode='guided',linkChainMode='practice',reducedMotion=false,initialStage=0,initialRound=0,compact=false}={}){
   const canonical=await createMission({surahId:manifest.surah,selection:'custom',start:manifest.first,end:manifest.last});
   if(JSON.stringify(manifest)!==JSON.stringify(canonical))throw Error('Mission configuration changed. Rebuild the briefing.');
   if(!Number.isInteger(rounds)||rounds<1||rounds>10)throw Error('Choose between 1 and 10 revision rounds.');
@@ -27,7 +27,7 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
   const linkPlans={},reviewRequested=new Set();
   if(activity==='link')Object.assign(linkPlans,await prepareLinkPlans(canonical.refs,null));
   let boundaryContent=activity==='link'&&BOUNDARY_MODES[linkMode]?await prepareBoundaryContent(canonical.refs):null;
-  const defenseContent=defenseMode?await prepareDefenseContent(canonical.refs,null,{motorDifficulty:defenseMotor}):null;
+  const defenseContent=defenseMode?await prepareDefenseContent(canonical.refs,null,{motorDifficulty:defenseMotor,memoryDifficulty:defenseMemory}):null;
   const captureOwner=activeProfileId(),captureRuntimes=new Map(),captureStore=defenseMode?createCaptureStore(profileStorage):null,captureRouteId=defenseMode?await sha256(JSON.stringify([canonical.id,defenseContent.plan.id,defenseMode,defenseMotor])):null;
   if(captureStore?.warning){defenseContent.dispose();throw Error(captureStore.warning);}
   const savedCapture=captureStore?.snapshot().routes?.[captureRouteId];if(savedCapture){if(savedCapture.stage>=canonical.stages.length||savedCapture.round>=roundCount){defenseContent.dispose();throw Error('Saved capture route needs recovery.');}index=savedCapture.stage;roundIndex=savedCapture.round;}

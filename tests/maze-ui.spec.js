@@ -15,7 +15,7 @@ test('maze launcher, real keyboard corridors, Arabic door decisions, exact RTL v
 });
 
 test('chain portals, Practice chamber retry, next-ayah guidance and recall navigation',async({page})=>{
- await openMaze(page,{end:2,rules:'practice'});for(const word of words)await openMazeChoice(page,word);await expect(page.locator('.maze-status')).toContainText('portal');await expect(page.locator('[data-maze-chamber]')).toContainText('1:1');await openMazeChoice(page,null);await expect(page.locator('[data-maze-chamber]')).toContainText('1:2');
+ await openMaze(page,{end:2,rules:'practice'});for(const word of words)await openMazeChoice(page,word);await expect(page.locator('[data-maze-chamber]')).toContainText('1:2');await expect(page.locator('.maze-status')).toContainText('new chamber');
  const nextWords=surahs[0].verses[1].words;
  for(let i=0;i<3;i++){if(i)await page.keyboard.press('ArrowUp');const wrong=(await mazeDOM(page)).signs.find(t=>t!==nextWords[0]);await openMazeChoice(page,wrong);}
  await expect(page.locator('.memory-maze')).toHaveClass(/maze-game-over/);await page.locator('[data-maze-action=retry]').click();await expect(page.locator('[data-maze-chamber]')).toContainText('1:2');await expect(page.locator('[data-maze-strikes]')).toContainText('3/3');

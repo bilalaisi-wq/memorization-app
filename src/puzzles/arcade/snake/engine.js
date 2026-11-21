@@ -85,6 +85,7 @@ export function stepSnake(previous,action){
   if(action.type==='assist'){reduce(s,'assist',{kind:action.kind});return s;}
   if(action.type==='recover'&&s.motorPause){resetBody(s);populate(s);s.motorPause=false;s.message='A fresh safe route. Word progress and memory strikes are unchanged.';return s;}
   if(s.motorPause)return previous;
+  if(action.type==='next'&&s.portal&&s.cursor===s.sectors[s.session.checkpoint].words.length){reduce(s,'checkpoint');s.score+=200;freshSector(s);s.message='Ayah connected. Your next trail is ready.';return s;}
   if(action.type==='boost'){
     if(s.boost.remainingMs||s.boost.cooldownMs)return previous;
     s.boost.remainingMs=SNAKE_BOOST.durationMs;s.message='Boost! Correct words and phrases earn 150 arcade points.';return s;

@@ -34,21 +34,55 @@ export function mountRevisionLab(main,{selectedPassage=null,onMissionSelection=(
   const oldCleanup=cleanup;cleanup=()=>{window.removeEventListener('ayahcosmicrestored',restored);oldCleanup();};
   async function missions(){
     const token=++generation;atPlanner=false;atSelection=false;flight?.dispose();director?.dispose();director=null;flight=null;
-    try{const {mountRevisionMissions}=await import('./missions/ui.js');if(token!==generation||!root.isConnected)return;flight=mountRevisionMissions(root,{client:appearanceAccount().client,refs:selectedPassage?.refs||null,defaultGame:selectedPassage?'runner':'snake',isCurrent:()=>token===generation,onExit:planner});}catch(e){if(token===generation){planner();const p=document.createElement('p');p.textContent=e.message;root.append(p);}}
+    try{const {mountRevisionMissions}=await import('./missions/ui.js');if(token!==generation||!root.isConnected)return;flight=mountRevisionMissions(root,{client:appearanceAccount().client,refs:selectedPassage?.refs||null,defaultGame:selectedPassage?'runner':'snake',isCurrent:()=>token===generation,onExit:selection});}catch(e){if(token===generation){planner();const p=document.createElement('p');p.textContent=e.message;root.append(p);}}
   }
   function missionEntry(){const b=document.createElement('button');b.className='cosmic-secondary';b.dataset.revisionMissions='';b.textContent='Memory Rescue & Long-Surah Marathon';b.onclick=missions;root.prepend(b);}
   function selection() {
     atSelection=true;atPlanner=false;
     generation++;
-    root.innerHTML = `<div class="cosmic-hero"><span class="cosmic-eyebrow">YOUR NEXT CONSTELLATION</span><h2>Revision Lab</h2><p>Plan a passage journey. Return to familiar ayahs and connect them together.</p></div><button class="cosmic-card" data-cosmic-select><span aria-hidden="true">✦</span><strong>Cosmic Rush</strong><span>Ayah Relay 2.0</span><p>Explore the mission planner and constellation route.</p><small>Star Runner + Meteor Defense + Ayah Link</small><b>Choose a mission →</b></button>`;
-    root.querySelector('[data-cosmic-select]').onclick = () => planner();
-    missionEntry();savedRoutes();
+    flight?.dispose();director?.dispose();flight=null;director=null;
+    const cards=[['runner','✧','Star Runner','Fly through space and collect the correct Qur’an words.','Word order and supported revision'],['defense','☄','Meteor Defense','Protect your star and capture the right words.','Recognize the next word group'],['link','✦','Ayah Link','Connect the end of one ayah to the beginning of the next.','Adjacent-ayah connections'],['cosmic','✴','Cosmic Rush Adventure','Play several challenges in one Qur’an adventure.','Custom passages and saved expeditions'],['rescue','◇','Memory Rescue','Practice parts you have found difficult.','Evidence-based corrective practice'],['marathon','☾','Long-Surah Marathon','Review a longer passage through several challenges.','Steady, bounded passage revision']];
+    root.innerHTML=`<div class="cosmic-hero"><span class="cosmic-eyebrow">ONE AYAH AT A TIME</span><h2>Choose your revision game</h2><p>Listen, say the words aloud, and build your confidence.</p></div><div class="revision-game-grid">${cards.map(([id,icon,title,description,skill])=>`<article class="revision-game-card"><span class="game-card-icon" aria-hidden="true">${icon}</span><h3>${title}</h3><p>${description}</p><small>Practice: ${skill}</small><button class="cosmic-primary" data-revision-game="${id}" ${id==='cosmic'?'data-cosmic-select':''}>Play ${title}</button></article>`).join('')}</div>`;
+    root.querySelectorAll('[data-revision-game]').forEach(button=>button.onclick=()=>{const id=button.dataset.revisionGame;if(id==='cosmic')planner();else if(id==='rescue'||id==='marathon')missions();else basicSetup(id);});
+    savedRoutes();
+  }
+  function basicSetup(activity) {
+    atSelection=false;atPlanner=false;generation++;
+    const titles={runner:'Star Runner',defense:'Meteor Defense',link:'Ayah Link'};
+    root.innerHTML=`<section class="revision-basic-setup" aria-label="${titles[activity]} game screen"><button class="cosmic-secondary" data-back>← Revision games</button><h2>${titles[activity]}</h2><p>Choose your ayahs, listen, and play. You can pause at any time.</p><form><label>Choose your surah<select name="surah">${cosmicSurahs.slice().sort((a,b)=>a.id-b.id).map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select></label><label>Choose your ayahs<select name="selection"><option value="5">Up to five ayahs</option><option value="10">Up to ten ayahs</option><option value="15">Up to fifteen ayahs</option><option value="20">Up to twenty ayahs</option><option value="30">Up to thirty ayahs</option><option value="entire">Entire surah</option><option value="custom">Custom range</option></select></label><label>First ayah<input name="start" type="number" min="1" value="1" required></label><label data-basic-end hidden>Last ayah<input name="end" type="number" min="1" value="2"></label><label>Memory challenge<select name="memory"><option value="guided">Easy · more hints</option><option value="standard">Normal · some hints</option><option value="expert">Hard · fewer hints</option></select></label><label>Game speed<select name="motor"><option value="relaxed">Relaxed · take your time</option><option value="normal">Normal · regular speed</option><option value="arcade">Fast · arcade challenge</option></select></label><details><summary>Advanced Settings</summary><p>Memory challenge changes learning support. Game speed changes movement, never your memory assessment.</p><label>Revision rounds<input name="rounds" type="number" min="1" max="10" value="1"></label><label>Pickup style<select name="pickup"><option value="mixed">Word groups, words and ayahs</option><option value="words">Word by word</option><option value="ayahs">Complete ayahs</option></select></label><label><input name="audio" type="checkbox" checked> Play verified learning cues</label><label><input name="gateways" type="checkbox"> Add safe gateway review</label><p>Transliteration, recitation volume, and effects are available inside the game.</p><button type="button" class="cosmic-secondary" data-full-planner>Open full mission planner</button></details><button class="cosmic-primary" type="submit">Start Game</button><p data-basic-error role="alert"></p></form></section>`;
+    const form=root.querySelector('form');if(activity==='link')form.elements.motor.closest('label').hidden=true;if(activity==='runner')form.elements.motor.querySelector('[value=arcade]').remove();const refresh=()=>{const surah=cosmicSurahs.find(s=>s.id===Number(form.elements.surah.value));form.elements.start.max=form.elements.end.max=surah.verses.length;form.elements.start.disabled=form.elements.selection.value==='entire';root.querySelector('[data-basic-end]').hidden=form.elements.selection.value!=='custom';form.elements.end.disabled=form.elements.selection.value!=='custom';};
+    form.elements.surah.onchange=()=>{form.elements.start.value='1';form.elements.end.value='2';refresh();};form.elements.selection.onchange=refresh;refresh();
+    root.querySelector('[data-back]').onclick=selection;root.querySelector('[data-full-planner]').onclick=planner;
+    form.onsubmit=async event=>{event.preventDefault();const token=++generation;form.querySelector('[type=submit]').disabled=true;
+      try{const mission=await createMission({surahId:Number(form.elements.surah.value),selection:form.elements.selection.value,start:Number(form.elements.start.value),end:Number(form.elements.end.value)});if(token!==generation||!root.isConnected)return;
+        if(activity==='link'&&mission.refs.length<2)throw Error('Choose at least two consecutive ayahs to connect.');
+        const options={rounds:Number(form.elements.rounds.value),slow:form.elements.motor.value==='relaxed',defenseMotor:form.elements.motor.value,defenseMemory:form.elements.memory.value,memoryDifficulty:form.elements.memory.value,defenseMode:activity==='defense'?'capture':null,pickupMode:form.elements.pickup.value,guidance:form.elements.audio.checked&&form.elements.memory.value!=='expert',memoryGateways:form.elements.gateways.checked,linkMode:form.elements.memory.value==='guided'?'guided':form.elements.memory.value==='expert'?'opening':'recognition',linkChainMode:'practice',compact:matchMedia('(max-width:600px)').matches,reducedMotion:cosmicReducedMotion()};
+        // Use the same validated mission/controller and source gates as the full planner.
+        await startBasic(mission,activity,options,()=>basicSetup(activity));
+      }catch(error){if(root.querySelector('[data-basic-error]')){root.querySelector('[data-basic-error]').textContent=error.message;form.querySelector('[type=submit]').disabled=false;}}
+    };
+  }
+  async function startBasic(mission,activity,options,back){
+    const token=++generation;flight?.dispose();director?.dispose();flight=null;
+    const current=await createFlightController(mission,{...options,activity,initialStage:0});if(token!==generation||!root.isConnected){current.dispose();return;}director=current;
+    const show=async next=>{const viewToken=++generation;flight?.dispose();flight=null;
+      if(next==='link')await current.prepareLink(appearanceAccount().client);
+      if(viewToken!==generation||director!==current||!root.isConnected)return;
+      const module=await(next==='link'?import('../puzzles/arcade/cosmic/link-ui.js'):next==='defense'?import('../puzzles/arcade/cosmic/defense-ui.js'):import('../puzzles/arcade/cosmic/ui.js'));
+      if(viewToken!==generation||director!==current||!root.isConnected)return;
+      const exit=()=>{generation++;flight?.dispose();current.dispose();flight=null;director=null;back();};
+      const transition=async type=>{if(director!==current)return;if(type==='link')await current.prepareLink(appearanceAccount().client);if(director===current&&current.switchActivity(type))await show(type);};
+      const common={...options,controller:current,client:appearanceAccount().client,isCurrent:()=>viewToken===generation,onExit:exit,onRunner:()=>transition('runner'),onDefense:()=>transition('defense'),onLink:()=>transition('link')};
+      const mounted=next==='link'?await module.mountAyahLink(root,mission,common):next==='defense'?await module.mountMeteorDefense(root,mission,common):await module.mountStarRunner(root,mission,common);
+      if(viewToken!==generation||!root.isConnected)mounted?.dispose();else {flight=mounted;mounted?.start?.();root.querySelector('.gameplay-viewport')?.scrollIntoView({block:'start'});}
+    };
+    try{await show(activity);}catch(error){if(director===current){current.dispose();director=null;back();const note=root.querySelector('[data-basic-error]');if(note)note.textContent=`Could not open game: ${error.message}`;}}
   }
   function savedRoutes(){
     root.querySelector('.exp-saved-routes')?.remove();
     const back=atPlanner?planner:selection;
     const saved=createExpeditionStore();
-    const list=document.createElement('div');list.className='exp-saved-routes';
+    const list=document.createElement('div');list.className='exp-saved-routes';const title=document.createElement('h3');title.textContent='Continue Your Adventure';list.append(title);
     if(saved.warning){const p=document.createElement('p');p.setAttribute('role','alert');p.textContent=saved.warning;list.append(p);}
     for(const run of COSMIC_EXPEDITIONS_ENABLED?Object.values(saved.snapshot().runs).reverse():[]){
       const b=document.createElement('button');b.className='cosmic-secondary';b.textContent=`Resume saved expedition · ${cosmicSurahs.find(s=>s.id===run.surah)?.name||run.surah} ${run.first}–${run.last}${run.final?.result?' · assessed':''}`;
@@ -140,6 +174,6 @@ export function mountRevisionLab(main,{selectedPassage=null,onMissionSelection=(
     }
     render(true);
   }
-  planner();
+  selection();
   if(selectedPassage){void missions();return;}
 }

@@ -1,7 +1,8 @@
+import {advancedRevision} from './revision-helper.js';
 import { test, expect } from '@playwright/test';
 async function open(page) {
   await page.goto('/');
-  await page.locator('#nav-revision-lab').click();
+  await advancedRevision(page);
   await expect(page.locator('.page-heading h1')).toHaveText('Revision Lab');
   await expect(page.locator('.cosmic-form')).toBeVisible();
 }

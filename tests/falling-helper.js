@@ -1,4 +1,5 @@
 export async function startFalling(page) {
+  if(!await page.locator(".tower-settings").isVisible())await page.locator(".gameplay-toolbar [data-game-command=settings]").click();
   await page.locator("[name=audio]").selectOption("silent");
   await page.getByRole("button", { name: "Start", exact: true }).click();
 }
@@ -11,4 +12,10 @@ export async function parkExtra(page) {
   if ((await width()) > 3) await page.locator("#fall-rotate").click();
   for (let i = 0; i < 10; i++) await page.locator("#fall-left").click();
   await page.locator("#fall-place").click();
+}
+export async function setFallingOption(page,name,value){
+ const field=page.locator(`.tower-settings [name="${name}"]`),hidden=!await field.isVisible();
+ if(hidden)await page.locator('.gameplay-toolbar [data-game-command=settings]').click();
+ await field.selectOption(value);
+ if(hidden)await page.locator('.gameplay-settings [data-game-command=resume]').click();
 }

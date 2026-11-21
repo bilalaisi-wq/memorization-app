@@ -1,3 +1,4 @@
+import {advancedRevision} from './revision-helper.js';
 import {test,expect} from '@playwright/test';
 import {mockBilling} from './billing-fixtures.js';
 test('mobile parking and Hold stay visible without nested horizontal scrolling; reference decoration does not overlap Arabic',async({page})=>{
@@ -12,7 +13,7 @@ test('mobile parking and Hold stay visible without nested horizontal scrolling; 
 });
 test('Night Sky mission action retains dark readable text on teal',async({page})=>{
  await mockBilling(page,{signed:false});await page.addInitScript(()=>localStorage.setItem('ayah-appearance-v1',JSON.stringify({version:1,theme:'night-sky',reduceEffects:true,updatedAt:'2026-11-08T00:00:00Z'})));
- await page.goto('/');await page.locator('#nav-revision-lab').click();
+ await page.goto('/');await advancedRevision(page);
  await expect(page.locator('.cosmic-primary').first()).toBeVisible();
  expect(await page.locator('.cosmic-primary').first().evaluate(el=>getComputedStyle(el).color)).toBe('rgb(9, 47, 54)');
 });

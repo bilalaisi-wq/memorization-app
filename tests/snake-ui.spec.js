@@ -27,10 +27,10 @@ test('correct words grow a real tail, assemble exact RTL text, save and replay w
  await page.reload();expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('ayah-puzzle-lab-v1')).history.some(h=>h.game==='snake'))).toBe(true);
 });
 
-test('Chain uses a physical portal and Practice checkpoints; completion offers next ayahs and recall',async({page})=>{
+test('Chain automatically crosses portals and retains Practice checkpoints; completion offers next ayahs and recall',async({page})=>{
  test.setTimeout(90000);await openSnake(page,{end:2,rules:'practice'});
  for(const word of words)await snakeCollect(page,word);
- await expect(page.locator('.snake-portal')).toBeVisible();await expect(page.locator('[data-snake-sector]')).toContainText('1:1');await snakePortal(page);await expect(page.locator('[data-snake-sector]')).toContainText('1:2');expect((await snakeDOM(page)).count).toBe(0);
+ await expect(page.locator('.snake-portal')).toHaveCount(0);await expect(page.locator('[data-snake-sector]')).toContainText('1:2');expect((await snakeDOM(page)).count).toBe(0);
  for(const word of surahs[0].verses[1].words)await snakeCollect(page,word);
  await expect(page.locator('.snake-save')).toContainText('Trail saved');await expect(page.locator('[data-snake-action=continue]')).toContainText('ayahs 3–4');
  await page.locator('[data-snake-action=recall]').click();await expect(page.locator('.snake-board')).toHaveCount(0);await expect(page.locator('main')).toContainText('SELF-ASSESSED RECITATION');

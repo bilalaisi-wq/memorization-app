@@ -41,7 +41,7 @@ test('B/N rotate without clicking the board, preserve arrows/X, and leave typing
  if(await page.locator('.falling-block').getAttribute('data-shape')==='O')await page.locator('#fall-hold').click();
  const cells=()=>page.locator('.tetromino-cell.active').evaluateAll(nodes=>nodes.map(e=>[e.style.getPropertyValue('--x'),e.style.getPropertyValue('--y')]));
  const before=await cells();await page.locator('.falling-stage').focus();await page.keyboard.press('b');expect(await cells()).not.toEqual(before);const afterB=await cells();await page.keyboard.press('n');expect(await cells()).not.toEqual(afterB);
- await page.locator('[name=first]').focus();const typed=await cells();await page.keyboard.press('b');expect(await cells()).toEqual(typed);
+ await page.locator('.gameplay-toolbar [data-game-command=settings]').click();await page.locator('[name=first]').focus();const typed=await cells();await page.keyboard.press('b');expect(await cells()).toEqual(typed);
  await page.locator('#lab-volume').focus();const current=await cells();await page.keyboard.press('ArrowRight');expect(await cells()).toEqual(current);
  await expect(page.locator('.falling-stage')).toHaveAttribute('aria-keyshortcuts',/B N/);
 });

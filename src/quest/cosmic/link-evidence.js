@@ -12,7 +12,7 @@ function valid(data){return data?.version===1&&Array.isArray(data.events)&&data.
 });}
 export function createLinkEvidence(mission,{storage=profileStorage,getOwner=activeProfileId,runId=crypto.randomUUID(),clock=()=>new Date(),boundaryContent=null}={}){
   const owner=getOwner(),store=versionedStore(storage,LINK_EVIDENCE_KEY,()=>({version:1,events:[]}),valid);let pending=Promise.resolve();
-  return {...store,record(event){
+  return {...store,flush:()=>pending,record(event){
     if(!allowed.has(event.type))return Promise.resolve();
     const task=pending.then(async()=>{
       if(getOwner()!==owner)throw Error('Account changed; Link evidence was not saved to another profile.');

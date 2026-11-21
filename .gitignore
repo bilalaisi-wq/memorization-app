@@ -31,3 +31,6 @@ public/.well-known/assetlinks.json
 # Capgo private keys and local signing environment
 .capgo_key*
 *.private.pem
+
+# Local gameplay validation logs and captures (selected evidence is in docs).
+/artifacts/

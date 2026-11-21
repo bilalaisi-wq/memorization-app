@@ -258,6 +258,7 @@ function bind() {
         }
         state.answerState=true;
         state.chain.push(id);
+        state.activePuzzle=state.chosen.find(next=>!state.chain.includes(next))||id;
         state.feedback = "Ayah connected. Keep building your sequence.";
         successCue(`chain-piece:${state.surah.id}:${id}`,"Ayah connected!");
         draw();

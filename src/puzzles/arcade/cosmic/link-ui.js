@@ -1,3 +1,5 @@
+import {mountCosmicGameplayFrame} from '../../../ui/cosmic-gameplay-frame.js';
+import {automaticContinuation} from '../../../ui/automatic-continuation.js';
 import {bindAnswerDrag} from '../../../ui/answer-drag.js';
 import {romanHTML} from '../../../quest/cosmic/transliteration.js';
 import {mountBoundaryLinkUI} from './link-boundary-ui.js';
@@ -24,6 +26,7 @@ export function renderLinkAyah(ayah,{end=false,opening=false,hiddenOpening=false
   return `${esc(ayah.text.slice(0,span.start))}<mark data-link-${end?'ending':'opening'}>${inside}</mark>${esc(ayah.text.slice(span.end))}`;
 }
 export async function mountAyahLink(root,mission,{controller=null,client=null,mode='guided',onExit=()=>{},onRunner=null,onDefense=null,onCheckpoint=null,isCurrent=()=>true}={}){
+ let gameplayFrame=null;const continuation=automaticContinuation();
   const owner=activeProfileId(),game=controller||await createFlightController(mission,{activity:'link',linkMode:mode,reducedMotion:cosmicReducedMotion()});
   if(!controller)await game.prepareLink(client);
   if(game.getSnapshot().boundaryVersion===2)return mountBoundaryLinkUI(root,mission,{game,ownsGame:!controller,onExit,onRunner,onDefense,onCheckpoint,isCurrent});
@@ -31,7 +34,7 @@ export async function mountAyahLink(root,mission,{controller=null,client=null,mo
   let disposed=false,raf=0,last=0,key='',warning='',exposureBlocked=false,audioToken=0,pending=false,bonusXP=0,weak=[];
   const abort=new AbortController(),evidence=createLinkEvidence(mission,{runId:game.getSnapshot().runId}),bonuses=createFlightBonuses(mission);
   const audio=createAudioManager({owner:'cosmic-link-study',initialVolume:readLabVolume(profileStorage)});
-  const unsubscribe=game.subscribe(e=>{
+  const unsubscribe=game.subscribe(e=>{gameplayFrame?.event(e);
     evidence.record(e).then(()=>{if(!disposed&&e.type==='link:checkpoint')refreshWeak();}).catch(error=>{if(!disposed){warning=error.message;paint();}});
     if(e.type==='link:transition-correct')bonuses.record(e).then(r=>{if(!disposed){if(r.xp&&!r.duplicate)bonusXP+=r.xp;paint();}}).catch(error=>{if(!disposed){warning=error.message;paint();}});
   });
@@ -47,6 +50,10 @@ export async function mountAyahLink(root,mission,{controller=null,client=null,mo
     return `<article class="link-ayah-card"><h4>${esc(ayah.name)} · ${ayah.ref}</h4><div class="link-arabic" lang="ar" dir="rtl" data-link-text="${which}">${renderLinkAyah(ayah,{end:which==='previous',opening:which==='next',hiddenOpening:hidden,hiddenAll:hidden&&s.mode==='extended'})}</div>${hidden&&s.mode==='extended'?'':romanHTML({transliteration:ayah.words.map((w,i)=>hidden&&i===0?'•••':w.transliteration||'').join(' ')})}<span class="link-verse-marker" lang="ar" aria-label="Canonical ayah ${ayah.ayah}">۝${digit(ayah.ayah)}</span></article>`;
   }
   function paint(){
+ if(disposed)return;
+ gameplayFrame??=mountCosmicGameplayFrame({root,game,mission,surface:'[data-link-body]',sequence:'.link-pair-board',send,onExit:()=>root.querySelector('[data-link-exit]')?.click(),replay:()=>root.querySelector('[data-link-listen]')?.click(),volume:{get:()=>readLabVolume(profileStorage),set:v=>audio.setVolume(v)}});gameplayFrame.update();
+ continuation.update(`${game.getSnapshot().runId||mission.id}:${game.getSnapshot().cursor}`,game.getSnapshot().status==='success'&&!warning,async()=>{await evidence.flush();if(!disposed&&!warning)send({type:'continue'});});
+
     if(disposed)return;const s=game.getSnapshot(),p=s.pair;view.dataset.linkState=s.status;view.dataset.pair=p.pairKey||'foundation';view.dataset.mode=s.mode;
     const exposed=[];
     if(!['ready','paused'].includes(s.status)){
@@ -124,6 +131,6 @@ export async function mountAyahLink(root,mission,{controller=null,client=null,mo
     const next=async i=>{if(disposed||token!==audioToken||i>=refs.length)return;const ok=await audio.play(canonicalLinkAyah(refs[i]).audio,{onEnded:()=>next(i+1)});if(!ok&&!disposed&&token===audioToken){warning='Full-ayah recitation could not play. Retry without a time limit.';paint();}};next(0);
   };
   const observer=new MutationObserver(()=>{if(!root.isConnected)dispose();});observer.observe(document.body,{childList:true,subtree:true});
-  function dispose(){if(disposed)return;disposed=true;disposeAnswerDrag();controls.dispose();cancelAnimationFrame(raf);abort.abort();observer.disconnect();stopPieceDrag();stopAudio();audio.dispose();unsubscribe();if(!controller)game.dispose();}
-  paint();refreshWeak();return {pause:()=>send({type:'pause'}),resume:()=>send({type:'resume'}),dispose,getSnapshot:()=>game.getSnapshot()};
+  function dispose(){if(disposed)return;disposed=true;gameplayFrame?.dispose();continuation.dispose();disposeAnswerDrag();controls.dispose();cancelAnimationFrame(raf);abort.abort();observer.disconnect();stopPieceDrag();stopAudio();audio.dispose();unsubscribe();if(!controller)game.dispose();}
+  paint();refreshWeak();return {start:()=>send({type:'start'}),pause:()=>send({type:'pause'}),resume:()=>send({type:'resume'}),dispose,getSnapshot:()=>game.getSnapshot()};
 }

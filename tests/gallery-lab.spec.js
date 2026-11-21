@@ -1,5 +1,5 @@
 import {enableDeveloperLab} from "./developer-lab-helper.js";
-import {startFalling,parkExtra} from "./falling-helper.js";
+import {startFalling,parkExtra,setFallingOption} from "./falling-helper.js";
 import { menu } from "./menu-helper.js";
 import { test, expect } from "@playwright/test";
 import { surahs } from "../src/data.js";
@@ -334,7 +334,7 @@ test("timed descent pauses for recitation and resumes only after stopping audio"
     };
   });
   await openLab(page);
-  await page.locator("[name=speed]").selectOption("slow");
+  await setFallingOption(page,"speed","slow");
   const initialTop = await page.locator(".falling-block").getAttribute("style");
   await expect.poll(() => page.locator(".falling-block").getAttribute("style")).not.toBe(initialTop);
   await page.locator("#lab-replay").click();

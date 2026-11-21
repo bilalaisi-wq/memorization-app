@@ -33,6 +33,14 @@ import { shuffled, verseAudio, wordAudio } from "../data.js";
 import { outline } from "../illustrations.js";
 import { esc, clearLearningView, uid } from "../ui/dom.js";
 import { gameTypes } from "./puzzle-store.js";
+
+function quickStart(form,start){
+ const b=document.createElement('button');b.type='button';b.className='primary';b.dataset.gameStart='';b.textContent='Start Game';b.onclick=()=>{if(form.reportValidity())start();};form.append(b);
+ form.classList.add('gameplay-pregame');
+ const note=document.createElement('p');note.textContent='Choose your ayahs and start. Changing the range or difficulty restarts the active run; already saved learning remains.';form.prepend(note);
+}
+function keepSetupInGame(form,host){const options=host.querySelector('[data-game-options]');if(options)options.append(form);}
+
 let cleanup = null, suspend = null;
 export function pausePuzzleLab(){suspend?.();}
 export function stopPuzzleLab() {
@@ -304,7 +312,7 @@ export function mountPuzzleLab(
     else if (game === "chain") chain();
     else if (game === "continue") continuation();
     else detective();
-    if (changedMode) transitionCue();
+    if (changedMode){transitionCue();area.scrollIntoView({block:'start',behavior:'instant'});}
   }
   function bridge() {
     const registry=createRegistry();registry.register(bridgeRegistration);
@@ -327,19 +335,20 @@ export function mountPuzzleLab(
           onSetup:()=>{form.scrollIntoView({block:'start'});form.elements.first.focus();},onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
           getNextSteps:s=>arcadeNextSteps({session:s.session,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'journey'}),
           onJourney:async choice=>{
-            nextAudio=choice.audioMode==='echo'?'echo':'listen';
-            if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
+            nextAudio=['listen','echo','silent'].includes(choice.audioMode)?choice.audioMode:'listen';
+            if(choice.kind==='customize'){const settings=host.querySelector('[data-game-command=settings]');if(settings){keepSetupInGame(form,host);settings.click();}form.elements.first.focus({preventScroll:true});return;}
             const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
             if(!range)throw Error('This surah is complete. Choose another surah from study.');
             form.elements.first.value=String(range.first);through.value=String(range.last);form.elements.rules.value=choice.config.chainMode;form.elements.difficulty.value=choice.difficulty;
             form.elements.journey.value=range.first===range.last?'single':'chain';through.disabled=range.first===range.last;await launch(true);
           }});
-        if(autoStart)fallingControl.start();status.textContent=autoStart?'Your next bridge has started.':'Ready. Press Start linking in the scene.';host.scrollIntoView({block:'start'});
+        if(autoStart)fallingControl.start();if(autoStart)keepSetupInGame(form,host);status.textContent=autoStart?'Your next bridge has started.':'Ready. Press Start linking in the scene.';(host.querySelector('.gameplay-viewport')||host).scrollIntoView({block:'start'});
       }catch(e){if(!cancelled){status.textContent=e.message;if(autoStart)throw e;}}finally{if(!cancelled&&token===launchToken)button.disabled=false;}
     }
     const showTutorial=()=>{fallingControl?.pause();tutorial?.dispose();tutorial=mountBridgeTutorial({adapter,library:surahs,volume:()=>recitationVolume,muted:()=>muted,onClose:result=>{tutorial=null;if(result.warning)status.textContent=result.warning;form.scrollIntoView({block:'start'});form.elements.first.focus();}});};
     form.querySelector('[data-bridge-tutorial]').onclick=showTutorial;
     if(createBridgeTutorialStore().needsTutorial())showTutorial();
+    quickStart(form,()=>{tutorial?.dispose();tutorial=null;launch(true);});
     form.onsubmit=e=>{e.preventDefault();tutorial?.dispose();tutorial=null;launch();};pauseGame=()=>fallingControl?.pause();gameCleanup=()=>{cancelled=true;launchToken++;tutorial?.dispose();launcher.dispose();};
   }
   function sirat() {
@@ -372,16 +381,17 @@ export function mountPuzzleLab(
           onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
           getNextSteps:s=>arcadeNextSteps({session:s.session,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'journey'}),
           onJourney:async choice=>{
-            nextAudio=choice.audioMode==='echo'?'echo':'listen';
-            if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
+            nextAudio=['listen','echo','silent'].includes(choice.audioMode)?choice.audioMode:'listen';
+            if(choice.kind==='customize'){const settings=host.querySelector('[data-game-command=settings]');if(settings){keepSetupInGame(form,host);settings.click();}form.elements.first.focus({preventScroll:true});return;}
             const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
             if(!range)throw Error('This surah is complete. Choose another surah from study.');
             form.elements.first.value=String(range.first);through.value=String(range.last);form.elements.rules.value=choice.config.chainMode;form.elements.difficulty.value=choice.difficulty;
             form.elements.journey.value=range.first===range.last?'single':'chain';through.disabled=range.first===range.last;await launch(true);
           }});
-        if(autoStart)fallingControl.start();status.textContent=autoStart?'Your next sirat has started.':'Ready. Press Start exploring below.';host.scrollIntoView({block:'start'});
+        if(autoStart)fallingControl.start();if(autoStart)keepSetupInGame(form,host);status.textContent=autoStart?'Your next sirat has started.':'Ready. Press Start exploring below.';(host.querySelector('.gameplay-viewport')||host).scrollIntoView({block:'start'});
       }catch(e){if(!cancelled){status.textContent=e.message;if(autoStart)throw e;}}finally{if(!cancelled&&token===launchToken)button.disabled=false;}
     }
+    quickStart(form,()=>launch(true));
     form.onsubmit=e=>{e.preventDefault();launch();};pauseGame=()=>fallingControl?.pause();gameCleanup=()=>{cancelled=true;launchToken++;launcher.dispose();};
   }
   function bubble() {
@@ -413,16 +423,17 @@ export function mountPuzzleLab(
           onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
           getNextSteps:s=>arcadeNextSteps({session:s.session,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'journey'}),
           onJourney:async choice=>{
-            nextAudio=choice.audioMode==='echo'?'echo':'listen';
-            if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
+            nextAudio=['listen','echo','silent'].includes(choice.audioMode)?choice.audioMode:'listen';
+            if(choice.kind==='customize'){const settings=host.querySelector('[data-game-command=settings]');if(settings){keepSetupInGame(form,host);settings.click();}form.elements.first.focus({preventScroll:true});return;}
             const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
             if(!range)throw Error('This surah is complete. Choose another surah from study.');
             form.elements.first.value=String(range.first);through.value=String(range.last);form.elements.rules.value=choice.config.chainMode;form.elements.difficulty.value=choice.difficulty;
             form.elements.journey.value=range.first===range.last?'single':'chain';through.disabled=range.first===range.last;await launch(true);
           }});
-        if(autoStart)fallingControl.start();status.textContent=autoStart?'Your next bubble has started.':'Ready. Press Start bubbles below.';host.scrollIntoView({block:'start'});
+        if(autoStart)fallingControl.start();if(autoStart)keepSetupInGame(form,host);status.textContent=autoStart?'Your next bubble has started.':'Ready. Press Start bubbles below.';(host.querySelector('.gameplay-viewport')||host).scrollIntoView({block:'start'});
       }catch(e){if(!cancelled){status.textContent=e.message;if(autoStart)throw e;}}finally{if(!cancelled&&token===launchToken)button.disabled=false;}
     }
+    quickStart(form,()=>launch(true));
     form.onsubmit=e=>{e.preventDefault();launch();};pauseGame=()=>fallingControl?.pause();gameCleanup=()=>{cancelled=true;launchToken++;launcher.dispose();};
   }
   function maze() {
@@ -455,16 +466,17 @@ export function mountPuzzleLab(
           onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
           getNextSteps:s=>arcadeNextSteps({session:s.session,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'journey'}),
           onJourney:async choice=>{
-            nextAudio=choice.audioMode==='echo'?'echo':'listen';
-            if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
+            nextAudio=['listen','echo','silent'].includes(choice.audioMode)?choice.audioMode:'listen';
+            if(choice.kind==='customize'){const settings=host.querySelector('[data-game-command=settings]');if(settings){keepSetupInGame(form,host);settings.click();}form.elements.first.focus({preventScroll:true});return;}
             const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
             if(!range)throw Error('This surah is complete. Choose another surah from study.');
             form.elements.first.value=String(range.first);through.value=String(range.last);form.elements.rules.value=choice.config.chainMode;form.elements.difficulty.value=choice.difficulty;
             form.elements.journey.value=range.first===range.last?'single':'chain';through.disabled=range.first===range.last;await launch(true);
           }});
-        if(autoStart)fallingControl.start();status.textContent=autoStart?'Your next maze has started.':'Ready. Press Enter maze below.';host.scrollIntoView({block:'start'});
+        if(autoStart)fallingControl.start();if(autoStart)keepSetupInGame(form,host);status.textContent=autoStart?'Your next maze has started.':'Ready. Press Enter maze below.';(host.querySelector('.gameplay-viewport')||host).scrollIntoView({block:'start'});
       }catch(e){if(!cancelled){status.textContent=e.message;if(autoStart)throw e;}}finally{if(!cancelled&&token===launchToken)button.disabled=false;}
     }
+    quickStart(form,()=>launch(true));
     form.onsubmit=e=>{e.preventDefault();launch();};pauseGame=()=>fallingControl?.pause();gameCleanup=()=>{cancelled=true;launchToken++;launcher.dispose();};
   }
   function snake() {
@@ -484,16 +496,17 @@ export function mountPuzzleLab(
         onComplete:s=>{record(s);callbacks.onWalletChange();},onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),onExit:target=>callbacks.onStudy(target),
         getNextSteps:s=>arcadeNextSteps({session:s.session,elapsed:s.elapsed,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id,activity:'round'}),
         onJourney:choice=>{
-          nextAudio=choice.audioMode==='echo'?'echo':'listen';nextSpeed=choice.speed;
-          if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
+          nextAudio=['listen','echo','silent'].includes(choice.audioMode)?choice.audioMode:'listen';nextSpeed=choice.speed;
+          if(choice.kind==='customize'){const settings=host.querySelector('[data-game-command=settings]');if(settings){keepSetupInGame(form,host);settings.click();}form.elements.first.focus({preventScroll:true});return;}
           const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
           if(!range)throw Error('This surah is complete. Choose another surah in study.');
           form.elements.first.value=String(range.first);through.value=String(range.last);form.elements.rules.value=choice.config.chainMode;
           form.elements.journey.value=range.first===range.last?'single':'chain';through.disabled=range.first===range.last;launch(true);
         }});
-      if(autoStart)fallingControl.start();
-      status.textContent=autoStart?'Your next trail has started.':'Ready. Press Start trail below.';host.scrollIntoView({block:'start'});
+      if(autoStart)fallingControl.start();if(autoStart)keepSetupInGame(form,host);
+      status.textContent=autoStart?'Your next trail has started.':'Ready. Press Start trail below.';(host.querySelector('.gameplay-viewport')||host).scrollIntoView({block:'start'});
     }
+    quickStart(form,()=>{try{launch(true);}catch(e){status.textContent=e.message;}});
     form.onsubmit=e=>{e.preventDefault();try{launch();}catch(e){status.textContent=e.message;}};
     pauseGame=()=>fallingControl?.pause();gameCleanup=()=>launcher.dispose();
   }
@@ -526,20 +539,21 @@ export function mountPuzzleLab(
           getNextSteps:s=>flightNextSteps({session:s.session,elapsed:s.elapsed,goals:readGoals(profileStorage),due:learning.daily().dueNow,history:lab.snapshot().history,lastAyah:surah.verses.at(-1).id}),
           onRecall:target=>callbacks.onRecall(target),onPractice:target=>callbacks.onStudy(target),
           onJourney:async choice=>{
-            nextLaunchAudio=choice.audioMode==='echo'?'echo':'listen';
-            if(choice.kind==='customize'){form.scrollIntoView({block:'start'});form.elements.first.focus();return;}
+            nextLaunchAudio=['listen','echo','silent'].includes(choice.audioMode)?choice.audioMode:'listen';
+            if(choice.kind==='customize'){const settings=host.querySelector('[data-game-command=settings]');if(settings){keepSetupInGame(form,host);settings.click();}form.elements.first.focus({preventScroll:true});return;}
             const range=choice.kind==='continue'?choice.next:{first:Number(choice.config.keys[0].split(':')[1]),last:Number(choice.config.keys.at(-1).split(':')[1])};
             if(!range)throw Error('This surah is complete. Choose another surah from study.');
-            form.elements.rules.value=choice.config.chainMode;form.elements.difficulty.value=difficulty;
+            form.elements.rules.value=choice.config.chainMode;form.elements.difficulty.value=choice.difficulty||difficulty;
             form.elements.first.value=String(range.first);through.value=String(range.last);
             form.elements.journey.value=range.first===range.last?'single':'chain';through.disabled=range.first===range.last;
-            nextLaunchAudio=choice.audioMode==='echo'?'echo':'listen';autoStart=true;await launchFlight();
+            nextLaunchAudio=['listen','echo','silent'].includes(choice.audioMode)?choice.audioMode:'listen';autoStart=true;await launchFlight();
           },onExit:target=>callbacks.onStudy(target)});
         const startedAutomatically=autoStart;
-        if(autoStart){autoStart=false;fallingControl.start();}
-        error.textContent=startedAutomatically?'Starting your next flight…':'Ready. Press Start flight below.';host.scrollIntoView({block:'start'});
+        if(autoStart){autoStart=false;fallingControl.start();keepSetupInGame(form,host);}
+        error.textContent=startedAutomatically?'Starting your next flight…':'Ready. Press Start flight below.';(host.querySelector('.gameplay-viewport')||host).scrollIntoView({block:'start'});
       }catch(e){if(!cancelled){error.textContent=e.message;if(autoStart){autoStart=false;throw e;}}}finally{if(!cancelled)button.disabled=false;}
     };
+    quickStart(form,()=>{autoStart=true;launchFlight();});
     form.onsubmit=e=>{e.preventDefault();autoStart=false;launchFlight();};
     pauseGame=()=>fallingControl?.pause();
     gameCleanup=()=>{cancelled=true;launchRun++;launcher.dispose();};
@@ -573,6 +587,7 @@ export function mountPuzzleLab(
           return true;
         } catch(e) { say(`Your attempt could not be saved: ${e.message}`); return false; }
       },
+      onRecall:target=>callbacks.onRecall(target),
       onExit: () => callbacks.onStudy(key),
     });
     fallingControl=control;

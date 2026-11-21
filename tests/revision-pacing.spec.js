@@ -145,7 +145,7 @@ test("endpoint answer positions vary across runs and source transliteration neve
 });
 test("briefing launches the selected later set and defaults to one revision round", async ({ page }) => {
   await page.goto("/");
-  await page.locator("#nav-revision-lab").click();
+  await page.locator("#nav-revision-lab").click();await page.locator('[data-cosmic-select]').click();
   await page.locator("[name=surah]").selectOption("91");
   await page.locator("[name=selection]").selectOption("15");
   await page.getByRole("button", { name: "View mission briefing →" }).click();
