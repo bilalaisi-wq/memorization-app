@@ -1,25 +1,24 @@
-# Meteor Defense: Protect and Capture (Ayah Quest 3.0 Phase 5)
+# Meteor Defense 3.0 · Intelligent Laser & Tractor Beam
 
-## Launch
+Revision Lab retains its existing free mission launch and shared authorized PassageContext launch. The original gateway-only Meteor Defense path and historical records remain available; **Protect and Capture now defaults to mechanics version 3**. No separate premium game or entitlement bypass is added.
 
-Revision Lab → Cosmic Rush → select a **free** mission → mission briefing → select D1 or D2 and movement pace → **Launch Protect and Capture**. The existing **Launch Meteor Defense** button and saved legacy expedition flow retain their original recognition-gateway rules.
+## One control, two context-sensitive actions
 
-For a shared authorized passage, select it through the existing PassageContext, open Revision Lab and choose **Protect and Capture · authorized passage**. This separate adapter uses authenticated `quran-content` bundle/audio loading and current source/review fingerprints. It can use available private content after backend authorization. It does not broaden Cosmic Rush's free-only mission manifest, grant content from local subscription flags, or advertise unverified surahs.
+Move the mouse, drag in the arena, tap a carrier to aim, use A/D or Left/Right, or use the accessible angle slider/aim buttons. Hold **Space** or the large **FIRE** button. The closest geometric ray intersection decides the behavior: neutral meteor → continuous damage laser; protected Arabic carrier → magnetic pull; empty space → harmless laser. The ray never reads source correctness to choose a target. All carriers have equivalent shapes and protection. No B/T weapon switch is required.
 
-## Two objectives on one battlefield
+The turret rotates through the shortest angular path, bounded to 9 radians/second. Pointer coordinates map through the actual responsive arena dimensions. Touch aiming and the separately captured FIRE pointer are independent: lifting the aiming thumb does not release the firing thumb. Canceled FIRE touches, pause, visibility changes and disposal stop firing safely. Controls inside unrelated fields/dialogs do not aim or fire.
 
-- **D1 Protected Ayah Orbs:** stationary source-backed carriers support relaxed targeting while neutral meteors move toward the core.
-- **D2 Defend and Capture:** the same carriers drift along controlled trajectories while the learner aims, defends and deliberately captures the next source piece.
+The beam lasts at most **1.5 seconds**, followed by **0.3 seconds** cooling and an explicit release before rearm. Holding Space after overheating cannot auto-fire. Normal meteors take approximately 0.2 seconds contact and strong ones 0.4 seconds (five damage/second). Pull speed is 420 arena units/second; home slots are within about 325 units of the core, so an aligned pull to collection radius fits comfortably in one hold. Tests exercise capture with 1.05–1.1 second holds including simulation overhead. No arbitrary duration extension was needed. Release retains position for 0.6 seconds before gradual drift home; a new hold can resume pulling.
 
-Both retain the original ring, crossfire and sweep meteor patterns, projectile collisions, core integrity, recoverable motor failures and four recognition-charged abilities. Movement settings independently change motor pace/density; they never certify memory strength.
+## Finite waves and safe capture
 
-Blaster (B) intercepts only neutral meteors. Tractor (T) locks and captures a deliberately selected Arabic carrier. Space activates the selected tool. Click/tap a carrier to lock and aim; the visible turret and beam indicate the lock. Pointer aiming, large aim buttons, a direction slider, and Next carrier support touch and keyboard users without precise dragging. The on-field controls provide the same tool, capture, redirection and pause actions. P pauses; D safely redirects a locked carrier.
+Each expected verified piece receives its own deterministic finite wave: **7 relaxed / 11 normal / 14 arcade meteors**. Existing wave patterns, core health and recognition-charged abilities remain. Clear the wave before capturing for an untimed safe opportunity, or collect the correct piece early and finish that same wave. Early correct source progress stays captured; the next piece/wave cannot overlap it.
 
-Correct and incorrect carriers have the same shape, colors and shielding. Distractors match the current target's word count and use authentic, position-backed free Quran wording. Neither blaster interception nor any defensive ability destroys Arabic carriers. Projectile impacts are absorbed and flash the shield; safe redirection moves intact wording out of the field. Required pieces return after redirection. No aiming miss, audio failure, lapse of time, shield interception or core impact consumes a memory strike.
+A wrong committed capture costs exactly one memory strike, shows its intact wording with a red outline/X, and restarts the current deterministic wave. Additional captures are blocked until that retry wave is secured. Completed earlier pieces remain intact. Meteor interception receipts are keyed to page/piece/meteor and deduplicated across failed-wave retries and reloads. Core damage and recovery remain motor outcomes; they never become memory grades. Classic/Practice strike and checkpoint rules are preserved.
 
-The tractor costs 30 energy per committed capture and regenerates 18 units/second up to 100. A wrong captured source unit costs exactly one memory strike. Empty/misaligned beam attempts are motor misses. Recognition charges are capped at two per ability and remain separate from core integrity and the three-strike budget. Motor recovery preserves captured source progress and memory strikes. Practice replenishes memory strikes at a new ayah; Classic retains them throughout the selected capture set. Motor recovery and Practice retries retain completed source workspaces; a Classic three-strike loss restarts the selected capture set.
+Protected carriers cannot be destroyed by laser or abilities. Neutral meteors reflect off shields using deterministic circle collisions at 120 Hz substeps, with damped velocity, outward separation, a 0.35-second repeat-contact guard and a three-bounce outward escape. An escaped neutral hazard can resolve the defense objective without creating interception points. Brief shield flashes and direction arrows show ricochets. Lag over 0.25 seconds safely pauses rather than applying catch-up damage. The original inactive projectile/capture-v2 implementation remains an explicit compatibility adapter (`intelligentBeam:false`), not the learner default.
 
-Every workspace requires both its source sequence and a genuinely secured neutral wave. If the wave clears first, remaining captures are untimed. If the core goes offline or the defended count is insufficient, retry safely; partial source work remains. Missing or redirected required carriers respawn and beam energy continues recovering after neutral combat clears.
+Full-ayah recitation, volume, transliteration, shared encouragement settings, readable source text and existing independent-recall boundaries remain. The success layer receives canonical capture events; the actor feedback retains the captured/incorrect original wording rather than shattering text. No laser sound is added over Quran audio.
 
 ## Long ayahs and source integrity
 
@@ -57,3 +56,10 @@ Live deployed Supabase policies and physical-device audio hardware require deplo
 - Desktop and 390px mobile screenshots were inspected for Arabic readability, carrier equivalence, in-field controls and viewport fit: [desktop](screenshots/meteor-defense/desktop.png), [mobile](screenshots/meteor-defense/mobile-390.png).
 
 No SQL migration or new backend deployment is required. Deploy the latest frontend build through the existing Railway process. Existing backend content entitlements remain authoritative. Live-game capture checkpoints are local/account-scoped, not cross-device synced; existing cloud learning records and FSRS remain unchanged.
+
+
+## Version 3 state and validation
+
+The same account-scoped `ayah-cosmic-defense-capture-v1` envelope gains additive `mechanicsVersion:3`, pending-piece/wave cursor, retry-wave state, cosmetic score and deduplicated interception receipts. No source Arabic is added to checkpoints. Legacy records rebuild from their exact existing canonical prefix and restart the unfinished neutral wave safely. Unknown/malformed metadata remains recoverable and is not overwritten. Transient pull positions and beam heat are deliberately not restored; source progress is retained while the interrupted motor wave restarts safely.
+
+See [Meteor Defense 3.0 validation](meteor-defense-3/validation.md) for changed modules, actual test results, inspected desktop/mobile screenshots, performance checks and remaining limitations. No database migration, new FSRS scheduler, entitlement rule or provider configuration is introduced.

@@ -15,7 +15,7 @@ import {createMission} from './mission.js';
 import {createRunner} from '../../puzzles/arcade/cosmic/runner.js';
 
 // One mission director. Arcade checkpoints never certify independent recall or mastery.
-export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=1,activity='runner',defenseConfig='balanced',defenseMode=null,defenseMotor='relaxed',defenseMemory='standard',linkMode='guided',linkChainMode='practice',reducedMotion=false,initialStage=0,initialRound=0,compact=false}={}){
+export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=1,activity='runner',defenseConfig='balanced',defenseMode=null,defenseMotor='relaxed',defenseMemory='standard',defenseBeamVersion=3,linkMode='guided',linkChainMode='practice',reducedMotion=false,initialStage=0,initialRound=0,compact=false}={}){
   const canonical=await createMission({surahId:manifest.surah,selection:'custom',start:manifest.first,end:manifest.last});
   if(JSON.stringify(manifest)!==JSON.stringify(canonical))throw Error('Mission configuration changed. Rebuild the briefing.');
   if(!Number.isInteger(rounds)||rounds<1||rounds>10)throw Error('Choose between 1 and 10 revision rounds.');
@@ -49,7 +49,7 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
     const targetIndex=event.targetRef?canonical.refs.indexOf(event.targetRef):-1;
     emit({...event,awardedPoints,...(targetIndex>=0?{fromRef:(event.type.startsWith('defense:memory-')||event.type.startsWith('link:'))?event.fromRef||null:['word','chunk'].includes(event.kind)&&(event.kind==='chunk'?event.unitId.split(':').at(-1).split('-')[0]!=='0':!event.unitId.endsWith(':0'))?event.targetRef:targetIndex?canonical.refs[targetIndex-1]:null}:{}),activity:currentActivity,missionId:canonical.id,runId,stageIndex:index,roundIndex,roundCount,completedCheckpoints:[...checkpoints]});
   }
-  if(defenseMode)try{for(const stage of canonical.stages)for(let r=0;r<roundCount;r++){const runtime=await createCaptureDirector({refs:stage.refs,content:defenseContent,ownedContent:false,mode:defenseMode,motorDifficulty:defenseMotor,stageId:`${stage.id}:round:${r}`,configuration:defenseConfig,onEvent:event});captureRuntimes.set(`${stage.order-1}:${r}`,runtime);const restored=runtime.getSnapshot();if(restored.status==='checkpoint'){activityClears.add(`defense:${stage.order-1}:${r}`);checkpoints.add(restored.checkpointId);}}}catch(e){captureRuntimes.forEach(g=>g.dispose());defenseContent.dispose();throw e;}
+  if(defenseMode)try{for(const stage of canonical.stages)for(let r=0;r<roundCount;r++){const runtime=await createCaptureDirector({refs:stage.refs,content:defenseContent,ownedContent:false,mode:defenseMode,motorDifficulty:defenseMotor,intelligentBeam:defenseBeamVersion!==2,stageId:`${stage.id}:round:${r}`,configuration:defenseConfig,onEvent:event});captureRuntimes.set(`${stage.order-1}:${r}`,runtime);const restored=runtime.getSnapshot();if(restored.status==='checkpoint'){activityClears.add(`defense:${stage.order-1}:${r}`);checkpoints.add(restored.checkpointId);}}}catch(e){captureRuntimes.forEach(g=>g.dispose());defenseContent.dispose();throw e;}
   function mount(){
     stageGates=0;
     const stage=canonical.stages[index],seed=parseInt(canonical.sourceHash.slice(0,8),16)+index+roundIndex*3571;

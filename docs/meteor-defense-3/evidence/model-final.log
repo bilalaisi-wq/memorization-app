@@ -1,0 +1,32 @@
+[WebServer] (node:12412) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12443) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 1 worker
+
+(node:12507) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/defense3.spec.js:7:1 › ray hits nearest geometry, never source correctness; wraparound and shield reflection are deterministic (13ms)
+  ✓   2 tests/defense3.spec.js:8:1 › one beam pulls authentic carriers within 1.5s, records a correct early capture and waits for its finite wave (80ms)
+  ✓   3 tests/defense3.spec.js:9:1 › release stops immediately, partial pulls retain position and overheat needs release plus cooldown (31ms)
+  ✓   4 tests/defense3.spec.js:10:60 › relaxed finite waves provide safe capture and a full canonical sequence is solvable (230ms)
+  ✓   5 tests/defense3.spec.js:10:60 › normal finite waves provide safe capture and a full canonical sequence is solvable (380ms)
+  ✓   6 tests/defense3.spec.js:10:60 › arcade finite waves provide safe capture and a full canonical sequence is solvable (429ms)
+  ✓   7 tests/defense3.spec.js:11:1 › wrong capture spends exactly one strike, resets a deterministic wave, blocks premature retry captures and preserves score receipts (156ms)
+  ✓   8 tests/defense3.spec.js:12:1 › new metadata persists pending captures without losing legacy prefixes; pauses and dispose are safe (18ms)
+  ✓   9 tests/defense3.spec.js:13:1 › carrier positions are reproducible, spread across seeds and never encode the correct choice (77ms)
+  ✓  10 tests/defense3.spec.js:14:1 › Classic and Practice retain correct pieces across wrong retries; exactly three committed errors end the run (645ms)
+  ✓  11 tests/defense3.spec.js:15:1 › actual neutral/carrier ricochets are bounded and leave exact source text intact (144ms)
+  ✓  12 tests/defense3.spec.js:16:1 › old canonical prefixes upgrade additively; invalid new mechanics metadata remains recoverable (21ms)
+  ✓  13 tests/defense3.spec.js:18:1 › new beam completes a long authorized grouped passage with every original source position and full-ayah audio policy (5.5s)
+  ✓  14 tests/defense3.spec.js:19:1 › beam recognition rewards remain bounded/idempotent without an FSRS review (367ms)
+  ✓  15 tests/defense3.spec.js:20:1 › a legacy fully captured prefix with an unfinished neutral wave cannot skip that defense objective (107ms)
+  ✓  16 tests/defense3.spec.js:21:1 › a completed v3 route restores its same deterministic checkpoint without replaying completions (699ms)
+
+  16 passed (11.4s)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice

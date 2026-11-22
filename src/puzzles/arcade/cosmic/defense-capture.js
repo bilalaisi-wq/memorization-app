@@ -1,8 +1,10 @@
+import {createIntelligentDefense} from './defense-intelligent.js';
 import {assertDefenseContent} from '../../../quest/cosmic/defense-content.js';
 import {seededShuffle} from '../content.js';
 export const CAPTURE_MODES=Object.freeze({protected:'D1 · Protected Ayah Orbs',capture:'D2 · Defend and Capture'});
 const speeds={relaxed:.18,normal:.28,arcade:.4};
-export function createDefenseCapture({refs,seed=1,stageId,configuration='balanced',difficulty=0,slow=false,mode='capture',content,motorDifficulty='relaxed',chainMode='practice',resume=null,onEvent=()=>{},coreFactory}){
+export function createDefenseCapture({refs,seed=1,stageId,configuration='balanced',difficulty=0,slow=false,mode='capture',content,motorDifficulty='relaxed',chainMode='practice',resume=null,intelligentBeam=true,onEvent=()=>{},coreFactory}){
+ if(intelligentBeam)return createIntelligentDefense({refs,seed,stageId,configuration,difficulty,slow,mode,content,motorDifficulty,chainMode,resume,onEvent,coreFactory});
  assertDefenseContent(content);if(!CAPTURE_MODES[mode]||!Object.hasOwn(speeds,motorDifficulty)||!['classic','practice'].includes(chainMode))throw Error('Invalid capture configuration.');
  const stages=content.stages(refs);let core,state,carriers=[],serial=0,held=false,phase=0;
  const current=()=>stages[state.page],expected=()=>current()?.targets[state.cursor];

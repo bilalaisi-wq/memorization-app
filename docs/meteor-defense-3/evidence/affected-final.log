@@ -1,0 +1,40 @@
+[WebServer] (node:11749) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 22 tests using 2 workers
+
+(node:11842) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11843) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 tests/defense3.spec.js:7:1 › ray hits nearest geometry, never source correctness; wraparound and shield reflection are deterministic (13ms)
+  ✓   3 tests/defense3.spec.js:8:1 › one beam pulls authentic carriers within 1.5s, records a correct early capture and waits for its finite wave (87ms)
+  ✓   4 tests/defense3.spec.js:9:1 › release stops immediately, partial pulls retain position and overheat needs release plus cooldown (65ms)
+  ✓   5 tests/defense3.spec.js:10:60 › relaxed finite waves provide safe capture and a full canonical sequence is solvable (482ms)
+  ✓   6 tests/defense3.spec.js:10:60 › normal finite waves provide safe capture and a full canonical sequence is solvable (1.1s)
+  ✓   7 tests/defense3.spec.js:10:60 › arcade finite waves provide safe capture and a full canonical sequence is solvable (795ms)
+  ✓   8 tests/defense3.spec.js:11:1 › wrong capture spends exactly one strike, resets a deterministic wave, blocks premature retry captures and preserves score receipts (511ms)
+  ✓   9 tests/defense3.spec.js:12:1 › new metadata persists pending captures without losing legacy prefixes; pauses and dispose are safe (37ms)
+  ✓  10 tests/defense3.spec.js:13:1 › carrier positions are reproducible, spread across seeds and never encode the correct choice (271ms)
+  ✓  11 tests/defense3.spec.js:14:1 › Classic and Practice retain correct pieces across wrong retries; exactly three committed errors end the run (1.1s)
+  ✓  12 tests/defense3.spec.js:15:1 › actual neutral/carrier ricochets are bounded and leave exact source text intact (196ms)
+  ✓  13 tests/defense3.spec.js:16:1 › old canonical prefixes upgrade additively; invalid new mechanics metadata remains recoverable (24ms)
+  ✓   1 tests/defense3-ui.spec.js:9:2 › desktop intelligent beam › hold fire, direct aim, smooth pull, safe waves, feedback, chain and clean exit (8.0s)
+  ✓  14 tests/defense3.spec.js:18:1 › new beam completes a long authorized grouped passage with every original source position and full-ayah audio policy (6.7s)
+  ✓  16 tests/defense3.spec.js:19:1 › beam recognition rewards remain bounded/idempotent without an FSRS review (353ms)
+  ✓  17 tests/defense3.spec.js:20:1 › a legacy fully captured prefix with an unfinished neutral wave cannot skip that defense objective (73ms)
+  ✓  15 tests/defense3-ui.spec.js:9:2 › phone intelligent beam › hold fire, direct aim, smooth pull, safe waves, feedback, chain and clean exit (4.3s)
+  ✓  19 tests/defense3-ui.spec.js:31:1 › accessible activation, two-pointer aiming, scoped input, pause and listener disposal (2.3s)
+  ✓  18 tests/defense5-ui.spec.js:7:1 › mission launch shows protected Arabic and real neutral physics, deliberate keyboard beam capture, saved prefix and audio pause/replay (3.2s)
+  ✓  20 tests/defense5-ui.spec.js:8:1 › shared authorized private passage uses bounded carriers and disposes on entitlement/account change (1.7s)
+  ✓  21 tests/defense5-ui.spec.js:9:1 › 390px touch tools and reduced motion keep Arabic/control labels on the battlefield (2.6s)
+  ✓  22 tests/defense5-ui.spec.js:10:1 › failed assistance persistence conceals the next carrier set and does not grade recall (1.1s)
+
+  22 passed (24.5s)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice

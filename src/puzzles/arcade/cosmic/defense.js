@@ -1,3 +1,4 @@
+import {reflectMeteor} from './defense-beam.js';
 import {createDefenseCapture} from './defense-capture.js';
 import {assertDefenseContent} from '../../../quest/cosmic/defense-content.js';
 import {createGatewaySession,freeAyah} from '../../../quest/cosmic/gateways.js';
@@ -9,8 +10,8 @@ export const DEFENSE_CONFIGS=Object.freeze({
 });
 export const DEFENSE_ABILITIES=Object.freeze({shield:'Star Shield',pulse:'Pulse Wave',repair:'Repair Beam',burst:'Constellation Burst'});
 const clone=x=>structuredClone(x),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
-export function createMeteorDefense({refs,seed=1,stageId,sourceHash='',configuration='balanced',difficulty=0,slow=false,revisionLoop=false,carrierMode=null,captureContent=null,captureCore=false,motorDifficulty='normal',chainMode='practice',resume=null,onEvent=()=>{}}){
-  if(carrierMode)return createDefenseCapture({refs,seed,stageId,sourceHash,configuration,difficulty,slow,mode:carrierMode,content:captureContent,motorDifficulty,chainMode,resume,onEvent,coreFactory:options=>createMeteorDefense({...options,captureCore:true,captureContent})});
+export function createMeteorDefense({refs,seed=1,stageId,sourceHash='',configuration='balanced',difficulty=0,slow=false,revisionLoop=false,carrierMode=null,captureContent=null,captureCore=false,motorDifficulty='normal',chainMode='practice',resume=null,intelligentBeam=true,captureWaveCount=null,onEvent=()=>{}}){
+  if(carrierMode)return createDefenseCapture({refs,seed,stageId,sourceHash,configuration,difficulty,slow,mode:carrierMode,content:captureContent,motorDifficulty,chainMode,resume,intelligentBeam,onEvent,coreFactory:options=>createMeteorDefense({...options,captureCore:true,captureContent})});
   if(captureCore)assertDefenseContent(captureContent);
   if(!Array.isArray(refs)||!refs.length||refs.length>5||!Object.hasOwn(DEFENSE_CONFIGS,configuration))throw Error('Choose a verified defense set and configuration.');
   refs.forEach((ref,i)=>{const v=captureCore?(captureContent.refs.includes(ref)?{surah:Number(ref.split(':')[0]),ayah:Number(ref.split(':')[1])}:(()=>{throw Error('Unauthorized defense reference');})()):freeAyah(ref);if(i){const p=freeAyah(refs[i-1]);if(v.surah!==p.surah||v.ayah!==p.ayah+1)throw Error('Defense references must be consecutive.');}});
@@ -34,7 +35,7 @@ export function createMeteorDefense({refs,seed=1,stageId,sourceHash='',configura
   }
   function pattern(){
     let n=(seed+state.waveIndex*7919)>>>0;const random=()=>{n=(Math.imul(n,1664525)+1013904223)>>>0;return n/4294967296;};
-    const count=7+Math.min(3,Math.max(0,difficulty)),type=['ring','crossfire','sweep'][(state.waveIndex+difficulty)%3];
+    const count=captureCore&&Number.isInteger(captureWaveCount)?captureWaveCount:7+Math.min(3,Math.max(0,difficulty)),type=['ring','crossfire','sweep'][(state.waveIndex+difficulty)%3];
     state.pattern=type;state.meteorCount=count;
     return Array.from({length:count},(_,i)=>{
       let angle;
@@ -64,14 +65,17 @@ export function createMeteorDefense({refs,seed=1,stageId,sourceHash='',configura
     if(name==='shield'){state.shield=5;effect('shield');}
     if(name==='pulse'){effect('pulse');for(const m of [...meteors])if(Math.hypot(m.x-W.cx,m.y-W.cy)<220)resolve(m,true);}
     if(name==='repair'){state.health=Math.min(state.maxHealth,state.health+36);effect('repair');if(state.status==='recovery')state.status='running';}
-    if(name==='burst'){effect('burst');for(let i=0;i<8;i++)fire(state.angle+i*Math.PI/4);}
+    if(name==='burst'){effect('burst');if(captureCore)for(const m of [...meteors])resolve(m,true);else for(let i=0;i<8;i++)fire(state.angle+i*Math.PI/4);}
     state.reason=`${DEFENSE_ABILITIES[name]} activated using a recognition-earned charge.`;emit('ability',{ability:name,category:'motor-defense'});
   }
   function tick(dt){
     state.elapsed+=dt;waveTime+=dt;state.angle+=turn*config.turn*dt;state.cooldown=Math.max(0,state.cooldown-dt);state.shield=Math.max(0,state.shield-dt);state.impact=Math.max(0,state.impact-dt);
     if(held&&state.cooldown===0){fire();state.cooldown=config.cooldown;}
     while(spawned<plan.length&&waveTime>=plan[spawned].at)meteors.push({...plan[spawned++]});
-    for(const m of meteors){m.x+=m.vx*dt;m.y+=m.vy*dt+Math.sin(waveTime*1.4)*m.curve*dt;}
+    for(const m of [...meteors]){m.shieldCooldown=Math.max(0,(m.shieldCooldown||0)-dt);m.x+=m.vx*dt;m.y+=m.vy*dt+Math.sin(waveTime*1.4)*m.curve*dt;
+      if(captureCore&&captureWaveCount)for(const c of protectedCarriers)if(reflectMeteor(m,c)){effect('absorb',c.x,c.y);emit('shield-ricochet',{carrierId:c.id,meteorId:m.id,category:'motor-defense'});break;}
+      if(captureCore&&captureWaveCount&&m.bounces&&Math.hypot(m.x-W.cx,m.y-W.cy)>550){meteors=meteors.filter(o=>o.id!==m.id);state.waveDefended++;}
+    }
     for(const b of bolts){b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt;
       const carrier=protectedCarriers.find(c=>Math.hypot(c.x-b.x,c.y-b.y)<=c.radius+b.radius);
       if(carrier){b.intercepted=true;b.life=0;effect('absorb',carrier.x,carrier.y);state.motorErrors++;emit('carrier-shield-absorb',{carrierId:carrier.id,category:'motor-control'});continue;}
@@ -103,6 +107,7 @@ export function createMeteorDefense({refs,seed=1,stageId,sourceHash='',configura
       if(state.status==='disposed')return api.getSnapshot();
       if(a.type==='start')return api.start();if(a.type==='pause')return api.pause(a.reason);if(a.type==='resume')return api.resume();
       if(a.type==='restart'){reset();return api.start();}
+      if(captureCore&&a.type==='beam-hit'&&state.status==='running'){const m=meteors.find(m=>m.id===a.id);if(m&&Number.isFinite(a.damage)&&a.damage>0&&a.damage<=1){m.hp-=a.damage;effect('spark',m.x,m.y);if(m.hp<=0)resolve(m);}return api.getSnapshot();}
       if(captureCore&&a.type==='recognition-charge'){for(const name of Object.keys(DEFENSE_ABILITIES))state.charges[name]=Math.min(2,state.charges[name]+1);return api.getSnapshot();}
       if(a.type==='audio-assisted'){listened.add(refs[state.waveIndex]);return api.getSnapshot();}
       if(state.status==='gateway'){
@@ -124,7 +129,7 @@ export function createMeteorDefense({refs,seed=1,stageId,sourceHash='',configura
     },
     setCaptureResources({charges,health}){if(!captureCore)return;for(const name of Object.keys(DEFENSE_ABILITIES))if(Number.isInteger(charges?.[name]))state.charges[name]=Math.max(0,Math.min(2,charges[name]));if(Number.isFinite(health))state.health=Math.max(1,Math.min(state.maxHealth,health));},
     setProtectedCarriers(items){if(captureCore)protectedCarriers=items.map(({id,x,y,radius})=>({id,x,y,radius}));},
-    getSnapshot(){return clone({...state,canRepair:canRepair(),defense:true,revisionLoop,configuration,world:W,objects:[...meteors,...bolts,...effects],gateway:memory.getSnapshot(),targetRef:refs[state.waveIndex],progress:state.waveIndex/refs.length,waveCount:refs.length});},
+    getSnapshot(){return clone({...state,canRepair:canRepair(),defense:true,revisionLoop,configuration,world:W,objects:[...meteors,...bolts,...effects],gateway:memory.getSnapshot(),targetRef:refs[state.waveIndex],waveSpawned:spawned,waveRemaining:Math.max(0,plan.length-spawned)+meteors.length,progress:state.waveIndex/refs.length,waveCount:refs.length});},
     dispose(){state.status='disposed';protectedCarriers=[];meteors=[];bolts=[];effects=[];turn=0;held=false;memory.dispose();},
   };
   return api;
