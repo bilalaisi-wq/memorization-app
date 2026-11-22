@@ -5,6 +5,28 @@ const assert = (ok: unknown, message = "Assertion failed") => {
 const bytes = await Deno.readFile(
   new URL("../../../tests/fixtures/2-282.json", import.meta.url),
 );
+Deno.test("existing Baqarah pilots permit server-verified active developers without granting client-flag preview access", async () => {
+  let developer = false, reads = 0;
+  const admin: any = {
+    auth: {getUser: async () => ({data: {user: {id: "owner", email_confirmed_at: "2026-01-01"}}})},
+    rpc: async (name: string, args: any) => {
+      assert(args.p_user === "owner");
+      return {data: name === "developer_enabled" ? developer : name === "is_quran_reviewer" ? false : {plan: "free", features: {}}};
+    },
+    storage: {from: () => ({download: async () => {reads++; return {data: new Blob([bytes])};}})},
+  };
+  const handler = quranHandler(() => admin);
+  const req = () => new Request("https://api.example.test", {method: "POST", headers: {authorization: "Bearer verified"}, body: JSON.stringify({key: "2:282", asset: "bundle", developer: true, plan: "guardian"})});
+  assert((await handler(req())).status === 403);
+  assert(reads === 0);
+  developer = true;
+  const response = await handler(req());
+  assert(response.status === 200);
+  assert((await response.json()).textUthmani === JSON.parse(new TextDecoder().decode(bytes)).textUthmani);
+  developer = false;
+  assert((await handler(req())).status === 403);
+  assert(reads === 1);
+});
 Deno.env.set("BILLING_SITE_URL", "https://ayah.example.test");
 Deno.test("private Quran requests require verified identity and server-derived juz entitlements; never accept a client plan/path/customer", async () => {
   let authenticated = true,

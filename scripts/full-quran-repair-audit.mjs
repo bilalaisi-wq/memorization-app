@@ -1,0 +1,11 @@
+// Read-only source inventory; operational states require explicit hosted evidence.
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {auditQuran} from './audit-quran-manifest.mjs';
+export function coverageMatrix(audit,hosted={}){
+ const rows=audit.manifest.verses.map(v=>({key:v.key,surah:v.surah,juz:v.juz,policy:v.policy,states:{cataloged:true,prepared:v.stages.downloaded,validated:v.stages.validated,uploaded:null,deployed:null,authorized:null,usable:null,released:v.policy==='free'?'existing-free-policy':false},assets:Object.fromEntries(['arabic','translation','transliteration','wordMeanings','fullAyahAudio'].map(k=>[k,{present:v.assets[k]?.present===true,sha256:v.assets[k]?.sha256||null,commercialRights:'not-attested'}])),sourceReview:'not-attested',missing:v.missingRequired,issues:v.issues}));
+ const group=(id,type)=>{const r=rows.filter(v=>v[type]===id);return {id,expected:r.length,first:r[0]?.key,last:r.at(-1)?.key,prepared:r.filter(v=>v.states.prepared).length,validated:r.filter(v=>v.states.validated).length,existingFree:r.filter(v=>v.policy==='free').length,missing:r.filter(v=>!v.states.prepared).length,uploaded:null,authorized:null,usable:null,releaseApproved:false};};
+ return {schemaVersion:1,numbering:'Existing Hafs catalog: 6236 canonical references',counts:audit.summary,operationalEvidence:hosted,limits:['Local validation is not commercial rights or scholarly approval.','Missing hosted evidence is unknown, never passing.','Catalog metadata does not provide protected source text.'],juzs:Array.from({length:30},(_,i)=>group(i+1,'juz')),surahs:Array.from({length:114},(_,i)=>group(i+1,'surah')),ayahs:rows};
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){const audit=await auditQuran();let hosted={status:'not-tested'};try{hosted=JSON.parse(await readFile('native-output/full-library-hosted-probe.json'));}catch{}const out=coverageMatrix(audit,hosted);await mkdir('content-audit/repair',{recursive:true});await writeFile('content-audit/repair/coverage.json',JSON.stringify(out,null,2)+'\n');console.log(JSON.stringify({surahs:out.surahs.length,juzs:out.juzs.length,...out.counts,uploaded:'unknown',authenticatedAccess:'not-tested'}));}

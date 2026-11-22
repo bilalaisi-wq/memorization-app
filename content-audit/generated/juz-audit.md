@@ -1,6 +1,6 @@
 # Per-juz local coverage audit
 
-Manifest SHA-256: `e8d7c4c0f59cef201095eb8e4a5643cdb6d8f066a969d6a6aad1d8536fd2af6a`. Local technical checks are not rights clearance, scholarly review, deployment or publication. Free policy stays unchanged.
+Manifest SHA-256: `6dc1b7b305114e6398ec9ecab6135e1e230e585b95a7cb0a2a3b19fa3d76d0f4`. Local technical checks are not rights clearance, scholarly review, deployment or publication. Free policy stays unchanged.
 
 | Juz | Canonical first–last | Expected | Local | Locally validated | Free policy | Developer preview | Private pilots | Missing | Status |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |

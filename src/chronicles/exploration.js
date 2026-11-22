@@ -1,0 +1,7 @@
+// Additive adventure metadata, independent of source text, rewards and FSRS.
+export const rooms=[{id:'archive',name:'Archive checkpoint',x:70},{id:'observatory',name:'Observatory lift',x:850},{id:'guardian',name:'Guardian chamber',x:1500},{id:'secret',name:'Hidden overlook',x:980}];
+export const roomKey=(section,room)=>`${section}:${room}`;
+export function freshExploration(section=0){return {version:1,visited:[roomKey(section,'archive')],switches:[],relaxed:false};}
+export function restoreExploration(saved,sections){if(!saved||saved.version!==1||typeof saved.relaxed!=='boolean'||!['visited','switches'].every(k=>Array.isArray(saved[k])&&new Set(saved[k]).size===saved[k].length&&saved[k].every(x=>typeof x==='string'&&/^\d+:(archive|observatory|guardian|secret)$/.test(x)&&Number(x.split(':')[0])<sections.length)))throw Error('Exploration map needs recovery. Original journal preserved.');return structuredClone(saved);}
+export function abilities(s){return {lightDash:s.connections.length>0,doubleJump:s.completed.length>0,starCompass:s.classified.length>0,evidenceLens:s.connections.length>0&&s.classified.length>0};}
+export function knowledgeMap(s,sections){return sections.flatMap((section,i)=>rooms.map(room=>({id:roomKey(i,room.id),section:i,room:room.id,name:`${section.title} · ${room.name}`,visited:s.exploration.visited.includes(roomKey(i,room.id)),available:i<=s.completed.length,completed:s.completed.includes(section.id)})));}

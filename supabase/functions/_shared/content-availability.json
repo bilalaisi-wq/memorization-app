@@ -563,7 +563,10 @@
         "full-ayah-audio",
         "windowed-reconstruction",
         "whole-ayah-recall"
-      ]
+      ],
+      "contentSha256": "096da6fd08a98042e7612019b7de0a09841a68858310611fd553e6a2934777c7",
+      "audioDurationMs": 51958,
+      "audioBytes": 831865
     },
     {
       "key": "2:282",
@@ -577,7 +580,10 @@
         "full-ayah-audio",
         "windowed-reconstruction",
         "whole-ayah-recall"
-      ]
+      ],
+      "contentSha256": "e08bf1392c7ec99d5f1663ba1c175998a4f2531c04f834fff6ab7f2894948287",
+      "audioDurationMs": 144849,
+      "audioBytes": 2318128
     },
     {
       "key": "68:1",

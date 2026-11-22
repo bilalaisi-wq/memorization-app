@@ -1,0 +1,24 @@
+{
+  "browserAndModel": {
+    "passed": 238,
+    "failed": 0
+  },
+  "additionalVisualJourneys": {
+    "passed": 4,
+    "failed": 0
+  },
+  "backend": {
+    "content": 8,
+    "chronicles": 7,
+    "billing": 8,
+    "failed": 0
+  },
+  "productionBuild": "passed",
+  "nativeAssetSync": "passed",
+  "functionTypeChecks": "passed",
+  "localContentIntegrityIssues": 0,
+  "authenticatedHostedVerification": "not performed",
+  "hostedDeployment": "not performed",
+  "physicalDeviceVerification": "not performed",
+  "newSqlMigrationRequired": false
+}

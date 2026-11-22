@@ -85,12 +85,10 @@ export function quranHandler(
       const ent = await admin.rpc("billing_entitlements_for", {
         p_user: identity.data.user.id,
       });
-      const developerOnly=developerReference(body.key);let previewDeveloper=false;
-      if(developerOnly || body.asset==='chapter') {
-        const role=await admin.rpc('developer_enabled',{p_user:identity.data.user.id});
-        if(role.error || role.data!==true) return reply('Active developer mode is required for this preview',403);
-        previewDeveloper=true;
-      }
+      const developerOnly=developerReference(body.key);
+      const developerRole=await admin.rpc('developer_enabled',{p_user:identity.data.user.id});
+      const previewDeveloper=!developerRole.error&&developerRole.data===true;
+      if((developerOnly||body.asset==='chapter')&&!previewDeveloper)return reply('Active developer mode is required for this preview',403);
       let reviewer = false;
       if (!allowedReference(body.key, ent.data)&&!previewDeveloper) {
         const role = await admin.rpc("is_quran_reviewer", {
@@ -115,7 +113,7 @@ export function quranHandler(
       const file = await admin.storage.from("quran-premium").download(path);
       let fallback=null,bytes;
       if (file.error || !file.data) {
-        if(!developerOnly) return reply("Verified content is not deployed yet",503);
+        if(!developerOnly&&!previewDeveloper) return reply("Verified content is not deployed yet",503);
         if(body.asset==='bundle') fallback=await bundleLoader(body.key);
         else {
           const url=`https://verses.quran.com/Alafasy/mp3/${String(surah).padStart(3,'0')}${String(ayah).padStart(3,'0')}.mp3`;

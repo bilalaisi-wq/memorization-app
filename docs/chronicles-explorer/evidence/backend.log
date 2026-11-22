@@ -1,0 +1,36 @@
+Check supabase/functions/_shared/chronicles/handler_test.ts
+Check supabase/functions/_shared/quran_test.ts
+Check supabase/functions/_shared/billing_test.ts
+running 7 tests from ./supabase/functions/_shared/chronicles/handler_test.ts
+QUR'AN CHRONICLES free guests receive only published, source-bound cards; missing review and stale sources fail closed ... ok (73ms)
+QUR'AN CHRONICLES premium text stays out of guest lists and forged plans cannot authorize source downloads ... ok (2ms)
+QUR'AN CHRONICLES editorial identity and commercial-rights evidence are required and actor cannot be supplied by a client ... ok (14ms)
+QUR'AN CHRONICLES rejects foreign origins, unsupported methods, oversize requests and unlicensed lesson text ... ok (2ms)
+QUR'AN CHRONICLES authorized premium source loads and subscription downgrade denies the same approved lesson ... ok (5ms)
+QUR'AN CHRONICLES learner rollout is disabled by default for direct guest and free-account reads ... ok (3ms)
+mechanics capability requires verified active developer authorization and no editorial role or published lesson ... ok (1ms)
+running 8 tests from ./supabase/functions/_shared/quran_test.ts
+existing Baqarah pilots permit server-verified active developers without granting client-flag preview access ... ok (28ms)
+private Quran requests require verified identity and server-derived juz entitlements; never accept a client plan/path/customer ... ok (2ms)
+private object corruption fails closed even for Pathfinder; expired plans cannot download again ... ok (490µs)
+staff access and reviewed stop metadata come only from the server; canonical text is untouched ... ok (2ms)
+Juz 29 preview rejects paid juz selection and requires active server developer mode before private storage ... ok (2ms)
+developer-only chapters reject paid accounts, forged claims and inactive owner flags before fetching text ... ok (583µs)
+provider fingerprints reject changed Quran wording, translation and word alignment ... ok (3ms)
+native WebView origins require explicit allowlisting and never bypass user authentication ... ok (956µs)
+running 8 tests from ./supabase/functions/_shared/billing_test.ts
+endpoints reject absent/forged JWTs, foreign origins, GETs, extra checkout fields and Guardian ... ok (33ms)
+Checkout uses owner-bound customer, fixed return URLs, verified price and persistent idempotency across failed saves ... ok (29ms)
+Portal and refresh bind to the verified account, ignoring supplied customer/plan/user IDs ... ok (4ms)
+premium endpoint denies Free writes, preserves reads/removal, validates ranges and cannot target B ... ok (26ms)
+webhook HTTP verifies official Stripe signatures, untouched raw bytes, timestamp and mode before processing ... ok (7ms)
+closing billing requires explicit confirmation and verified cancellation; retry after Stripe deletion is safe ... ok (16ms)
+authenticated non-payment services can initialize without Stripe; payment operations still reject missing or mismatched keys ... ok (1ms)
+native billing HTTP boundary rejects missing or forged accounts before invoking store APIs ...
+------- post-test output -------
+(node:13693) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+----- post-test output end -----
+native billing HTTP boundary rejects missing or forged accounts before invoking store APIs ... ok (315ms)
+
+ok | 23 passed | 0 failed (979ms)
+
