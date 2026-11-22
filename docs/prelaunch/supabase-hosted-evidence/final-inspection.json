@@ -1,0 +1,75 @@
+{
+  "project": "ycgyuatjgdbhiakqourg",
+  "functions": [
+    {
+      "slug": "billing-passages",
+      "status": "ACTIVE",
+      "version": 5,
+      "verify_jwt": false
+    },
+    {
+      "slug": "quran-content",
+      "status": "ACTIVE",
+      "version": 5,
+      "verify_jwt": false
+    },
+    {
+      "slug": "chronicles-content",
+      "status": "ACTIVE",
+      "version": 1,
+      "verify_jwt": false
+    }
+  ],
+  "storage": [
+    {
+      "id": "quran-premium",
+      "public": false,
+      "objects": 1278
+    }
+  ],
+  "editorialRls": [
+    {
+      "relname": "chronicles_audit",
+      "relrowsecurity": true
+    },
+    {
+      "relname": "chronicles_editors",
+      "relrowsecurity": true
+    },
+    {
+      "relname": "chronicles_lessons",
+      "relrowsecurity": true
+    }
+  ],
+  "privateStoragePolicies": [
+    {
+      "tablename": "buckets",
+      "policyname": "quran_premium_bucket_server_only",
+      "permissive": "RESTRICTIVE"
+    },
+    {
+      "tablename": "objects",
+      "policyname": "quran_premium_server_only",
+      "permissive": "RESTRICTIVE"
+    }
+  ],
+  "ownerDeveloper": [
+    {
+      "developer": "true"
+    }
+  ],
+  "editorSafety": [
+    {
+      "can_review": false,
+      "can_publish": true
+    }
+  ],
+  "stagingCleanup": [
+    {
+      "remaining_auth_users": 0,
+      "remaining_saved_passages": 0,
+      "remaining_subscriptions": 0,
+      "remaining_customers": 0
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "function": "quran-content",
+    "action": "bundle",
+    "unauthenticatedStatus": 401,
+    "passed": true
+  },
+  {
+    "function": "chronicles-content",
+    "action": "list",
+    "unauthenticatedStatus": 401,
+    "passed": true
+  },
+  {
+    "function": "chronicles-content",
+    "action": "editor-list",
+    "unauthenticatedStatus": 401,
+    "passed": true
+  },
+  {
+    "function": "billing-passages",
+    "action": "list",
+    "unauthenticatedStatus": 401,
+    "passed": true
+  }
+]

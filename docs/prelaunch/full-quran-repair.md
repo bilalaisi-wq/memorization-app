@@ -1,5 +1,7 @@
 # Full Qur’an library repair — implementation and operator report
 
+[Hosted follow-up: the pending Supabase operations have now been executed; see the dated operational report for current deployment evidence.](supabase-hosted-repair.md)
+
 ## Status
 
 Local repair completed; complete-Qur’an publication and authenticated hosted access remain blocked. This report supersedes historical hosted-status statements in older preview guides. No migration, Storage upload, Edge Function deployment or source approval was performed during this repair.

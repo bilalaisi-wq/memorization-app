@@ -1,5 +1,7 @@
 # QUR’AN CHRONICLES — Explorer’s Chronicle implementation report
 
+[Hosted follow-up: staging/production functions and editorial prerequisites have now been deployed. See the dated operational report; this original section records the earlier local validation.](../prelaunch/supabase-hosted-repair.md)
+
 ## Scope and release status
 
 The existing QUR’AN CHRONICLES platform engine, inventory, source validation, Knowledge Constellation, Evidence Detective, editorial publishing pipeline and reward contracts were retained. This change extends that engine instead of replacing Sirat Quest or introducing a competing lesson system.

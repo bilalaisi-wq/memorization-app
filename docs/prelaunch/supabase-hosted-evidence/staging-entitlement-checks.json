@@ -1,0 +1,150 @@
+{
+  "project": "ygxtnvoycirmktxudzsp",
+  "checks": [
+    {
+      "check": "create disposable developer account",
+      "passed": true
+    },
+    {
+      "check": "real developer sign-in",
+      "passed": true
+    },
+    {
+      "check": "create disposable free account",
+      "passed": true
+    },
+    {
+      "check": "real free sign-in",
+      "passed": true
+    },
+    {
+      "check": "2:255 developer exact canonical text",
+      "passed": true
+    },
+    {
+      "check": "2:255 forged free access denied",
+      "passed": true
+    },
+    {
+      "check": "2:282 developer exact canonical text",
+      "passed": true
+    },
+    {
+      "check": "2:282 forged free access denied",
+      "passed": true
+    },
+    {
+      "check": "67:1 developer exact canonical text",
+      "passed": true
+    },
+    {
+      "check": "67:1 forged free access denied",
+      "passed": true
+    },
+    {
+      "check": "7:1 developer exact canonical text",
+      "passed": true
+    },
+    {
+      "check": "7:1 forged free access denied",
+      "passed": true
+    },
+    {
+      "check": "verified full-ayah audio delivered",
+      "passed": true
+    },
+    {
+      "check": "anonymous content rejected",
+      "passed": true
+    },
+    {
+      "check": "real developer demo capability",
+      "passed": true
+    },
+    {
+      "check": "free demo capability denied",
+      "passed": true
+    },
+    {
+      "check": "learner Chronicles remains coming soon",
+      "passed": true
+    },
+    {
+      "check": "developer library empty without invented lessons",
+      "passed": true
+    },
+    {
+      "check": "direct private access denied storage",
+      "passed": true
+    },
+    {
+      "check": "direct private access denied rest",
+      "passed": true
+    },
+    {
+      "check": "authenticated developer passage save",
+      "passed": true
+    },
+    {
+      "check": "account B cannot list account A passage",
+      "passed": true
+    },
+    {
+      "check": "foreign delete returns safely",
+      "passed": true
+    },
+    {
+      "check": "account A passage survives account B delete",
+      "passed": true
+    },
+    {
+      "check": "same session loses preview after server revocation",
+      "passed": true
+    },
+    {
+      "check": "staging Explorer fixture without selected juz denied",
+      "passed": true
+    },
+    {
+      "check": "staging Explorer selects approved juz through RPC",
+      "passed": true
+    },
+    {
+      "check": "staging Explorer fixture selected juz allowed",
+      "passed": true
+    },
+    {
+      "check": "Explorer six-juz selection rejected",
+      "passed": true
+    },
+    {
+      "check": "cancellation fixture retains paid-period access",
+      "passed": true
+    },
+    {
+      "check": "paid fixture does not unlock developer-only chapters",
+      "passed": true
+    },
+    {
+      "check": "client cannot update subscription status",
+      "passed": true
+    },
+    {
+      "check": "account B cannot invoke service-only entitlement lookup",
+      "passed": true
+    },
+    {
+      "check": "expired staging fixture loses paid content immediately",
+      "passed": true
+    },
+    {
+      "check": "expired fixture retains free learning features",
+      "passed": true
+    },
+    {
+      "check": "free entitlement survives repairs",
+      "passed": true
+    }
+  ],
+  "allPassed": true
+}
