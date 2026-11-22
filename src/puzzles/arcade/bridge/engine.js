@@ -1,3 +1,4 @@
+import {makeMemoryStructure,startMemoryCrossing,tickMemoryCrossing} from './memory-structure.js';
 import {memoryLevel} from '../difficulty.js';
 import {createSession,reduceSession} from '../session.js';
 import {seededShuffle} from '../content.js';
@@ -29,18 +30,34 @@ export function createBridge({id,config,sectors,difficulty='beginner'}){
  difficulty=memoryLevel(config,difficulty);
  if(!bridgeProfiles[difficulty]||sectors.length!==config.keys.length-1||sectors.some((s,i)=>s.from!==config.keys[i]||s.to!==config.keys[i+1]||s.choices.length!==3||s.choices.filter(c=>c.key===s.to).length!==1||new Set(s.choices.map(c=>identity(c.words))).size!==3))throw Error('Invalid verified transition content');
  const session=createSession({id,game:'bridge',config:{...config,sourceKeys:[...config.keys],keys:config.keys.slice(1)}});
- return {version:2,session,sourceConfig:structuredClone(config),sectors,difficulty,revision:bridgeRevision(sectors),phase:difficulty==='expert'?'recall':'choose',crossing:0,bridges:[],transitionErrors:[],score:0,clock:0,selection:0,gate:null,gatesCleared:[],message:'Recall the opening of the next ayah. Connect the right island to the left island.'};
+ return {version:2,structure:makeMemoryStructure(sectors.map(t=>t.id)),session,sourceConfig:structuredClone(config),sectors,difficulty,revision:bridgeRevision(sectors),phase:difficulty==='expert'?'recall':'choose',crossing:0,bridges:[],transitionErrors:[],score:0,clock:0,selection:0,gate:null,gatesCleared:[],message:'Recall the opening of the next ayah. Connect the right island to the left island.'};
 }
 const reduce=(s,type,extra={})=>{const cp=s.session.checkpoint;if(s.gate&&['mistake','assist','motor-error'].includes(type))s.session.checkpoint=s.gate.start+s.gate.cursor;s.session=reduceSession(s.session,{type,...extra});if(s.gate&&['mistake','assist','motor-error'].includes(type))s.session.checkpoint=cp;};
 export const bridgeTransition=s=>s.sectors[s.gate?s.gate.start+s.gate.cursor:s.session.checkpoint];
 export function stepBridge(previous,action){
  if(previous.session.status==='disposed')return previous;
  const s={...structuredClone({...previous,sectors:undefined}),sectors:previous.sectors},t=bridgeTransition(s);
+ if(action.type==='load-test'&&s.session.status==='won'){s.structurePaused=false;s.structure=startMemoryCrossing(s.structure,s.difficulty,action.load==='heavy'?'heavy':'basic');s.message=s.structure.status==='repair'?'Revisit the highlighted connection to add a brace. Your completed bridges remain safe.':'Watch the load travel across every connected span.';return s;}
+ if(action.type==='reinforce'&&s.session.status==='won'&&s.structure.status!=='crossing'){
+  const span=s.structure.spans.find(p=>p.id===action.id&&p.deck);if(!span)return previous;
+  s.reinforcement={id:span.id,selection:0};s.rehearsalStrikes=s.rehearsalStrikes??0;if(s.rehearsalStrikes>=3)return previous;s.message='Recall this connection again to add a brace. This is supported recognition, not independent recall.';return s;
+ }
+ if(action.type==='reinforce-retry'&&s.session.status==='won'){s.rehearsalStrikes=0;s.reinforcement=null;return s;}
+ if(action.type==='reinforce-select'&&s.reinforcement&&s.session.status==='won'&&(s.rehearsalStrikes??0)<3){
+  const pair=s.sectors.find(t=>t.id===s.reinforcement.id),choice=pair.choices[action.index];if(!choice)return previous;
+  const correct=choice.key===pair.to;s.structure.attempts.push({id:pair.id,correct,assisted:true});if(s.structure.attempts.length>10000)s.structure.attempts.shift();
+  if(correct){s.structure.spans.find(p=>p.id===pair.id).reinforced=true;s.reinforcement=null;if(s.sourceConfig.chainMode==='practice')s.rehearsalStrikes=0;s.message='Brace added! Try the heavier crossing. No extra XP or recall grade.';}
+  else{s.rehearsalStrikes=(s.rehearsalStrikes??0)+1;s.transitionErrors.push({transitionId:pair.id,from:pair.from,to:pair.to,selected:choice.key,event:s.session.events});s.message=s.rehearsalStrikes===3?'Three rehearsal strikes. Restart reinforcement when ready; your finished route stays safe.':'That opening belongs elsewhere. One rehearsal memory strike; your finished route stays safe.';}
+  return s;
+ }
+ if(action.type==='pause'&&s.session.status==='won'){s.structurePaused=true;return s;}
+ if(action.type==='resume'&&s.session.status==='won'){s.structurePaused=false;return s;}
+ if(action.type==='tick'&&s.session.status==='won'){if(s.structurePaused)return previous;s.structure=tickMemoryCrossing(s.structure,s.difficulty,action.dt);return s;}
  if(action.type==='dispose'){reduce(s,'dispose');return s;}
  if(action.type==='start'&&s.session.status==='ready'){reduce(s,'start');return s;}
  if(action.type==='pause'){reduce(s,'pause');return s;}
  if(action.type==='resume'){reduce(s,'resume');return s;}
- if(action.type==='retry'&&s.session.status==='lost'){reduce(s,'retry');if(s.sourceConfig.chainMode==='classic'){s.bridges=[];s.score=0;s.gate=null;s.gatesCleared=[];}s.phase=s.gate?'gate-recall':s.difficulty==='expert'?'recall':'choose';s.crossing=0;return s;}
+ if(action.type==='retry'&&s.session.status==='lost'){reduce(s,'retry');if(s.sourceConfig.chainMode==='classic'){s.bridges=[];s.structure=makeMemoryStructure(s.sectors.map(t=>t.id));s.score=0;s.gate=null;s.gatesCleared=[];}s.phase=s.gate?'gate-recall':s.difficulty==='expert'?'recall':'choose';s.crossing=0;return s;}
  if(action.type==='assist'&&['ready','playing','paused'].includes(s.session.status)){const status=s.session.status;s.session.status='playing';reduce(s,'assist',{kind:action.kind});s.session.status=status;return s;}
  if(s.session.status!=='playing')return previous;
  if(action.type==='motor-error'){reduce(s,'motor-error');s.message='Connector returned safely. Tap it or try again; no memory strike.';return s;}
@@ -51,8 +68,8 @@ export function stepBridge(previous,action){
   if(!Number.isFinite(action.dt)||action.dt<=0||action.dt>.2)return previous;
   s.clock+=action.dt;
   if(['crossing','gate-crossing'].includes(s.phase)){s.crossing=Math.min(1,s.crossing+action.dt/2);if(s.crossing===1){
-   if(s.gate){if(s.gate.cursor===0){s.gate.cursor=1;s.phase='gate-recall';s.crossing=0;if(s.sourceConfig.chainMode==='practice')s.session.strikes=0;s.message='First Gate link recalled. Now try the next boundary.';}else{s.gatesCleared.push(s.gate.id);s.gate=null;s.phase='checkpoint';s.message='Bridge Gate cleared. Two connections reviewed; no extra completion or recall grade awarded.';}}
-   else{s.bridges.push(t.id);s.score+=100;reduce(s,'checkpoint');s.phase=s.session.status==='won'?'complete':'checkpoint';s.message='Connection complete! Recite both ayahs together. Game success does not certify memorization.';
+   if(s.gate){if(s.gate.cursor===0){s.gate.cursor=1;s.phase='gate-recall';s.crossing=0;if(s.sourceConfig.chainMode==='practice')s.session.strikes=0;s.message='First Gate link recalled. Now try the next boundary.';}else{for(const pair of s.sectors.slice(s.gate.start,s.gate.start+2))s.structure.spans.find(p=>p.id===pair.id).reinforced=true;s.gatesCleared.push(s.gate.id);s.gate=null;s.phase='checkpoint';s.message='Bridge Gate cleared. Two connections reviewed; no extra completion or recall grade awarded.';}}
+   else{s.bridges.push(t.id);const span=s.structure.spans.find(p=>p.id===t.id);Object.assign(span,{deck:true,supports:2,truss:true});s.score+=100;reduce(s,'checkpoint');s.phase=s.session.status==='won'?'complete':'checkpoint';if(s.session.status==='won')s.structure=startMemoryCrossing(s.structure,s.difficulty);s.message='Connection complete! Recite both ayahs together. Game success does not certify memorization.';
     if(s.sourceConfig.bridgeGate&&s.session.status!=='won'&&s.bridges.length%3===0){s.gate={id:`gate:${s.bridges.length}`,start:s.bridges.length-2,cursor:0};s.phase='gate-recall';s.crossing=0;s.message='Bridge Gate: say two consecutive openings from memory before revealing their connectors.';}
    }
   }}

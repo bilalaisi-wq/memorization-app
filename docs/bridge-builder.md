@@ -1,4 +1,4 @@
-# Bridge Builder 2.0 · Ayah Link
+# Bridge Builder 3.0 · The Bridge of Memory
 
 Bridge Builder now tests **the transition between adjacent ayahs**, not the order of words inside one ayah. The permanent arcade identifier remains `bridge`. It is now available to learners in the regular Puzzle Lab. Premium content and developer authorization remain enforced.
 
@@ -6,7 +6,7 @@ Bridge Builder now tests **the transition between adjacent ayahs**, not the orde
 
 Open Your Space → Puzzle Lab → Bridge Builder. Choose **Single Transition** (two adjacent ayahs) or **Ayah Chain**, a start/end, strike rules and difficulty. Prepare crossing, then Start linking. The last ayah of a surah cannot be chosen as a starting boundary; opening on that ayah selects the preceding pair. A chain of N selected ayahs generates N−1 challenges, including every internal boundary. The existing shared arcade configuration bounds each route to at most 50 ayahs; choose a subsequent contiguous range for longer surahs.
 
-The right island shows the ending of ayah N, and the left island asks how N+1 begins. Say the opening aloud, choose its connector and watch the bridge snap in and the lantern cross **right to left**. Continue to the next boundary. The built-in How to play demonstration explains this without requiring engineering knowledge.
+The right island shows the ending of ayah N, and the left island asks how N+1 begins. Say the opening aloud, choose its connector and watch the bridge snap in and the lantern cross **right to left**. The next boundary opens automatically without a Next button. The built-in How to play demonstration explains this without requiring engineering knowledge.
 
 - Beginner: last word, three distinguishable opening cues, stationary connectors, guided full-ayah recitation by default.
 - Intermediate: last three words (or all available), up to three opening words, gently floating connectors.
@@ -14,7 +14,7 @@ The right island shows the ending of ayah N, and the left island asks how N+1 be
 - Tap/click any connector. Keyboard: Left/Right selects a connector, Space/Enter commits; 1–3 directly choose; P pauses. Tab/Enter works on ordinary controls. Intermediate/Advanced also allow dragging a connector onto the gap. Dragging is optional; a missed/canceled drag is a motor event, never a memory mistake. There is no response timer. Pausing freezes the traveler; reduced motion removes connector float and cosmetic demonstration movement.
 - Classic: three wrong openings across the chain; retry restarts that route. Practice: three per boundary; completed bridges remain intact on retry.
 
-All door meanings, connectors, feedback and audio controls are inside the game scene. Mobile uses large, vertically arranged connector buttons. No engineering selectors, load tests, piers, stiffness budgets, cart simulation or intra-ayah beam reconstruction remain in active gameplay. `structure.js` is retained as inactive legacy code; it is not imported by the new engine/UI.
+All door meanings, connectors, feedback and audio controls are inside the game scene. Mobile uses large, vertically arranged connector buttons. There are no material budgets, engineering questions, free-build selectors or intra-ayah beam reconstruction. Version 3 adds a deterministic supported-span load model driven solely by correct adjacent-ayah connections. `structure.js` is retained as inactive legacy code; it is not imported by the new engine/UI.
 
 ## Verified source and audio
 
@@ -63,3 +63,18 @@ Tutorial previews, captured in actual pointer and native touch-tap sessions: [de
 ## Learner availability
 
 Bridge Builder is available from the regular Puzzle Lab and the shared arcade registry without developer mode. First-time players receive the interactive tutorial. Exiting developer mode keeps an active Bridge run available. Existing content authorization still applies: releasing the game does not unlock paid surahs or developer-only content. Other unreleased games remain hidden.
+
+
+## Bridge of Memory structural layer (3.0)
+
+`memory-structure.js` models one span for each canonical transition. A correct completion creates the deck, two supports and triangular truss. Wrong answers create no structural credit and leave finished spans intact. `structure-view.js` renders a horizontally explorable RTL structural overview independently from the unchanged Arabic islands/choices. It shows numbered joints, missing dashed spans, supports, braces, moving load and load-dependent deck deflection. Long chains retain full-size source text and a scrollable overview, not tiny Arabic.
+
+Basic load weights are 1 (lantern), 1.25 (supply cart), 1.5 (wagon); every completed supported span has capacity 1.6. An added brace raises capacity to 2.8. The optional heavy trial multiplies weight by 1.6. Inspection checks every span, not just the one under the traveler. Missing or under-capacity spans stop the trial safely before crossing; there is no random collapse. Deflection follows the moving load location and weight/capacity ratio, bounded to a few visual pixels. This is a transparent arcade structural model, not engineering certification. A correct complete required sequence always passes the basic test.
+
+The final basic load starts automatically after the last boundary. It traverses the complete connected overview right-to-left in a bounded 2–12-second simulation. Result actions stay inline below it, so the crossing remains visible and can be paused, replayed or left without a blocking celebration. The learning result is saved at canonical completion, independently of cosmetic crossing latency. Optional trials never mint a new completion receipt or change FSRS.
+
+Try a Heavier Load highlights the spans needing braces. Practice Weak Connections chooses an unbraced weak span first and asks its original source-backed next-opening question. Correct recognition adds a brace; incorrect recognition consumes a **separate three-charge post-completion rehearsal budget** and records transition-specific evidence. Practice resets rehearsal charges after a successful brace; Classic retains them across this optional reinforcement session. At three charges, Retry Reinforcement resets only that rehearsal, never removes the finished bridge. This separate budget preserves the already saved run and its existing strike/history contract. These are assisted recognition attempts, not independent recall. The existing optional Bridge Gate also braces the two boundaries it successfully reviews, without extra checkpoint or XP credit.
+
+The same `ayah-bridge-checkpoints-v2` envelope now has optional `structure` metadata (schema 1), reference-only spans, reinforcement attempts and rehearsal charges. Historical v2 records without it reconstruct base supports from their **existing completed transition IDs**, never from engineering-era achievements. Invalid/future structural metadata blocks restore with the existing export/recovery path. It is not silently overwritten. No database migration is required. An interrupted optional reinforcement question can be offered again; completed braces persist. Existing saved paid-source authorization checks still happen before reconstruction.
+
+Additional tests: `bridge-structure.spec.js` covers deterministic loads, missing supports, all presets, targeted repair, three rehearsal charges, legacy restoration and no scheduler/reward changes. `bridge-grand-crossing.spec.js` plays five Al-Fatihah ayahs through four actual pointer/touch connector choices, automatic boundaries, a full moving crossing, pause/settings, heavier trial, reinforcement and landscape resizing. Screenshots are local Chromium gameplay evidence, not physical iOS/Android certification. See [3.0 validation](bridge-builder-3-validation.md) for final results and image links.

@@ -1,0 +1,62 @@
+[WebServer] (node:34437) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:34450) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 44 tests using 2 workers
+
+(node:34537) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34538) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 tests/bridge-engine.spec.js:16:1 › N ayahs create N-1 adjacent transitions, never same-ayah word reconstruction (23ms)
+  ✓   3 tests/bridge-engine.spec.js:17:58 › beginner source-backed openings, distinct choices and a complete transition solution (110ms)
+  ✓   4 tests/bridge-engine.spec.js:17:58 › standard source-backed openings, distinct choices and a complete transition solution (93ms)
+  ✓   5 tests/bridge-engine.spec.js:17:58 › expert source-backed openings, distinct choices and a complete transition solution (205ms)
+  ✓   6 tests/bridge-engine.spec.js:18:1 › repeated authentic openings never appear twice among alternatives (23ms)
+  ✓   7 tests/bridge-engine.spec.js:19:1 › three wrong openings consume memory strikes; motor misses, ticks, delayed selections do not (5ms)
+  ✓   8 tests/bridge-engine.spec.js:20:47 › classic boundary recovery retains the correct checkpoint budget (11ms)
+  ✓   9 tests/bridge-engine.spec.js:20:47 › practice boundary recovery retains the correct checkpoint budget (51ms)
+  ✓  10 tests/bridge-engine.spec.js:21:1 › advanced recall-first cannot commit choices before readiness; pause, disposal and steering work (53ms)
+  ✓  11 tests/bridge-engine.spec.js:22:1 › checkpoint restoration binds exact source revision, stores metadata only and preserves invalid originals (31ms)
+  ✓  12 tests/bridge-engine.spec.js:23:1 › legacy history survives and transition rewards are idempotent, account-bound and FSRS-neutral (93ms)
+  ✓  13 tests/bridge-engine.spec.js:25:1 › assistance heard while paused survives a checkpoint reload and rapid duplicate selections cannot advance twice (5ms)
+  ✓  14 tests/bridge-engine.spec.js:27:1 › malformed or future individual checkpoints are preserved rather than replaced by a new run (41ms)
+  ✓  15 tests/bridge-structure.spec.js:10:1 › only correct canonical boundaries construct deck, supports and triangular trusses (9ms)
+  ✓  16 tests/bridge-structure.spec.js:11:58 › beginner all correct sequences deterministically pass basic moving load without extra FSRS or rewards (30ms)
+  ✓  17 tests/bridge-structure.spec.js:11:58 › standard all correct sequences deterministically pass basic moving load without extra FSRS or rewards (14ms)
+  ✓  18 tests/bridge-structure.spec.js:11:58 › expert all correct sequences deterministically pass basic moving load without extra FSRS or rewards (113ms)
+  ✓  19 tests/bridge-structure.spec.js:12:1 › incomplete structures cannot cross; load stress responds to position and weight (3ms)
+  ✓  20 tests/bridge-structure.spec.js:13:1 › targeted authentic recognition repairs heavier loads; wrong rehearsal preserves built spans and consumes rehearsal charges (32ms)
+  ✓  21 tests/bridge-structure.spec.js:14:1 › additive structural metadata restores v2 historical checkpoints and refuses malformed structure without rewriting (7ms)
+  ✓  22 tests/bridge-structure.spec.js:15:1 › structural time is bounded and disposed games cannot advance (2ms)
+  ✓  23 tests/bridge-structure.spec.js:17:1 › grand crossing respects pure pause/resume and reduced-motion rendering leaves source model unchanged (268ms)
+  ✓  24 tests/bridge-tutorial-assistance.spec.js:4:1 › tutorial reference exposure marks a matching pending recall assisted without grading or scheduling (2.4s)
+  ✓  25 tests/bridge-tutorial-assistance.spec.js:10:1 › failed assistance writes prevent tutorial reference text and recitation from being exposed (2.0s)
+  ✓  26 tests/bridge-tutorial.spec.js:10:1 › tutorial uses verified Ikhlas adjacent pairs, separate flags and preserves future flags (8ms)
+  ✓  27 tests/bridge-tutorial.spec.js:11:1 › optional Gate reviews two boundaries with no additional completions or score and restores mid-Gate (8ms)
+  ✓  28 tests/bridge-tutorial.spec.js:17:1 › first-time tutorial plays both full ayahs sequentially, teaches two transitions and never writes game or memory history (4.0s)
+  ✓  29 tests/bridge-tutorial.spec.js:18:1 › skip is saved, Escape closes, replay and silent keyboard practice cannot earn XP (3.0s)
+  ✓  30 tests/bridge-tutorial.spec.js:19:1 › tutorial audio failure and profile change clean up without changing another profile (1.6s)
+  ✓  31 tests/bridge-tutorial.spec.js:20:34 › desktop tutorial readable source, touch, reduced motion and screenshot (1.7s)
+  ✓  32 tests/bridge-tutorial.spec.js:20:34 › 390px mobile tutorial readable source, touch, reduced motion and screenshot (1.8s)
+  ✓   1 tests/bridge-grand-crossing.spec.js:5:2 › desktop Grand Crossing › five ayahs build four spans automatically, carry a load, repair and reinforce without duplicate rewards (19.8s)
+  ✓  33 tests/bridge-tutorial.spec.js:22:1 › replayed tutorial preserves and reloads an unfinished real run without giving XP (3.8s)
+  ✓  35 tests/bridge-tutorial.spec.js:23:1 › optional Bridge Gate is playable and never awards extra checkpoint receipts (7.7s)
+  ✓  34 tests/bridge-grand-crossing.spec.js:5:2 › 390px Grand Crossing › five ayahs build four spans automatically, carry a load, repair and reinforce without duplicate rewards (12.3s)
+  ✓  36 tests/bridge-ui.spec.js:4:1 › single transition tests the next ayah, demonstrates the bridge and crosses RTL before saving once (2.5s)
+  ✓  37 tests/bridge-ui.spec.js:5:1 › three wrong next openings lose; practice retains completed transition checkpoints and resumes after reload (4.7s)
+  ✓  38 tests/bridge-ui.spec.js:6:1 › advanced recall-first has no automatic audio and cannot reveal choices prematurely (2.2s)
+  ✓  39 tests/bridge-ui.spec.js:7:1 › moving connectors are optional to drag; missed drops are motor events and keyboard selection is fully playable (2.3s)
+  ✓  40 tests/bridge-ui.spec.js:8:1 › guided audio uses complete preceding and following ayah; listening-first pauses; volume and exit clean media (3.1s)
+  ✓  41 tests/bridge-ui.spec.js:9:1 › audio failure, save retry and repeated clicks do not create strikes or duplicate XP; FSRS is untouched (2.1s)
+  ✓  42 tests/bridge-ui.spec.js:10:1 › profile switch disposes private scene and audio without writing the departing draft into the new account (1.1s)
+  ✓  43 tests/bridge-ui.spec.js:11:1 › invalid checkpoint remains exportable and never gets overwritten (1.3s)
+  ✓  44 tests/bridge-ui.spec.js:12:110 › mobile › touch connectors stay readable inside the scene and retain RTL islands and reduced motion (2.4s)
+
+  44 passed (55.6s)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+npm notice To update run: npm install -g npm@12.2.3
+npm notice
