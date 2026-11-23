@@ -1,3 +1,5 @@
+import {mountSmartArabic} from '../ui/smart-arabic/ui.js';
+import {surahs as freeSurahs} from '../data.js';
 import {readingHTML,mountReadingSetting} from '../ui/reading-aids.js';
 import {showAnswerFeedback} from '../ui/answer-feedback.js';
 import {mountExpansion} from '../memorization/ui.js';
@@ -43,7 +45,7 @@ import "./passage.css";
 export function openPassageStudio(ctx = {}) {
   const d = document.createElement(ctx.inlineRoot ? "section" : "dialog");
   d.className = "account-dialog passage-studio";
-  let expansion=null,groupSize=0;
+  let expansion=null,groupSize=0,smartInput=null;
   let closed=false,releaseOwner=()=>{};
   const owner = ctx.user?.id || null;
   const guard=()=>{if(closed||activeProfileId()!==owner)throw Error('Account changed or passage studio closed.');};
@@ -149,7 +151,7 @@ export function openPassageStudio(ctx = {}) {
   }
   const close = () => {
     if(closed)return;
-    expansion?.dispose();expansion=null;
+    smartInput?.dispose();smartInput=null;expansion?.dispose();expansion=null;
     gameHost?.dispose();gameHost=null;
     closed=true;
     releaseOwner();
@@ -340,7 +342,7 @@ export function openPassageStudio(ctx = {}) {
   }
   function draw() {
     mountReadingSetting(d);
-    expansion?.dispose();expansion=null;
+    smartInput?.dispose();smartInput=null;expansion?.dispose();expansion=null;
     pendingControl();
     assessmentView++;
     d.dataset.recallActive = "false";
@@ -730,7 +732,7 @@ export function openPassageStudio(ctx = {}) {
       const unit = await recallUnit(all, segment);
       if (!d.isConnected || request !== navigation) return;
       // Persist externally observed quest support with the actual attempt in one write.
-      expansion?.dispose();expansion=null;
+      smartInput?.dispose();smartInput=null;expansion?.dispose();expansion=null;
       memory.begin(unit, {assisted: ctx.assessmentAssisted === true});
       drawAssessment();
       note(
@@ -742,7 +744,7 @@ export function openPassageStudio(ctx = {}) {
   }
   async function drawAssessment() {
     ctx.onAssessmentView?.(true);
-    expansion?.dispose();expansion=null;
+    smartInput?.dispose();smartInput=null;expansion?.dispose();expansion=null;
     pendingControl();
     const view = ++assessmentView;
     const currentView = () => d.isConnected && view === assessmentView;
@@ -764,6 +766,8 @@ export function openPassageStudio(ctx = {}) {
     } from memory. This is self-assessed recitation, not automatic speech verification.</p><button class="primary" data-declare ${
       a.declared ? "disabled" : ""
     }>I recited from memory</button><button class="text-button" data-compare>Reveal verified text and compare</button><button class="text-button" data-recall-listen>Listen to reciter (study assistance)</button><button class="text-button" data-abandon>Return to practice</button><div data-comparison></div><div data-grades></div>`;
+    const typingButton=document.createElement('button');typingButton.className='text-button';typingButton.textContent='Try written recall · Arabic or transliteration';typingButton.dataset.smartRecall='';root.querySelector('[data-comparison]').before(typingButton);
+    typingButton.onclick=()=>{if(!currentView()||smartInput)return;const region=document.createElement('div');typingButton.after(region);const sourceWords=(assessmentBundles||[]).flatMap(b=>unit.type==='segment'?b.words.slice(unit.firstWord-1,unit.lastWord):b.words);const corpus=freeSurahs.flatMap(s=>s.verses.map(v=>localBundle(`${s.id}:${v.id}`))).concat(assessmentBundles||[]);smartInput=mountSmartArabic(region,{words:sourceWords,corpus,assertCurrent:()=>{guard();if(!currentView())throw Error('Recall view changed.');},onAssistance:()=>memory.update('typing-suggestions'),onSubmit:r=>{if(r.available)memory.update('written',{mode:r.mode,exact:r.exact,assisted:r.assisted,differences:r.differences.length});}});typingButton.disabled=true;};
     const anchors=assessmentBundles?.flatMap(b=>reviewedAnchors(b,ctx.anchors||b.memoryAnchors||[]))||[];
     if(anchors.length){const button=document.createElement('button');button.className='text-button';button.dataset.recallAnchors='';button.textContent='Use reviewed memory anchors · marks assistance';root.querySelector('[data-comparison]').before(button);button.onclick=()=>{try{memory.update('anchor',anchors.map(a=>a.id));button.disabled=true;const help=document.createElement('div');help.dataset.recallAnchorHelp='';help.innerHTML=anchors.map(a=>`<p>${esc(a.note)} · ${a.sources.map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title)}</a>`).join(' · ')}</p>`).join('');button.after(help);}catch(e){note(e.message,true);}};}
     root.querySelector("[data-declare]").onclick = () => {

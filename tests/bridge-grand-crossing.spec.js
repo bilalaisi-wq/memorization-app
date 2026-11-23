@@ -1,5 +1,6 @@
+import {surahs} from '../src/data.js';
 import {test,expect} from '@playwright/test';
-import {openBridge,connectBoundary,opening} from './bridge-helper.js';
+import {openBridge,connectBoundary,opening,currentOpening,selectBridgeEnding} from './bridge-helper.js';
 for(const mobile of [false,true])test.describe(mobile?'390px Grand Crossing':'desktop Grand Crossing',()=>{
  test.use({viewport:mobile?{width:390,height:844}:{width:1366,height:1000},hasTouch:mobile,reducedMotion:mobile?'reduce':'no-preference'});
  test('five ayahs build four spans automatically, carry a load, repair and reinforce without duplicate rewards',async({page})=>{
@@ -8,7 +9,7 @@ for(const mobile of [false,true])test.describe(mobile?'390px Grand Crossing':'de
   await page.evaluate(()=>document.documentElement.dataset.theme='night-sky');
   await page.locator('.bridge-stage').evaluate(e=>e.scrollTop=0);await page.locator('.bridge-stage').screenshot({path:`${prefix}-building.png`,animations:'disabled'});
   for(let ayah=2;ayah<=5;ayah++){
-   const choice=page.locator('[data-bridge-choice]').filter({has:page.getByText(opening(ayah,'standard'),{exact:true})});
+   await selectBridgeEnding(page);const choice=page.locator('[data-bridge-choice]').filter({has:page.getByText(await currentOpening(page,ayah),{exact:true})});
    await choice.evaluate(e=>e.scrollIntoView({block:'center'}));const box=await choice.boundingBox();if(mobile)await page.touchscreen.tap(box.x+box.width/2,box.y+box.height/2);else await page.mouse.click(box.x+box.width/2,box.y+box.height/2);
    if(ayah===2){await page.clock.runFor(700);await page.locator('.bridge-stage').evaluate(e=>e.scrollTop=0);await page.locator('.bridge-stage').screenshot({path:`${prefix}-connection.png`,animations:'disabled'});await page.clock.runFor(1700);}else await page.clock.runFor(2400);
    await expect(page.locator('.memory-span.built')).toHaveCount(ayah-1);
@@ -27,7 +28,7 @@ for(const mobile of [false,true])test.describe(mobile?'390px Grand Crossing':'de
   for(let ayah=2;ayah<=5;ayah++){
    await page.locator('[data-bridge-action=reinforce]').click();
    if(ayah===2){await page.locator('.bridge-stage').evaluate(e=>e.scrollTop=0);await page.locator('.bridge-stage').screenshot({path:`${prefix}-repair.png`,animations:'disabled'});await page.locator('.bridge-toolbar [data-bridge-action=listen]').click();expect(await page.evaluate(()=>window.bridgeAudio.at(-1).src)).toContain('001001');}
-   const c=page.locator('[data-reinforce-choice]').filter({has:page.getByText(opening(ayah,'standard'),{exact:true})});if(mobile)await c.tap();else await c.click();
+   const c=page.locator('[data-reinforce-choice]').filter({has:page.locator('.arabic').filter({hasText:new RegExp('^'+surahs[0].verses[ayah-1].words[0])})});if(mobile)await c.tap();else await c.click();
   }
   await expect(page.locator('.memory-span.braced')).toHaveCount(4);await page.locator('[data-bridge-action=heavy]').click();await page.clock.runFor(6500);
   await expect(page.locator('.memory-strength')).toContainText('Crossing complete');

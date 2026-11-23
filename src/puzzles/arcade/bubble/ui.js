@@ -12,7 +12,7 @@ export const bubbleRegistration={id:'bubble',title:'Ayah Bubble Burst',create:mo
 const text=p=>p.words.map(w=>w.text).join(' ');
 export function mountBubble({root,adapter,config,library,id,difficulty='beginner',reviews={},muted=()=>false,volume=()=>1,onComplete=()=>{},onExit=()=>{},onRecall=()=>{},onJourney=null,getNextSteps=()=>({}),initialAudio='listen'}) {
  const frames=backgroundFrames(),requestAnimationFrame=frames.request,cancelAnimationFrame=frames.cancel;
- config=annotateDifficulty(config,difficulty);difficulty=memoryLevel(config,difficulty);
+ config=annotateDifficulty({...config,cascadeVersion:1},difficulty);difficulty=memoryLevel(config,difficulty);
  reportStudyExposure([config.keys[0]]);
  let state=createBubble({id,config,difficulty,sectors:buildFormations(adapter,config,library,{difficulty,reviews})}),disposed=false,frame=0,last=0,saved=false,saveError='',audioMode=initialAudio,pendingAudio=false,mediaToken=0,paintedEffect=0,formationSignature='';
  const audio=createAudioManager({owner:'bubble',initialVolume:volume()}),motion=motionSettings();
@@ -34,8 +34,8 @@ export function mountBubble({root,adapter,config,library,id,difficulty='beginner
   const sequence=root.querySelector('.bubble-sequence'),sequenceKey=`${sector().key}:${state.captured.length}`;
   if(sequence.dataset.sequence!==sequenceKey){sequence.dataset.sequence=sequenceKey;sequence.innerHTML=state.captured.length?`${state.captured.length>12?'<small class="bubble-empty">Latest 12 connected words · full sequence retained</small>':''}${state.captured.slice(-12).map(w=>`<span>${esc(w.text)}</span>`).join(' ')}`:'<span class="bubble-empty">Connected words appear here</span>';}
 
-  const signature=state.bubbles.map(b=>`${b.id}:${b.y}`).join('|');
-  if(signature!==formationSignature){formationSignature=signature;targets.innerHTML=state.bubbles.map(b=>`<div class="word-bubble" style="${place(b)}" data-bubble-id="${b.id}"><span class="arabic" dir="rtl" lang="ar">${esc(text(b.piece))}</span></div>`).join('')+state.neutrals.map(n=>`<div class="bubble-neutral" style="${place(n)}" aria-hidden="true">✧</div>`).join('');
+  const signature=state.bubbles.map(b=>`${b.id}:${b.y}`).join('|')+'|'+(state.obstacles||[]).map(o=>o.id).join('|');
+  if(signature!==formationSignature){formationSignature=signature;targets.innerHTML=state.bubbles.map(b=>`<div class="word-bubble" style="${place(b)}" data-bubble-id="${b.id}"><span class="arabic" dir="rtl" lang="ar">${esc(text(b.piece))}</span></div>`).join('')+(state.obstacles||[]).map(n=>`<div class="bubble-crystal" style="${place(n)}" aria-label="Neutral crystal obstacle">◆</div>`).join('')+state.neutrals.map(n=>`<div class="bubble-neutral" style="${place(n)}" aria-hidden="true">✧</div>`).join('');
   }
   const shot=root.querySelector('.bubble-shot');shot.hidden=!state.projectile;if(state.projectile){shot.style.left=`${state.projectile.x/9}%`;shot.style.top=`${state.projectile.y/8.2}%`;}
   // Dotted geometric preview includes wall reflections, never a correctness cue.

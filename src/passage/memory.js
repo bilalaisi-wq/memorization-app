@@ -4,6 +4,7 @@ const scheduler = fsrs(FSRS_SETTINGS);
 export const PASSAGE_MEMORY_KEY = "ayah-passage-recall-v1";
 const BASE = "ayah-passage-sync-v1";
 const clone = (x) => JSON.parse(JSON.stringify(x));
+const validWritten=v=>v===undefined||v&&v.kind==='written-comparison'&&['arabic','latin'].includes(v.mode)&&typeof v.exact==='boolean'&&typeof v.assisted==='boolean'&&v.spokenVerified===false&&v.policy==='practice-v1'&&Number.isSafeInteger(v.differences)&&v.differences>=0&&v.differences<=1024;
 export function validMemory(data) {
   return data?.version === 1 && data.records &&
     typeof data.records === "object" && !Array.isArray(data.records) &&
@@ -12,7 +13,7 @@ export function validMemory(data) {
       ["ayah", "segment", "passage"].includes(r.unit.type) &&
       Array.isArray(r.unit.refs) && r.unit.refs.length > 0 &&
       r.unit.refs.every((k) => /^\d+:\d+$/.test(k)) &&
-      Array.isArray(r.history) && Array.isArray(r.successfulDays) &&
+      Array.isArray(r.history) && r.history.every(h=>validWritten(h?.writtenResult)) && Array.isArray(r.successfulDays) &&
       (!r.card ||
         (Number.isFinite(r.card.stability) &&
           Number.isFinite(r.card.difficulty) &&
@@ -23,7 +24,7 @@ export function validMemory(data) {
       (typeof data.active.id === "string" && data.records[data.active.unitId] &&
         typeof data.active.declared === "boolean" &&
         typeof data.active.assisted === "boolean" &&
-        typeof data.active.compared === "boolean"));
+        typeof data.active.compared === "boolean" && validWritten(data.active.writtenResult)));
 }
 export function createPassageMemory(
   storage,
@@ -83,6 +84,8 @@ export function createPassageMemory(
     update(flag, evidence = null) {
       return save((d) => {
         if (!d.active) throw Error("Start a recall first.");
+        if(flag==='written'){if(!evidence||!['arabic','latin'].includes(evidence.mode)||typeof evidence.exact!=='boolean'||!Number.isSafeInteger(evidence.differences)||evidence.differences<0)throw Error('Invalid written comparison metadata.');d.active.writtenResult={kind:'written-comparison',mode:evidence.mode,exact:evidence.exact,assisted:evidence.assisted===true,differences:evidence.differences,policy:'practice-v1',spokenVerified:false};if(evidence.assisted||!d.active.declared)d.active.assisted=true;}
+        if(flag === "typing-suggestions"){d.active.assisted=true;d.active.typingAssisted=true;}
         if(flag === "anchor"){d.active.assisted=true;d.active.anchorIds=Array.isArray(evidence)?evidence.filter(id=>typeof id==='string').slice(0,100):[];}
         if (flag === "abandon") d.active.assisted = true;
         else if (flag === "declared") d.active.declared = true;
@@ -135,6 +138,7 @@ export function createPassageMemory(
           ...(assessmentSource === "self-assessed" ? {assessmentSource} : {}),
           independent,
           ...(a.anchorIds?{anchorIds:clone(a.anchorIds)}:{}),
+          ...(a.writtenResult?{writtenResult:clone(a.writtenResult)}:{}),
           scheduled: eligible,
           nextReview: r.card?.due || null,
           stage: r.successfulDays.length >= 3 && r.card?.state === State.Review

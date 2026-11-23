@@ -3,7 +3,7 @@ export function arcadeNextSteps({session,elapsed=0,goals,due=[],history=[],lastA
   const keys=session.config.keys,last=Number(keys.at(-1).split(':')[1]),surah=Number(keys[0].split(':')[0]);
   const recent=new Set(history.filter(h=>h.game===(session.game||'asteroids')&&Date.parse(h.at)>=now.getTime()-86400000).map(h=>h.sessionId.split(':').slice(0,-2).join(':'))).size;
   const small=goals?.confidence==='shaky'||session.mistakes.length>0||goals?.minutes<=10;
-  const size=small?1:Math.min(3,keys.length);
+  const size=session.config.batchSize||session.config.sourceKeys?.length||keys.length;
   const next=last<lastAyah?{first:last+1,last:Math.min(lastAyah,last+size),surah}:null;
   let title='Take one small step forward',reason=`Try recalling this ayah aloud, then choose another short ${activity} when you feel ready.`,action='recall',target=keys.at(-1);
   if(due.length){title='Make room for your due revision';reason='You have scheduled recall due. Review one now before adding more material.';target=due[0].key;}

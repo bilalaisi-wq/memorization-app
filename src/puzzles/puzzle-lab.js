@@ -35,10 +35,11 @@ import { esc, clearLearningView, uid } from "../ui/dom.js";
 import { gameTypes } from "./puzzle-store.js";
 
 function quickStart(form,start){
- const b=document.createElement('button');b.type='button';b.className='primary';b.dataset.gameStart='';b.textContent='Start Game';b.onclick=()=>{if(form.reportValidity())start();};form.append(b);
+ const b=document.createElement('button');b.type='button';b.className='primary';b.dataset.gameStart='';b.textContent='Start Game';b.onclick=()=>{if(form.reportValidity())return start();};form.append(b);
  form.classList.add('gameplay-pregame');
  const note=document.createElement('p');note.textContent='Choose your ayahs and start. Changing the range or difficulty restarts the active run; already saved learning remains.';form.prepend(note);
 }
+function retainPracticeDifficulty(config,form){const p=form.__practiceDifficulty;if(!p)return;for(const key of ['memoryDifficulty','motorDifficulty'])if(({memoryDifficulty:['guided','standard','expert'],motorDifficulty:['relaxed','normal','arcade']})[key].includes(p[key]))config[key]=p[key];config.difficultySchema=1;}
 function keepSetupInGame(form,host){const options=host.querySelector('[data-game-options]');if(options)options.append(form);}
 
 let cleanup = null, suspend = null;
@@ -320,14 +321,15 @@ export function mountPuzzleLab(
     const record=createResultRecorder({learning,lab,accountId:activeProfileId(),getAccountId:activeProfileId});
     let cancelled=false,launchToken=0,nextAudio='listen',tutorial=null;
     const initial=Math.min(verse.id,surah.verses.at(-1).id-1);
-    area.innerHTML=`<form class="bridge-config"><h3>Bridge Builder · Ayah Link</h3><p>Recall the next ayah’s opening. Connect the ending on the right island to the opening on the left. A chain of N ayahs has N−1 bridges.</p><div class="bridge-config-fields"><label>Journey<select name="journey"><option value="single">Single Transition · two adjacent ayahs</option><option value="chain">Ayah Chain · one bridge per boundary</option></select></label><label>Starting ayah<input name="first" type="number" min="1" max="${surah.verses.at(-1).id-1}" value="${initial}"></label><label>Through ayah<input name="last" type="number" min="2" max="${surah.verses.at(-1).id}" value="${initial+1}" disabled></label><label>Checkpoints<select name="rules"><option value="classic">Classic · three strikes per run</option><option value="practice">Practice · three per boundary</option></select></label><label>Bridge difficulty<select name="difficulty"><option value="beginner">Beginner · guided openings</option><option value="standard">Intermediate · opening phrases</option><option value="expert">Advanced · Cold Crossing</option></select></label></div><label><input type="checkbox" name="bridgeGate"> Optional Bridge Gate · review two links after every three bridges in longer chains</label><button class="text-button" type="button" data-bridge-tutorial>How to Play</button><p>Only source-backed visual excerpts are used. Full-ayah audio preserves recitation; visual excerpts do not certify stopping points.</p><button class="primary" type="submit">Prepare crossing</button><p data-bridge-preparation role="status"></p></form><div data-bridge-host></div>`;
+    area.innerHTML=`<form class="bridge-config"><h3>Bridge Builder · Ayah Link</h3><p>Recall the next ayah’s opening. Connect the ending on the right island to the opening on the left. A chain of N ayahs has N−1 bridges.</p><div class="bridge-config-fields"><label>Journey<select name="journey"><option value="single">Single Transition · two adjacent ayahs</option><option value="chain">Ayah Chain · one bridge per boundary</option></select></label><label>Starting ayah<input name="first" type="number" min="1" max="${surah.verses.at(-1).id-1}" value="${initial}"></label><label>Through ayah<input name="last" type="number" min="2" max="${surah.verses.at(-1).id}" value="${initial+1}" disabled></label><label>Checkpoints<select name="rules"><option value="classic">Classic · three strikes per run</option><option value="practice">Practice · three per boundary</option></select></label><label>Bridge difficulty<select name="difficulty"><option value="beginner">Beginner · guided openings</option><option value="standard">Intermediate · opening phrases</option><option value="expert">Advanced · Cold Crossing</option></select></label></div><label>Endpoint challenge<select name="bridgeEndpoints"><option value="both">Both endings and openings · Expedition Crossing</option><option value="opening">Opening only · resume legacy crossing</option></select></label><label><input type="checkbox" name="bridgeGate"> Optional Bridge Gate · review two links after every three bridges in longer chains</label><button class="text-button" type="button" data-bridge-tutorial>How to Play</button><p>Only source-backed visual excerpts are used. Full-ayah audio preserves recitation; visual excerpts do not certify stopping points.</p><button class="primary" type="submit">Prepare crossing</button><p data-bridge-preparation role="status"></p></form><div data-bridge-host></div>`;
     const form=area.querySelector('form'),host=area.querySelector('[data-bridge-host]'),status=area.querySelector('[data-bridge-preparation]'),through=form.elements.last;
     form.elements.journey.onchange=()=>through.disabled=form.elements.journey.value==='single';
     async function launch(autoStart=false){
       const token=++launchToken,button=form.querySelector('[type=submit]');button.disabled=true;status.textContent='Preparing verified bridge signs…';
       try{
         const first=Number(form.elements.first.value),difficulty=form.elements.difficulty.value;
-        const config={...adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first+1:Number(through.value),mode:'chain',chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]}),...(form.elements.bridgeGate.checked?{bridgeGate:true}:{})};
+        const config={...adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first+1:Number(through.value),mode:'chain',chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]}),bridgeEndpoints:form.elements.bridgeEndpoints.value,...(form.elements.bridgeGate.checked?{bridgeGate:true}:{})};
+        retainPracticeDifficulty(config,form);
         const reviews={};
         if(cancelled||token!==launchToken)return;
         buildCrossings(adapter,config,surahs,{difficulty,reviews}); // Preserve the old result if preparation fails.
@@ -348,7 +350,7 @@ export function mountPuzzleLab(
     const showTutorial=()=>{fallingControl?.pause();tutorial?.dispose();tutorial=mountBridgeTutorial({adapter,library:surahs,volume:()=>recitationVolume,muted:()=>muted,onClose:result=>{tutorial=null;if(result.warning)status.textContent=result.warning;form.scrollIntoView({block:'start'});form.elements.first.focus();}});};
     form.querySelector('[data-bridge-tutorial]').onclick=showTutorial;
     if(createBridgeTutorialStore().needsTutorial())showTutorial();
-    quickStart(form,()=>{tutorial?.dispose();tutorial=null;launch(true);});
+    quickStart(form,()=>{tutorial?.dispose();tutorial=null;return launch(true);});
     form.onsubmit=e=>{e.preventDefault();tutorial?.dispose();tutorial=null;launch();};pauseGame=()=>fallingControl?.pause();gameCleanup=()=>{cancelled=true;launchToken++;tutorial?.dispose();launcher.dispose();};
   }
   function sirat() {
@@ -364,6 +366,7 @@ export function mountPuzzleLab(
       try{
         const first=Number(form.elements.first.value),difficulty=form.elements.difficulty.value;
         const config=adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first:Number(through.value),mode:form.elements.journey.value,chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]});
+        retainPracticeDifficulty(config,form);
         config.siratRoute=form.elements.route.value;config.siratRelaxed=form.elements.relaxed.checked;
         const reviews={};
         for(const key of config.keys){
@@ -407,6 +410,7 @@ export function mountPuzzleLab(
       try{
         const first=Number(form.elements.first.value),difficulty=form.elements.difficulty.value;
         const config=adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first:Number(through.value),mode:form.elements.journey.value,chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]});
+        retainPracticeDifficulty(config,form);
         const reviews={};
         for(const key of config.keys){
           const canonical=adapter.words(key);
@@ -449,6 +453,7 @@ export function mountPuzzleLab(
       try{
         const first=Number(form.elements.first.value),difficulty=form.elements.difficulty.value;
         const config=adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first:Number(through.value),mode:form.elements.journey.value,chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]});
+        retainPracticeDifficulty(config,form);
         config.correctionRooms=form.elements.corrections.checked;
         const reviews={};
         for(const key of config.keys){
@@ -490,6 +495,7 @@ export function mountPuzzleLab(
     function launch(autoStart=false){
       const first=Number(form.elements.first.value);
       const config=adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first:Number(through.value),mode:form.elements.journey.value,chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]});
+        retainPracticeDifficulty(config,form);
       // Validate before disposing a completed trail, preserving safe error recovery.
       config.keys.forEach(k=>adapter.choices(k,{count:6,maxWords:config.visualWindows?1000:40}));
       fallingControl=launcher.launch('snake',{root:host,adapter,config,id:uid(),speed:nextSpeed,initialAudio:nextAudio,muted:()=>muted,volume:()=>recitationVolume,
@@ -506,7 +512,7 @@ export function mountPuzzleLab(
       if(autoStart)fallingControl.start();if(autoStart)keepSetupInGame(form,host);
       status.textContent=autoStart?'Your next trail has started.':'Ready. Press Start trail below.';(host.querySelector('.gameplay-viewport')||host).scrollIntoView({block:'start'});
     }
-    quickStart(form,()=>{try{launch(true);}catch(e){status.textContent=e.message;}});
+    quickStart(form,()=>{try{return launch(true);}catch(e){status.textContent=e.message;}});
     form.onsubmit=e=>{e.preventDefault();try{launch();}catch(e){status.textContent=e.message;}};
     pauseGame=()=>fallingControl?.pause();gameCleanup=()=>launcher.dispose();
   }
@@ -523,6 +529,7 @@ export function mountPuzzleLab(
       try {
         const first=Number(form.elements.first.value),difficulty=form.elements.difficulty.value;
         const config=adapter.configure({surah:surah.id,start:first,end:form.elements.journey.value==='single'?first:Number(through.value),mode:form.elements.journey.value,chainMode:form.elements.rules.value,seed:crypto.getRandomValues(new Uint32Array(1))[0]});
+        retainPracticeDifficulty(config,form);
         const reviews={};
         for(const key of config.keys) {
           const canonical=adapter.words(key);
@@ -553,7 +560,7 @@ export function mountPuzzleLab(
         error.textContent=startedAutomatically?'Starting your next flight…':'Ready. Press Start flight below.';(host.querySelector('.gameplay-viewport')||host).scrollIntoView({block:'start'});
       }catch(e){if(!cancelled){error.textContent=e.message;if(autoStart){autoStart=false;throw e;}}}finally{if(!cancelled)button.disabled=false;}
     };
-    quickStart(form,()=>{autoStart=true;launchFlight();});
+    quickStart(form,()=>{autoStart=true;return launchFlight();});
     form.onsubmit=e=>{e.preventDefault();autoStart=false;launchFlight();};
     pauseGame=()=>fallingControl?.pause();
     gameCleanup=()=>{cancelled=true;launchRun++;launcher.dispose();};

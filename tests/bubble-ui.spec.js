@@ -1,3 +1,4 @@
+import {aimBubble} from './bubble-aim-helper.js';
 import {test,expect} from '@playwright/test';
 import {surahs} from '../src/data.js';
 async function open(page,{end=1,chainMode='classic',difficulty='beginner'}={}){
@@ -6,7 +7,7 @@ async function open(page,{end=1,chainMode='classic',difficulty='beginner'}={}){
  if(end>1){await page.locator('[name=journey]').selectOption('chain');await page.locator('[name=last]').fill(String(end));}
  await page.locator('[name=rules]').selectOption(chainMode);await page.locator('[name=difficulty]').selectOption(difficulty);await page.getByRole('button',{name:'Prepare bubbles',exact:true}).click();await expect(page.locator('.bubble-arena')).toBeVisible();await page.clock.install();await page.locator('[data-bubble-audio]').selectOption('silent');await page.getByRole('button',{name:'Start bubbles',exact:true}).click();
 }
-async function hit(page,word){const target=page.locator('.word-bubble').filter({has:page.locator('.arabic',{hasText:word})}).first(),box=await target.boundingBox();await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();await page.mouse.up();await page.clock.runFor(1900);}
+async function hit(page,word){await aimBubble(page,word);}
 async function solve(page,ayah=1){for(const word of surahs[0].verses[ayah-1].words)await hit(page,word);}
 test('pointer aiming launches travelling connectors and keyboard aim remains adjustable',async({page})=>{
  await open(page);const arena=page.locator('.bubble-arena');await arena.focus();const angle=await arena.getAttribute('data-angle');await page.keyboard.press('ArrowLeft');expect(await arena.getAttribute('data-angle')).not.toBe(angle);

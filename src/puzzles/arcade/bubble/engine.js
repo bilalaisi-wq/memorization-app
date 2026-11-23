@@ -1,3 +1,4 @@
+import {configureCascade,traceCascade,releaseNeutralCluster} from './cascade.js';
 import {memoryLevel,motorLevel} from '../difficulty.js';
 import {createSession, reduceSession} from '../session.js';
 import {answerOrder} from '../../../quest/cosmic/answer-order.js';
@@ -30,7 +31,7 @@ function slotOrder(s, salt=0) {
   return answerOrder([0,1,2],s.session.config.seed+Math.imul(s.cursor+1,7919)+s.session.checkpoint*104729+salt);
 }
 function fillSlot(s,slot,piece) {
-  const profile=bubbleProfiles[s.difficulty],radius=s.session.config.difficultySchema===1?128:profile.radius;
+  const profile=bubbleProfiles[s.difficulty],radius=s.session.config.cascadeVersion===1?profile.radius:s.session.config.difficultySchema===1?128:profile.radius;
   const offset=slotOrder(s,slot+311).indexOf(slot)*30;
   const y=400+offset+s.descent;
   const id=`${s.session.checkpoint}-${s.cursor}-${slot}-${s.generation++}`;
@@ -53,10 +54,12 @@ function populate(s,previousSlot=null) {
   const affected=previousSlot===null?[0,1,2]:[slot,previousSlot];
   s.neutrals=s.neutrals.filter(n=>!affected.includes(n.slot));
   for(const n of affected){const anchor=s.bubbles.find(b=>b.slot===n);for(let j=0;j<1+slotOrder(s,719).indexOf(n);j++)s.neutrals.push({id:`neutral-${anchor.id}-${j}`,slot:n,support:anchor.id,x:anchor.x+(j-1)*32,y:anchor.y+anchor.radius+24,radius:15});}
+  if(s.session.config.cascadeVersion===1)configureCascade(s);
   s.targetSlot=slot;
   s.placements.push({checkpoint:s.session.checkpoint,cursor:s.cursor,slot,x:150+slot*300,y:s.bubbles.find(b=>b.slot===slot).y});
 }
 export function trajectoryPreview(state) {
+  if(state.session.config.cascadeVersion===1)return traceCascade(state,state.angle).points;
   let x=WORLD.launcher.x,y=WORLD.launcher.y,dx=Math.cos(state.angle),dy=Math.sin(state.angle);
   const points=[{x,y}];
   for(let step=0;step<2200;step++){
@@ -78,7 +81,7 @@ function descend(s) {
 export function createBubble({id,config,sectors,difficulty='beginner'}) {
   difficulty=memoryLevel(config,difficulty);
   if(!bubbleProfiles[difficulty]||!sectors.length||sectors.map(s=>s.key).join('|')!==config.keys.join('|')||sectors.some(s=>!s.targets.length||!s.distractors.length))throw Error('Invalid verified bubble content');
-  const s={session:createSession({id,game:'bubble',config}),sectors:structuredClone(sectors),difficulty,motionDifficulty:motorLevel(config,difficulty),cursor:0,captured:[],bubbles:[],neutrals:[],projectile:null,angle:-Math.PI/2,score:0,shots:0,bounces:0,shotBounces:0,lastClear:[],lastDetached:[],combo:0,placements:[],generation:0,descent:0,arcadeRecovery:false,effect:0,awaitingNext:false,message:'Aim the connector, then launch toward the next continuation.'};populate(s);return s;
+  const s={session:createSession({id,game:'bubble',config}),sectors:structuredClone(sectors),difficulty,motionDifficulty:motorLevel(config,difficulty),cursor:0,captured:[],bubbles:[],neutrals:[],obstacles:[],neutralClears:0,projectile:null,angle:-Math.PI/2,score:0,shots:0,bounces:0,shotBounces:0,lastClear:[],lastDetached:[],combo:0,placements:[],generation:0,descent:0,arcadeRecovery:false,effect:0,awaitingNext:false,message:'Aim the connector, then launch toward the next continuation.'};populate(s);return s;
 }
 export function stepBubble(previous,action) {
   if(previous.session.status==='disposed')return previous;
@@ -103,6 +106,8 @@ export function stepBubble(previous,action) {
   while(remaining>0&&s.projectile){const dt=Math.min(remaining,.008);remaining-=dt;const p=s.projectile;p.x+=p.vx*dt;p.y+=p.vy*dt;
     if(p.x<WORLD.shotRadius){p.x=2*WORLD.shotRadius-p.x;p.vx=Math.abs(p.vx);s.bounces++;s.shotBounces++;}
     if(p.x>WORLD.width-WORLD.shotRadius){p.x=2*(WORLD.width-WORLD.shotRadius)-p.x;p.vx=-Math.abs(p.vx);s.bounces++;s.shotBounces++;}
+    const crystal=(s.obstacles||[]).find(b=>Math.hypot(p.x-b.x,p.y-b.y)<=b.radius+WORLD.shotRadius);
+    if(crystal){s.projectile=null;s.lastDetached=releaseNeutralCluster(s.obstacles,crystal.id);s.obstacles=s.obstacles.filter(o=>!s.lastDetached.includes(o));s.lastClear=[];s.neutralClears++;s.score+=10+5*(s.lastDetached.length-1);s.effect++;s.message='Neutral crystal released. Read the Arabic targets and plan your next shot. No memory strike.';break;}
     const hit=s.bubbles.find(b=>Math.hypot(p.x-b.x,p.y-b.y)<=b.radius+WORLD.shotRadius);
     if(hit){s.projectile=null;const sector=s.sectors[s.session.checkpoint],expected=sector.targets[s.cursor];
       if(identity(hit.piece)===identity(expected)){

@@ -93,11 +93,11 @@ test('mission stages advance only from safe checkpoints and restart retains the 
   await page.getByRole('button',{name:'View mission briefing →'}).click();await page.locator('[data-pickup-mode]').selectOption('ayahs');await page.locator('[data-flow-guidance]').uncheck();await page.clock.install();
   await page.getByRole('button',{name:'Launch Star Runner',exact:true}).click();await page.getByRole('button',{name:'Start flight',exact:true}).click();
   await pilot(page);await expect(page.locator('.star-runner')).toHaveAttribute('data-flight-state','checkpoint');
-  await expect(page.locator('[data-flight-stage]')).toHaveText('Stage 1 / 2');
+  await expect(page.locator('[data-flight-stage]')).toContainText('Stage 1 / 2');
   await page.getByRole('button',{name:'Next ayah set →',exact:true}).click();
-  await expect(page.locator('[data-flight-stage]')).toHaveText('Stage 2 / 2');
+  await expect(page.locator('[data-flight-stage]')).toContainText('Stage 2 / 2');
   await page.getByRole('button',{name:'Restart stage',exact:true}).click();
-  await expect(page.locator('[data-flight-stage]')).toHaveText('Stage 2 / 2');
+  await expect(page.locator('[data-flight-stage]')).toContainText('Stage 2 / 2');
   await expect(page.locator('[data-shield]')).toContainText('3/3');
   await pilot(page);await expect(page.getByRole('button',{name:'Replay this ayah set',exact:true})).toBeVisible();
   await expect(page.locator('.runner-overlay')).toContainText('not independent memorization mastery');

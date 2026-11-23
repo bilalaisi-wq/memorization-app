@@ -507,14 +507,15 @@ export function createLearningStore(
         return clone(state.activeReview);
       });
     },
-    updateRecall(attemptId, action) {
+    updateRecall(attemptId, action, evidence = null) {
       return transact((state) => {
         const a = state.activeReview;
         if (!a || a.id !== attemptId || a.graded)
           throw new Error(
             "This recall attempt has finished or changed. Start a new attempt.",
           );
-        if (action === "compare") {
+        if(action==='written'){if(!evidence||!['arabic','latin'].includes(evidence.mode)||typeof evidence.exact!=='boolean'||!Number.isSafeInteger(evidence.differences)||evidence.differences<0)throw Error('Invalid written comparison.');a.writtenResult={kind:'written-comparison',mode:evidence.mode,exact:evidence.exact,assisted:evidence.assisted===true,differences:evidence.differences,spokenVerified:false};if(evidence.assisted||!a.declaredRecited)a.usedHint=true;
+        } else if (action === "compare") {
           a.declaredRecited = true;
           a.comparisonRevealed = true;
         } else if (action === "hint") {
@@ -596,6 +597,7 @@ export function createLearningStore(
           day,
           grade,
           independent,
+          ...(a.writtenResult?{writtenResult:clone(a.writtenResult)}:{}),
           usedHint: a.usedHint,
           audioBeforeRecall: a.audioBeforeRecall,
           comparisonRevealed: a.comparisonRevealed,

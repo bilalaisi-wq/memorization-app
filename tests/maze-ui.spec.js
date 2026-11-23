@@ -19,7 +19,7 @@ test('chain portals, Practice chamber retry, next-ayah guidance and recall navig
  const nextWords=surahs[0].verses[1].words;
  for(let i=0;i<3;i++){if(i)await page.keyboard.press('ArrowUp');const wrong=(await mazeDOM(page)).signs.find(t=>t!==nextWords[0]);await openMazeChoice(page,wrong);}
  await expect(page.locator('.memory-maze')).toHaveClass(/maze-game-over/);await page.locator('[data-maze-action=retry]').click();await expect(page.locator('[data-maze-chamber]')).toContainText('1:2');await expect(page.locator('[data-maze-strikes]')).toContainText('3/3');
- for(const word of nextWords)await openMazeChoice(page,word);await expect(page.locator('[data-maze-panel]')).toContainText('Journey saved');await expect(page.locator('[data-maze-action=continue]')).toContainText('ayah 3');await page.locator('[data-maze-action=recall]').click();await expect(page.locator('.maze-grid')).toHaveCount(0);await expect(page.locator('main')).toContainText('SELF-ASSESSED RECITATION');
+ for(const word of nextWords)await openMazeChoice(page,word);await expect(page.locator('[data-maze-panel]')).toContainText('Journey saved');await expect(page.locator('[data-maze-action=continue]')).toContainText('ayahs 3–4');await page.locator('[data-maze-action=recall]').click();await expect(page.locator('.maze-grid')).toHaveCount(0);await expect(page.locator('main')).toContainText('SELF-ASSESSED RECITATION');
 });
 
 test('fog exploration, map reveal, zoom, native input guards, pause and cleanup preserve other games',async({page})=>{

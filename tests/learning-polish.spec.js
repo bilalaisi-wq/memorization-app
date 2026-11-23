@@ -24,7 +24,7 @@ test('Ayah Chain reorders built words by native drag and accessible arrows witho
  expect(await puzzle.locator('.build-zone [data-word]').evaluateAll(xs=>xs.map(x=>+x.dataset.word))).toEqual([0,1,3,2]);
 });
 test('QUR\'AN CHRONICLES is hidden for learners, developer-only and labeled coming soon',async({page})=>{
- await page.goto('/');await expect(page.locator('#nav-comprehension-lab')).toBeHidden();await enableDeveloperLab(page);await expect(page.locator('#nav-comprehension-lab')).toBeVisible();await expect(page.locator('#nav-comprehension-lab')).toContainText('Coming soon');
+ await page.goto('/');await expect(page.locator('#nav-comprehension-lab')).toBeHidden();await enableDeveloperLab(page);await expect(page.locator('#nav-comprehension-lab')).toBeVisible();await expect(page.locator('#nav-comprehension-lab')).toContainText('Developer preview');
  await page.evaluate(async()=>{(await import('/src/developer/access.js')).setDeveloperPreview(false);});await expect(page.locator('#nav-comprehension-lab')).toBeHidden();
 });
 test('mobile Star Runner pickups show Arabic and source transliteration together',async({page})=>{

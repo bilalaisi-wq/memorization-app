@@ -1,3 +1,7 @@
+import {mountSmartArabic} from './ui/smart-arabic/ui.js';
+import {localBundle} from './content/library.js';
+import {surahs as freeSurahs} from './data.js';
+import {activeProfileId} from './learner/profile-storage.js';
 import { awardStudy } from "./rewards/store.js";
 import { profileBackup } from "./learner/profile-storage.js";
 import { mountLearnerDashboard } from "./learner/dashboard.js";
@@ -123,8 +127,10 @@ export function mountRecall(main, store, surahs, callbacks) {
   root.className = "self-assessment";
   main.append(root);
   let error = "",
-    recording;
+    recording,smartInput;
+  const recallOwner=activeProfileId();
   const draw = () => {
+    smartInput?.dispose();smartInput=null;
     if (!root.isConnected) return;
     const state = store.snapshot(),
       a = state.activeReview;
@@ -170,6 +176,7 @@ export function mountRecall(main, store, surahs, callbacks) {
      )
      .join("") || "<li>No completed assessments yet.</li>"
  }</ol><small>Showing up to 10 recent assessments. Export includes the full history.</small></details></section>${error || store.warning ? `<p class="storage-warning" role="alert">${esc(error || store.warning)}</p>` : ""}`;
+    if(!a.graded){const button=document.createElement('button');button.className='text-button';button.dataset.smartRecall='';button.textContent='Try written recall · Arabic or transliteration';root.querySelector('.recall-history').before(button);button.onclick=()=>{if(smartInput||!root.isConnected)return;const host=document.createElement('div');button.after(host);const source=localBundle(a.key)||{key:a.key,words:verse.words.map((text,i)=>({text,position:i+1,transliteration:verse.roman?.[i]||''}))},corpus=freeSurahs.flatMap(s=>s.verses.map(v=>localBundle(`${s.id}:${v.id}`))).concat(source);smartInput=mountSmartArabic(host,{words:source.words,corpus,assertCurrent:()=>{if(!root.isConnected||recallOwner!==activeProfileId()||store.snapshot().activeReview?.id!==a.id)throw Error('Recall account or attempt changed.');},onAssistance:()=>store.updateRecall(a.id,'assisted'),onSubmit:r=>{if(r.available)store.updateRecall(a.id,'written',{mode:r.mode,exact:r.exact,assisted:r.assisted,differences:r.differences.length});}});button.disabled=true;};}
     bindOpen(root, callbacks);
     const change = (action) => {
       try {
@@ -269,5 +276,5 @@ export function mountRecall(main, store, surahs, callbacks) {
     root.querySelector("#recited-compare") ||
     root.querySelector("[data-recall-grade]")
   )?.focus();
-  return {dispose(){recording?.dispose();root.remove();}};
+  return {dispose(){smartInput?.dispose();recording?.dispose();root.remove();}};
 }
