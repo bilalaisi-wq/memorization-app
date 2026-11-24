@@ -1,7 +1,7 @@
 import {catalog,availability,validateBundle,loadAudio} from './library.js';
 import {isDeveloperMode} from '../developer/access.js';
 import {configurePrivateAudio,clearPrivateAudio} from './private-audio.js';
-export const previewSurahs=[7,...Array.from({length:11},(_,i)=>67+i)];
+export const previewSurahs=catalog.chapters.map(c=>c.id);
 export function chapterFromBundles(id,bundles){
  const meta=catalog.chapters.find(c=>c.id===id);
  if(!meta||!previewSurahs.includes(id)||!Array.isArray(bundles)||bundles.length!==meta.verseCount)throw Error('The full verified chapter is required.');

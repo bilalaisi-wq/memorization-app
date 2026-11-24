@@ -35,6 +35,7 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
   let boundaryStrikes=0;const boundaryConnections=new Set();
   const skippedRounds=new Set();
   const engines=new Map(),checkpoints=new Set(),activityClears=new Set(),scoreReceipts=new Set();
+  for(let stage=0;stage<initialStage;stage++)for(let round=0;round<roundCount;round++)activityClears.add(`${activity}:${stage}:${round}`);
   const gateway=memoryGateways?createGatewaySession(canonical,{onEvent:e=>emit({...e,missionId:canonical.id,sourceHash:canonical.sourceHash})}):null;
   function event(event){
     if(disposed)return;

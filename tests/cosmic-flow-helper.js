@@ -1,5 +1,5 @@
 import {expect} from '@playwright/test';
-export async function flyTo(page,stop='checkpoint') {
+export async function flyTo(page,stop='checkpoint',{fire=false}={}) {
   for(let i=0;i<1400;i++){
     const state=await page.locator('.star-runner').getAttribute('data-flight-state');
     if(state===stop)return;
@@ -21,6 +21,7 @@ export async function flyTo(page,stop='checkpoint') {
       for(let j=0;j<2;j++){const current=Number(await page.locator('.star-runner').getAttribute('data-lane'));if(current===lane)break;await page.locator('.runner-field').focus();await page.keyboard.press(current>lane?'ArrowLeft':'ArrowRight');}
 
     }
+    if(fire){await page.locator('.runner-field').focus();await page.keyboard.press('Space');}
     await page.clock.runFor(500);
   }
   await expect(page.locator('.star-runner')).toHaveAttribute('data-flight-state',stop);

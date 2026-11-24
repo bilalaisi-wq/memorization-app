@@ -172,7 +172,7 @@ test("authorized Al-Baqarah uses the same Memorization tabs and actual Star Runn
   );
   await page.locator("[data-context-runner]").click();
   await expect(page.locator(".star-runner")).toBeVisible();
-  await page.getByRole("button", { name: "Start flight", exact: true }).click();
+  await expect(page.locator(".star-runner")).toHaveAttribute("data-flight-state", "running");
   await expect(page.locator("[data-flight-objects] .runner-pickup"))
     .toHaveCount(3);
   await page.locator(".runner-field").focus();
