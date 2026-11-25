@@ -1,0 +1,236 @@
+.flow-adventure {
+  color: #f0f6fb;
+  background: radial-gradient(ellipse at top, #303262, #101c34);
+  padding: clamp(8px, 2vw, 20px);
+  border: 1px solid #76b5bf;
+  border-radius: 24px;
+  min-width: 0;
+}
+.flow-adventure h3 {
+  margin: 0 0 8px;
+}
+.flow-adventure p {
+  color: inherit;
+}
+.flow-adventure button,
+.flow-adventure select {
+  min-height: 46px;
+  border-radius: 12px;
+  padding: 9px 13px;
+  border: 1px solid #80bdc4;
+  background: #20485b;
+  color: #fff4d4;
+  max-width: 100%;
+}
+.flow-adventure :focus-visible {
+  outline: 3px solid #f0cd67;
+  outline-offset: 2px;
+}
+.flow-toolbar,
+.flow-actions,
+.flow-pad {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.flow-actions {
+  padding: 8px;
+}
+.flow-actions label {
+  display: grid;
+  gap: 4px;
+}
+.flow-scene {
+  min-width: 0;
+  position: relative;
+  background: #14223d;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.flow-scene svg {
+  width: 100%;
+  display: block;
+  max-height: 44dvh;
+  min-height: 210px;
+}
+.flow-battlefield {
+  min-width: 0;
+  outline-offset: 2px;
+}
+.flow-hud {
+  padding: 8px;
+  font: 600 14px/1.5 system-ui;
+}
+.flow-ribbon {
+  padding: 10px;
+  border: 1px solid #b7a366;
+  border-radius: 16px;
+  background: #152b43;
+  max-height: 36dvh;
+  overflow: auto;
+  scroll-padding: 10px;
+}
+.flow-ribbon > p {
+  margin: 4px 0;
+}
+.flow-choices {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.flow-choices button {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+.flow-choices small {
+  display: block;
+  color: #d4e5e9;
+}
+.flow-choices .arabic,
+.flow-ribbon .arabic {
+  font: clamp(25px, 2.3vw, 34px) / 1.85 Uthmanic, serif;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  display: block;
+}
+.flow-choices .reading-roman {
+  font: 14px/1.4 system-ui;
+  display: block;
+  white-space: normal;
+}
+.flow-pad {
+  padding: 8px;
+  justify-content: center;
+  touch-action: none;
+}
+.flow-pad button {
+  min-width: 55px;
+  min-height: 48px;
+  touch-action: none;
+}
+.flow-adventure .gameplay-viewport {
+  display: flex;
+  flex-direction: column;
+  height: min(940px, calc(100dvh - 16px));
+  min-height: 0;
+  max-height: calc(100dvh - 16px);
+  overflow: hidden;
+}
+.flow-adventure .gameplay-practice-sidebar {
+  display: none;
+}
+.flow-adventure .gameplay-settings {
+  max-height: 75dvh;
+  overflow: auto;
+}
+.flow-adventure .gameplay-toolbar {
+  flex-shrink: 0;
+}
+.flow-adventure .gameplay-playfield {
+  width: 100%;
+  max-width: none;
+  max-height: none;
+  min-height: 0;
+}
+.flow-adventure .flow-ribbon button[disabled] {
+  opacity: 0.55;
+}
+.flow-actions [data-flow-ability] {
+  border-color: #d3b85c;
+}
+html[data-transliteration="off"] .flow-adventure .reading-roman {
+  display: none;
+}
+@media (max-width: 600px) {
+  .flow-adventure {
+    padding: 6px;
+  }
+  .flow-scene svg {
+    min-height: 155px;
+    max-height: 28dvh;
+  }
+  .flow-choices {
+    flex-direction: column;
+    gap: 5px;
+  }
+  .flow-choices button {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    align-items: center;
+    text-align: center;
+    padding: 4px 8px;
+  }
+  .flow-choices .reading-roman {
+    grid-column: 2;
+  }
+  .flow-choices .arabic {
+    font-size: 25px;
+    line-height: 1.7;
+  }
+  .flow-ribbon {
+    max-height: 38dvh;
+  }
+  .flow-actions {
+    max-height: 135px;
+    overflow: auto;
+  }
+  .flow-pad {
+    position: sticky;
+    bottom: env(safe-area-inset-bottom);
+    background: #13273eea;
+  }
+  .flow-hud {
+    font-size: 12px;
+  }
+  .flow-adventure h3 {
+    font-size: 22px;
+  }
+}
+@media (orientation: landscape) and (max-height: 550px) {
+  .flow-battlefield {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 6px;
+  }
+  .flow-hud {
+    grid-column: 1/-1;
+  }
+  .flow-scene {
+    grid-column: 1;
+  }
+  .flow-ribbon {
+    grid-column: 2;
+    grid-row: 2/4;
+    max-height: 65dvh;
+  }
+  .flow-actions,
+  .flow-pad {
+    grid-column: 1;
+  }
+  .flow-scene svg {
+    max-height: 40dvh;
+    min-height: 150px;
+  }
+  .flow-choices {
+    flex-direction: column;
+  }
+  .flow-choices .arabic {
+    font-size: 25px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flow-adventure * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* The surrounding site's light theme must not replace the dark game surface in fullscreen. */
+.flow-adventure .gameplay-viewport.gameplay-expanded,
+.flow-adventure .gameplay-viewport:fullscreen {
+  background: #14223d !important;
+  color: #f0f6fb;
+}

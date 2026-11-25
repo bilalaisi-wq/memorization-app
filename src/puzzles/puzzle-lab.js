@@ -35,11 +35,12 @@ import { esc, clearLearningView, uid } from "../ui/dom.js";
 import { gameTypes } from "./puzzle-store.js";
 
 function quickStart(form,start){
+ form.__restartChallenge=async next=>{form.__practiceDifficulty={memoryDifficulty:next.memory,motorDifficulty:next.motor};form.__resumeCheckpoint=next.checkpoint;form.__resumeSeed=next.config.seed;form.__resumeEvidence=next.evidence;const difficulty=form.elements.difficulty;if(difficulty)difficulty.value={guided:'beginner',standard:'standard',expert:'expert'}[next.memory];if(form.elements.speed){const opts={relaxed:['slow'],normal:['steady','normal'],arcade:['brisk','fast']}[next.motor];const value=opts.find(v=>[...form.elements.speed.options].some(o=>o.value===v));if(value)form.elements.speed.value=value;}await start();};
  const b=document.createElement('button');b.type='button';b.className='primary';b.dataset.gameStart='';b.textContent='Start Game';b.onclick=()=>{if(form.reportValidity())return start();};form.append(b);
  form.classList.add('gameplay-pregame');
  const note=document.createElement('p');note.textContent='Choose your ayahs and start. Changing the range or difficulty restarts the active run; already saved learning remains.';form.prepend(note);
 }
-function retainPracticeDifficulty(config,form){const p=form.__practiceDifficulty;if(!p)return;for(const key of ['memoryDifficulty','motorDifficulty'])if(({memoryDifficulty:['guided','standard','expert'],motorDifficulty:['relaxed','normal','arcade']})[key].includes(p[key]))config[key]=p[key];config.difficultySchema=1;}
+function retainPracticeDifficulty(config,form){if(Number.isSafeInteger(form.__resumeCheckpoint))config.resumeCheckpoint=form.__resumeCheckpoint;if(form.__resumeEvidence)config.resumeEvidence=form.__resumeEvidence;if(Number.isSafeInteger(form.__resumeSeed))config.seed=form.__resumeSeed;const p=form.__practiceDifficulty;if(!p)return;for(const key of ['memoryDifficulty','motorDifficulty'])if(({memoryDifficulty:['guided','standard','expert'],motorDifficulty:['relaxed','normal','arcade']})[key].includes(p[key]))config[key]=p[key];config.difficultySchema=1;}
 function keepSetupInGame(form,host){const options=host.querySelector('[data-game-options]');if(options)options.append(form);}
 
 let cleanup = null, suspend = null;
@@ -347,7 +348,7 @@ export function mountPuzzleLab(
         if(autoStart)fallingControl.start();if(autoStart)keepSetupInGame(form,host);status.textContent=autoStart?'Your next bridge has started.':'Ready. Press Start linking in the scene.';(host.querySelector('.gameplay-viewport')||host).scrollIntoView({block:'start'});
       }catch(e){if(!cancelled){status.textContent=e.message;if(autoStart)throw e;}}finally{if(!cancelled&&token===launchToken)button.disabled=false;}
     }
-    const showTutorial=()=>{fallingControl?.pause();tutorial?.dispose();tutorial=mountBridgeTutorial({adapter,library:surahs,volume:()=>recitationVolume,muted:()=>muted,onClose:result=>{tutorial=null;if(result.warning)status.textContent=result.warning;form.scrollIntoView({block:'start'});form.elements.first.focus();}});};
+    const showTutorial=()=>{const prior=fallingControl,wasPlaying=prior?.getSnapshot?.()?.session?.status==='playing';fallingControl?.pause();tutorial?.dispose();tutorial=mountBridgeTutorial({adapter,library:surahs,volume:()=>recitationVolume,muted:()=>muted,onClose:result=>{tutorial=null;if(result.warning)status.textContent=result.warning;if(wasPlaying&&prior===fallingControl&&host.isConnected){prior.resume();host.querySelector('.bridge-stage')?.focus({preventScroll:true});}else if(form.isConnected){form.scrollIntoView({block:'start'});form.elements.first.focus();}}});};
     form.querySelector('[data-bridge-tutorial]').onclick=showTutorial;
     if(createBridgeTutorialStore().needsTutorial())showTutorial();
     quickStart(form,()=>{tutorial?.dispose();tutorial=null;return launch(true);});

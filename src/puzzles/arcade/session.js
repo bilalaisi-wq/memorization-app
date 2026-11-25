@@ -1,7 +1,9 @@
 // Pure reducer. Games map their own mechanics into these learning events.
 export function createSession({id,game,config}) {
   if (!id || !game || !config?.keys?.length || !['classic','practice'].includes(config.chainMode)) throw Error('Invalid session');
-  return {id,game,config:structuredClone(config),status:'ready',checkpoint:0,completed:[],strikes:config.contextVersion===1&&Number.isInteger(config.initialStrikes)?Math.min(2,Math.max(0,config.initialStrikes)):0,mistakes:[],motorErrors:[],assistance:config.difficultySchema===1&&config.memoryDifficulty==='guided'?[{key:config.keys[0],kind:'hint',event:0}]:[],events:0};
+  const evidence=config.resumeEvidence||{};
+  const checkpoint=Number.isSafeInteger(config.resumeCheckpoint)?Math.min(config.keys.length-1,Math.max(0,config.resumeCheckpoint)):0;
+  return {id,game,config:structuredClone(config),status:'ready',checkpoint,completed:config.keys.slice(0,checkpoint),strikes:config.contextVersion===1&&Number.isInteger(config.initialStrikes)?Math.min(2,Math.max(0,config.initialStrikes)):Number.isInteger(evidence.strikes)&&evidence.strikes<3?Math.max(0,evidence.strikes):0,mistakes:structuredClone(Array.isArray(evidence.mistakes)?evidence.mistakes:[]),motorErrors:structuredClone(Array.isArray(evidence.motorErrors)?evidence.motorErrors:[]),assistance:Array.isArray(evidence.assistance)?structuredClone(evidence.assistance):config.difficultySchema===1&&config.memoryDifficulty==='guided'?[{key:config.keys[0],kind:'hint',event:0}]:[],events:Number.isSafeInteger(evidence.events)?evidence.events:0};
 }
 export function reduceSession(previous, action) {
   if (previous.status==='disposed') return previous;

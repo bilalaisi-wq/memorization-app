@@ -7,7 +7,10 @@ export const NORMAL_FLIGHT_RATE=.7;
 // Absolute boosted flight rate: 50% above the previous 3.234x rate.
 export const BOOST_MULTIPLIER=4.851;
 // Arabic pickups are intact capsules, separate from unlabeled environmental rocks.
-export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0,slow=false,compact=false,onEvent=()=>{},choices=flowChoices}) {
+export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0,slow=false,compact=false,motorDifficulty=null,onEvent=()=>{},choices=flowChoices}) {
+  if(motorDifficulty&&!['relaxed','normal','arcade'].includes(motorDifficulty))throw Error('Unsupported motor profile');
+  if(motorDifficulty)slow=motorDifficulty==='relaxed';
+  const motorRate=motorDifficulty==='arcade'?1.25:1;
   const choose=choices;
   if(!units?.length)throw Error('Verified flow units required.');
   if(!Number.isInteger(roundIndex)||roundIndex<0||roundIndex>9)throw Error('Invalid revision round.');
@@ -39,7 +42,7 @@ export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0
     return wave.objects.map(o=>({...o,x:WORLD.lanes[o.lane]+(o.drift?Math.sin(state.elapsed*1.7)*o.drift:0),y:WORLD.shipY+(state.elapsed-o.arrival)*wave.speed,ribbon:wave.ribbon&&o.kind==='pickup'}))
       .filter(o=>!o.consumed&&o.y>=-300&&o.y<=WORLD.height+240);
   }
-  function snapshot(){return clone({...state,flow:true,roundIndex,speedMultiplier,asteroidCount,unit:units[state.cursor]||null,totalUnits:units.length,objects:[...objects(),...shots.map(b=>({...b,kind:'bolt',radius:5})),...effects.map(e=>({...e,kind:e.kind||'burst',radius:e.kind==='starburst'?90:38}))],waveId:wave?.id,waves:[],nextSafeLane:null,progress:state.cursor/units.length,slow});}
+  function snapshot(){return clone({...state,flow:true,roundIndex,speedMultiplier,motorDifficulty,motorRate,asteroidCount,unit:units[state.cursor]||null,totalUnits:units.length,objects:[...objects(),...shots.map(b=>({...b,kind:'bolt',radius:5})),...effects.map(e=>({...e,kind:e.kind||'burst',radius:e.kind==='starburst'?90:38}))],waveId:wave?.id,waves:[],nextSafeLane:null,progress:state.cursor/units.length,slow});}
   function finishWave(selected){
     const target=units[state.cursor];wave.resolved=true;
     wave.objects.forEach(o=>{o.consumed=true;});
@@ -61,7 +64,7 @@ export function createFlowRunner({units,seed=1,stageId,difficulty=0,roundIndex=0
     const boosted=state.boosting&&state.boostEnergy>0;
     if(boosted){state.boostEnergy=Math.max(0,state.boostEnergy-dt);if(!state.boostEnergy)state.boosting=false;}
     else state.boostEnergy=Math.min(BOOST_CAPACITY,state.boostEnergy+dt*.6);
-    state.elapsed+=dt*(boosted?BOOST_MULTIPLIER:NORMAL_FLIGHT_RATE)*(state.cueSlow ? .25 : 1);state.fireCooldown=Math.max(0,state.fireCooldown-dt);state.invulnerable=Math.max(0,state.invulnerable-dt);state.impact=Math.max(0,state.impact-dt);
+    state.elapsed+=dt*(boosted?BOOST_MULTIPLIER:NORMAL_FLIGHT_RATE)*motorRate*(state.cueSlow ? .25 : 1);state.fireCooldown=Math.max(0,state.fireCooldown-dt);state.invulnerable=Math.max(0,state.invulnerable-dt);state.impact=Math.max(0,state.impact-dt);
     const delta=WORLD.lanes[state.lane]-state.x;state.x+=Math.sign(delta)*Math.min(Math.abs(delta),1400*dt);
     effects=effects.filter(e=>(e.life-=dt)>0);
     for(const b of shots)b.y-=720*dt;

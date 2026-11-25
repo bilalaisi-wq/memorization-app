@@ -15,7 +15,7 @@ import {createMission} from './mission.js';
 import {createRunner} from '../../puzzles/arcade/cosmic/runner.js';
 
 // One mission director. Arcade checkpoints never certify independent recall or mastery.
-export async function createFlightController(manifest,{onEvent=()=>{},slow=false,memoryGateways=false,pickupMode=null,rounds=1,activity='runner',defenseConfig='balanced',defenseMode=null,defenseMotor='relaxed',defenseMemory='standard',defenseBeamVersion=3,linkMode='guided',linkChainMode='practice',reducedMotion=false,initialStage=0,initialRound=0,compact=false}={}){
+export async function createFlightController(manifest,{onEvent=()=>{},slow=false,runnerMotor=null,memoryGateways=false,pickupMode=null,rounds=1,activity='runner',defenseConfig='balanced',defenseMode=null,defenseMotor='relaxed',defenseMemory='standard',defenseBeamVersion=3,linkMode='guided',linkChainMode='practice',reducedMotion=false,initialStage=0,initialRound=0,compact=false}={}){
   const canonical=await createMission({surahId:manifest.surah,selection:'custom',start:manifest.first,end:manifest.last});
   if(JSON.stringify(manifest)!==JSON.stringify(canonical))throw Error('Mission configuration changed. Rebuild the briefing.');
   if(!Number.isInteger(rounds)||rounds<1||rounds>10)throw Error('Choose between 1 and 10 revision rounds.');
@@ -57,7 +57,7 @@ export async function createFlightController(manifest,{onEvent=()=>{},slow=false
     if(currentActivity==='link')engine=createAyahLink({refs:stage.refs,allRefs:canonical.refs,plans:linkPlans,stageId:stage.id,seed:seed^parseInt(runId.replace(/-/g,'').slice(0,8),16),mode:linkMode,boundaryContent,chainMode:linkChainMode,initialStrikes:linkChainMode==='classic'?boundaryStrikes:0,cumulativeAll:index===canonical.stages.length-1,reducedMotion,onEvent:event});
     else if(currentActivity==='defense'&&defenseMode){engine=captureRuntimes.get(`${index}:${roundIndex}`);if(captureOwner!==activeProfileId())throw Error('Account changed.');captureStore.transact(s=>{s.routes??={};s.routes[captureRouteId]={stage:index,round:roundIndex};});}
     else if(currentActivity==='defense')engine=createMeteorDefense({refs:stage.refs,stageId:stage.id,sourceHash:canonical.sourceHash,seed,revisionLoop:true,configuration:defenseConfig,difficulty:index+roundIndex,slow,carrierMode:defenseMode,captureContent:defenseContent,motorDifficulty:defenseMotor,onEvent:event});
-    else engine=(pickupMode?createFlowRunner:createRunner)({...(pickupMode?{units:createFlowUnits(stage.refs,pickupMode,roundIndex),roundIndex}:{}),stageId:stage.id,seed,difficulty:index,slow,compact,onEvent:event});
+    else engine=(pickupMode?createFlowRunner:createRunner)({...(pickupMode?{units:createFlowUnits(stage.refs,pickupMode,roundIndex),roundIndex,motorDifficulty:runnerMotor}:{}),stageId:stage.id,seed,difficulty:index,slow,compact,onEvent:event});
     engines.set(currentActivity,engine);
   }
   mount();

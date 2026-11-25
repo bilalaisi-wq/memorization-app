@@ -32,7 +32,7 @@ test("Start begins automatic motion and looping audio; keyboard works without cl
   await open(page);
   await expect(page.locator("#fall-discard")).toHaveCount(0);
   await expect(page.locator("#lab-timed")).toHaveCount(0);
-  await expect(page.locator("[value=relaxed]")).toHaveCount(0);
+  await expect(page.locator("[name=speed] option[value=relaxed]")).toHaveCount(0);
   const before = await page.locator(".falling-block").getAttribute("style");
   await page.waitForTimeout(350);
   expect(await page.locator(".falling-block").getAttribute("style")).toBe(

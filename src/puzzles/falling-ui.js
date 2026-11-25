@@ -58,7 +58,8 @@ export function mountFalling(
   let checkpointFailed=false;
   let frameUI=null,towerRun=crypto.randomUUID();
   const feedback=createGameplayFeedback(area),outlineTimers=new Set();
-  const frameSnapshot=()=>({session:{id:towerRun,status:!started?"ready":state.paused?"paused":awaitingChoice?"won":state.status,checkpoint:floor,config:{keys:selected.map(v=>`${surah.id}:${v.id}`)},mistakes:runErrors}});
+  const frameSnapshot=()=>({session:{id:towerRun,status:!started?"ready":state.paused?"paused":awaitingChoice?"won":state.status,checkpoint:floor,config:{keys:selected.map(v=>`${surah.id}:${v.id}`),memoryDifficulty:config.memory||'guided',motorDifficulty:{slow:'relaxed',normal:'normal',fast:'arcade'}[config.speed]||'relaxed'},mistakes:runErrors}});
+  area.__ayahRestartChallenge=async next=>{checkpointStore.clear(`${surah.id}:${selected[floor].id}`);config.speed={relaxed:'slow',normal:'normal',arcade:'fast'}[next.motor];config.memory=next.memory;form.elements.speed.value=config.speed;awaitingChoice=false;newFloor();state.paused=false;frameUI?.closeSettings();root.querySelector('.falling-stage')?.focus({preventScroll:true});};
   const audioLevel=createAudioLevel({initialVolume:volume()});
   function followActive(){if(followTower){const rail=root.querySelector('.tower-section-rail');if(rail){rail.scrollTop=rail.scrollHeight;rail.scrollLeft=rail.scrollWidth;}}positionLabel();}
   function positionLabel(){const label=root.querySelector('.falling-block'),board=root.querySelector('.tower-board');if(label&&board?.clientHeight){const maximum=Math.max(0,100-label.offsetHeight/board.clientHeight*100-1);label.style.top=`${Math.min(labelPosition(),maximum)}%`;}}
@@ -133,7 +134,7 @@ export function mountFalling(
     stopAudio();
     failedSaved = false;
     const v = currentVerse();
-    const entries = questOptions?.entries || wordChoices(surah, v, 3).map((e,i)=>v.grouped&&i<v.words.length?{...e,audio:verseAudio(v.id,surah.id),sourcePositions:v.groups[i].map(p=>p+1),sourceWords:v.groups[i].map(p=>({text:v.sourceVerse.words[p],transliteration:v.sourceVerse.roman?.[p]||'',id:`${surah.id}:${v.id}:${p}`}))}:e);
+    const entries = questOptions?.entries || wordChoices(surah, v, {guided:3,standard:5,expert:8}[config.memory||'guided']).map((e,i)=>v.grouped&&i<v.words.length?{...e,audio:verseAudio(v.id,surah.id),sourcePositions:v.groups[i].map(p=>p+1),sourceWords:v.groups[i].map(p=>({text:v.sourceVerse.words[p],transliteration:v.sourceVerse.roman?.[p]||'',id:`${surah.id}:${v.id}:${p}`}))}:e);
     state = createFalling({
       words: v.words,
       entries,
@@ -595,7 +596,7 @@ export function mountFalling(
     },
     setVolume(value) {audioLevel.setVolume(value);},
     dispose() {
-      disposed = true;frameUI?.dispose();feedback.dispose();outlineTimers.forEach(clearTimeout);outlineTimers.clear();
+      disposed = true;delete area.__ayahRestartChallenge;frameUI?.dispose();feedback.dispose();outlineTimers.forEach(clearTimeout);outlineTimers.clear();
       resizeObserver.disconnect();
       audioLevel.dispose();
       document.removeEventListener("keydown", key);

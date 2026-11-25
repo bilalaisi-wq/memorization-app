@@ -103,7 +103,7 @@ export async function mountStarRunner(root, mission, {onExit=()=>{},onEvent=()=>
     field.style.setProperty('--flight-camera',`${(300-s.x)*.025}px`);
     field.style.setProperty('--flight-bank',isReduced()?'0deg':`${Math.max(-10,Math.min(10,( [120,300,480][s.lane]-s.x)*.08))}deg`);
     setText('[data-flight-stage]',`Stage ${s.stageIndex+1} / ${s.stageCount} · Ayahs ${mission.stages[s.stageIndex].first}–${mission.stages[s.stageIndex].last}`);
-    setText('[data-flight-round]',`Round ${s.roundIndex+1} / ${s.roundCount} · ${Math.round((s.speedMultiplier||1)*70)}% normal speed · ${s.asteroidCount||1} asteroid${s.asteroidCount===1?'':'s'} / wave`);
+    setText('[data-flight-round]',`Round ${s.roundIndex+1} / ${s.roundCount} · ${Math.round((s.speedMultiplier||1)*(s.motorRate||1)*70)}% normal speed · ${s.asteroidCount||1} asteroid${s.asteroidCount===1?'':'s'} / wave`);
     setText('[data-shield]',`Shield ${'◈'.repeat(s.shield)}${'◇'.repeat(3-s.shield)} · ${s.shield}/3`);
     setText('[data-stars]',s.flow?`${s.completedAyahs.length} ayahs connected · ${s.memoryMistakes} word/ayah selections to practise`:`★ ${s.stars} / 3 navigation stars`);
     root.querySelector('[data-flight-progress]').value=s.progress;

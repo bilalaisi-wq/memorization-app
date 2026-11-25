@@ -151,6 +151,7 @@ async function mountRunnerWindow(
     onExit = () => {},
     rounds = 1,
     onWindowEvent = () => {},
+    memoryDifficulty='guided',motorDifficulty='relaxed',
   } = {},
 ) {
   const content = await prepareRunnerContent(refs, client, {
@@ -172,7 +173,7 @@ async function mountRunnerWindow(
       surah: Number(refs[0].split(":")[0]),
       first: Number(refs[0].split(":")[1]),
       last: Number(refs.at(-1).split(":")[1]),
-      stages: [{ id: id + ":stage:1", refs: [...refs] }],
+      stages: [{ id: id + ":stage:1", refs: [...refs],first:Number(refs[0].split(":")[1]),last:Number(refs.at(-1).split(":")[1]) }],
     };
     if (!Number.isInteger(rounds) || rounds < 1 || rounds > 10) {
       throw Error("Choose one to ten revision rounds.");
@@ -199,7 +200,8 @@ async function mountRunnerWindow(
         seed: parseInt(sourceHash.slice(0, 8), 16),
         stageId: mission.stages[0].id,
         roundIndex: round,
-        slow: true,
+        slow: motorDifficulty==='relaxed',
+        motorDifficulty,
         onEvent: emit,
       });
     engine = make();
@@ -283,7 +285,7 @@ async function mountRunnerWindow(
       content,
       isCurrent,
       disposeController: true,
-      guidance: true,
+      guidance: memoryDifficulty!=='expert',
       onExit,
       onCheckpoint: !onComplete&&rounds===1?null:(s) => {
         if (round < rounds - 1) {
@@ -333,17 +335,19 @@ async function mountRunnerWindow(
 // Full selection stays in metadata; the existing runner owns one authorized window.
 export async function mountAuthorizedRunner(root,options={}){
  const {refs,client,isCurrent=()=>true,verifyBundle=()=>{},onComplete,onExit=()=>{},rounds=1}=options;
+ let presentation={memory:options.memoryDifficulty||'guided',motor:options.motorDifficulty||'relaxed'};
  const owner=activeProfileId(),abort=new AbortController();let disposed=false,current=null,busy=false,epoch=0,finished=false;
  const alive=()=>!disposed&&root.isConnected&&owner===activeProfileId()&&isCurrent();
- const sourceRevision=await sha256(JSON.stringify(refs.map(ref=>[ref,availability.premium.find(p=>p.key===ref)||'existing-free'])));if(!alive())throw Error('Learning account changed.');const run=await passageRun(refs,{activity:'runner',settings:{rounds,sourceRevision},storage:profileStorage,guard:()=>{if(!alive())throw Error('Learning account changed.');}});if(options.restart===true)run.restart();
+ const sourceRevision=await sha256(JSON.stringify(refs.map(ref=>[ref,availability.premium.find(p=>p.key===ref)||'existing-free'])));if(!alive())throw Error('Learning account changed.');const run=await passageRun(refs,{activity:'runner',settings:{rounds,sourceRevision},storage:profileStorage,guard:()=>{if(!alive())throw Error('Learning account changed.');}});if(options.restart===true)run.restart();presentation=run.presentation||presentation;
  function notice(error,retry){if(!alive())return;root.replaceChildren();const p=document.createElement('p');p.setAttribute('role','alert');p.textContent=error;const b=document.createElement('button');b.textContent='Retry saved passage';b.onclick=retry;const exit=document.createElement('button');exit.textContent='Save and exit';exit.onclick=()=>{dispose();onExit();};root.append(p,b,exit);}
  async function open(){if(!alive())return;const ticket=++epoch,stage=run.next;if(stage>=run.windows.length){notice('Selected passage completed. Recognition is separate from independent recall.',async()=>{run.restart();finished=false;await open();});return;}
  const windowRefs=run.windows[stage];let pins={};current?.dispose();current=null;root.textContent='Preparing the next authorized ayahs…';
- try{const view=await mountRunnerWindow(root,{...options,refs:windowRefs,rounds,isCurrent:()=>alive()&&ticket===epoch,verifyBundle:async b=>{await verifyBundle(b);pins[b.key]=await fingerprints(b);run.verify(pins);},onComplete:null,onWindowEvent:e=>{options.onWindowEvent?.(e);if(e.type==='runner:checkpoint'&&!busy)queueMicrotask(()=>advance(windowRefs,pins,ticket));},onExit:()=>{dispose();onExit();}});if(!alive()||ticket!==epoch){view?.dispose();return;}current=view;
+ try{const view=await mountRunnerWindow(root,{...options,refs:windowRefs,rounds,memoryDifficulty:presentation.memory,motorDifficulty:presentation.motor,isCurrent:()=>alive()&&ticket===epoch,verifyBundle:async b=>{await verifyBundle(b);pins[b.key]=await fingerprints(b);run.verify(pins);},onComplete:null,onWindowEvent:e=>{options.onWindowEvent?.(e);if(e.type==='runner:checkpoint'&&!busy)queueMicrotask(()=>advance(windowRefs,pins,ticket));},onExit:()=>{dispose();onExit();}});if(!alive()||ticket!==epoch){view?.dispose();return;}current=view;
  const hud=document.createElement('p');hud.dataset.continuousProgress='';hud.setAttribute('role','status');hud.textContent=`Selected ${refs[0]}–${refs.at(-1)} · ${run.completed}/${refs.length} completed · section ${stage+1}/${run.windows.length} · saved checkpoint`;root.prepend(hud);view?.start?.();
  }catch(e){if(alive()&&ticket===epoch)notice(e.message,open);}}
  async function advance(windowRefs,pins,ticket){if(!alive()||ticket!==epoch||busy)return;busy=true;try{if((current?.getSnapshot().roundIndex||0)<rounds-1){current.dispatch({type:'continuous-next'});return;}run.complete(windowRefs,pins);if(run.completed<refs.length){busy=false;await open();}else if(!finished){finished=true;const hud=root.querySelector('[data-continuous-progress]');if(hud)hud.textContent=`Selected passage complete · ${refs.length}/${refs.length} ayahs · recognition practice`;onComplete?.({...current?.getSnapshot(),selectedRefs:refs,completedRefs:refs});}}catch(e){current?.pause?.();notice(e.message,()=>{busy=false;return advance(windowRefs,pins,ticket);});}finally{busy=false;}}
- function dispose(){if(disposed)return;disposed=true;epoch++;abort.abort();current?.dispose();current=null;root.replaceChildren();}
+ root.__ayahRestartChallenge=async next=>{run.setPresentation({memory:next.memory,motor:next.motor});presentation={memory:next.memory,motor:next.motor};root.__ayahDifficulty=presentation;await open();};root.__ayahDifficulty=presentation;
+ function dispose(){if(disposed)return;disposed=true;delete root.__ayahRestartChallenge;delete root.__ayahDifficulty;epoch++;abort.abort();current?.dispose();current=null;root.replaceChildren();}
  window.addEventListener('ayahprofilechange',dispose,{signal:abort.signal});for(const event of ['ayah-content-access-changed','ayah-private-content-denied'])window.addEventListener(event,()=>{if(refs.some(r=>!freeReference(r)))dispose();},{signal:abort.signal});
  await open();return {start:()=>current?.start?.(),pause:()=>current?.pause?.(),resume:()=>current?.dispatch?.({type:'resume'}),dispatch:a=>current?.dispatch?.(a),getSnapshot:()=>({...current?.getSnapshot(),selectedRefs:[...refs],completedRefs:refs.slice(0,run.completed),continuous:true}),restart:async()=>{run.restart();finished=false;await open();},dispose};
 }

@@ -166,7 +166,7 @@ test("manual audio pauses gravity, switches safely, and touch/RTL/reduced motion
   const top = await page.locator(".falling-block").getAttribute("style");
   await page.waitForTimeout(450);
   expect(await page.locator(".falling-block").getAttribute("style")).toBe(top);
-  await page.locator("#fall-ayah").click();
+  await page.locator(".gameplay-toolbar [data-game-command=listen]").click();
   expect(
     await page.evaluate(
       () => window.audioLog.filter((x) => x[0] === "stop").length,
@@ -258,7 +258,7 @@ test("Single Ayah can select a later ayah without a chain end and uses its verif
   await form.locator("[name=first]").fill("5");
   await form.getByRole("button", { name: "Start", exact: true }).click();
   await expect(page.locator(".tower-hud")).toContainText("Ayah 5");
-  await page.locator("#fall-ayah").click();
+  await page.locator(".gameplay-toolbar [data-game-command=listen]").click();
   expect(await page.evaluate(() => window.audioLog.at(-1)[1])).toContain(
     "001005",
   );
