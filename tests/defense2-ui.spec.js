@@ -411,3 +411,38 @@ test("late listen-before completion cannot resume combat behind an explicitly op
   );
   await expect(page.locator("[data-flow-choice]").first()).toBeDisabled();
 });
+for (const game of ["ayah-defense", "surah-rush"])
+  test(`${game}: Start remains disabled until the initial verified source is ready`, async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.evaluate(async (game) => {
+      const { mountAdventure } = await import("/src/revision/adventures/ui.js");
+      const root = document.createElement("section");
+      document.body.replaceChildren(root);
+      const gate = new Promise((resolve) => {
+        window.releaseInitialSource = resolve;
+      });
+      window.pendingInitialMount = mountAdventure(root, {
+        game,
+        refs: ["1:1", "1:2"],
+        verifyBundle: () => gate,
+      });
+    }, game);
+    await expect(page.locator("[data-flow-start]")).toBeDisabled();
+    await expect(page.locator("[data-flow-start]")).toContainText(
+      "Preparing verified passage"
+    );
+    await page.evaluate(async () => {
+      window.releaseInitialSource();
+      window.initialActivity = await window.pendingInitialMount;
+    });
+    await expect(page.locator("[data-flow-start]")).toBeEnabled();
+    await page.locator("[data-adventure-audio]").selectOption("paused");
+    await page.locator("[data-flow-start]").click();
+    await expect(page.locator(".flow-battlefield")).toHaveAttribute(
+      "data-adventure-state",
+      "playing"
+    );
+    await expect(page.locator("[data-flow-choice]").first()).toBeEnabled();
+  });

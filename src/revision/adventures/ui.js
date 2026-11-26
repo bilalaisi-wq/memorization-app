@@ -287,7 +287,7 @@ export async function mountAdventure(
       : "Momentum course. Arrows move, Space jumps, S slides, Shift dashes. Number keys choose a route."
   }"><div class="flow-hud" role=status></div><div class="flow-scene"><svg viewBox="0 0 900 400" aria-label="${
     game === "ayah-defense" ? "Tower-defense battlefield" : "Platform course"
-  }"></svg></div><div class="flow-ribbon" aria-label="Quran revision ribbon"></div><div class="flow-actions"></div><div class="flow-pad"></div><p data-flow-message role=status></p><button data-flow-start>Start journey</button><small class="flow-integrity">Pieces are study groups, not recitation stops. Game recognition is separate from independent recitation.</small></div></section>`;
+  }"></svg></div><div class="flow-ribbon" aria-label="Quran revision ribbon"></div><div class="flow-actions"></div><div class="flow-pad"></div><p data-flow-message role=status></p><button data-flow-start disabled>Preparing verified passage…</button><small class="flow-integrity">Pieces are study groups, not recitation stops. Game recognition is separate from independent recitation.</small></div></section>`;
   const field = root.querySelector(".flow-battlefield"),
     svg = root.querySelector("svg"),
     ribbon = root.querySelector(".flow-ribbon"),
@@ -851,7 +851,15 @@ export async function mountAdventure(
             s.motorErrors
           } motor recoveries`;
     root.querySelector("[data-flow-message]").textContent = message;
-    root.querySelector("[data-flow-start]").hidden = started || record.finished;
+    const startButton = root.querySelector("[data-flow-start]");
+    startButton.hidden = started || record.finished;
+    startButton.disabled =
+      pendingSave ||
+      !!retrySourceControl ||
+      (!region && record.completed < refs.length);
+    startButton.textContent = startButton.disabled
+      ? "Preparing verified passage…"
+      : "Start journey";
     if (game === "ayah-defense") {
       renderDefenseScene(svg, s, {
         placement,
