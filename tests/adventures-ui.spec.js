@@ -29,13 +29,14 @@ async function open(page, game, { last = 3 } = {}) {
   await expect(page.locator(".flow-ribbon")).toContainText("1:1");
   await page.clock.install();
   await page.clock.pauseAt(new Date(Date.now() + 1000));
-  if (game === "ayah-defense") await page.locator("[data-flow-place]").click();
   await page.locator("[data-flow-start]").click();
   await expect(page.locator(".flow-battlefield")).toBeFocused();
   // SVG shapes must not swallow later siblings through unquoted closing attributes.
   const entity =
     game === "ayah-defense" ? "[data-flow-tower-entity]" : "[data-flow-runner]";
-  await expect(page.locator(entity)).toBeVisible();
+  if (game === "ayah-defense")
+    await expect(page.locator(entity)).toHaveCount(0);
+  else await expect(page.locator(entity)).toBeVisible();
   expect(
     await page
       .locator(".flow-scene svg")
@@ -50,7 +51,7 @@ async function choose(page, ref, index = 0) {
   const text = revisionUnits(localBundle(ref))[index].text;
   await page.locator("[data-flow-choice]").filter({ hasText: text }).click();
 }
-test("Ayah Defense places real blueprints, powers towers from Arabic only, fights waves and keeps source coverage/FSRS separate", async ({
+test("Ayah Defense earns and places real towers, fights waves and keeps source coverage/FSRS separate", async ({
   page,
 }) => {
   await open(page, "ayah-defense");
@@ -60,12 +61,11 @@ test("Ayah Defense places real blueprints, powers towers from Arabic only, fight
     "data-covered",
     "1"
   );
-  await expect(page.locator(".flow-hud")).toContainText("construction");
-  await expect(page.locator("[data-flow-upgrade]")).toContainText("18 coins");
-  await page.locator("[data-flow-upgrade]").click();
-  await expect(page.locator("[data-flow-upgrade]")).toContainText("36 coins");
+  await expect(page.locator(".flow-hud")).toContainText("Construction Points");
   await choose(page, "1:2");
   await choose(page, "1:3");
+  await page.locator("[data-defense-buy=arrow]").click();
+  await page.locator("[data-defense-confirm]").click();
   await expect(page.locator(".flow-battlefield")).toHaveAttribute(
     "data-covered",
     "3"
@@ -129,6 +129,20 @@ test("Surah Rush requires actual traversal, number route choice, no Space answer
   await page
     .locator(".flow-adventure")
     .screenshot({ path: "docs/gameplay-overhaul/rush-desktop.png" });
+  await page.locator('[data-flow-end="replay"]').click();
+  await expect(page.locator(".flow-battlefield")).toHaveAttribute(
+    "data-covered",
+    "0"
+  );
+  await expect(page.locator("[data-flow-start]")).toBeVisible();
+  const replayed = await page.evaluate(
+    () =>
+      Object.values(
+        JSON.parse(localStorage.getItem("ayah-flow-adventures-v1")).runs
+      )[0]
+  );
+  expect(replayed.history.at(-1).completed).toBe(2);
+  expect(replayed.history.at(-1).finished).toBe(true);
 });
 test("new game pause applies independent settings to the current challenge, restores focus and preserves earlier ayah coverage", async ({
   page,
@@ -179,7 +193,6 @@ test("ten-ayah fortress passage crosses five without a menu and restores the com
       .click();
   }
   await select();
-  await page.locator("[data-flow-place]").click();
   await page.locator("[data-flow-start]").click();
   for (let ayah = 1; ayah <= 6; ayah++)
     for (const unit of revisionUnits(localBundle(`78:${ayah}`))) {
@@ -288,7 +301,6 @@ test("actual long pilot groups and cumulative checks preserve exact source cover
       },
     });
   }, bundle);
-  await page.locator("[data-flow-place]").click();
   await page.locator("[data-flow-start]").click();
   for (const unit of revisionUnits(bundle)) {
     await page
@@ -345,7 +357,6 @@ test("defense combat keeps moving while the next verified source is loading", as
   });
   await page.clock.install();
   await page.clock.pauseAt(new Date(Date.now() + 1000));
-  await page.locator("[data-flow-place]").click();
   await page.locator("[data-flow-start]").click();
   await choose(page, "1:1");
   const before = await page.evaluate(

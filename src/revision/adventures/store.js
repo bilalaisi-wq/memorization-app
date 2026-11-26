@@ -1,12 +1,57 @@
 import { versionedStore } from "../../ui/versioned-store.js";
 import { validateRefs } from "../../passage-context/model.js";
 import { TOWERS, SITES } from "./defense.js";
+import { placementCheck } from "./defense-maps.js";
 export const ADVENTURE_KEY = "ayah-flow-adventures-v1";
 const integer = (n, max = 1e9) => Number.isSafeInteger(n) && n >= 0 && n <= max;
 const number = (n) => Number.isFinite(n) && Math.abs(n) <= 1e9;
 export function validArcade(game, a) {
   if (a === null) return true;
   if (!a || typeof a !== "object") return false;
+  if (game === "ayah-defense" && a.version === 2)
+    return (
+      [
+        "time",
+        "coins",
+        "energy",
+        "core",
+        "shield",
+        "score",
+        "totalEarned",
+        "nextEnemyId",
+        "nextTowerId",
+      ].every((k) => number(a[k]) && a[k] >= 0) &&
+      integer(a.map, 3) &&
+      integer(a.region, 4) &&
+      Array.isArray(a.towers) &&
+      a.towers.length <= 24 &&
+      new Set(a.towers.map((t) => t.id)).size === a.towers.length &&
+      a.towers.every(
+        (t) =>
+          Object.hasOwn(TOWERS, t.kind) &&
+          integer(t.id) &&
+          t.id > 0 &&
+          integer(t.level, 3) &&
+          t.level > 0 &&
+          number(t.x) &&
+          number(t.y) &&
+          placementCheck(a.map, t, a.towers, t.id).valid &&
+          number(t.paidCost) &&
+          number(t.upgradeSpend) &&
+          ["first", "last", "strongest", "nearest"].includes(t.targeting)
+      ) &&
+      Array.isArray(a.accepted) &&
+      a.accepted.length <= 20000 &&
+      a.accepted.every((v) => typeof v === "string" && v.length < 100) &&
+      a.earnedByRef &&
+      Object.entries(a.earnedByRef).every(
+        ([k, n]) => /^\d+:\d+$/.test(k) && integer(n, 100)
+      ) &&
+      a.cooldowns &&
+      ["shield", "frost", "overcharge"].every(
+        (k) => number(a.cooldowns[k]) && a.cooldowns[k] >= 0
+      )
+    );
   if (game === "ayah-defense")
     return (
       ["time", "coins", "energy", "core", "shield", "score"].every((k) =>
@@ -54,6 +99,12 @@ export function validAdventure(r) {
     ["ayah-defense", "surah-rush"].includes(r.game) &&
     ["guided", "standard", "expert"].includes(r.settings?.memory) &&
     ["relaxed", "normal", "arcade"].includes(r.settings?.motor) &&
+    (r.settings.map === undefined || integer(r.settings.map, 3)) &&
+    (r.settings.tourMaps === undefined ||
+      typeof r.settings.tourMaps === "boolean") &&
+    (r.finished === undefined || typeof r.finished === "boolean") &&
+    (r.finished !== true || r.completed === r.refs.length) &&
+    (!r.arcade?.final || r.completed === r.refs.length) &&
     integer(r.completed, r.refs.length) &&
     integer(r.assistance) &&
     (r.history === undefined ||

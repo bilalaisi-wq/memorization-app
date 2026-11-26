@@ -1,7 +1,14 @@
+import {
+  mapFor,
+  pathLength,
+  pathPoint,
+  placementCheck,
+  legalPositions,
+} from "./defense-maps.js";
 export const TOWERS = {
   arrow: {
     name: "Arrow",
-    cost: 8,
+    cost: 50,
     energy: 6,
     range: 160,
     rate: 0.5,
@@ -9,7 +16,7 @@ export const TOWERS = {
   },
   frost: {
     name: "Frost",
-    cost: 10,
+    cost: 90,
     energy: 6,
     range: 140,
     rate: 1.4,
@@ -17,7 +24,7 @@ export const TOWERS = {
   },
   beam: {
     name: "Beam",
-    cost: 12,
+    cost: 130,
     energy: 8,
     range: 180,
     rate: 0.15,
@@ -25,7 +32,7 @@ export const TOWERS = {
   },
   pulse: {
     name: "Pulse",
-    cost: 12,
+    cost: 160,
     energy: 8,
     range: 120,
     rate: 1.8,
@@ -33,7 +40,7 @@ export const TOWERS = {
   },
   guardian: {
     name: "Guardian",
-    cost: 10,
+    cost: 180,
     energy: 6,
     range: 155,
     rate: 2,
@@ -41,7 +48,7 @@ export const TOWERS = {
   },
   observatory: {
     name: "Observatory",
-    cost: 10,
+    cost: 200,
     energy: 6,
     range: 190,
     rate: 1,
@@ -71,43 +78,80 @@ const ENEMIES = {
   shielded: { hp: 30, speed: 0.9, armor: 0, shield: 15 },
   siege: { hp: 120, speed: 0.5, armor: 1 },
 };
-export function defensePath(region = 0) {
-  return [
-    { x: -20, y: 210 },
-    { x: 180, y: 210 },
-    { x: 250, y: region % 2 ? 90 : 330 },
-    { x: 460, y: region % 2 ? 90 : 330 },
-    { x: 530, y: 210 },
-    { x: 920, y: 210 },
-  ];
+export function defensePath(map = 0, lane = 0) {
+  return mapFor(map).paths[lane % mapFor(map).paths.length];
 }
-export function pointOnPath(distance, region) {
-  const path = defensePath(region);
-  for (let i = 1; i < path.length; i++) {
-    const a = path[i - 1],
-      b = path[i],
-      length = Math.hypot(b.x - a.x, b.y - a.y);
-    if (distance <= length)
-      return {
-        x: a.x + ((b.x - a.x) * distance) / length,
-        y: a.y + ((b.y - a.y) * distance) / length,
-      };
-    distance -= length;
+export function pointOnPath(distance, map = 0, lane = 0) {
+  return pathPoint(distance, defensePath(map, lane));
+}
+export function migrateDefenseCheckpoint(old) {
+  if (!old || old.version === 2) return old;
+  const next = {
+    ...structuredClone(old),
+    version: 2,
+    map: 0,
+    tourMaps: false,
+    earnedByRef: {},
+    totalEarned: 0,
+    nextEnemyId: 0,
+    nextTowerId: 0,
+    firstBuiltAt: old.towers.some((t) => t.active) ? 0 : null,
+    accepted: [...old.accepted],
+    towers: [],
+    queue: [],
+    legacy: true,
+  };
+  for (const t of old.towers) {
+    const paid = {
+      arrow: 8,
+      frost: 10,
+      beam: 12,
+      pulse: 12,
+      guardian: 10,
+      observatory: 10,
+    }[t.kind];
+    if (t.active && placementCheck(0, t, next.towers).valid)
+      next.towers.push({
+        ...t,
+        id: ++next.nextTowerId,
+        active: true,
+        paidCost: paid + (t.charge || 0),
+        upgradeSpend: (18 * (t.level - 1) * t.level) / 2,
+        targeting: "first",
+      });
+    else {
+      next.energy += paid + (t.charge || 0);
+      next.coins += (18 * (t.level - 1) * t.level) / 2;
+    }
   }
-  return path.at(-1);
+  next.firstBuiltAt = next.towers.some((t) => TOWERS[t.kind].damage > 0)
+    ? 0
+    : null;
+  return next;
 }
 export function createAyahDefense({
   motor = "relaxed",
   restore = null,
+  map = 0,
+  tourMaps = false,
   onEvent = () => {},
 } = {}) {
   let disposed = false,
     serial = 0,
     acc = 0;
   const s = {
+    version: 2,
+    map,
+    originMap: map,
+    tourMaps,
+    earnedByRef: {},
+    totalEarned: 0,
+    nextEnemyId: 0,
+    nextTowerId: 0,
+    firstBuiltAt: null,
     status: "ready",
     time: 0,
-    coins: 72,
+    coins: 0,
     energy: 0,
     core: 100,
     shield: 25,
@@ -127,12 +171,13 @@ export function createAyahDefense({
     final: false,
     finalSpawns: 0,
     accepted: [],
-    ...structuredClone(restore || {}),
+    ...structuredClone(migrateDefenseCheckpoint(restore) || {}),
   };
   s.enemies = [];
   s.effects = [];
   s.status = "ready";
   s.reading = 0;
+  serial = s.nextEnemyId;
   const event = (type, data = {}) => onEvent({ type, ...data });
   function hit(e, damage, pierce = false) {
     if (e.shield > 0 && !pierce) {
@@ -140,7 +185,8 @@ export function createAyahDefense({
       e.shield -= amount;
       damage -= amount;
     }
-    e.hp -= Math.max(0.25, damage - (pierce ? 0 : e.armor || 0));
+    if (damage > 0)
+      e.hp -= Math.max(0.25, damage - (pierce ? 0 : e.armor || 0));
   }
   function tick(dt) {
     s.time += dt;
@@ -149,33 +195,51 @@ export function createAyahDefense({
       s.cooldowns[k] = Math.max(0, s.cooldowns[k] - dt);
     s.overcharge = Math.max(0, s.overcharge - dt);
     s.effects = s.effects.filter((e) => (e.life -= dt) > 0);
-    const pressure = s.reading > 12 ? 0.28 : 1,
+    const grace = !s.towers.some((t) => TOWERS[t.kind].damage > 0),
+      ramp = grace ? 0 : Math.min(1, (s.time - s.firstBuiltAt) / 45);
+    const pressure = grace ? 0.12 : s.reading > 12 ? 0.28 : 0.35 + 0.65 * ramp,
       pace = { relaxed: 34, normal: 48, arcade: 64 }[motor];
     s.spawn -= dt;
     if (
       s.spawn <= 0 &&
-      s.enemies.length < (s.reading > 12 ? 3 : 9) &&
+      s.enemies.length < (grace ? 2 : s.reading > 12 ? 3 : 9) &&
       (!s.final || s.finalSpawns < 2)
     ) {
       const types = Object.keys(ENEMIES),
-        kind = s.final
-          ? "siege"
-          : types[
-              (s.wave + serial) %
-                Math.min(types.length, 2 + Math.floor(s.wave / 2))
-            ],
+        kind =
+          s.final && !grace
+            ? "siege"
+            : types[
+                (s.wave + serial) %
+                  Math.min(
+                    types.length,
+                    1 + Math.floor(ramp * 4) + Math.floor(s.wave / 8)
+                  )
+              ],
         e = ENEMIES[kind];
-      s.enemies.push({ id: ++serial, kind, ...e, maxHp: e.hp, d: 0, slow: 0 });
+      s.nextEnemyId = ++serial;
+      s.enemies.push({
+        id: serial,
+        lane: serial % mapFor(s.map).paths.length,
+        kind,
+        ...e,
+        maxHp: e.hp,
+        d: 0,
+        slow: 0,
+      });
       if (kind === "swarm" && s.enemies.length < 8)
         s.enemies.push({
           id: ++serial,
+          lane: serial % mapFor(s.map).paths.length,
           kind,
           ...e,
           maxHp: e.hp,
           d: -25,
           slow: 0,
         });
-      s.spawn = (motor === "arcade" ? 2.2 : 3.8) / pressure;
+      s.nextEnemyId = serial;
+      s.spawn =
+        (grace ? 8 : motor === "arcade" ? 2.8 : 4.8) / (grace ? 1 : pressure);
       s.wave++;
       if (s.final) s.finalSpawns++;
     }
@@ -205,7 +269,7 @@ export function createAyahDefense({
         if (t.cool <= 0) {
           s.shield = Math.min(60, s.shield + 2 * level);
           for (const e of s.enemies) {
-            const p = pointOnPath(e.d, s.region);
+            const p = pointOnPath(e.d, s.map, e.lane);
             if (Math.hypot(p.x - t.x, p.y - t.y) < range)
               e.d = Math.max(0, e.d - 12 * level);
           }
@@ -220,10 +284,26 @@ export function createAyahDefense({
       if (t.kind === "observatory") continue;
       const targets = s.enemies
         .filter((e) => {
-          const p = pointOnPath(e.d, s.region);
+          const p = pointOnPath(e.d, s.map, e.lane);
           return Math.hypot(p.x - t.x, p.y - t.y) < range;
         })
-        .sort((a, b) => b.d - a.d);
+        .sort((a, b) =>
+          t.targeting === "last"
+            ? a.d - b.d
+            : t.targeting === "strongest"
+            ? b.hp - a.hp
+            : t.targeting === "nearest"
+            ? Math.hypot(
+                pointOnPath(a.d, s.map, a.lane).x - t.x,
+                pointOnPath(a.d, s.map, a.lane).y - t.y
+              ) -
+              Math.hypot(
+                pointOnPath(b.d, s.map, b.lane).x - t.x,
+                pointOnPath(b.d, s.map, b.lane).y - t.y
+              )
+            : b.d / pathLength(defensePath(s.map, b.lane)) -
+              a.d / pathLength(defensePath(s.map, a.lane))
+        );
       if (!targets.length || t.cool > 0) continue;
       t.cool = rate;
       const selected =
@@ -231,8 +311,8 @@ export function createAyahDefense({
           ? targets
           : t.kind === "pulse"
           ? targets.filter((e) => {
-              const a = pointOnPath(targets[0].d, s.region),
-                b = pointOnPath(e.d, s.region);
+              const a = pointOnPath(targets[0].d, s.map, targets[0].lane),
+                b = pointOnPath(e.d, s.map, e.lane);
               return Math.hypot(a.x - b.x, a.y - b.y) < 65 + level * 15;
             })
           : t.kind === "arrow" && level >= 3
@@ -246,7 +326,7 @@ export function createAyahDefense({
           e.slowFactor = level >= 3 ? 0.05 : 0.55 - 0.1 * (level - 1);
         }
         hit(e, def.damage * (1 + 0.45 * (level - 1)), t.kind === "beam");
-        const p = pointOnPath(e.d, s.region);
+        const p = pointOnPath(e.d, s.map, e.lane);
         s.effects.push({
           x: t.x,
           y: t.y,
@@ -268,12 +348,17 @@ export function createAyahDefense({
         event("neutral-defeated", { kind: e.kind });
         continue;
       }
-      if (e.d > 1300) {
+      const length = pathLength(defensePath(s.map, e.lane));
+      if (grace) e.d = Math.min(e.d, length * 0.72);
+      if (e.d >= length) {
         s.motorErrors++;
         const damage = e.kind === "siege" ? 20 : 8,
           absorbed = Math.min(s.shield, damage);
         s.shield -= absorbed;
-        s.core = Math.max(s.reading > 12 ? 1 : 0, s.core - (damage - absorbed));
+        s.core = Math.max(
+          grace || s.reading > 12 ? 1 : 0,
+          s.core - (damage - absorbed)
+        );
         e.hp = 0;
         event("motor-error");
       }
@@ -305,63 +390,150 @@ export function createAyahDefense({
         if (
           !["ready", "playing", "paused"].includes(s.status) ||
           !Object.hasOwn(TOWERS, a.kind) ||
-          !SITES[a.site] ||
-          s.towers.some((t) => t.site === a.site) ||
-          s.coins < TOWERS[a.kind].cost
+          s.towers.length >= 24 ||
+          s.energy < TOWERS[a.kind].cost
         )
           break;
-        s.coins -= TOWERS[a.kind].cost;
-        s.towers.push({
-          ...SITES[a.site],
-          site: a.site,
+        if (
+          TOWERS[a.kind].damage === 0 &&
+          !s.towers.some((t) => TOWERS[t.kind].damage > 0)
+        ) {
+          event("support-needs-attack");
+          break;
+        }
+        const position =
+          a.position || (a.site !== undefined ? SITES[a.site] : null);
+        const check = placementCheck(s.map, position, s.towers);
+        if (!check.valid) {
+          event("invalid-placement", check);
+          break;
+        }
+        s.energy -= TOWERS[a.kind].cost;
+        const t = {
+          ...position,
+          id: ++s.nextTowerId,
           kind: a.kind,
           level: 1,
           charge: 0,
-          active: false,
+          active: true,
+          paidCost: TOWERS[a.kind].cost,
+          upgradeSpend: 0,
+          targeting: "first",
+          builtAt: s.time,
+        };
+        s.towers.push(t);
+        if (s.firstBuiltAt === null) s.firstBuiltAt = s.time;
+        s.effects.push({
+          kind: "build",
+          x: t.x,
+          y: t.y,
+          tx: t.x,
+          ty: t.y,
+          life: 0.6,
         });
-        s.queue.push(a.site);
-        event("blueprint");
+        event("tower-built", { id: t.id });
         break;
       }
-      case "priority":
-        if (s.queue.includes(a.site))
-          s.queue = [a.site, ...s.queue.filter((n) => n !== a.site)];
+      case "targeting": {
+        const t = s.towers.find((t) => t.id === a.id);
+        if (t && ["first", "last", "strongest", "nearest"].includes(a.value))
+          t.targeting = a.value;
         break;
+      }
+      case "map": {
+        const next = mapFor(a.value),
+          index = Number.isInteger(a.value) ? a.value : 0;
+        if (index < 0 || index > 3) break;
+        let points = 0,
+          coins = 0;
+        const kept = [];
+        for (const t of s.towers) {
+          if (placementCheck(index, t, kept).valid) kept.push(t);
+          else {
+            points += t.paidCost || 0;
+            coins += t.upgradeSpend || 0;
+          }
+        }
+        s.towers = kept;
+        if (!kept.some((t) => TOWERS[t.kind].damage > 0)) s.firstBuiltAt = null;
+        s.energy += points;
+        s.coins += coins;
+        s.map = index;
+        s.enemies = [];
+        s.spawn = 3;
+        event("map-transfer", { points, coins });
+        break;
+      }
       case "upgrade": {
-        const t = s.towers.find((t) => t.site === a.site);
+        const t = s.towers.find(
+          (t) => t.id === a.id || (a.site !== undefined && t.site === a.site)
+        );
         if (!t?.active || t.level >= 3 || s.coins < t.level * 18) break;
         s.coins -= t.level * 18;
+        t.upgradeSpend = (t.upgradeSpend || 0) + t.level * 18;
+        t.builtAt = s.time;
         t.level++;
+        s.effects.push({
+          kind: "build",
+          x: t.x,
+          y: t.y,
+          tx: t.x,
+          ty: t.y,
+          life: 0.6,
+        });
         event("tower-upgraded");
         break;
       }
       case "revision":
         if (s.status !== "playing" || s.accepted.includes(a.id)) break;
+        if (
+          typeof a.id !== "string" ||
+          a.id.length > 100 ||
+          !/^\d+:\d+:\d+-\d+(?::review)?$/.test(a.id)
+        )
+          break;
+        if (
+          a.points !== undefined &&
+          (!Number.isInteger(a.points) || a.points < 1 || a.points > 20)
+        )
+          break;
         s.accepted.push(a.id);
-        s.accepted = s.accepted.slice(-1000);
         s.reading = 0;
-        s.energy += 6;
+        const ref = a.id.split(":").slice(0, 2).join(":"),
+          prior = s.earnedByRef[ref] || 0;
+        let earned = Math.min(
+          80 - prior,
+          Math.max(1, Math.min(20, Math.floor(a.points || 10)))
+        );
+        // A tiny selected passage still earns its first defense through genuine completion.
+        if (a.lastSource && s.totalEarned + earned < 50)
+          earned = 50 - s.totalEarned;
+        s.earnedByRef[ref] = prior + earned;
+        s.energy += earned;
+        s.totalEarned += earned;
         s.score += 20;
-        {
-          const target = s.towers.find((t) => t.site === s.queue[0]);
-          if (target)
-            s.effects.push({
-              kind: "construction",
-              x: 450,
-              y: 390,
-              tx: target.x,
-              ty: target.y,
-              life: 0.45,
-            });
-        }
+        s.effects.push({
+          kind: "construction",
+          x: 450,
+          y: 490,
+          tx: 850,
+          ty: 245,
+          life: 0.45,
+        });
         event("construction-energy");
         break;
       case "region":
         s.region = a.index % REGIONS.length;
+        if (s.tourMaps)
+          dispatch({
+            type: "map",
+            value: ((s.originMap ?? 0) + Math.floor(a.index)) % 4,
+          });
         s.enemies = [];
         s.spawn = 1;
         break;
       case "final":
+        if (s.final) break;
         s.final = true;
         s.finalSpawns = 0;
         s.spawn = 0;
@@ -403,49 +575,20 @@ export function createAyahDefense({
         }
         break;
     }
-    while (s.energy > 0 && s.queue.length) {
-      const t = s.towers.find((t) => t.site === s.queue[0]),
-        efficiency = s.towers
-          .filter(
-            (o) =>
-              o.active &&
-              o.kind === "observatory" &&
-              Math.hypot(o.x - t.x, o.y - t.y) <
-                190 * (1 + 0.12 * (o.level - 1))
-          )
-          .reduce((n, o) => n + o.level * 0.2, 1),
-        cost = Math.ceil(TOWERS[t.kind].energy / efficiency),
-        need = Math.max(0, cost - t.charge),
-        amount = Math.min(need, s.energy);
-      t.charge += amount;
-      s.energy -= amount;
-      if (t.charge >= cost) {
-        t.active = true;
-        t.builtAt = s.time;
-        s.effects.push({
-          kind: "build",
-          x: t.x,
-          y: t.y,
-          tx: t.x,
-          ty: t.y,
-          life: 0.55,
-        });
-        s.queue.shift();
-        event("tower-built", { site: t.site });
-      } else break;
-    }
   }
+
   return {
     start: () => dispatch({ type: "start" }),
     pause: () => dispatch({ type: "pause" }),
     resume: () => dispatch({ type: "resume" }),
     dispatch,
     getSnapshot: () => structuredClone(s),
+    getFrame: () => structuredClone({ ...s, accepted: [], earnedByRef: {} }),
     checkpoint: () => ({
       ...structuredClone(s),
       enemies: [],
       effects: [],
-      accepted: s.accepted.slice(-1000),
+      accepted: [...s.accepted],
     }),
     dispose() {
       disposed = true;

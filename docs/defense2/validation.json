@@ -1,0 +1,51 @@
+{
+  "broadSuite": {
+    "startTime": "2026-11-25T20:35:19.382Z",
+    "duration": 2235948.725,
+    "expected": 1209,
+    "skipped": 10,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "broadSuiteReruns": {
+    "chroniclesPreview": "passed unchanged with required server alias",
+    "starRunner1440": "passed unchanged in isolation"
+  },
+  "finalFocusedSuite": {
+    "startTime": "2026-11-25T21:17:56.542Z",
+    "duration": 123565.97399999999,
+    "expected": 48,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "backendPolicies": {
+    "passed": 36,
+    "failed": 0
+  },
+  "productionOffline": {
+    "passed": 4,
+    "failed": 0
+  },
+  "build": "passed",
+  "capacitorSync": "passed; native compilation and physical devices not verified",
+  "fullSurahHost": {
+    "surah": 7,
+    "refs": 206,
+    "decisions": 1665,
+    "sourceWords": 3320,
+    "authorization": "mocked transport using exact ignored operator source bundles",
+    "hostedOwnerAccessVerified": false
+  },
+  "databaseMigration": "none",
+  "sourceHashes": {
+    "src/revision/adventures/content.js": "78fe9cfec733ba932dc17429c8565664665217b694903aa8533ea4eea2033189",
+    "src/revision/adventures/defense.js": "f2c4ceb91ba792adba948c32025c6cd2f4afd4c39544cca61557083ca7e667f8",
+    "src/revision/adventures/defense-art.js": "960237c32f2b9c526e9698d62d50c6ce125ea27928e0885c383282fa4d742b48",
+    "src/revision/adventures/defense-maps.js": "4fb278d02358b7b7e1063050cd3d14ebc167aef69ffae0a04625d672c671a0e5",
+    "src/revision/adventures/store.js": "ca705431a236bf5c18dd64607169be2a1995296d1eec1f6636c119fb01138c07",
+    "src/revision/adventures/ui.js": "3f96a2524c9509059a1fbc129c4aeec1725adc6078505c23a627cb11484ab1f4",
+    "src/revision/adventures/ui.css": "173826d57f2596c8e692bca4322752204f71fa184eb613661ceeef452174809c",
+    "src/revision/ui.js": "2c4a483ac58db1dbafc25e8f0ba5a77b558377a7e7a80eb56b44b4eb09591826"
+  }
+}

@@ -1,13 +1,22 @@
 import { authorizeRegion, revisionChoices } from "./content.js";
-import { adventureStore, newAdventure } from "./store.js";
+import { adventureStore, newAdventure, validAdventure } from "./store.js";
 import {
   createAyahDefense,
+  migrateDefenseCheckpoint,
   TOWERS,
   SITES,
   REGIONS,
   defensePath,
   pointOnPath,
 } from "./defense.js";
+import {
+  DEFENSE_MAPS,
+  mapFor,
+  placementCheck,
+  legalPositions,
+  pointerOnMap,
+} from "./defense-maps.js";
+import { renderDefenseScene } from "./defense-art.js";
 import { createSurahRush, terrain } from "./rush.js";
 import {
   profileStorage,
@@ -36,7 +45,7 @@ export const ADVENTURES = {
   "ayah-defense": {
     title: "Ayah Defense",
     subtitle:
-      "Build your defenses. Protect your fortress. Keep your Qur’an revision flowing.",
+      "Celestial Fortress · Earn your defenses through Qur’an revision.",
   },
   "surah-rush": {
     title: "Surah Rush",
@@ -55,6 +64,7 @@ export async function mountAdventure(
     onNext = () => {},
     restart = false,
     verifyBundle = async () => {},
+    frameScheduler = null,
   } = {}
 ) {
   validateRefs(refs);
@@ -76,6 +86,7 @@ export async function mountAdventure(
     frame = null,
     audioLease = null,
     audioEpoch = 0,
+    pauseEpoch = 0,
     studio = null,
     started = false,
     selectedTower = "arrow",
@@ -85,7 +96,25 @@ export async function mountAdventure(
     muted = false,
     message = "",
     pendingSection = false,
-    retrySourceControl = null;
+    retrySourceControl = null,
+    placement = null,
+    selectedTowerId = null,
+    zoom = null,
+    pendingMap = 0,
+    pendingTours = false,
+    pendingSave = false,
+    mapChanged = false,
+    promptGeneration = 0,
+    shopView = "buy",
+    lastTransfer = "",
+    pendingReset = false;
+  const requestFrame = (fn) =>
+    frameScheduler ? frameScheduler.request(fn) : requestAnimationFrame(fn);
+  const cancelFrame = (id) =>
+    frameScheduler ? frameScheduler.cancel(id) : cancelAnimationFrame(id);
+  const currentFrame = () =>
+    engine?.getFrame ? engine.getFrame() : engine?.getSnapshot();
+  const heldAnswers = new Set();
   const alive = () =>
     !disposed && owner === activeProfileId() && root.isConnected && isCurrent();
   if (!alive()) throw Error("Account changed");
@@ -96,18 +125,59 @@ export async function mountAdventure(
   }
   if (record.refs.join("|") !== refs.join("|"))
     throw Error("Saved passage needs recovery; export existing progress");
+  if (game === "ayah-defense" && record.arcade && record.arcade.version !== 2) {
+    store.transact((d) => {
+      const r = d.runs[id];
+      r.legacyArcade ??= structuredClone(r.arcade);
+      r.arcade = migrateDefenseCheckpoint(r.arcade);
+    });
+    record = store.snapshot().runs[id];
+  }
   settings = { ...record.settings };
+  pendingMap = settings.map ?? record.arcade?.map ?? 0;
+  pendingTours = settings.tourMaps ?? false;
   const audio = createAudioManager({
     owner: "revision-adventure",
     initialVolume: readLabVolume(profileStorage),
   });
-  function save(fn) {
+  function persistRecord() {
+    store.transact((d) => {
+      const old = d.runs[id];
+      if (
+        !pendingReset &&
+        ((old?.completed || 0) > record.completed ||
+          (old?.completed === record.completed &&
+            old.unit > record.unit &&
+            old.accepted.some((k) => !record.accepted.includes(k))))
+      )
+        throw Error(
+          "Another window has newer progress. Export this attempt before recovery."
+        );
+      d.runs[id] = structuredClone(record);
+    });
+    pendingSave = false;
+    pendingReset = false;
+  }
+  function save(fn, reset = false) {
     if (!alive()) throw Error("Learning account changed");
-    store.transact((d) => fn(d.runs[id]));
-    record = store.snapshot().runs[id];
+    const next = structuredClone(record);
+    fn(next);
+    if (!validAdventure(next))
+      throw Error("Invalid checkpoint; previous data retained.");
+    record = next;
+    pendingReset ||= reset;
+    try {
+      persistRecord();
+    } catch (e) {
+      pendingSave = true;
+      throw Error(
+        e.message +
+          " Completed progress is held in this window. Retry saving before leaving."
+      );
+    }
   }
   const snapshot = () => {
-    const s = engine?.getSnapshot();
+    const s = currentFrame();
     return {
       session: {
         id,
@@ -168,8 +238,13 @@ export async function mountAdventure(
     }
     engine = (game === "ayah-defense" ? createAyahDefense : createSurahRush)({
       motor: settings.motor,
+      map: settings.map ?? 0,
+      tourMaps: settings.tourMaps ?? false,
       restore,
       onEvent: (event) => {
+        if (event.type === "map-transfer")
+          message =
+            lastTransfer = `Map transfer: ${event.points} Construction Points and ${event.coins} Upgrade Coins refunded for displaced towers.`;
         if (event.type === "route-committed") void answer(event.choice);
         if (event.type === "section-finished") {
           pendingSection = false;
@@ -208,7 +283,7 @@ export async function mountAdventure(
     ADVENTURES[game].subtitle
   }</p><div class="flow-toolbar"><label>Recitation<select data-adventure-audio><option value="continuous">Continuous full ayah</option><option value="before">Listen before play</option><option value="paused">Pause recitation</option></select></label><button data-flow-mute>Mute recitation</button></div><div class="flow-battlefield" tabindex="0" role="region" aria-label="${
     game === "ayah-defense"
-      ? "Fortress battlefield. Number keys choose wording. Select a tower then a construction site."
+      ? "Fortress battlefield. Digit or Numpad 1–3 answers. Earn points, choose a tower and place it on land."
       : "Momentum course. Arrows move, Space jumps, S slides, Shift dashes. Number keys choose a route."
   }"><div class="flow-hud" role=status></div><div class="flow-scene"><svg viewBox="0 0 900 400" aria-label="${
     game === "ayah-defense" ? "Tower-defense battlefield" : "Platform course"
@@ -219,6 +294,13 @@ export async function mountAdventure(
     hud = root.querySelector(".flow-hud"),
     actions = root.querySelector(".flow-actions"),
     pad = root.querySelector(".flow-pad");
+  if (game === "ayah-defense") {
+    const tools = document.createElement("div");
+    tools.className = "defense-map-tools";
+    tools.innerHTML =
+      '<button data-defense-zoom aria-label="Zoom battlefield">Zoom map</button><button data-defense-cancel hidden>Cancel placement</button>';
+    root.querySelector(".flow-scene").append(tools);
+  }
   mountReadingSetting(root);
   const dispatch = (a) => {
     if (!alive()) return;
@@ -226,10 +308,16 @@ export async function mountAdventure(
       void recite(true);
       return;
     }
+    if (a.type === "resume" && (pendingSave || retrySourceControl)) {
+      message = "Retry saving / loading the verified source before resuming.";
+      paintAll();
+      return;
+    }
     engine?.dispatch(a);
     if (a.type === "pause") {
+      pauseEpoch++;
       audio.pause();
-      cancelAnimationFrame(raf);
+      cancelFrame(raf);
       raf = 0;
     }
     if (a.type === "resume") {
@@ -240,13 +328,28 @@ export async function mountAdventure(
     paintAll();
   };
   root.__ayahRestartChallenge = async (next) => {
-    settings = { memory: next.memory, motor: next.motor };
+    settings = {
+      ...settings,
+      memory: next.memory,
+      motor: next.motor,
+      ...(game === "ayah-defense"
+        ? { map: pendingMap, tourMaps: pendingTours }
+        : {}),
+    };
+    placement = null;
+    if (
+      game === "ayah-defense" &&
+      mapChanged &&
+      currentFrame().map !== pendingMap
+    )
+      engine.dispatch({ type: "map", value: pendingMap });
     save((r) => {
       r.settings = settings;
       r.unit = 0;
       r.arcade = engine.checkpoint();
     });
     buildEngine(record.arcade);
+    mapChanged = false;
     await load();
     started = true;
     engine.start();
@@ -255,6 +358,44 @@ export async function mountAdventure(
     focusGameplay(field, { force: true });
     paint();
   };
+  root.addEventListener(
+    "keydown",
+    (e) => {
+      if (
+        game !== "ayah-defense" ||
+        !placement ||
+        e.target.closest("input,select,textarea") ||
+        e.isComposing
+      )
+        return;
+      if (e.code === "Escape") {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        placement = null;
+        paint();
+        return;
+      }
+      const d = {
+        ArrowLeft: [-16, 0],
+        ArrowRight: [16, 0],
+        ArrowUp: [0, -16],
+        ArrowDown: [0, 16],
+      }[e.code];
+      if (d) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        placement.x += d[0];
+        placement.y += d[1];
+        paint();
+      }
+      if (e.code === "Enter") {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        placeDefense(placement);
+      }
+    },
+    { capture: true, signal: abort.signal }
+  );
   frame = mountGameplayFrame({
     root: root.querySelector(".flow-adventure"),
     surface: () => field,
@@ -280,27 +421,61 @@ export async function mountAdventure(
     },
   });
   function fail(error) {
+    audioEpoch++;
+    audioLease?.revoke();
+    audioLease = null;
     region = null;
     choices = [];
     message = error.message;
     engine?.pause();
     audio.stop();
+    root.querySelector(".gameplay-settings").hidden = true;
     paint();
     const retry = document.createElement("button");
     retry.textContent = "Retry source / save";
     retry.onclick = () => {
-      void load().then(() => {
-        if (!region && record.completed < refs.length) return;
-        if (started) {
-          engine.resume();
-          wake();
-        }
-        paintAll();
-        focusGameplay(field, {force:true});
-      });
+      void (async () => {
+        const restartPending = pendingReset;
+        if (pendingSave) persistRecord();
+        if (restartPending) prepareFreshAttempt();
+        await flushRewards();
+        await load();
+      })()
+        .then(() => {
+          if (!region && record.completed < refs.length) return;
+          if (started) {
+            engine.resume();
+            wake();
+          }
+          paintAll();
+          focusGameplay(field, { force: true });
+        })
+        .catch((e) => fail(e));
     };
-    retrySourceControl = retry;
-    ribbon.replaceChildren(retry);
+    const recovery = document.createElement("div"),
+      detail = document.createElement("p");
+    detail.setAttribute("role", "alert");
+    detail.textContent = error.message;
+    recovery.append(detail, retry);
+    retrySourceControl = recovery;
+    ribbon.replaceChildren(recovery);
+    if (pendingSave) {
+      const exportButton = document.createElement("button");
+      exportButton.textContent = "Export pending checkpoint";
+      exportButton.onclick = () => {
+        const url = URL.createObjectURL(
+          new Blob([JSON.stringify({ version: 1, id, record }, null, 2)], {
+            type: "application/json",
+          })
+        );
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "ayah-defense-pending-recovery.json";
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      };
+      recovery.append(exportButton);
+    }
   }
   function invalidate() {
     dispose();
@@ -309,30 +484,46 @@ export async function mountAdventure(
   }
   async function recite(force = false) {
     if (!region || (audioMode === "paused" && !force)) return;
-    const ticket = ++audioEpoch;
+    const wasPlaying = currentFrame()?.status === "playing" || listeningBefore;
+    if (!force && !wasPlaying) return;
+    const ticket = ++audioEpoch,
+      pauseTicket = pauseEpoch;
+    const mayResume = () =>
+      alive() &&
+      ticket === audioEpoch &&
+      pauseTicket === pauseEpoch &&
+      wasPlaying &&
+      started &&
+      !pendingSave &&
+      !retrySourceControl &&
+      root.querySelector(".gameplay-settings").hidden;
     audio.stop();
     audioLease?.revoke();
     audioLease = null;
     try {
       const lease = await loadAudio(region.bundle, client);
-      if (!alive() || ticket !== audioEpoch) {
+      if (!alive() || ticket !== audioEpoch || pauseTicket !== pauseEpoch) {
         lease.revoke();
         return;
       }
       audioLease = lease;
       reportStudyExposure([region.bundle.key]);
-      if (audioMode === "before") {
+      if (audioMode === "before" && wasPlaying) {
         listeningBefore = true;
         engine.pause();
+        paintAll();
       }
       const ok = await audio.play(lease.url, {
         loop: audioMode === "continuous",
         muted,
         onEnded: () => {
-          if (alive() && started && audioMode === "before") {
+          if (alive() && ticket === audioEpoch && audioMode === "before") {
             listeningBefore = false;
-            engine.resume();
-            wake();
+            if (mayResume()) {
+              engine.resume();
+              wake();
+            }
+            paintAll();
           }
         },
       });
@@ -341,7 +532,7 @@ export async function mountAdventure(
         listeningBefore = false;
         message =
           "Audio unavailable. Replay when ready; your progress remains safe.";
-        if (started) {
+        if (mayResume()) {
           engine.resume();
           wake();
         }
@@ -349,8 +540,12 @@ export async function mountAdventure(
       paint();
     } catch (e) {
       if (alive() && ticket === audioEpoch) {
+        if (pendingSave) {
+          fail(e);
+          return;
+        }
         message = e.message;
-        if (started) {
+        if (mayResume()) {
           engine.resume();
           wake();
         }
@@ -367,6 +562,7 @@ export async function mountAdventure(
         turn: record.completed * 17 + record.unit,
         memory: settings.memory,
       });
+      promptGeneration++;
       reportStudyExposure([...new Set(choices.map((c) => c.key))]);
       if (game === "surah-rush") engine.dispatch({ type: "next" });
       paintAll();
@@ -377,6 +573,7 @@ export async function mountAdventure(
       paintAll();
       return;
     }
+    const previousLoaded = region?.bundle;
     const ticket = ++epoch;
     audioEpoch++;
     audio.stop();
@@ -387,7 +584,7 @@ export async function mountAdventure(
     readyRecall = settings.memory !== "expert";
     if (record.completed >= refs.length) {
       if (game === "ayah-defense") engine.dispatch({ type: "final" });
-      else if (!engine.getSnapshot().final) engine.dispatch({ type: "final" });
+      else if (!currentFrame().final) engine.dispatch({ type: "final" });
       paint();
       return;
     }
@@ -405,7 +602,10 @@ export async function mountAdventure(
         );
       if (record.completed > 0) {
         const previousKey = refs[record.completed - 1],
-          previous = await loadBundle(previousKey, client);
+          previous =
+            previousLoaded?.key === previousKey
+              ? previousLoaded
+              : await loadBundle(previousKey, client);
         await verifyBundle(previous);
         if (!alive() || ticket !== epoch) return;
         if (
@@ -426,6 +626,7 @@ export async function mountAdventure(
         turn: record.completed * 17 + record.unit,
         memory: settings.memory,
       });
+      promptGeneration++;
       reportStudyExposure([...new Set(choices.map((c) => c.key))]);
       if (game === "surah-rush") engine.dispatch({ type: "next" });
       if (started) void recite();
@@ -434,13 +635,14 @@ export async function mountAdventure(
       if (alive() && ticket === epoch) fail(e);
     }
   }
-  async function answer(index) {
+  async function answer(index, generation = promptGeneration) {
     if (
       !alive() ||
+      generation !== promptGeneration ||
       busy ||
       !region ||
       !readyRecall ||
-      engine.getSnapshot().status !== "playing"
+      currentFrame().status !== "playing"
     )
       return;
     const choice = choices[index],
@@ -480,6 +682,26 @@ export async function mountAdventure(
         already = record.accepted.includes(acceptedId),
         ayahFinished = record.unit === region.units.length - 1,
         key = unit.key;
+      if (game === "ayah-defense" && !already) {
+        const n = region.units.length,
+          budget = Math.min(80, Math.max(20, n * 10)),
+          points = Math.floor(budget / n) + (record.unit < budget % n ? 1 : 0);
+        engine.dispatch({
+          type: "revision",
+          id: acceptedId,
+          points,
+          lastSource: ayahFinished && record.completed === refs.length - 1,
+        });
+      }
+      if (
+        game === "ayah-defense" &&
+        ayahFinished &&
+        (record.completed + 1) % 5 === 0
+      )
+        engine.dispatch({
+          type: "region",
+          index: Math.floor((record.completed + 1) / 5),
+        });
       save((r) => {
         if (!r.accepted.includes(acceptedId)) r.accepted.push(acceptedId);
         r.unit++;
@@ -494,21 +716,19 @@ export async function mountAdventure(
         r.arcade = engine.checkpoint();
       });
       if (game === "ayah-defense") {
-        if (!already) engine.dispatch({ type: "revision", id: acceptedId });
-        if (ayahFinished && record.completed % 5 === 0)
-          engine.dispatch({
-            type: "region",
-            index: Math.floor(record.completed / 5),
-          });
+        // Coverage, construction receipts and region changes are already in one checkpoint.
       } else {
         engine.dispatch({ type: "correct", index });
         pendingSection = true;
         if (record.completed === refs.length)
           engine.dispatch({ type: "final" });
       }
-      message = ayahFinished
-        ? "Ayah covered in supported revision. Continue your journey."
-        : "Verified continuation connected.";
+      message =
+        lastTransfer ||
+        (ayahFinished
+          ? "Ayah covered in supported revision. Continue your journey."
+          : "Verified continuation connected.");
+      lastTransfer = "";
       await flushRewards();
       if (!alive()) return;
       save((r) => (r.arcade = engine.checkpoint()));
@@ -524,7 +744,7 @@ export async function mountAdventure(
       if (
         alive() &&
         document.activeElement === document.body &&
-        engine.getSnapshot().status === "playing"
+        currentFrame().status === "playing"
       )
         focusGameplay(field, { force: true });
     }
@@ -535,7 +755,7 @@ export async function mountAdventure(
       ribbon.replaceChildren(retrySourceControl);
       return;
     }
-    const s = engine.getSnapshot();
+    const s = currentFrame();
     if (record.finished || s.status === "won") {
       ribbon.innerHTML = `<h4>Passage complete · ${refs.length}/${refs.length} ayahs</h4><p>Supported recognition, not certified spoken mastery.</p><button data-flow-end="replay">Replay</button><button data-flow-end="harder">Harder memory</button><button data-flow-end="faster">Faster game speed</button><button data-flow-end="next">Next ayah batch</button><button data-flow-end="recall">Independent self-assessment</button><button data-flow-end="exit">Other revision games</button>`;
       return;
@@ -578,9 +798,9 @@ export async function mountAdventure(
         : `<div class="flow-choices" dir=rtl>${choices
             .map(
               (c, i) =>
-                `<button data-flow-choice="${i}" ${
-                  s.status !== "playing" ? "disabled" : ""
-                }><small>${
+                `<button data-flow-choice="${i}" data-flow-generation="${promptGeneration}" data-flow-prompt="${
+                  unit.id
+                }" ${s.status !== "playing" ? "disabled" : ""}><small>${
                   i + 1
                 }</small><span class="arabic" dir=rtl lang=ar>${esc(
                   c.text
@@ -595,9 +815,13 @@ export async function mountAdventure(
   }
   function paint() {
     if (!alive() || !engine) return;
-    const s = engine.getSnapshot();
+    const s = currentFrame();
     const narrowCourse = game === "surah-rush" && svg.clientWidth < 600;
-    svg.setAttribute("viewBox", narrowCourse ? "0 110 480 290" : "0 0 900 400");
+    if (game !== "ayah-defense")
+      svg.setAttribute(
+        "viewBox",
+        narrowCourse ? "0 110 480 290" : "0 0 900 400"
+      );
     const renderCamera = narrowCourse
       ? Math.max(0, Math.min(810, s.x - 160))
       : s.camera;
@@ -614,11 +838,13 @@ export async function mountAdventure(
     }
     hud.textContent =
       game === "ayah-defense"
-        ? `${REGIONS[s.region]} · wave ${s.wave} · fortress ${Math.ceil(
-            s.core
-          )} · shield ${Math.ceil(s.shield)} · coins ${
-            s.coins
-          } · construction ${s.energy}`
+        ? `${mapFor(s.map).name} · ${
+            !s.towers.some((t) => TOWERS[t.kind].damage > 0)
+              ? "Grace wave · earn and place your first defense"
+              : "wave " + s.wave
+          } · fortress ${Math.ceil(s.core)} · shield ${Math.ceil(
+            s.shield
+          )} · ◇ Upgrade Coins ${s.coins} · ✦ Construction Points ${s.energy}`
         : `Region ${
             Math.floor(record.completed / 5) + 1
           } · momentum ${Math.round(Math.abs(s.vx))} · flow ${s.flow} · ${
@@ -627,96 +853,14 @@ export async function mountAdventure(
     root.querySelector("[data-flow-message]").textContent = message;
     root.querySelector("[data-flow-start]").hidden = started || record.finished;
     if (game === "ayah-defense") {
-      const path = defensePath(s.region)
-        .map((p, i) => `${i ? "L" : "M"}${p.x},${p.y}`)
-        .join(" ");
-      drawScene(
-        `<rect width=900 height=400 fill="${
-          ["#14223d", "#182e42", "#292341", "#10333c", "#2a2549"][s.region]
-        }"/><path d="${path}" stroke="#557685" stroke-width=38 fill=none/><path d="${path}" stroke="#b6d2d633" stroke-width=2 stroke-dasharray="8 12" fill=none/><g transform="translate(865,175)"><rect width=32 height=65 fill="#dfc16d"/><path d="M-8 0 L16 -24 L40 0" fill="#5bc7ce"/></g>${SITES.map(
-          (p, i) =>
-            `<g data-flow-site="${i}" role=button tabindex=0 aria-label="Construction site ${
-              i + 1
-            }" transform="translate(${p.x},${
-              p.y
-            })"><circle r=25 fill="#1f4056" stroke="${
-              selectedSite === i ? "#ffd868" : "#7dbbbb"
-            }" stroke-width=3/><text text-anchor=middle y=6 fill=white>${
-              i + 1
-            }</text></g>`
-        ).join("")}${s.towers
-          .map(
-            (t) =>
-              `<g data-flow-tower-entity="${t.kind}" transform="translate(${
-                t.x
-              },${t.y})"><circle r="${
-                selectedSite === t.site ? TOWERS[t.kind].range : 25
-              }" fill="none" stroke="#d4c67855" stroke-dasharray="5 8"/><rect x=-16 y=-22 width=32 height=32 rx=6 fill="${
-                t.active ? "#e2c26b" : "#567484"
-              }" opacity="${t.active ? 1 : 0.6}" transform="translate(0,${
-                !minimalMotion && t.active
-                  ? 20 *
-                    (1 -
-                      Math.min(
-                        1,
-                        Math.max(0, s.time - (t.builtAt ?? -1)) / 0.45
-                      ))
-                  : 0
-              })"/>${towerIcon(
-                t.kind
-              )}<text text-anchor=middle y=38 fill=white font-size=12>${
-                t.active
-                  ? "L" + t.level
-                  : t.charge + "/" + TOWERS[t.kind].energy
-              }</text></g>`
-          )
-          .join("")}${s.enemies
-          .map((e) => {
-            const p = pointOnPath(e.d, s.region);
-            return `<g transform="translate(${p.x},${p.y})"><${
-              e.kind === "armored" ? "rect" : "ellipse"
-            } ${
-              e.kind === "armored"
-                ? "x=-13 y=-13 width=26 height=26"
-                : "rx=13 ry=11"
-            } fill="${
-              e.kind === "frost"
-                ? "#85e2ed"
-                : e.kind === "siege"
-                ? "#b079ae"
-                : "#cf8c65"
-            }"/><text y=-18 text-anchor=middle fill=white font-size=11>${
-              e.kind
-            } ${Math.ceil(e.hp)}</text>${
-              e.shield ? '<circle r=18 fill=none stroke="#9de5fa"/>' : ""
-            }</g>`;
-          })
-          .join("")}${s.effects
-          .filter(
-            (e) =>
-              experiencePreferences().effects !== "off" ||
-              !["build", "construction"].includes(e.kind)
-          )
-          .map((e) =>
-            e.kind === "build"
-              ? `<circle cx="${e.x}" cy="${e.y}" r="${
-                  minimalMotion ? 29 : 25 + (0.55 - e.life) * 55
-                }" fill="none" stroke="#ffe48b" stroke-width="3" opacity="${
-                  e.life / 0.55
-                }" />`
-              : `<path d="M${e.x},${e.y} L${e.tx},${e.ty}" stroke="${
-                  e.kind === "frost" ? "#99eaff" : "#ffe48b"
-                }" stroke-width="${e.kind === "beam" ? 5 : 2}"/>`
-          )
-          .join("")}`
-      );
-      for (const b of actions.querySelectorAll("[data-flow-ability]")) {
-        const remaining = s.cooldowns[b.dataset.flowAbility];
-        b.disabled = s.status !== "playing" || remaining > 0;
-        b.textContent =
-          b.dataset.flowAbility +
-          (remaining > 0 ? " · " + Math.ceil(remaining) + "s" : " · ready");
-      }
+      renderDefenseScene(svg, s, {
+        placement,
+        selected: selectedTowerId,
+        zoom,
+        minimal: minimalMotion,
+        effects: experiencePreferences().effects,
+      });
+      paintDefenseShop(s);
     } else {
       let ground = "";
       for (let x = 0; x <= 1320; x += 10) {
@@ -756,66 +900,352 @@ export async function mountAdventure(
         }</g><path d="M1260 200 V355" stroke=gold stroke-width=6/></g>`
       );
     }
-    if (s.status === "recovery")
-      actions.innerHTML =
-        "<button data-flow-recover>Repair fortress · motor recovery</button>";
-    else if (game === "ayah-defense" && !actions.dataset.initialized) {
-      actions.dataset.initialized = "true";
-      actions.innerHTML = `<label>Tower class<select data-flow-tower>${Object.entries(
-        TOWERS
-      )
-        .map(
-          ([k, v]) =>
-            `<option value="${k}">${v.name} · ${v.cost} coins</option>`
-        )
-        .join(
-          ""
-        )}</select></label><label>Site<select data-flow-site-select>${SITES.map(
-        (_, i) => `<option value=${i}>${i + 1}</option>`
-      ).join(
-        ""
-      )}</select></label><button data-flow-place>Queue blueprint</button><button data-flow-priority>Build selected first</button><button data-flow-upgrade>Upgrade selected tower</button>${[
-        "shield",
-        "overcharge",
-        "frost",
-      ]
-        .map((n) => `<button data-flow-ability="${n}">${n}</button>`)
-        .join("")}`;
-    }
-    if (game === "ayah-defense") {
-      const tower = s.towers.find((t) => t.site === selectedSite);
-      const upgrade = actions.querySelector("[data-flow-upgrade]");
-      if (upgrade) {
-        upgrade.disabled =
-          !tower?.active || tower.level >= 3 || s.coins < tower.level * 18;
-        upgrade.textContent = !tower?.active
-          ? "Activate this tower to upgrade"
-          : tower.level >= 3
-          ? "Tower fully upgraded"
-          : `Upgrade selected tower · ${tower.level * 18} coins`;
-      }
+    if (
+      game === "ayah-defense" &&
+      s.status === "recovery" &&
+      !actions.querySelector("[data-flow-recover]")
+    ) {
+      const b = document.createElement("button");
+      b.dataset.flowRecover = "";
+      b.textContent = "Repair fortress · motor recovery";
+      actions.prepend(b);
     }
     if (game === "surah-rush" && !pad.children.length)
       pad.innerHTML =
         '<button data-flow-move="-1">←</button><button data-flow-control="jump">Jump</button><button data-flow-move="1">→</button><button data-flow-control="dash">Dash</button><button data-flow-slide>Slide</button>';
     frame.update(snapshot());
   }
-  function towerIcon(kind) {
-    const shapes = {
-      arrow: '<path d="M-10 9 L10 -11 M0 -11 H10 V0"/>',
-      frost: '<path d="M0 -13 V13 M-11 -7 L11 7 M-11 7 L11 -7"/>',
-      beam: '<path d="M-9 11 L9 -11 M-10 0 H10"/><circle r="4"/>',
-      pulse: '<circle r="5"/><circle r="11"/>',
-      guardian: '<path d="M-10 -10 H10 V1 Q10 9 0 14 Q-10 9 -10 1 Z"/>',
-      observatory: '<path d="M-12 0 Q0 -18 12 0 Z M0 0 V12 M-7 12 H7"/>',
-    };
-    return `<g stroke="#142c42" stroke-width="2" fill="none" aria-label="${TOWERS[kind].name}">${shapes[kind]}</g>`;
-  }
   window.addEventListener("resize", () => paint(), { signal: abort.signal });
   function drawScene(markup) {
     // HTML foreign-content parsing treats a slash after an unquoted value as part
     // of that value. Separate self-closing tokens so sibling SVG objects remain siblings.
     svg.innerHTML = markup.replace(/\/>/g, " />");
+  }
+  function prepareFreshAttempt() {
+    buildEngine(null);
+    placement = null;
+    selectedTowerId = null;
+    started = false;
+    region = null;
+    choices = [];
+    audioEpoch++;
+    audio.stop();
+    audioLease?.revoke();
+    audioLease = null;
+    root.querySelector(".gameplay-settings").hidden = true;
+  }
+  function restartEntire() {
+    try {
+      save((r) => {
+        const old = structuredClone(r);
+        Object.assign(r, newAdventure(game, refs, settings), {
+          evidence: old.evidence,
+          history: [
+            ...(old.history || []),
+            {
+              completed: old.completed,
+              unit: old.unit,
+              accepted: old.accepted,
+              pins: old.pins,
+              arcade: old.arcade,
+              assistance: old.assistance,
+              finished: old.finished,
+              settings: old.settings,
+            },
+          ].slice(-50),
+        });
+      }, true);
+      prepareFreshAttempt();
+      void load();
+      focusGameplay(field, { force: true });
+    } catch (e) {
+      fail(e);
+    }
+  }
+  function persistDefense() {
+    try {
+      save((r) => (r.arcade = engine.checkpoint()));
+      paint();
+    } catch (e) {
+      fail(e);
+    }
+  }
+  function selectPlacement(kind) {
+    const s = currentFrame();
+    if (pendingSave || retrySourceControl) return;
+    if (!Object.hasOwn(TOWERS, kind) || s.energy < TOWERS[kind].cost) {
+      message = "Earn more Construction Points from the revision ribbon.";
+      paint();
+      return;
+    }
+    placement = {
+      kind,
+      ...(legalPositions(s.map, s.towers)[0] || { x: 450, y: 250 }),
+    };
+    paint();
+    svg.scrollIntoView({
+      block: "nearest",
+      inline: "nearest",
+      behavior: "instant",
+    });
+    focusGameplay(field, { force: true });
+  }
+  function placeDefense(position) {
+    if (!placement || pendingSave || retrySourceControl) return;
+    const s = currentFrame(),
+      check = placementCheck(s.map, position, s.towers);
+    if (!check.valid) {
+      message = check.reason;
+      placement = { ...placement, ...position };
+      paint();
+      return;
+    }
+    const before = s.towers.length;
+    engine.dispatch({ type: "place", kind: placement.kind, position });
+    const after = currentFrame();
+    if (after.towers.length > before) {
+      selectedTowerId = after.towers.at(-1).id;
+      placement = null;
+      actions.scrollTop = 0;
+      message = "Tower constructed. Its foundation is permanent.";
+      persistDefense();
+    } else {
+      message = "Purchase not made. Check your Construction Points.";
+      paint();
+    }
+    focusGameplay(field, { force: true });
+  }
+  function paintDefenseShop(s) {
+    if (!actions.dataset.defenseShop) {
+      actions.dataset.defenseShop = "true";
+      actions.innerHTML = `<div class="defense-shop-head"><strong>Tower shop</strong><button data-defense-shop-view>Upgrades & targeting</button></div><div class="defense-shop" aria-label="Tower shop">${Object.entries(
+        TOWERS
+      )
+        .map(
+          ([kind, t]) =>
+            `<button draggable="true" data-defense-buy="${kind}" aria-label="Buy ${
+              t.name
+            } Tower, ${
+              t.cost
+            } Construction Points"><span class="defense-shop-icon" aria-hidden="true">${
+              {
+                arrow: "➶",
+                frost: "❄",
+                beam: "✧",
+                pulse: "◎",
+                guardian: "♜",
+                observatory: "☾",
+              }[kind]
+            }</span><strong>${t.name}</strong><small>✦ ${
+              t.cost
+            }</small></button>`
+        )
+        .join(
+          ""
+        )}</div><p data-defense-placement-status role="status"></p><div class="defense-placement-controls"><button data-defense-cancel hidden>Cancel placement · Esc</button><button data-defense-confirm hidden>Build here · Enter</button><button data-defense-zoom>Zoom map</button></div><div class="defense-tower-controls"><label>Your tower<select data-defense-selected><option value="">Select a tower</option></select></label><label>Target<select data-defense-targeting><option value="first">First</option><option value="last">Last</option><option value="strongest">Strongest</option><option value="nearest">Nearest</option></select></label><button data-flow-upgrade>Upgrade selected tower</button></div><details class="defense-help"><summary>How to play & commander abilities</summary><p>Start with zero points. Answer 1–3 or Numpad 1–3, then buy a tower and tap land beside the path. Dragging also works. Arrows move a selected preview; Enter builds; Esc cancels. Opening balloons wait safely while you learn.</p>${[
+        "shield",
+        "overcharge",
+        "frost",
+      ]
+        .map((n) => `<button data-flow-ability="${n}">${n}</button>`)
+        .join("")}</details>`;
+    }
+    for (const b of actions.querySelectorAll("[data-defense-buy]")) {
+      const t = TOWERS[b.dataset.defenseBuy];
+      const supportBlocked =
+        t.damage === 0 && !s.towers.some((k) => TOWERS[k.kind].damage > 0);
+      b.disabled =
+        s.energy < t.cost ||
+        s.towers.length >= 24 ||
+        supportBlocked ||
+        pendingSave ||
+        !!retrySourceControl;
+      b.title = supportBlocked
+        ? "Build an attacking tower before support towers."
+        : `${t.cost} Construction Points`;
+      b.setAttribute(
+        "aria-pressed",
+        String(placement?.kind === b.dataset.defenseBuy)
+      );
+    }
+    actions.querySelector(".defense-shop").hidden = shopView !== "buy";
+    actions.querySelector(".defense-tower-controls").hidden =
+      shopView !== "controls";
+    actions.querySelector("[data-defense-shop-view]").textContent =
+      shopView === "buy" ? "Upgrades & targeting" : "Buy towers";
+    actions.querySelector("[data-defense-placement-status]").hidden =
+      !placement && s.firstBuiltAt !== null;
+    const select = actions.querySelector("[data-defense-selected]"),
+      signature = s.towers.map((t) => t.id + ":" + t.level).join("|");
+    if (select.dataset.signature !== signature) {
+      select.dataset.signature = signature;
+      select.innerHTML =
+        '<option value="">Select a tower</option>' +
+        s.towers
+          .map(
+            (t) =>
+              `<option value="${t.id}">${TOWERS[t.kind].name} · level ${
+                t.level
+              }</option>`
+          )
+          .join("");
+    }
+    select.value = selectedTowerId ? String(selectedTowerId) : "";
+    const t = s.towers.find((t) => t.id === selectedTowerId),
+      up = actions.querySelector("[data-flow-upgrade]");
+    up.disabled = !t || t.level >= 3 || s.coins < t.level * 18;
+    up.textContent = t
+      ? t.level >= 3
+        ? "Fully upgraded"
+        : `Upgrade · ◇ ${t.level * 18}`
+      : "Select a tower to upgrade";
+    actions.querySelector("[data-defense-targeting]").disabled = !t;
+    if (t)
+      actions.querySelector("[data-defense-targeting]").value = t.targeting;
+    for (const b of actions.querySelectorAll("[data-flow-ability]")) {
+      b.disabled =
+        s.status !== "playing" || s.cooldowns[b.dataset.flowAbility] > 0;
+      b.textContent =
+        b.dataset.flowAbility +
+        (s.cooldowns[b.dataset.flowAbility] > 0
+          ? " · " + Math.ceil(s.cooldowns[b.dataset.flowAbility]) + "s"
+          : " · ready");
+    }
+    for (const b of root.querySelectorAll("[data-defense-cancel]"))
+      b.hidden = !placement;
+    actions.querySelector("[data-defense-confirm]").hidden = !placement;
+    actions.querySelector("[data-defense-placement-status]").textContent =
+      placement
+        ? `${placementCheck(s.map, placement, s.towers).valid ? "✓" : "×"} ${
+            placementCheck(s.map, placement, s.towers).reason
+          } · ✦ ${TOWERS[placement.kind].cost}`
+        : !s.towers.some((t) => TOWERS[t.kind].damage > 0)
+        ? "Grace Wave: earn ✦ 50, choose Arrow, then tap land. A short completed passage earns a bounded first-defense bonus."
+        : "Choose a tower to inspect its range. Towers stay where you build them.";
+  }
+  if (game === "ayah-defense") {
+    root
+      .querySelector(".gameplay-settings")
+      .querySelector('[data-game-command="exit"]').textContent = "Save & Exit";
+    const options = root
+      .querySelector(".gameplay-settings")
+      .querySelector("[data-game-options]");
+    const mapLabel = document.createElement("label");
+    mapLabel.textContent = "Map · applies on Restart with New Settings";
+    const mapSelect = document.createElement("select");
+    mapSelect.dataset.defenseMapSetting = "";
+    mapSelect.innerHTML = DEFENSE_MAPS.map(
+      (m, i) => `<option value="${i}">${m.name}</option>`
+    ).join("");
+    mapSelect.value = String(pendingMap);
+    mapSelect.onchange = () => {
+      pendingMap = Number(mapSelect.value);
+      mapChanged = true;
+    };
+    mapLabel.append(mapSelect);
+    options.append(mapLabel);
+    const note = document.createElement("p");
+    note.textContent =
+      "Map changes keep valid towers. Displaced towers refund exactly their paid Construction Points and spent Upgrade Coins. No free resources are granted.";
+    options.append(note);
+    const restart = document.createElement("details");
+    restart.innerHTML =
+      "<summary>Restart entire selected range</summary><p>Completed evidence is archived; the new attempt starts at the beginning with zero currencies.</p><button data-defense-entire-confirm>Restart entire range · keep previous history</button>";
+    options.append(restart);
+    restart.querySelector("button").onclick = restartEntire;
+    svg.addEventListener(
+      "pointerdown",
+      (e) => {
+        if (!placement) {
+          const t = e.target.closest("[data-defense-tower]");
+          if (t) {
+            selectedTowerId = Number(t.dataset.defenseTower);
+            paint();
+          }
+        }
+      },
+      { signal: abort.signal }
+    );
+    svg.addEventListener(
+      "pointermove",
+      (e) => {
+        if (!placement) return;
+        const p = pointerOnMap(svg, e.clientX, e.clientY);
+        if (p) {
+          placement = { ...placement, ...p };
+          paint();
+        }
+      },
+      { signal: abort.signal }
+    );
+    svg.addEventListener(
+      "click",
+      (e) => {
+        if (placement) {
+          const p = pointerOnMap(svg, e.clientX, e.clientY);
+          if (p) placeDefense(p);
+        } else {
+          const t = e.target.closest("[data-defense-tower]");
+          if (t) {
+            selectedTowerId = Number(t.dataset.defenseTower);
+            paint();
+          }
+        }
+      },
+      { signal: abort.signal }
+    );
+    actions.addEventListener(
+      "dragstart",
+      (e) => {
+        const b = e.target.closest("[data-defense-buy]");
+        if (!b || b.disabled) return;
+        selectPlacement(b.dataset.defenseBuy);
+        e.dataTransfer.setData("text/plain", b.dataset.defenseBuy);
+        e.dataTransfer.effectAllowed = "copy";
+      },
+      { signal: abort.signal }
+    );
+    svg.addEventListener(
+      "dragover",
+      (e) => {
+        if (placement) {
+          e.preventDefault();
+          const p = pointerOnMap(svg, e.clientX, e.clientY);
+          if (p) {
+            placement = { ...placement, ...p };
+            paint();
+          }
+        }
+      },
+      { signal: abort.signal }
+    );
+    svg.addEventListener(
+      "drop",
+      (e) => {
+        e.preventDefault();
+        const p = pointerOnMap(svg, e.clientX, e.clientY);
+        if (placement && p) placeDefense(p);
+      },
+      { signal: abort.signal }
+    );
+    actions.addEventListener(
+      "change",
+      (e) => {
+        if (e.target.matches("[data-defense-selected]")) {
+          selectedTowerId = Number(e.target.value) || null;
+          paint();
+        }
+        if (e.target.matches("[data-defense-targeting]")) {
+          engine.dispatch({
+            type: "targeting",
+            id: selectedTowerId,
+            value: e.target.value,
+          });
+          persistDefense();
+        }
+      },
+      { signal: abort.signal }
+    );
   }
   function paintAll() {
     paint();
@@ -858,11 +1288,6 @@ export async function mountAdventure(
         paint();
         return;
       }
-      if (game === "ayah-defense" && !engine.getSnapshot().towers.length) {
-        message = "Choose a tower and queue its blueprint before starting.";
-        paint();
-        return;
-      }
       started = true;
       engine.start();
       wake();
@@ -876,46 +1301,68 @@ export async function mountAdventure(
         message = "Route selected. Move right into the gateway.";
         paint();
         focusGameplay(field, { force: true });
-      } else void answer(Number(b.dataset.flowChoice)).then(paintAll);
+      } else
+        void answer(
+          Number(b.dataset.flowChoice),
+          Number(b.dataset.flowGeneration)
+        ).then(paintAll);
     }
     if (e.detail === 0 && b.dataset.flowControl)
       engine.dispatch({ type: b.dataset.flowControl });
     if (e.detail === 0 && b.dataset.flowMove) move(Number(b.dataset.flowMove));
     if (e.detail === 0 && b.hasAttribute("data-flow-slide"))
-      engine.dispatch({ type: "slide", active: !engine.getSnapshot().slide });
+      engine.dispatch({ type: "slide", active: !currentFrame().slide });
     if (b.hasAttribute("data-flow-ready")) {
       readyRecall = true;
       paintRibbon();
     }
-    if (b.hasAttribute("data-flow-place")) {
-      selectedTower = root.querySelector("[data-flow-tower]").value;
-      selectedSite = Number(
-        root.querySelector("[data-flow-site-select]").value
-      );
-      engine.dispatch({
-        type: "place",
-        kind: selectedTower,
-        site: selectedSite,
-      });
+    if (b.hasAttribute("data-defense-shop-view")) {
+      shopView = shopView === "buy" ? "controls" : "buy";
       paint();
+      actions.scrollTop = 0;
+      return;
     }
-    if (b.hasAttribute("data-flow-priority"))
-      engine.dispatch({
-        type: "priority",
-        site: Number(root.querySelector("[data-flow-site-select]").value),
-      });
-    if (b.hasAttribute("data-flow-upgrade")) {
-      engine.dispatch({
-        type: "upgrade",
-        site: Number(root.querySelector("[data-flow-site-select]").value),
-      });
+    if (b.dataset.defenseBuy) {
+      selectPlacement(b.dataset.defenseBuy);
+      return;
+    }
+    if (b.hasAttribute("data-defense-cancel")) {
+      placement = null;
       paint();
+      focusGameplay(field, { force: true });
+      return;
+    }
+    if (b.hasAttribute("data-defense-confirm")) {
+      if (placement) placeDefense(placement);
+      return;
+    }
+    if (b.hasAttribute("data-defense-zoom")) {
+      const center = placement ||
+        currentFrame().towers.find((t) => t.id === selectedTowerId) || {
+          x: 450,
+          y: 250,
+        };
+      zoom = zoom
+        ? null
+        : {
+            x: Math.max(0, Math.min(340, center.x - 280)),
+            y: Math.max(0, Math.min(150, center.y - 175)),
+          };
+      paint();
+      return;
+    }
+    if (b.hasAttribute("data-flow-upgrade")) {
+      engine.dispatch({ type: "upgrade", id: selectedTowerId });
+      persistDefense();
+      return;
     }
     if (b.dataset.flowAbility) {
       engine.dispatch({ type: "ability", name: b.dataset.flowAbility });
-      paint();
+      persistDefense();
+      return;
     }
     if (b.hasAttribute("data-flow-recover")) {
+      if (pendingSave || retrySourceControl) return;
       engine.dispatch({ type: "recover" });
       wake();
       actions.dataset.initialized = "";
@@ -993,25 +1440,7 @@ export async function mountAdventure(
             normal: "arcade",
             arcade: "arcade",
           }[settings.motor];
-        save((r) => {
-          const evidence = r.evidence,
-            history = [
-              ...(r.history || []),
-              {
-                completed: r.completed,
-                assistance: r.assistance,
-                finished: r.finished,
-                settings: r.settings,
-              },
-            ].slice(-50);
-          Object.assign(r, newAdventure(game, refs, settings), {
-            evidence,
-            history,
-          });
-        });
-        buildEngine(null);
-        started = false;
-        void load();
+        restartEntire();
       }
     }
   });
@@ -1061,6 +1490,7 @@ export async function mountAdventure(
     (e) => {
       if (
         e.defaultPrevented ||
+        e.isComposing ||
         e.ctrlKey ||
         e.altKey ||
         e.metaKey ||
@@ -1073,11 +1503,13 @@ export async function mountAdventure(
       const key = e.code;
       if (
         e.repeat &&
-        (/Digit[1-3]/.test(key) ||
+        (/(?:Digit|Numpad)[1-3]/.test(key) ||
           ["Space", "ShiftLeft", "ShiftRight"].includes(key))
       )
         return;
-      if (/^Digit[1-3]$/.test(key)) {
+      if (/^(?:Digit|Numpad)[1-3]$/.test(key)) {
+        if (heldAnswers.has(key)) return;
+        heldAnswers.add(key);
         e.preventDefault();
         const index = Number(key.at(-1)) - 1;
         if (game === "ayah-defense") void answer(index).then(paintAll);
@@ -1109,6 +1541,7 @@ export async function mountAdventure(
   field.addEventListener(
     "keyup",
     (e) => {
+      heldAnswers.delete(e.code);
       if (["ArrowLeft", "ArrowRight", "KeyA", "KeyD"].includes(e.code))
         engine.dispatch({ type: "move", direction: 0 });
       if (["KeyS", "ArrowDown"].includes(e.code))
@@ -1133,11 +1566,17 @@ export async function mountAdventure(
     audio.mute(muted);
     e.target.textContent = muted ? "Unmute recitation" : "Mute recitation";
   };
+  root.addEventListener("keyup", (e) => heldAnswers.delete(e.code), {
+    capture: true,
+    signal: abort.signal,
+  });
   const background = () => {
+    pauseEpoch++;
+    heldAnswers.clear();
     message = "Paused safely. Resume when ready.";
     engine?.pause();
     audio.pause();
-    cancelAnimationFrame(raf);
+    cancelFrame(raf);
     raf = 0;
     paintAll();
   };
@@ -1185,7 +1624,7 @@ export async function mountAdventure(
     audioEpoch++;
     clearInterval(timer);
     abort.abort();
-    cancelAnimationFrame(raf);
+    cancelFrame(raf);
     frame?.dispose();
     engine?.dispose();
     audio.dispose();
@@ -1201,7 +1640,7 @@ export async function mountAdventure(
   function wake() {
     if (!raf && alive()) {
       last = 0;
-      raf = requestAnimationFrame(loop);
+      raf = requestFrame(loop);
     }
   }
   function loop(t) {
@@ -1216,14 +1655,13 @@ export async function mountAdventure(
       background();
     } else engine.dispatch({ type: "tick", dt });
     paint();
-    if (engine.getSnapshot().status === "playing")
-      raf = requestAnimationFrame(loop);
+    if (currentFrame().status === "playing") raf = requestFrame(loop);
   }
   buildEngine();
   await flushRewards();
   await load();
   paintAll();
-  raf = requestAnimationFrame(loop);
+  raf = requestFrame(loop);
   return {
     start() {
       started = true;
@@ -1240,6 +1678,9 @@ export async function mountAdventure(
       refs: [...refs],
       completed: record.completed,
       unit: record.unit,
+      pendingSave,
+      answerPending: busy,
+      promptGeneration,
       engine: engine.getSnapshot(),
     }),
     dispose,

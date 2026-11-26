@@ -12,10 +12,11 @@ import {
 } from "../../content/library.js";
 import { seededShuffle } from "../../puzzles/arcade/content.js";
 import { surahs } from "../../data.js";
+let publicPool;
 const pool = () =>
-  surahs
+  (publicPool ??= surahs
     .filter((s) => freeReference(`${s.id}:1`))
-    .flatMap((s) => s.verses.map((v) => localBundle(`${s.id}:${v.id}`)));
+    .flatMap((s) => s.verses.map((v) => localBundle(`${s.id}:${v.id}`))));
 // Display workspaces only. No stop/timing/waqf approval is inferred.
 export function revisionUnits(bundle, memory = "guided") {
   if (!["guided", "standard", "expert"].includes(memory))
@@ -86,7 +87,14 @@ export function revisionChoices(
 ) {
   const seen = new Set([wordIdentity(unit.text)]),
     wrong = [];
-  for (const b of seededShuffle(bundles, seed + turn)) {
+  const ordered = seededShuffle(bundles, seed + turn);
+  if (memory === "expert")
+    ordered.sort(
+      (a, b) =>
+        Number(b.words[0]?.text[0] === unit.text[0]) -
+        Number(a.words[0]?.text[0] === unit.text[0])
+    );
+  for (const b of ordered) {
     const count = unit.positions.length,
       words = b.words.slice(0, count),
       text = words.map((w) => w.text).join(" ");
@@ -99,6 +107,7 @@ export function revisionChoices(
       transliteration: words.map((w) => w.transliteration || "").join(" "),
       positions: words.map((w) => w.position),
     });
+    if (wrong.length >= (memory === "guided" ? 1 : 2)) break;
   }
   if (memory === "expert")
     wrong.sort(

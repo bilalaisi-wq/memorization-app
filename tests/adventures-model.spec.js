@@ -1,3 +1,4 @@
+import { legalPositions } from "../src/revision/adventures/defense-maps.js";
 import { test, expect } from "@playwright/test";
 import {
   createAyahDefense,
@@ -41,34 +42,38 @@ test("adaptive source plans preserve original positions, repeated words and bala
       }
     }
 });
-test("six distinct towers: queue, finite energy, upgrades, support, enemy damage and commander cooldowns", () => {
+test("six distinct earned towers retain damage, support, upgrades and lifecycle", () => {
   const g = createAyahDefense();
-  for (let i = 0; i < 6; i++)
-    g.dispatch({ type: "place", kind: Object.keys(TOWERS)[i], site: i });
-  expect(g.getSnapshot().towers).toHaveLength(6);
   g.start();
-  for (let i = 0; i < 8; i++) g.dispatch({ type: "revision", id: "unit-" + i });
-  expect(g.getSnapshot().towers.every((t) => t.active)).toBe(true);
+  for (let a = 1; a <= 40; a++)
+    for (const u of revisionUnits(localBundle(`78:${a}`)))
+      g.dispatch({ type: "revision", id: u.id, points: 20 });
+  for (const kind of Object.keys(TOWERS))
+    g.dispatch({
+      type: "place",
+      kind,
+      position: legalPositions(0, g.getSnapshot().towers)[0],
+    });
+  expect(g.getSnapshot().towers).toHaveLength(6);
   const energy = g.getSnapshot().energy;
-  g.dispatch({ type: "revision", id: "unit-0" });
+  g.dispatch({
+    type: "revision",
+    id: revisionUnits(localBundle("78:1"))[0].id,
+    points: 20,
+  });
   expect(g.getSnapshot().energy).toBe(energy);
   g.dispatch({ type: "ability", name: "shield" });
   const shield = g.getSnapshot().shield;
   g.dispatch({ type: "ability", name: "shield" });
   expect(g.getSnapshot().shield).toBe(shield);
-  for (let i = 0; i < 1000; i++) g.dispatch({ type: "tick", dt: 0.1 });
+  for (let i = 0; i < 2400; i++) g.dispatch({ type: "tick", dt: 0.1 });
   expect(g.getSnapshot().kills).toBeGreaterThan(0);
-  expect(g.getSnapshot().motorErrors).toBeGreaterThanOrEqual(0);
-  expect(g.getSnapshot().towers.find((t) => t.kind === "frost").active).toBe(
-    true
-  );
-  g.dispatch({ type: "upgrade", site: 0 });
+  g.dispatch({ type: "upgrade", id: g.getSnapshot().towers[0].id });
   expect(g.getSnapshot().towers[0].level).toBeGreaterThan(1);
-  expect(pointOnPath(100, 0).x).toBeGreaterThan(0);
   g.pause();
-  const t = g.getSnapshot().time;
+  const time = g.getSnapshot().time;
   g.dispatch({ type: "tick", dt: 0.2 });
-  expect(g.getSnapshot().time).toBe(t);
+  expect(g.getSnapshot().time).toBe(time);
   g.dispose();
   expect(g.getSnapshot().status).toBe("disposed");
 });
@@ -232,4 +237,16 @@ test("balanced candidate blocks, independent motor profiles and recoverable malf
   for (let i = 0; i < 25; i++) rush.dispatch({ type: "tick", dt: 0.03 });
   expect(rush.getSnapshot().x).toBeGreaterThan(265);
   expect(rush.getSnapshot().motorErrors).toBe(errors);
+});
+test("supplied source candidates stay request-local and do not contaminate the cached free-source pool", () => {
+  const unit = revisionUnits(localBundle("1:1"))[0];
+  const supplied = [localBundle("112:2")];
+  const custom = revisionChoices(unit, { bundles: supplied });
+  expect(custom.find((c) => c.id !== unit.id).key).toBe("112:2");
+  const fresh = revisionChoices(unit, { memory: "standard" });
+  expect(fresh).toHaveLength(3);
+  expect(
+    fresh.every((c) => c.key === "1:1" || Number(c.key.split(":")[0]) >= 78)
+  ).toBe(true);
+  expect(supplied).toHaveLength(1);
 });
