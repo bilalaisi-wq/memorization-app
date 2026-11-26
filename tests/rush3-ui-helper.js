@@ -9,6 +9,9 @@ export async function mountRush(
     environment = 0,
     game = "surah-rush",
     renderIntervalMs = 100,
+    express = false,
+    autoSprint = false,
+    audioMode = "paused",
   } = {}
 ) {
   await page.goto("/");
@@ -21,12 +24,24 @@ export async function mountRush(
       environment,
       game,
       renderIntervalMs,
+      express,
+      autoSprint,
+      audioMode,
     }) => {
+      window.rushAudio = [];
       window.Audio = class {
+        constructor(src) {
+          this.src = src;
+          window.rushAudio.push(this);
+        }
         play() {
+          this.playing = true;
+          this.plays = (this.plays || 0) + 1;
           return Promise.resolve();
         }
-        pause() {}
+        pause() {
+          this.playing = false;
+        }
         load() {}
         removeAttribute() {}
       };
@@ -39,7 +54,14 @@ export async function mountRush(
       window.rushActivity = await mountAdventure(root, {
         game,
         refs,
-        settings: { motor, memory, environment },
+        settings: {
+          motor,
+          memory,
+          environment,
+          express,
+          autoSprint,
+          audioMode,
+        },
         client: client
           ? {
               functions: {
@@ -69,9 +91,21 @@ export async function mountRush(
         },
       });
     },
-    { refs, motor, memory, client, environment, game, renderIntervalMs }
+    {
+      refs,
+      motor,
+      memory,
+      client,
+      environment,
+      game,
+      renderIntervalMs,
+      express,
+      autoSprint,
+      audioMode,
+    }
   );
-  await page.locator("[data-adventure-audio]").selectOption("paused");
+  await page.locator("[data-adventure-audio]").selectOption(audioMode);
+  await page.locator("[data-dismiss-instructions]").click();
   if (!(await page.locator(".rush-checkpoint").isVisible())) {
     await page.locator("[data-flow-start]").click();
     await expect(page.locator(".flow-battlefield")).toBeFocused();
@@ -116,6 +150,7 @@ export async function driveRush(
           key("ArrowRight", "keyup");
           return host;
         }
+        if (s.status === "disposed") throw Error("Source host disposed");
         if (host.pendingSave) throw Error("Host save pending");
         if (document.querySelector("[data-flow-ready]"))
           document.querySelector("[data-flow-ready]").click();
@@ -143,28 +178,46 @@ export async function driveRush(
         const x = s.x - s.plan.start;
         if (s.detour) {
           wrongDone = true;
-          if (s.grounded && x > 1230) key("Space");
+          if (s.grounded && s.x > s.plan.detour.gap[0] - 70) key("Space");
         } else if (!s.resolved) {
+          if (route === 0 && s.wall) key("Space");
           if (
             route === 0 &&
             s.grounded &&
-            x > 440 &&
-            x < 1080 &&
+            x > (s.plan.metrics?.jumpStart ?? 440) &&
+            s.x < s.plan.commits[0].x - 20 &&
             s.y + 18 > s.plan.upper + 8
           )
             key("Space");
           if (
             route === 2 &&
             s.grounded &&
-            x > 580 &&
-            x < 930 &&
+            x > (s.plan.metrics?.dropStart ?? 580) &&
+            s.x < s.plan.commits[0].x - 170 &&
             s.y + 18 < s.plan.lower - 20
           )
             key("ArrowDown");
+          const firstGap = s.plan.platforms.find((p) => p.route === 1)
+            ?.gaps?.[0];
+          if (
+            route === 1 &&
+            s.plan.layouts?.middle === "slide-tunnel" &&
+            s.x > s.plan.barriers[0].x - 60
+          )
+            key("KeyS");
+          if (
+            route === 1 &&
+            firstGap &&
+            s.grounded &&
+            s.plan.platforms
+              .find((p) => p.route === 1)
+              .gaps.some((g) => s.x > g[0] - 22 && s.x < g[0])
+          )
+            key("Space");
           if (
             ["obstacles", "multi-junction"].includes(s.plan.kind) &&
             x > 870 &&
-            x < 930 &&
+            s.x < s.plan.commits[0].x - 170 &&
             s.grounded
           )
             key("Space");

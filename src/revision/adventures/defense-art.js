@@ -1,3 +1,4 @@
+import { ENEMY_ROSTER } from "./defense-waves.js";
 // Original procedural SVG illustration. No third-party game artwork or Quran text in combat.
 import { mapFor, WORLD, placementCheck } from "./defense-maps.js";
 import { TOWERS, pointOnPath, purchaseCheck, towerRange } from "./defense.js";
@@ -209,13 +210,44 @@ export function renderDefenseScene(
           shielded: "#83d6c5",
           siege: "#cca0ba",
         }[e.kind];
+      if (["boulder", "rover", "tank"].includes(e.kind)) {
+        const rolling = e.kind === "boulder",
+          tank = e.kind === "tank",
+          size = tank ? 29 : 22;
+        const body = rolling
+          ? `<g transform="rotate(${
+              minimal ? 0 : e.d * 1.2
+            })"><path d="M-23 -8L-9 -24 16 -20 25 0 12 20 -15 19Z" fill="#8b98aa" stroke="#d8d4be" stroke-width="3"/><path d="M-12 -8L6 -14 14 4 -6 12Z" fill="none" stroke="#55687b" stroke-width="3"/></g>`
+          : `<rect x="-${size}" y="-10" width="${
+              size * 2
+            }" height="25" rx="8" fill="${
+              tank ? "#8271a0" : "#659a9d"
+            }" stroke="#e7d4a4" stroke-width="3"/><path d="M-${
+              size - 3
+            } -10 L-12 -25 H13 L${size - 3} -10" fill="${
+              tank ? "#a991bd" : "#89b3a8"
+            }" stroke="#ebd8b2" stroke-width="2"/><circle cx="-13" cy="14" r="8" fill="#33485e" stroke="#c5d3bb"/><circle cx="13" cy="14" r="8" fill="#33485e" stroke="#c5d3bb"/>${
+              tank
+                ? '<path d="M-4 -19H32" stroke="#edca85" stroke-width="7"/>'
+                : '<path d="M-6 -18H6 M0 -24V-12" stroke="#ffe7a6" stroke-width="3"/>'
+            }`;
+        return `<g data-defense-balloon="${e.kind}" data-enemy-family="${
+          ENEMY_ROSTER[e.kind].family
+        }" transform="translate(${p.x} ${p.y})"><title>${
+          ENEMY_ROSTER[e.kind].name
+        }</title>${body}<rect x="-28" y="-35" width="56" height="5" rx="2" fill="#183648"/><rect x="-28" y="-35" width="${
+          56 * Math.max(0, e.hp / e.maxHp)
+        }" height="5" fill="#e7d58e"/></g>`;
+      }
       return `<g data-defense-balloon="${e.kind}" transform="translate(${p.x} ${
         p.y
       })"><title>${
-        e.kind
-      } balloon</title><ellipse cy="8" rx="13" ry="7" fill="#0c3846" opacity=".35"/><path d="M0 -18 C-22 -20 -21 6 0 12 C21 6 22 -20 0 -18Z" fill="${color}" stroke="#fff5d4" stroke-width="1.5"/><ellipse cx="-6" cy="-10" rx="4" ry="5" fill="white" opacity=".4"/><path d="M-3 12 L0 16 3 12 M0 16 q-5 6 0 9" stroke="${color}" fill="none"/>${
+        ENEMY_ROSTER[e.kind]?.name || e.kind
+      }</title><ellipse cy="8" rx="13" ry="7" fill="#0c3846" opacity=".35"/><path d="M0 -18 C-22 -20 -21 6 0 12 C21 6 22 -20 0 -18Z" fill="${color}" stroke="#fff5d4" stroke-width="1.5"/><ellipse cx="-6" cy="-10" rx="4" ry="5" fill="white" opacity=".4"/><path d="M-3 12 L0 16 3 12 M0 16 q-5 6 0 9" stroke="${color}" fill="none"/>${
         e.kind === "armored"
           ? '<path d="M-13 -5 H13 M0 -17 V10" stroke="#455f75" stroke-width="4"/>'
+          : e.kind === "shielded"
+          ? '<path d="M-10 -11Q0 -20 10 -11M-13 -4Q0 -13 13 -4" stroke="#e8f5cf" stroke-width="3" fill="none"/>'
           : e.kind === "scout"
           ? '<path d="M-10 0 l7 -7 0 7 7 -7" stroke="#984677" stroke-width="2" fill="none"/>'
           : e.kind === "siege"
@@ -236,7 +268,13 @@ export function renderDefenseScene(
     )
     .slice(-40)
     .map((e) =>
-      e.kind === "build"
+      e.kind === "pop"
+        ? `<circle cx="${e.x}" cy="${e.y}" r="${
+            minimal ? 16 : 12 + (0.35 - e.life) * 45
+          }" fill="none" stroke="#eed6a0" stroke-width="3" opacity="${
+            e.life / 0.35
+          }"/>`
+        : e.kind === "build"
         ? `<circle cx="${e.x}" cy="${e.y}" r="${
             minimal ? 29 : 25 + (0.6 - e.life) * 50
           }" stroke="#ffe8a6" stroke-width="3" fill="none" opacity="${

@@ -1,3 +1,4 @@
+import { wavePlan, ENEMY_ROSTER } from "./defense-waves.js";
 import {
   mapFor,
   pathLength,
@@ -200,6 +201,8 @@ export function createAyahDefense({
     acc = 0;
   const s = {
     version: 2,
+    wavePlannerVersion: restore ? restore.wavePlannerVersion || 3 : 4,
+    waveState: null,
     map,
     originMap: map,
     tourMaps,
@@ -232,7 +235,8 @@ export function createAyahDefense({
     accepted: [],
     ...structuredClone(migrateDefenseCheckpoint(restore) || {}),
   };
-  s.enemies = [];
+  s.enemies =
+    s.wavePlannerVersion === 4 ? structuredClone(restore?.enemies || []) : [];
   s.effects = [];
   s.status = "ready";
   s.reading = 0;
@@ -244,8 +248,19 @@ export function createAyahDefense({
       e.shield -= amount;
       damage -= amount;
     }
+    const escorted = s.enemies.some(
+      (o) =>
+        o.id !== e.id &&
+        o.kind === "rover" &&
+        o.hp > 0 &&
+        Math.abs(o.d - e.d) < 80 &&
+        o.lane === e.lane
+    );
     if (damage > 0)
-      e.hp -= Math.max(0.25, damage - (pierce ? 0 : e.armor || 0));
+      e.hp -= Math.max(
+        0.25,
+        damage - (pierce ? 0 : (e.armor || 0) + (escorted ? 1 : 0))
+      );
   }
   function tick(dt) {
     s.time += dt;
@@ -256,49 +271,88 @@ export function createAyahDefense({
     s.effects = s.effects.filter((e) => (e.life -= dt) > 0);
     const { grace, ramp, multiplier: pressure } = openingPace(s),
       pace = { relaxed: 34, normal: 48, arcade: 64 }[motor];
-    s.spawn -= dt;
-    if (
-      s.spawn <= 0 &&
-      s.enemies.length < (grace ? 4 : s.reading > 12 ? 5 : 12) &&
-      (!s.final || s.finalSpawns < 2)
-    ) {
-      const types = Object.keys(ENEMIES),
-        kind =
-          s.final && !grace
-            ? "siege"
-            : types[
-                s.wave %
-                  Math.min(
-                    types.length,
-                    1 + Math.floor(ramp * 4) + Math.floor(s.wave / 8)
-                  )
-              ],
-        e = ENEMIES[kind];
-      s.nextEnemyId = ++serial;
-      s.enemies.push({
-        id: serial,
-        lane: serial % mapFor(s.map).paths.length,
-        kind,
-        ...e,
-        maxHp: e.hp,
-        d: 0,
-        slow: 0,
-      });
-      if (kind === "swarm" && s.enemies.length < 8)
+    if (s.wavePlannerVersion === 4) {
+      if (!s.waveState) {
+        s.wave = Math.max(1, s.wave);
+        s.waveState = { number: s.wave, spawned: 0, elapsed: 0 };
+        event("wave-start", { wave: s.wave });
+      }
+      const plan = wavePlan(s.waveState.number, { motor, map: s.map }),
+        limit = s.final ? 2 : plan.count;
+      s.waveState.elapsed += dt;
+      s.spawn -= dt;
+      if (
+        s.spawn <= 0 &&
+        s.waveState.spawned < limit &&
+        s.enemies.length < (grace ? 4 : s.reading > 12 ? 5 : 24)
+      ) {
+        const blueprint =
+          plan.enemies[s.waveState.spawned % plan.enemies.length];
+        s.nextEnemyId = ++serial;
         s.enemies.push({
-          id: ++serial,
+          ...blueprint,
+          id: serial,
+          lane: serial % mapFor(s.map).paths.length,
+          maxHp: blueprint.hp,
+          d: 0,
+          slow: 0,
+        });
+        s.waveState.spawned++;
+        if (s.final) s.finalSpawns++;
+        s.spawn = plan.interval * (grace ? 1 : s.reading > 12 ? 1.5 : 1);
+      }
+      if (s.waveState.spawned >= limit && !s.enemies.length && !s.final) {
+        event("wave-complete", { wave: s.wave });
+        s.wave++;
+        s.waveState = { number: s.wave, spawned: 0, elapsed: 0 };
+        s.spawn = 3;
+      }
+    } else {
+      s.spawn -= dt;
+      if (
+        s.spawn <= 0 &&
+        s.enemies.length < (grace ? 4 : s.reading > 12 ? 5 : 12) &&
+        (!s.final || s.finalSpawns < 2)
+      ) {
+        const types = Object.keys(ENEMIES),
+          kind =
+            s.final && !grace
+              ? "siege"
+              : types[
+                  s.wave %
+                    Math.min(
+                      types.length,
+                      1 + Math.floor(ramp * 4) + Math.floor(s.wave / 8)
+                    )
+                ],
+          e = ENEMIES[kind];
+        s.nextEnemyId = ++serial;
+        s.enemies.push({
+          id: serial,
           lane: serial % mapFor(s.map).paths.length,
           kind,
           ...e,
           maxHp: e.hp,
-          d: -25,
+          d: 0,
           slow: 0,
         });
-      s.nextEnemyId = serial;
-      s.spawn =
-        (grace ? 1.1 : motor === "arcade" ? 2.8 : 4.8) / (grace ? 1 : pressure);
-      s.wave++;
-      if (s.final) s.finalSpawns++;
+        if (kind === "swarm" && s.enemies.length < 8)
+          s.enemies.push({
+            id: ++serial,
+            lane: serial % mapFor(s.map).paths.length,
+            kind,
+            ...e,
+            maxHp: e.hp,
+            d: -25,
+            slow: 0,
+          });
+        s.nextEnemyId = serial;
+        s.spawn =
+          (grace ? 1.1 : motor === "arcade" ? 2.8 : 4.8) /
+          (grace ? 1 : pressure);
+        s.wave++;
+        if (s.final) s.finalSpawns++;
+      }
     }
     for (const t of s.towers) {
       if (!t.active) continue;
@@ -393,9 +447,31 @@ export function createAyahDefense({
     for (const e of s.enemies) {
       e.slow = Math.max(0, e.slow - dt);
       e.d +=
-        pace * e.speed * pressure * (e.slow > 0 ? e.slowFactor || 0.4 : 1) * dt;
+        pace *
+        e.speed *
+        pressure *
+        (e.slow > 0
+          ? Math.max(
+              ENEMY_ROSTER[e.kind]?.slowResistance || 0,
+              e.slowFactor || 0.4
+            )
+          : 1) *
+        dt;
       if (e.hp <= 0) {
-        s.coins += e.kind === "siege" ? 12 : 3;
+        s.coins += ["siege", "tank"].includes(e.kind)
+          ? 12
+          : ["boulder", "rover"].includes(e.kind)
+          ? 6
+          : 3;
+        const pop = pointOnPath(e.d, s.map, e.lane);
+        s.effects.push({
+          kind: "pop",
+          x: pop.x,
+          y: pop.y,
+          tx: pop.x,
+          ty: pop.y,
+          life: 0.35,
+        });
         s.kills++;
         s.score += 10;
         event("neutral-defeated", { kind: e.kind });
@@ -405,7 +481,11 @@ export function createAyahDefense({
       if (grace) e.d = Math.min(e.d, length * 0.72);
       if (e.d >= length) {
         s.motorErrors++;
-        const damage = e.kind === "siege" ? 20 : 8,
+        const damage = ["siege", "tank"].includes(e.kind)
+            ? 20
+            : e.kind === "boulder"
+            ? 12
+            : 8,
           absorbed = Math.min(s.shield, damage);
         s.shield -= absorbed;
         s.core = Math.max(
@@ -533,24 +613,27 @@ export function createAyahDefense({
           break;
         if (
           a.points !== undefined &&
-          (!Number.isInteger(a.points) || a.points < 1 || a.points > 20)
+          (!Number.isInteger(a.points) || a.points < 0 || a.points > 20)
         )
           break;
         s.accepted.push(a.id);
         s.reading = 0;
         const ref = a.id.split(":").slice(0, 2).join(":"),
           prior = s.earnedByRef[ref] || 0;
-        let earned = Math.min(
-          80 - prior,
-          Math.max(1, Math.min(20, Math.floor(a.points || 10)))
-        );
+        let earned =
+          a.points === 0
+            ? 0
+            : Math.min(
+                80 - prior,
+                Math.max(1, Math.min(20, Math.floor(a.points || 10)))
+              );
         // A tiny selected passage still earns its first defense through genuine completion.
-        if (a.lastSource && s.totalEarned + earned < 50)
+        if (a.lastSource && a.points !== 0 && s.totalEarned + earned < 50)
           earned = 50 - s.totalEarned;
         s.earnedByRef[ref] = prior + earned;
         s.energy += earned;
         s.totalEarned += earned;
-        s.score += 20;
+        if (earned > 0) s.score += 20;
         s.effects.push({
           kind: "construction",
           x: 450,
@@ -575,6 +658,8 @@ export function createAyahDefense({
         if (s.final) break;
         s.final = true;
         s.finalSpawns = 0;
+        if (s.wavePlannerVersion === 4)
+          s.waveState = { number: Math.max(1, s.wave), spawned: 0, elapsed: 0 };
         s.spawn = 0;
         break;
       case "ability":
@@ -625,7 +710,7 @@ export function createAyahDefense({
     getFrame: () => structuredClone({ ...s, accepted: [], earnedByRef: {} }),
     checkpoint: () => ({
       ...structuredClone(s),
-      enemies: [],
+      enemies: s.wavePlannerVersion === 4 ? structuredClone(s.enemies) : [],
       effects: [],
       accepted: [...s.accepted],
     }),

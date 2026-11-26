@@ -69,7 +69,7 @@ const mix = (n) => {
   n = Math.imul(n, 0x45d9f3b);
   return (n ^ (n >>> 16)) >>> 0;
 };
-export function coursePlan(
+function legacyCourse(
   index,
   { seed = 1, motor = "normal", zone = 0, count = 3 } = {}
 ) {
@@ -294,4 +294,189 @@ export function checkpointDue(
     completed % checkpointInterval === 0
     ? completed
     : null;
+}
+
+// Versioned additions: old checkpoints still use the original course generator.
+export const UPPER_ROUTES = [
+  "spring-ascent",
+  "spiral-ramp",
+  "lift-climb",
+  "wall-jump",
+  "sky-rail",
+];
+export const MIDDLE_ROUTES = [
+  "rolling-hills",
+  "slide-tunnel",
+  "loop-run",
+  "gap-hops",
+  "conveyor-dash",
+];
+export function routeLayouts(index, { seed = 1, motor = "normal" } = {}) {
+  const history = [];
+  let pair;
+  const base = Math.floor(index / 32) * 32;
+  for (let n = base; n <= index; n++) {
+    const choose = (ids, salt) => {
+      const weights = ids.map((id, i) => ({
+        id,
+        score:
+          ((mix(seed + n * 12347 + i * 104729 + salt) % 10000) / 10000) *
+          (1 /
+            (1 + history.slice(-4).filter((p) => p.includes(id)).length * 2)) *
+          (motor === "relaxed" && id === "wall-jump" ? 0.7 : 1),
+      }));
+      return weights.sort((a, b) => b.score - a.score)[0].id;
+    };
+    pair = [choose(UPPER_ROUTES, 71), choose(MIDDLE_ROUTES, 131)];
+    if (history.at(-1)?.join() === pair.join())
+      pair[1] =
+        MIDDLE_ROUTES[
+          (MIDDLE_ROUTES.indexOf(pair[1]) + 1 + (mix(seed + n) % 4)) % 5
+        ];
+    history.push(pair);
+  }
+  return { upper: pair[0], middle: pair[1] };
+}
+export function coursePlan(index, options = {}) {
+  if (options.generatorVersion !== 4) return legacyCourse(index, options);
+  const p = legacyCourse(index, { ...options, motor: "relaxed" }),
+    start = p.start;
+  const ids = options.layouts || routeLayouts(index, options),
+    relaxed = options.motor === "relaxed";
+  p.generatorVersion = 4;
+  p.layouts = ids;
+  p.kind = `${ids.upper}+${ids.middle}`;
+  p.barriers = [];
+  p.loop = null;
+  p.springs = [];
+  p.platforms = p.platforms.filter((v) => !v.moving && !v.rotating && !v.rail);
+  for (const v of p.platforms) delete v.conveyor;
+  const add = (id, a, b, y, extra = {}) =>
+    p.platforms.push({
+      id: `${index}:${id}`,
+      a: start + a,
+      b: start + b,
+      y,
+      ...extra,
+    });
+  const removeSteps = () => {
+    p.platforms = p.platforms.filter(
+      (v) => !v.id.endsWith("step-a") && !v.id.endsWith("step-b")
+    );
+  };
+  if (ids.upper === "spring-ascent") {
+    p.springs = [{ x: start + 505, y: 350, power: relaxed ? 650 : 680 }];
+  } else if (ids.upper === "spiral-ramp") {
+    removeSteps();
+    // Three traversable curved ramp surfaces carry momentum continuously uphill.
+    add("ramp-a", 470, 615, 350, { curve: true, toY: 320 });
+    add("ramp-b", 615, 745, 320, { curve: true, toY: 286 });
+    add("ramp-c", 745, 875, 286, { curve: true, toY: p.upper });
+  } else if (ids.upper === "lift-climb") {
+    removeSteps();
+    add("lift-boarding", 470, 800, 350);
+    add("lift", 620, 770, 295, { moving: true, amplitude: 65, period: 4.8 });
+    add("lift-exit", 760, 990, 280);
+  } else if (ids.upper === "wall-jump") {
+    // Wide safe ledges back the short wall shaft; wall jumps are real engine impulses.
+    p.walls = [
+      { x: start + 620, y: 270, w: 18, h: 80 },
+      { x: start + 760, y: 190, w: 18, h: 160 },
+    ];
+    p.platforms = p.platforms.filter((v) => !v.id.endsWith("step-b"));
+    add("wall-rest", 595, 665, 350);
+    add("wall-top", 700, 850, 280);
+  } else if (ids.upper === "sky-rail") {
+    p.rail = {
+      a: start + 675,
+      b: start + 960,
+      fromY: 286,
+      toY: p.upper,
+      speed: relaxed ? 300 : 390,
+    };
+    add("rail-board", 640, 760, 286);
+    add("rail-line", 675, 960, 286, { rail: true, toY: p.upper, slope: true });
+  }
+  const middle = p.platforms.find((v) => v.route === 1);
+  if (ids.middle === "rolling-hills") middle.hills = true;
+  if (ids.middle === "slide-tunnel")
+    p.barriers = [{ x: start + 865, y: 355, w: 115, h: 49, ceiling: true }];
+  if (ids.middle === "loop-run")
+    p.loop = {
+      cx: start + 800,
+      cy: p.middle - 62,
+      r: 62,
+      entry: start + 738,
+      exit: start + 862,
+      minSpeed: relaxed ? 100 : 150,
+    };
+  if (ids.middle === "gap-hops") {
+    middle.gaps = [
+      [start + 925, start + (relaxed ? 945 : 950)],
+      [start + 980, start + (relaxed ? 1000 : 1005)],
+    ];
+  }
+  if (ids.middle === "conveyor-dash") middle.conveyor = relaxed ? 75 : 110;
+  p.recoveryStart = start + 1080;
+  if (options.express) compressExpress(p);
+  return validateCourse(p)
+    ? p
+    : {
+        ...courseFallback(index, options),
+        generatorVersion: 4,
+        layouts: { upper: "spring-ascent", middle: "rolling-hills" },
+        fallback: true,
+      };
+}
+
+export function courseStride(express = false) {
+  return express ? 1315 : STRIDE;
+}
+function compressExpress(p) {
+  const old = p.start,
+    origin = p.index * 1315;
+  const tx = (x) => {
+    const v = x - old;
+    return (
+      origin +
+      (v < 440 ? v * 0.65 : v <= 1260 ? v - 154 : 1106 + (v - 1260) * 0.55)
+    );
+  };
+  for (const v of p.platforms) {
+    v.a = tx(v.a);
+    v.b = tx(v.b);
+    if (v.gap) v.gap = v.gap.map(tx);
+    if (v.gaps) v.gaps = v.gaps.map((g) => g.map(tx));
+  }
+  for (const v of [...p.springs, ...p.barriers, ...(p.walls || [])])
+    v.x = tx(v.x);
+  for (const v of p.commits) {
+    v.x = tx(v.x);
+    v.a = tx(v.a);
+    v.b = tx(v.b);
+  }
+  if (p.loop) {
+    p.loop.cx = tx(p.loop.cx);
+    p.loop.entry = tx(p.loop.entry);
+    p.loop.exit = tx(p.loop.exit);
+  }
+  if (p.rail) {
+    p.rail.a = tx(p.rail.a);
+    p.rail.b = tx(p.rail.b);
+  }
+  p.detour.a = tx(p.detour.a);
+  p.detour.b = tx(p.detour.b);
+  p.detour.gap = p.detour.gap.map(tx);
+  p.signX = tx(p.signX);
+  p.recoveryStart = tx(p.recoveryStart);
+  p.start = origin;
+  p.end = origin + 1315;
+  p.express = true;
+  p.metrics = {
+    approach: 286,
+    decision: 946,
+    exit: 1106,
+    dropStart: 426,
+    jumpStart: 286,
+  };
 }

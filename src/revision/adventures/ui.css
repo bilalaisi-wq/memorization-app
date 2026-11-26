@@ -935,3 +935,194 @@ html[data-transliteration="off"] .flow-adventure .reading-roman {
   color: #153c48 !important;
   background: #b8e0d2 !important;
 }
+
+/* Upgrade 4: compact controls and a non-scrolling desktop answer ribbon. */
+.flow-adventure .gameplay-viewport > .flow-toolbar {
+  flex: 0 0 auto;
+  padding: 3px;
+  font-size: 12px;
+  gap: 5px;
+}
+.flow-adventure .flow-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.flow-adventure .flow-toolbar button,
+.flow-adventure .flow-toolbar select {
+  min-height: 36px;
+  padding: 4px 7px;
+  font-size: 12px;
+}
+.flow-adventure .flow-toolbar input[type="range"] {
+  width: 75px;
+}
+.revision-instructions {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px;
+  flex-shrink: 0;
+}
+.revision-instructions p {
+  margin: 0;
+}
+.revision-instructions[hidden] {
+  display: none;
+}
+.revision-instructions button {
+  min-height: 38px;
+  white-space: nowrap;
+  padding: 4px 8px;
+}
+.rush-run-options {
+  padding: 8px;
+  border: 1px solid #80b5bd;
+  border-radius: 10px;
+}
+.rush-run-options label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+@media (min-width: 1000px) and (min-height: 650px) {
+  .ayah-defense .flow-battlefield.gameplay-playfield {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(240px, 1fr) auto auto auto auto;
+    gap: 4px;
+  }
+  .ayah-defense .flow-hud {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 2px;
+    font-size: 12px;
+  }
+  .ayah-defense .flow-scene {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 240px;
+  }
+  .ayah-defense .flow-ribbon {
+    grid-column: 1;
+    grid-row: 3;
+    overflow: visible;
+    max-height: none;
+    padding: 5px 8px;
+  }
+  .ayah-defense .flow-ribbon p {
+    margin: 0;
+    font-size: 12px;
+  }
+  .ayah-defense .flow-ribbon p.arabic {
+    font-size: 22px;
+    line-height: 1.55;
+  }
+  .ayah-defense .flow-choices {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin: 2px 0;
+  }
+  .ayah-defense .flow-choices button {
+    padding: 4px 7px;
+    min-height: 48px;
+  }
+  .ayah-defense .flow-choices .arabic {
+    font-size: clamp(23px, 1.7vw, 29px);
+    line-height: 1.65;
+    overflow: visible;
+  }
+  .ayah-defense .flow-ribbon .flow-choices .reading-roman {
+    font-size: 12px;
+  }
+  .ayah-defense .flow-actions {
+    grid-column: 1;
+    grid-row: 4;
+    max-height: 85px;
+    overflow: auto;
+  }
+  .ayah-defense .flow-pad {
+    grid-column: 1;
+    grid-row: 5;
+  }
+  .ayah-defense .flow-battlefield > [data-flow-message] {
+    grid-row: 6;
+    margin: 0;
+    font-size: 11px;
+  }
+}
+@media (max-width: 600px) {
+  .flow-adventure .flow-toolbar {
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+  .flow-adventure .flow-toolbar input[type="range"] {
+    width: 55px;
+  }
+  .revision-instructions {
+    font-size: 11px;
+    line-height: 1.25;
+  }
+}
+/* The generic expanded practice grid must not treat the audio toolbar as a sidebar. */
+.flow-adventure .gameplay-viewport,
+.flow-adventure .gameplay-viewport.gameplay-expanded {
+  display: flex !important;
+  flex-direction: column !important;
+  max-width: none;
+  grid-template-columns: none;
+}
+.flow-adventure .gameplay-viewport > .flow-toolbar {
+  width: 100%;
+  min-width: 0;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.flow-adventure .gameplay-viewport > .gameplay-playfield {
+  width: 100%;
+  flex: 1 1 auto;
+}
+.saved-plan-offer {
+  padding: 6px 9px;
+  border: 1px solid #e2cd8a;
+  border-radius: 10px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.saved-plan-offer p {
+  margin: 0 0 4px;
+}
+@media (min-width: 1000px) and (min-height: 650px) {
+  .ayah-defense .defense-shop button {
+    min-height: 48px;
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    grid-template-rows: auto auto;
+    gap: 0;
+    padding: 3px 7px;
+  }
+  .ayah-defense .defense-shop-icon {
+    grid-row: 1/3;
+    font-size: 25px;
+  }
+  .ayah-defense .defense-shop-head {
+    margin-bottom: 2px;
+    min-height: 29px;
+  }
+  .ayah-defense .defense-shop-head button {
+    min-height: 28px;
+    padding: 3px 7px;
+    font-size: 12px;
+  }
+  .ayah-defense .flow-actions {
+    max-height: 90px;
+  }
+}
+
+@media (max-width: 600px) and (min-height: 800px) {
+  .ayah-defense .flow-scene {
+    min-height: 240px;
+  }
+}

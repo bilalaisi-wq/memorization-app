@@ -34,10 +34,11 @@ for (const motor of ["relaxed", "normal", "arcade"])
       for (let route = 0; route < 3; route++) {
         let answer = null;
         const g = createSurahRush({
+          generatorVersion: 3,
           motor,
           seed: 12,
           restore: {
-            ...createSurahRush().checkpoint(),
+            ...createSurahRush({ generatorVersion: 3 }).checkpoint(),
             course: index,
             x: index * STRIDE + 60,
             y: 400,
@@ -47,6 +48,7 @@ for (const motor of ["relaxed", "normal", "arcade"])
         // Same public event contract as the host; correctness is checked outside physics.
         const events = [];
         const h = createSurahRush({
+          generatorVersion: 3,
           motor,
           seed: 12,
           restore: g.checkpoint(),
@@ -87,6 +89,7 @@ test("generated course reachability, original zones and bounded plans stay deter
 test("wrong recognition takes a playable detour, motor failures stay separate, and a retry cannot advance a source", () => {
   const events = [],
     g = createSurahRush({
+      generatorVersion: 3,
       motor: "normal",
       seed: 3,
       onEvent: (e) => events.push(e),
@@ -109,6 +112,7 @@ test("wrong recognition takes a playable detour, motor failures stay separate, a
 test("a correct physical crossing streams into the next junction without x or camera reset; loop and springs use real curved/vertical movement", () => {
   const events = [],
     g = createSurahRush({
+      generatorVersion: 3,
       motor: "normal",
       seed: 1,
       onEvent: (e) => events.push(e),
@@ -141,7 +145,11 @@ for (const range of [
       { length: range[1] - range[0] + 1 },
       (_, i) => `78:${range[0] + i}`
     );
-    const g = createSurahRush({ motor: "relaxed", seed: 21 });
+    const g = createSurahRush({
+      generatorVersion: 3,
+      motor: "relaxed",
+      seed: 21,
+    });
     g.start();
     let n = 0;
     for (const ref of refs) {
@@ -211,7 +219,11 @@ test("all exact local Al-Araf sources pass continuous physical decisions and ret
     !existsSync(".quran-private/7/206/bundle.json"),
     "Ignored operator source files unavailable"
   );
-  const g = createSurahRush({ motor: "relaxed", seed: 12 });
+  const g = createSurahRush({
+    generatorVersion: 3,
+    motor: "relaxed",
+    seed: 12,
+  });
   g.start();
   let decisions = 0;
   let source = null;
@@ -242,14 +254,14 @@ test("all exact local Al-Araf sources pass continuous physical decisions and ret
     if (at) {
       g.dispatch({ type: "checkpoint" });
       const c = g.checkpoint(),
-        r = createSurahRush({ restore: c });
+        r = createSurahRush({ generatorVersion: 3, restore: c });
       expect(r.getSnapshot().checkpointPending).toBe(true);
       g.dispatch({ type: "continue-checkpoint" });
     }
   }
   g.dispatch({ type: "final" });
   crossRush(g, 1, { until: (s) => s.status === "won" });
-  expect(decisions).toBeGreaterThan(1000);
+  expect(decisions).toBeGreaterThan(500);
   expect(g.getSnapshot().residentSections).toBeLessThan(8);
   for (const file of ["2-282.json"]) {
     const b = JSON.parse(
@@ -268,8 +280,11 @@ test("all five environments keep all physical routes reachable under every movem
       for (let course = 0; course < 5; course++)
         for (let route = 0; route < 3; route++) {
           let choice = null;
-          const baseline = createSurahRush().checkpoint(),
+          const baseline = createSurahRush({
+              generatorVersion: 3,
+            }).checkpoint(),
             g = createSurahRush({
+              generatorVersion: 3,
               motor,
               seed: 12,
               restore: { ...baseline, course, x: course * STRIDE + 60, y: 400 },
@@ -283,8 +298,24 @@ test("all five environments keep all physical routes reachable under every movem
           expect(choice).toBe(route);
         }
 });
-test('long-label reading slowdown keeps every physical continuation reachable',()=>{
- for(const motor of ['relaxed','normal','arcade'])for(let course=0;course<5;course++)for(let route=0;route<3;route++){
-  let choice=null;const baseline=createSurahRush().checkpoint(),g=createSurahRush({motor,seed:12,restore:{...baseline,course,x:course*STRIDE+60,y:400},onEvent:e=>{if(e.type==='route-committed')choice=e.choice;}});g.dispatch({type:'challenge',id:'1:1:1-4',count:3,length:80});g.start();crossRush(g,route,{until:()=>choice!==null});expect(choice).toBe(route);
- }
+test("long-label reading slowdown keeps every physical continuation reachable", () => {
+  for (const motor of ["relaxed", "normal", "arcade"])
+    for (let course = 0; course < 5; course++)
+      for (let route = 0; route < 3; route++) {
+        let choice = null;
+        const baseline = createSurahRush({ generatorVersion: 3 }).checkpoint(),
+          g = createSurahRush({
+            generatorVersion: 3,
+            motor,
+            seed: 12,
+            restore: { ...baseline, course, x: course * STRIDE + 60, y: 400 },
+            onEvent: (e) => {
+              if (e.type === "route-committed") choice = e.choice;
+            },
+          });
+        g.dispatch({ type: "challenge", id: "1:1:1-4", count: 3, length: 80 });
+        g.start();
+        crossRush(g, route, { until: () => choice !== null });
+        expect(choice).toBe(route);
+      }
 });

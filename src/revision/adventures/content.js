@@ -18,7 +18,7 @@ const pool = () =>
     .filter((s) => freeReference(`${s.id}:1`))
     .flatMap((s) => s.verses.map((v) => localBundle(`${s.id}:${v.id}`))));
 // Display workspaces only. No stop/timing/waqf approval is inferred.
-export function revisionUnits(bundle, memory = "guided") {
+function legacyUnits(bundle, memory = "guided") {
   if (!["guided", "standard", "expert"].includes(memory))
     throw Error("Unsupported memory challenge");
   const words = contentView(bundle, "words"),
@@ -81,6 +81,64 @@ export function revisionUnits(bundle, memory = "guided") {
   }
   return expanded;
 }
+// Version 4 is a visual study plan, never a recitation-stop approval.
+export function revisionGroupSizes(total, seed = 1) {
+  if (!Number.isInteger(total) || total < 1)
+    throw Error("Invalid canonical word count");
+  if (total <= 6) return [total];
+  const weights = [3, 4, 4, 4, 4, 5, 5, 5, 6, 3],
+    out = [];
+  let left = total,
+    turn = 0;
+  while (left > 0) {
+    if (left <= 6) {
+      out.push(left);
+      break;
+    }
+    const order = seededShuffle(weights, seed + turn++ * 7919);
+    const width = order.find((n) => left - n === 0 || left - n >= 3);
+    out.push(width);
+    left -= width;
+  }
+  return out;
+}
+export function revisionUnits(bundle, memory = "guided", { version = 4 } = {}) {
+  if (version === 3) return legacyUnits(bundle, memory);
+  if (version !== 4 || !["guided", "standard", "expert"].includes(memory))
+    throw Error("Unsupported revision planner");
+  const words = contentView(bundle, "words"),
+    seed = [...bundle.key].reduce((n, c) => n * 31 + c.charCodeAt(0), 7) >>> 0;
+  let start = 0;
+  return revisionGroupSizes(words.length, seed).map((width, groupIndex) => {
+    const part = words.slice(start, start + width),
+      context = words.slice(
+        Math.max(
+          0,
+          start - (memory === "guided" ? 3 : memory === "standard" ? 1 : 0)
+        ),
+        start
+      );
+    start += width;
+    return {
+      id: `${bundle.key}:${part[0].position}-${part.at(-1).position}`,
+      key: bundle.key,
+      kind: words.length <= 6 ? "ayah" : "visual-group",
+      plannerVersion: 4,
+      groupIndex,
+      memoryDifficulty: memory,
+      assisted: false,
+      sourceFingerprint: null,
+      text: canonicalSlice(bundle, part[0].position, part.at(-1).position),
+      transliteration: part.map((w) => w.transliteration || "").join(" "),
+      positions: part.map((w) => w.position),
+      targetPositions: part.map((w) => w.position),
+      contextPositions: context.map((w) => w.position),
+      sourceWordIds: part.map((w) => w.id),
+      cue: context.map((w) => w.text).join(" "),
+      cumulative: false,
+    };
+  });
+}
 export function revisionChoices(
   unit,
   { seed = 1, turn = 0, memory = "guided", bundles = pool() } = {}
@@ -97,7 +155,9 @@ export function revisionChoices(
   for (const b of ordered) {
     const count = unit.positions.length,
       words = b.words.slice(0, count),
-      text = words.map((w) => w.text).join(" ");
+      text = words.length
+        ? canonicalSlice(b, words[0].position, words.at(-1).position)
+        : "";
     if (!text || seen.has(wordIdentity(text))) continue;
     seen.add(wordIdentity(text));
     wrong.push({
@@ -135,6 +195,7 @@ export async function authorizeRegion(
     isCurrent = () => true,
     pin = null,
     verifyBundle = async () => {},
+    plannerVersion = 4,
   } = {}
 ) {
   validateRefs(refs);
@@ -145,5 +206,11 @@ export async function authorizeRegion(
   const fingerprint = await fingerprints(bundle);
   if (pin && JSON.stringify(pin) !== JSON.stringify(fingerprint))
     throw Error("Source revision changed; saved progress retained for export");
-  return { bundle, fingerprint, units: revisionUnits(bundle, memory) };
+  return {
+    bundle,
+    fingerprint,
+    units: revisionUnits(bundle, memory, { version: plannerVersion }).map(
+      (u) => ({ ...u, sourceFingerprint: fingerprint })
+    ),
+  };
 }

@@ -81,9 +81,10 @@ for (const motor of ["relaxed", "normal", "arcade"])
     advance(g, 3);
     expect(openingPace(g.getSnapshot()).grace).toBe(false);
   });
-test("established mixed waves introduce every neutral balloon effect without arbitrary Quran rewards", () => {
+test("historical wave planner retains every legacy balloon effect without arbitrary Quran rewards", () => {
   const seen = new Set(),
     g = createAyahDefense({
+      restore: { ...createAyahDefense().checkpoint(), wavePlannerVersion: 3 },
       onEvent: (e) => {
         if (e.type === "neutral-defeated") seen.add(e.kind);
       },

@@ -1,3 +1,5 @@
+import { UPPER_ROUTES, MIDDLE_ROUTES } from "./rush-course.js";
+import { ENEMY_ROSTER } from "./defense-waves.js";
 import { versionedStore } from "../../ui/versioned-store.js";
 import { validateRefs } from "../../passage-context/model.js";
 import { TOWERS, SITES } from "./defense.js";
@@ -15,6 +17,25 @@ export function validArcade(game, a) {
     return false;
   if (game === "ayah-defense" && a.version === 2)
     return (
+      (a.wavePlannerVersion === undefined ||
+        [3, 4].includes(a.wavePlannerVersion)) &&
+      (a.waveState == null ||
+        (integer(a.waveState.number, 10000) &&
+          a.waveState.number > 0 &&
+          integer(a.waveState.spawned, 24) &&
+          number(a.waveState.elapsed))) &&
+      (a.wavePlannerVersion !== 4 ||
+        (Array.isArray(a.enemies) &&
+          a.enemies.length <= 24 &&
+          a.enemies.every(
+            (e) =>
+              Object.hasOwn(ENEMY_ROSTER, e.kind) &&
+              ["hp", "maxHp", "d", "speed", "armor", "slow"].every((k) =>
+                number(e[k])
+              ) &&
+              integer(e.id) &&
+              integer(e.lane, 5)
+          ))) &&
       [
         "time",
         "coins",
@@ -106,6 +127,17 @@ export function validArcade(game, a) {
         "camera",
         "cameraY",
       ].every((k) => number(a[k])) &&
+      (a.generatorVersion === undefined ||
+        [3, 4].includes(a.generatorVersion)) &&
+      ["express", "autoSprint", "sprintConfirmed"].every(
+        (k) => a[k] === undefined || typeof a[k] === "boolean"
+      ) &&
+      (a.runSeed === undefined || integer(a.runSeed, 4294967295)) &&
+      (a.junction == null ||
+        a.junction.layouts == null ||
+        (integer(a.junction.index, 100000) &&
+          UPPER_ROUTES.includes(a.junction.layouts.upper) &&
+          MIDDLE_ROUTES.includes(a.junction.layouts.middle))) &&
       integer(a.course, 100000) &&
       integer(a.motorErrors) &&
       integer(a.zone, 4) &&
@@ -131,6 +163,14 @@ export function validAdventure(r) {
   }
   return (
     ["ayah-defense", "surah-rush"].includes(r.game) &&
+    (r.plannerVersion === undefined || [3, 4].includes(r.plannerVersion)) &&
+    ["express", "autoSprint"].every(
+      (k) => r.settings?.[k] === undefined || typeof r.settings[k] === "boolean"
+    ) &&
+    (r.settings?.audioMode === undefined ||
+      ["paused", "listen", "continuous", "before"].includes(
+        r.settings.audioMode
+      )) &&
     ["guided", "standard", "expert"].includes(r.settings?.memory) &&
     ["relaxed", "normal", "arcade"].includes(r.settings?.motor) &&
     (r.settings.environment === undefined ||
@@ -147,6 +187,28 @@ export function validAdventure(r) {
     (!r.arcade?.final || r.completed === r.refs.length) &&
     integer(r.completed, r.refs.length) &&
     integer(r.assistance) &&
+    (r.audioAssistedRefs === undefined ||
+      (Array.isArray(r.audioAssistedRefs) &&
+        r.audioAssistedRefs.length <= 300 &&
+        r.audioAssistedRefs.every((k) => r.refs.includes(k)))) &&
+    (r.hintUnits === undefined ||
+      (Array.isArray(r.hintUnits) &&
+        r.hintUnits.length <= 10000 &&
+        r.hintUnits.every((k) => typeof k === "string" && k.length < 100))) &&
+    (r.recognitionHistory === undefined ||
+      (Array.isArray(r.recognitionHistory) &&
+        r.recognitionHistory.length <= 300 &&
+        r.recognitionHistory.every(
+          (e) =>
+            r.refs.includes(e.ref) &&
+            ["assisted-recognition", "unassisted-recognition"].includes(
+              e.kind
+            ) &&
+            Array.isArray(e.targetPositions) &&
+            Array.isArray(e.contextPositions) &&
+            e.targetPositions.every((v) => integer(v, 1000) && v > 0) &&
+            e.contextPositions.every((v) => integer(v, 1000) && v > 0)
+        ))) &&
     (r.history === undefined ||
       (Array.isArray(r.history) && r.history.length <= 50)) &&
     integer(r.unit, 999) &&
@@ -231,6 +293,7 @@ export function newAdventure(game, refs, settings) {
     throw new Error("Unsupported adventure settings");
   return {
     game,
+    plannerVersion: 4,
     refs: [...refs],
     settings: { ...settings },
     completed: 0,
@@ -239,6 +302,9 @@ export function newAdventure(game, refs, settings) {
     pins: {},
     evidence: [],
     assistance: 0,
+    recognitionHistory: [],
+    audioAssistedRefs: [],
+    hintUnits: [],
     arcade: null,
     finished: false,
   };

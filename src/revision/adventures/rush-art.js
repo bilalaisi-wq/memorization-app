@@ -100,11 +100,16 @@ export function renderRushScene(
   const p = s.plan,
     z = ZONES[s.zone % 5],
     floorPath = (v) =>
-      v.ground
+      v.ground || v.curve || v.hills
         ? `M${v.a} ${v.y} ${Array.from({ length: 15 }, (_, i) => {
             const x = v.a + ((v.b - v.a) * i) / 14;
             return `L${x} ${
-              x - v.a < 430
+              v.curve
+                ? v.y + (v.toY - v.y) * ((i / 14) ** 2 * (3 - (2 * i) / 14))
+                : v.hills
+                ? v.y +
+                  Math.sin((x - v.a) / 65) * 18 * Math.sin((Math.PI * i) / 14)
+                : x - v.a < 430
                 ? v.y +
                   Math.sin((x - v.a) / 100) *
                     12 *
@@ -120,17 +125,21 @@ export function renderRushScene(
   svg.dataset.zone = z.id;
   svg.dataset.course = String(s.course);
   svg.dataset.layout = p.kind;
+  svg.dataset.upperRoute = p.layouts?.upper || p.kind;
+  svg.dataset.middleRoute = p.layouts?.middle || p.kind;
   const next = coursePlan(s.course + 1, {
     motor: s.motor,
     seed: p.seed,
+    generatorVersion: s.generatorVersion,
+    express: s.express,
     zone: s.zone,
   });
   const platforms = [
     ...p.platforms,
     ...next.platforms.filter((v) => v.a < next.start + 460),
     {
-      a: p.start + 1260,
-      b: p.start + 1590,
+      a: p.express ? p.start + 1106 : p.start + 1260,
+      b: p.end - 50,
       y: p.lower,
       toY: p.middle,
       slope: true,
@@ -172,10 +181,16 @@ export function renderRushScene(
       }" fill="none"/><path d="${line}" stroke="${
         z.edge
       }" stroke-width="6" fill="none"/>${
-        v.gap
-          ? `<rect x="${v.gap[0]}" y="${y - 12}" width="${
-              v.gap[1] - v.gap[0]
-            }" height="33" fill="${z.sky}"/>`
+        (v.gaps || [v.gap]).filter(Boolean).length
+          ? (v.gaps || [v.gap])
+              .filter(Boolean)
+              .map(
+                (g) =>
+                  `<rect x="${g[0]}" y="${y - 12}" width="${
+                    g[1] - g[0]
+                  }" height="33" fill="${z.sky}"/>`
+              )
+              .join("")
           : ""
       }</g>`;
     })
@@ -188,7 +203,13 @@ export function renderRushScene(
     .join("");
   if (p.loop)
     ground += `<circle data-rush-loop cx="${p.loop.cx}" cy="${p.loop.cy}" r="${p.loop.r}" stroke="${z.land}" stroke-width="21" fill="none"/><circle cx="${p.loop.cx}" cy="${p.loop.cy}" r="${p.loop.r}" stroke="${z.edge}" stroke-width="4" fill="none"/>`;
-  ground += p.barriers
+  if (p.rail)
+    ground += `<path data-rush-rail d="M${p.rail.a} ${p.rail.fromY}L${
+      p.rail.b
+    } ${p.rail.toY}" stroke="#eacc7a" stroke-width="9"/><path d="M${p.rail.a} ${
+      p.rail.fromY - 5
+    }L${p.rail.b} ${p.rail.toY - 5}" stroke="#8ee2dc" stroke-width="3"/>`;
+  ground += [...p.barriers, ...(p.walls || [])]
     .map(
       (v) =>
         `<g data-rush-obstacle><rect x="${v.x}" y="${v.y}" width="${v.w}" height="${v.h}" rx="7" fill="#b095c8" stroke="#ead2a4" stroke-width="4"/></g>`

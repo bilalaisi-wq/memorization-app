@@ -3,6 +3,7 @@ import {
   MOTOR_PROFILES,
   coursePlan,
   platformY,
+  courseStride,
 } from "./rush-course.js";
 export { STRIDE, MOTOR_PROFILES, coursePlan } from "./rush-course.js";
 // Compatibility export for legacy callers; active gameplay uses streamed platform surfaces.
@@ -39,6 +40,9 @@ export function createSurahRush({
   motor = "normal",
   restore = null,
   seed = 1,
+  express = false,
+  autoSprint = false,
+  generatorVersion = restore ? restore.generatorVersion || 3 : 4,
   onEvent = () => {},
 } = {}) {
   let disposed = false,
@@ -46,6 +50,13 @@ export function createSurahRush({
     cache = new Map();
   const s = {
     version: 3,
+    generatorVersion,
+    runSeed: seed,
+    express,
+    autoSprint,
+    sprintConfirmed: false,
+    approachTime: 0,
+    rail: null,
     status: "ready",
     x: 60,
     y: 400,
@@ -93,26 +104,51 @@ export function createSurahRush({
   s.jumpBuffer = 0;
   s.support = null;
   s.grounded = false;
+  seed = s.runSeed;
+  const stride = () => courseStride(s.express);
   const event = (type, data = {}) => onEvent({ type, ...data });
   function plan(index = s.course) {
-    const key = `${index}:${motor}:${s.zone}:${s.challenge?.count || 3}`;
+    const key = `${index}:${motor}:${s.zone}:${s.challenge?.count || 3}:${
+      s.express
+    }`;
     if (!cache.has(key))
       cache.set(
         key,
         coursePlan(index, {
           motor,
           seed,
+          generatorVersion: s.generatorVersion,
+          express: s.express,
+          layouts: s.junction?.index === index ? s.junction.layouts : undefined,
           zone: s.zone,
           count: s.challenge?.count || 3,
         })
       );
-    return cache.get(key);
+    const found = cache.get(key);
+    if (index === s.course)
+      s.junction = {
+        index,
+        layouts: found.layouts || null,
+        generatorVersion: s.generatorVersion,
+      };
+    return found;
   }
   function surface(p, x, time) {
     if (p.rotating)
       return (
         p.y +
         (x - (p.a + p.b) / 2) * Math.sin((time * Math.PI * 2) / p.period) * 0.3
+      );
+    if (p.curve) {
+      const t = Math.max(0, Math.min(1, (x - p.a) / (p.b - p.a)));
+      return p.y + (p.toY - p.y) * (t * t * (3 - 2 * t));
+    }
+    if (p.hills)
+      return (
+        p.y +
+        Math.sin((x - p.a) / 65) *
+          18 *
+          Math.sin(Math.PI * Math.max(0, Math.min(1, (x - p.a) / (p.b - p.a))))
       );
     if (p.slope) return p.y + ((x - p.a) / (p.b - p.a)) * (p.toY - p.y);
     if (p.ground && x - p.a < 430)
@@ -130,8 +166,8 @@ export function createSurahRush({
         ...p.platforms,
         {
           id: `${s.course}:lower-exit`,
-          a: p.start + 1260,
-          b: p.start + 1590,
+          a: p.express ? p.start + 1106 : p.start + 1260,
+          b: p.end - 50,
           y: p.lower,
           toY: p.middle,
           slope: true,
@@ -141,12 +177,12 @@ export function createSurahRush({
       return [
         {
           id: "detour",
-          a: p.start + 1080,
+          a: p.recoveryStart ?? p.start + 1080,
           b: p.end + 60,
           y: 630,
           gap: motor === "relaxed" ? null : p.detour.gap,
         },
-        { id: "detour-step", a: p.start + 1410, b: p.end + 90, y: 552 },
+        { id: "detour-step", a: p.end - 230, b: p.end + 90, y: 552 },
         { id: "detour-return", a: p.end - 70, b: p.end + 200, y: 480 },
       ];
     return list;
@@ -164,6 +200,10 @@ export function createSurahRush({
   }
   function enterNext(retry = false) {
     s.course++;
+    s.junction = null;
+    s.sprintConfirmed = false;
+    s.approachTime = 0;
+    s.rail = null;
     s.resolved = false;
     s.committed = false;
     s.awaiting = false;
@@ -175,7 +215,7 @@ export function createSurahRush({
       s.pendingChallenge = null;
     }
     s.holding = !s.challenge;
-    s.safe = { x: s.course * STRIDE + 40, y: 400 };
+    s.safe = { x: s.course * stride() + 40, y: 400 };
     // Recovery joins the next approach through a visible return spring. Normal exits
     // preserve x, velocity and camera; only a fallen recovery traveler is lifted safely.
     if (s.y > 470) {
@@ -191,6 +231,11 @@ export function createSurahRush({
     const p = plan(),
       profile = MOTOR_PROFILES[motor];
     s.time += dt;
+    const approach = p.metrics?.approach ?? 440,
+      decision = p.commits[0].x;
+    if (!s.resolved && !s.detour && s.x >= p.start + approach)
+      s.approachTime += dt;
+    const direction = s.direction || (s.autoSprint ? 1 : 0);
     s.cooldown = Math.max(0, s.cooldown - dt);
     s.dash = Math.max(0, s.dash - dt);
     s.spring = Math.max(0, s.spring - dt);
@@ -198,7 +243,19 @@ export function createSurahRush({
     s.feedback = Math.max(0, s.feedback - dt);
     s.jumpBuffer = Math.max(0, s.jumpBuffer - dt);
     s.coyote = s.grounded ? 0.12 : Math.max(0, s.coyote - dt);
-    if (s.loop) {
+    if (s.rail) {
+      const r = s.rail;
+      s.x += r.speed * dt;
+      const t = Math.min(1, (s.x - r.a) / (r.b - r.a));
+      s.y = r.fromY + (r.toY - r.fromY) * t - 18;
+      s.grounded = false;
+      if (s.x >= r.b) {
+        s.rail = null;
+        s.grounded = true;
+        s.vx = r.speed;
+        event("rail-finished");
+      }
+    } else if (s.loop) {
       const loop = s.loop;
       s.loop.angle += Math.max(2.5, Math.abs(s.vx) / loop.r) * dt;
       s.x = loop.cx + Math.cos(loop.angle) * loop.r;
@@ -214,6 +271,10 @@ export function createSurahRush({
     } else {
       if (s.jumpBuffer > 0 && (s.coyote > 0 || s.wall)) {
         s.vy = -profile.jump;
+        if (s.wall) {
+          s.vx = (s.wallSide || 1) * 190;
+          event("wall-boost");
+        }
         s.grounded = false;
         s.support = null;
         s.coyote = 0;
@@ -223,18 +284,35 @@ export function createSurahRush({
       const oldX = s.x,
         oldFeet = s.y + 18,
         wasGrounded = s.grounded;
-      const reading = (s.challenge?.length || 0) > 22 ? 0.72 : 1;
+      const reading =
+        s.generatorVersion === 4
+          ? Math.max(
+              0.52,
+              Math.min(
+                1,
+                1.1 -
+                  (s.challenge?.length || 0) * 0.005 -
+                  (s.challenge?.wordCount || 0) * 0.012 -
+                  (s.challenge?.count || 3) * 0.015
+              )
+            )
+          : (s.challenge?.length || 0) > 22
+          ? 0.72
+          : 1;
       let max =
-        profile.speed * (s.dash > 0 ? 1.65 : 1) * (s.feedback > 0 ? 1.15 : 1);
-      if (!s.resolved && !s.detour && s.x > p.start + 440)
+        profile.speed *
+        (s.dash > 0 ? 1.65 : 1) *
+        (s.feedback > 0 ? 1.15 : 1) *
+        (s.express ? 1.18 + Math.min(8, s.flow) * 0.035 : 1);
+      if (!s.resolved && !s.detour && s.x > p.start + approach)
         max = Math.min(max, Math.min(350, profile.speed) * reading);
-      if (s.direction)
+      if (direction)
         s.vx = Math.max(
           -max,
           Math.min(
             max,
             s.vx +
-              s.direction *
+              direction *
                 (wasGrounded
                   ? profile.acceleration
                   : profile.acceleration * 0.6) *
@@ -261,7 +339,9 @@ export function createSurahRush({
         if (
           s.x < platform.a - 8 ||
           s.x > platform.b + 8 ||
-          (platform.gap && s.x > platform.gap[0] && s.x < platform.gap[1])
+          (platform.gaps || [platform.gap])
+            .filter(Boolean)
+            .some((g) => s.x > g[0] && s.x < g[1])
         )
           continue;
         if (s.drop > 0 && platform.route !== 2 && !platform.safety && !s.detour)
@@ -287,10 +367,10 @@ export function createSurahRush({
         } else if (s.x < p.start + 1000 && !s.detour)
           s.safe = { x: s.x, y: s.y };
       } else s.support = null;
-      for (const barrier of p.barriers) {
+      for (const barrier of [...p.barriers, ...(p.walls || [])]) {
         if (
           !s.detour &&
-          !s.slide &&
+          !(barrier.ceiling && s.slide) &&
           s.x + 15 > barrier.x &&
           s.x - 15 < barrier.x + barrier.w &&
           s.y + 18 > barrier.y &&
@@ -298,7 +378,8 @@ export function createSurahRush({
         ) {
           s.x = oldX;
           s.vx = 0;
-          s.wall = true;
+          s.wall = !barrier.ceiling;
+          s.wallSide = oldX < barrier.x ? -1 : 1;
         }
       }
       for (const pad of p.springs)
@@ -315,12 +396,30 @@ export function createSurahRush({
           event("spring");
         }
       if (
+        p.rail &&
+        !s.detour &&
+        s.x >= p.rail.a &&
+        s.x < p.rail.b &&
+        s.grounded &&
+        Math.abs(
+          s.y +
+            18 -
+            (p.rail.fromY +
+              ((p.rail.toY - p.rail.fromY) * (s.x - p.rail.a)) /
+                (p.rail.b - p.rail.a))
+        ) < 28
+      ) {
+        s.rail = { ...p.rail };
+        event("rail-entered");
+      }
+      if (
         p.loop &&
         !s.detour &&
         !s.slide &&
         s.x >= p.loop.entry &&
         oldX < p.loop.entry &&
-        Math.abs(s.y + 18 - p.middle) < 28
+        Math.abs(s.y + 18 - p.middle) < 28 &&
+        Math.abs(s.vx) >= (p.loop.minSpeed || 0)
       ) {
         s.loop = { ...p.loop, angle: Math.PI / 2, until: Math.PI * 2.5 };
         s.x = p.loop.cx;
@@ -335,10 +434,23 @@ export function createSurahRush({
       }
     } else if (!s.resolved) {
       if (!s.challenge || s.holding) {
-        s.x = Math.min(s.x, p.start + 420);
+        s.x = Math.min(s.x, p.start + approach - 20);
         s.vx = 0;
         s.holding = true;
       } else if (!s.committed && !s.holding) {
+        // Auto-Sprint requires a deliberate route gesture at every question. It never answers itself.
+        const readingSeconds =
+          1.2 +
+          (s.challenge.length || 0) * 0.025 +
+          (s.challenge.count || 3) * 0.15;
+        if (
+          s.autoSprint &&
+          (!s.sprintConfirmed || s.approachTime < readingSeconds) &&
+          s.x >= decision - 85
+        ) {
+          s.x = decision - 85;
+          s.vx = 0;
+        }
         for (const c of p.commits.slice(0, s.challenge.count)) {
           if (
             s.x >= c.x &&
@@ -358,10 +470,10 @@ export function createSurahRush({
         }
       }
       if (s.awaiting) {
-        s.x = Math.min(s.x, p.start + 1250);
+        s.x = Math.min(s.x, p.commits[0].b + 10);
         s.vx *= Math.max(0, 1 - dt * 8);
       }
-      if (s.x >= p.start + 1270 && !s.committed) {
+      if (s.x >= p.commits[0].b + 30 && !s.committed) {
         s.safe = { x: p.start + 360, y: 400 };
         motorRecover();
       }
@@ -390,6 +502,10 @@ export function createSurahRush({
         if (s.status === "playing") s.status = "paused";
         s.direction = 0;
         break;
+      case "auto-sprint":
+        s.autoSprint = !!a.value;
+        s.sprintConfirmed = false;
+        break;
       case "motor":
         if (MOTOR_PROFILES[a.value]) {
           motor = a.value;
@@ -403,9 +519,12 @@ export function createSurahRush({
         }
         break;
       case "move":
+        if (a.direction) s.sprintConfirmed = true;
         s.direction = Math.sign(a.direction);
         break;
       case "jump":
+        s.sprintConfirmed = true;
+        s.rail = null;
         if (s.loop) {
           s.loop = null;
           s.vy = -MOTOR_PROFILES[motor].jump;
@@ -414,6 +533,7 @@ export function createSurahRush({
         s.jumpBuffer = 0.14;
         break;
       case "slide":
+        if (a.active) s.sprintConfirmed = true;
         s.slide = !!a.active;
         if (a.drop) {
           s.drop = 0.45;
@@ -423,6 +543,7 @@ export function createSurahRush({
         }
         break;
       case "drop":
+        s.sprintConfirmed = true;
         s.drop = 0.45;
         s.grounded = false;
         s.support = null;
@@ -442,6 +563,7 @@ export function createSurahRush({
           id: a.id,
           count: a.count,
           length: Math.max(0, Math.min(100, a.length || 0)),
+          wordCount: a.wordCount || 0,
         };
         s.zone = Number.isInteger(a.zone) ? a.zone % 5 : s.zone;
         if (s.resolved) {
@@ -451,6 +573,8 @@ export function createSurahRush({
             s.challenge = v;
             s.committed = false;
             s.awaiting = false;
+            s.sprintConfirmed = false;
+            s.approachTime = 0;
           } else s.challenge = v;
           s.holding = !!a.held;
         }
@@ -476,7 +600,10 @@ export function createSurahRush({
           s.vx = Math.max(90, Math.abs(s.vx) * 0.5);
           s.y = 590;
           s.vy = 0;
-          s.safe = { x: plan().start + 1160, y: 612 };
+          s.safe = {
+            x: (plan().recoveryStart ?? plan().start + 1080) + 80,
+            y: 612,
+          };
           event("recovery-detour");
         }
         break;
@@ -536,7 +663,7 @@ export function createSurahRush({
     getFrame: () => structuredClone({ ...s, plan: plan(), motor }),
     checkpoint: () => {
       const { plan: p, ...out } = { ...s };
-      return structuredClone({ ...out, loop: null, direction: 0 });
+      return structuredClone({ ...out, loop: null, rail: null, direction: 0 });
     },
     dispose() {
       disposed = true;

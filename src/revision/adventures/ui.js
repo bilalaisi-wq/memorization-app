@@ -1,4 +1,4 @@
-import { authorizeRegion, revisionChoices } from "./content.js";
+import { authorizeRegion, revisionChoices, revisionUnits } from "./content.js";
 import { adventureStore, newAdventure, validAdventure } from "./store.js";
 import {
   createAyahDefense,
@@ -71,13 +71,20 @@ export async function mountAdventure(
     frameScheduler = null,
   } = {}
 ) {
+  const requestedSettings = { ...settings };
   validateRefs(refs);
   if (!ADVENTURES[game]) throw Error("Game unavailable");
   const owner = activeProfileId(),
-    id = await sha256(JSON.stringify([1, game, refs])),
+    legacyId = await sha256(JSON.stringify([1, game, refs])),
+    modernId = await sha256(JSON.stringify([4, game, refs])),
     abort = new AbortController(),
     store = adventureStore(profileStorage);
   if (store.warning) throw Error(store.warning);
+  let id = store.snapshot().runs[modernId]
+    ? modernId
+    : store.snapshot().runs[legacyId]
+    ? legacyId
+    : modernId;
   let disposed = false,
     epoch = 0,
     raf = 0,
@@ -95,7 +102,8 @@ export async function mountAdventure(
     started = false,
     selectedTower = "arrow",
     selectedSite = 0,
-    audioMode = "continuous",
+    audioMode = "paused",
+    audioReference = null,
     listeningBefore = false,
     muted = false,
     message = "",
@@ -126,6 +134,7 @@ export async function mountAdventure(
     !disposed && owner === activeProfileId() && root.isConnected && isCurrent();
   if (!alive()) throw Error("Account changed");
   let record = store.snapshot().runs[id];
+  const restoring = !!record && !restart;
   if (!record || restart) {
     store.transact((d) => (d.runs[id] = newAdventure(game, refs, settings)));
     record = store.snapshot().runs[id];
@@ -152,6 +161,7 @@ export async function mountAdventure(
     message =
       "Your earlier learning is kept. The new course resumes at a safe point.";
   settings = { ...record.settings };
+  audioMode = settings.audioMode || "paused";
   if (game === "surah-rush") {
     const chapter = catalog.chapters.find((c) => `${c.id}:1` === refs[0]);
     settings.fullSurah = !!chapter && chapter.verseCount === refs.length;
@@ -248,10 +258,13 @@ export async function mountAdventure(
       restore = structuredClone(restore);
       if (game === "surah-rush") {
         restore = migrateRushCheckpoint(restore, record.completed);
-      } else if (restore.final) restore.finalSpawns = 0;
+      } else if (restore.final && restore.wavePlannerVersion !== 4)
+        restore.finalSpawns = 0;
     }
     engine = (game === "ayah-defense" ? createAyahDefense : createSurahRush)({
       motor: settings.motor,
+      express: !!settings.express,
+      autoSprint: !!settings.autoSprint,
       seed: parseInt(id.slice(0, 8), 16),
       map: settings.map ?? 0,
       tourMaps: settings.tourMaps ?? false,
@@ -305,7 +318,7 @@ export async function mountAdventure(
     ADVENTURES[game].title
   }"><h3>${ADVENTURES[game].title}</h3><p>${
     ADVENTURES[game].subtitle
-  }</p><div class="flow-toolbar"><label>Recitation<select data-adventure-audio><option value="continuous">Continuous full ayah</option><option value="before">Listen before play</option><option value="paused">Pause recitation</option></select></label><button data-flow-mute>Mute recitation</button></div><div class="flow-battlefield" tabindex="0" role="region" aria-label="${
+  }</p><div class="flow-toolbar"><label>Recitation<select data-adventure-audio><option value="paused">Independent Revision</option><option value="listen">Listen &amp; Revise</option><option value="continuous">Repeat &amp; Practice</option><option value="before" hidden>Listen before play (saved mode)</option></select></label><button data-flow-audio-pause>Pause audio</button><button data-flow-mute>Mute recitation</button><label>Volume <input data-flow-volume aria-label="Recitation volume" type="range" min="0" max="1" step=".05"></label><button data-flow-help>How to revise</button></div><div class="flow-battlefield" tabindex="0" role="region" aria-label="${
     game === "ayah-defense"
       ? "Fortress battlefield. Digit or Numpad 1–3 answers. Earn points, choose a tower and place it on land."
       : "Physical route adventure. Arrows or A/D move, Space or Up jumps, Down drops, S slides, Shift dashes. Run through a route to answer."
@@ -336,6 +349,64 @@ export async function mountAdventure(
     checkpoint.setAttribute("aria-label", "Expedition checkpoint");
     root.querySelector(".flow-scene").append(checkpoint);
   }
+  root.querySelector("[data-adventure-audio]").value = audioMode;
+  const instructions = document.createElement("aside");
+  instructions.className = "revision-instructions";
+  instructions.innerHTML =
+    "<p>Try to recite each ayah aloud or quietly to yourself as you play. Remember the next words before choosing. Turn on full-ayah audio if you need help.</p><button data-dismiss-instructions>Got it</button>";
+  root.querySelector(".flow-toolbar").after(instructions);
+  instructions.querySelector("button").onclick = () => {
+    instructions.hidden = true;
+  };
+  root.querySelector("[data-flow-help]").onclick = () => {
+    instructions.hidden = false;
+  };
+  root.querySelector("[data-flow-volume]").value = audio.getVolume();
+  const markAudible = () => {
+    if (
+      audioReference &&
+      !muted &&
+      audio.getVolume() > 0 &&
+      !record.audioAssistedRefs?.includes(audioReference)
+    )
+      save((r) => {
+        r.assistance++;
+        r.audioAssistedRefs ??= [];
+        r.audioAssistedRefs.push(audioReference);
+      });
+  };
+  root.querySelector("[data-flow-volume]").oninput = (e) => {
+    audio.setVolume(Number(e.target.value));
+    markAudible();
+    profileStorage.setItem("ayah-lab-volume", String(audio.getVolume()));
+  };
+  let audioPaused = false;
+  root.querySelector("[data-flow-audio-pause]").onclick = async (e) => {
+    audioPaused = !audioPaused;
+    if (audioPaused) audio.pause();
+    else if (region && audioReference !== region.bundle.key) await recite(true);
+    else await audio.resume();
+    e.target.textContent = audioPaused ? "Resume audio" : "Pause audio";
+  };
+  if (
+    restoring &&
+    (record.plannerVersion !== 4 ||
+      ["express", "autoSprint", "memory", "motor", "environment"].some(
+        (k) =>
+          requestedSettings[k] !== undefined &&
+          requestedSettings[k] !== record.settings[k]
+      ))
+  ) {
+    const offer = document.createElement("aside");
+    offer.className = "saved-plan-offer";
+    offer.innerHTML =
+      "<p>Your saved setup and progress are restored. Start a new attempt to apply the newly selected setup and latest revision plan. The previous attempt stays archived.</p><button data-flow-new-plan>Archive saved attempt &amp; start new plan</button>";
+    root.querySelector(".flow-toolbar").after(offer);
+    offer.querySelector("button").onclick = async () => {
+      await restartEntire(requestedSettings);
+      if (!pendingSave) offer.remove();
+    };
+  }
   mountReadingSetting(root);
   const dispatch = (a) => {
     if (!alive()) return;
@@ -350,6 +421,7 @@ export async function mountAdventure(
     }
     engine?.dispatch(a);
     if (a.type === "pause") {
+      persistPlayback();
       pauseEpoch++;
       audio.pause();
       cancelFrame(raf);
@@ -363,6 +435,19 @@ export async function mountAdventure(
     paintAll();
   };
   root.__ayahRestartChallenge = async (next) => {
+    const exposed = region?.units[record.unit];
+    if (
+      next.memory !== settings.memory &&
+      exposed &&
+      (exposed.cue ||
+        (record.unit === 0 &&
+          region.transitionCue &&
+          settings.memory !== "expert"))
+    )
+      save((r) => {
+        r.hintUnits ??= [];
+        if (!r.hintUnits.includes(exposed.id)) r.hintUnits.push(exposed.id);
+      });
     settings = {
       ...settings,
       memory: next.memory,
@@ -380,7 +465,7 @@ export async function mountAdventure(
       engine.dispatch({ type: "map", value: pendingMap });
     save((r) => {
       r.settings = settings;
-      r.unit = 0;
+      if (r.plannerVersion !== 4) r.unit = 0;
       r.arcade = engine.checkpoint();
     });
     buildEngine(record.arcade);
@@ -455,10 +540,30 @@ export async function mountAdventure(
       get: () => audio.getVolume(),
       set: (v) => {
         audio.setVolume(v);
+        markAudible();
         profileStorage.setItem("ayah-lab-volume", String(v));
       },
     },
   });
+  if (game === "surah-rush") {
+    const options = root.querySelector("[data-game-options]"),
+      controls = document.createElement("section");
+    controls.className = "rush-run-options";
+    controls.innerHTML = `<label><input type="checkbox" data-rush-auto ${
+      settings.autoSprint ? "checked" : ""
+    }> Auto-Sprint · move forward; choose each route yourself</label><p>Auto-Sprint waits before each gate until you make a route gesture. Pause always stops motion.</p><p>${
+      settings.express ? "Express Revision" : "Standard Revision"
+    } · choose Express when preparing a new run. It shortens empty corridors, not the Arabic.</p>`;
+    options.append(controls);
+    controls.querySelector("input").onchange = (e) => {
+      settings.autoSprint = e.target.checked;
+      engine.dispatch({ type: "auto-sprint", value: settings.autoSprint });
+      save((r) => {
+        r.settings = { ...settings };
+        r.arcade = engine.checkpoint();
+      });
+    };
+  }
   function fail(error) {
     audioEpoch++;
     audioLease?.revoke();
@@ -523,6 +628,17 @@ export async function mountAdventure(
   }
   async function recite(force = false) {
     if (!region || (audioMode === "paused" && !force)) return;
+    if (force) {
+      audioPaused = false;
+      root.querySelector("[data-flow-audio-pause]").textContent = "Pause audio";
+    }
+    const currentRef = region.bundle.key;
+    if (!force && audioPaused) return;
+    if (!force && audioReference === currentRef) {
+      if (currentFrame().status === "playing") void audio.resume();
+      return;
+    }
+    audioReference = currentRef;
     const wasPlaying = currentFrame()?.status === "playing" || listeningBefore;
     if (!force && !wasPlaying) return;
     const ticket = ++audioEpoch,
@@ -566,7 +682,19 @@ export async function mountAdventure(
           }
         },
       });
-      if (ok) save((r) => r.assistance++);
+      if (
+        ok &&
+        alive() &&
+        ticket === audioEpoch &&
+        !muted &&
+        audio.getVolume() > 0
+      )
+        save((r) => {
+          r.assistance++;
+          r.audioAssistedRefs ??= [];
+          if (!r.audioAssistedRefs.includes(currentRef))
+            r.audioAssistedRefs.push(currentRef);
+        });
       if (!ok) {
         listeningBefore = false;
         message =
@@ -606,6 +734,7 @@ export async function mountAdventure(
       id: unit.id,
       count: choices.length,
       length: Math.max(...choices.map((c) => c.text.length)),
+      wordCount: Math.max(...choices.map((c) => c.positions.length)),
       zone:
         ((settings.environment || 0) + Math.floor(record.completed / 25)) % 5,
       held: !readyRecall,
@@ -640,7 +769,18 @@ export async function mountAdventure(
                       ? "rush-route-wrong"
                       : ""
                   }" data-rush-sign="${i}"><small>${
-                    ["↑ Upper route", "→ Middle route", "↓ Lower route"][i]
+                    [
+                      "↑ " +
+                        (state.plan.layouts?.upper || "Upper route").replaceAll(
+                          "-",
+                          " "
+                        ),
+                      "→ " +
+                        (
+                          state.plan.layouts?.middle || "Middle route"
+                        ).replaceAll("-", " "),
+                      "↓ Lower route",
+                    ][i]
                   }</small><span class="arabic" dir="rtl" lang="ar">${esc(
                     c.text
                   )}</span>${readingHTML(c)}</div>`
@@ -774,6 +914,9 @@ export async function mountAdventure(
     }
     readyRecall = settings.memory !== "expert";
     if (region && region.bundle.key === refs[record.completed]) {
+      region.units = revisionUnits(region.bundle, settings.memory, {
+        version: record.plannerVersion || 3,
+      }).map((u) => ({ ...u, sourceFingerprint: region.fingerprint }));
       choices = revisionChoices(region.units[record.unit], {
         seed: parseInt(id.slice(0, 8), 16),
         turn: record.completed * 17 + record.unit,
@@ -793,6 +936,7 @@ export async function mountAdventure(
     const previousLoaded = region?.bundle;
     const ticket = ++epoch;
     audioEpoch++;
+    audioReference = null;
     audio.stop();
     audioLease?.revoke();
     audioLease = null;
@@ -808,6 +952,7 @@ export async function mountAdventure(
     try {
       const loaded = await authorizeRegion(refs, record.completed, client, {
         memory: settings.memory,
+        plannerVersion: record.plannerVersion || 3,
         isCurrent: alive,
         pin: record.pins[refs[record.completed]],
         verifyBundle,
@@ -906,14 +1051,20 @@ export async function mountAdventure(
         ayahFinished = record.unit === region.units.length - 1,
         key = unit.key;
       if (game === "ayah-defense" && !already) {
-        const n = region.units.length,
+        const targets = region.units.filter((u) => !u.review),
+          n = targets.length,
           budget = Math.min(80, Math.max(20, n * 10)),
-          points = Math.floor(budget / n) + (record.unit < budget % n ? 1 : 0);
+          targetIndex = targets.findIndex((u) => u.id === unit.id),
+          points = unit.review
+            ? 0
+            : Math.floor(budget / n) + (targetIndex < budget % n ? 1 : 0);
         engine.dispatch({
           type: "revision",
           id: acceptedId,
           points,
-          lastSource: ayahFinished && record.completed === refs.length - 1,
+          lastSource:
+            targetIndex === targets.length - 1 &&
+            record.completed === refs.length - 1,
         });
       }
       if (
@@ -928,6 +1079,28 @@ export async function mountAdventure(
       if (game === "surah-rush") engine.dispatch({ type: "correct", index });
       save((r) => {
         if (!r.accepted.includes(acceptedId)) r.accepted.push(acceptedId);
+        r.recognitionHistory ??= [];
+        r.recognitionHistory.push({
+          ref: key,
+          unit: acceptedId,
+          groupIndex: unit.groupIndex ?? record.unit,
+          contextPositions: unit.contextPositions || [],
+          targetPositions:
+            unit.targetPositions || (!unit.review ? unit.positions : []),
+          sourceFingerprint: region.fingerprint,
+          memory: settings.memory,
+          audioMode,
+          kind:
+            r.audioAssistedRefs?.includes(key) ||
+            r.hintUnits?.includes(acceptedId) ||
+            !!unit.cue ||
+            (record.unit === 0 &&
+              settings.memory !== "expert" &&
+              !!region.transitionCue)
+              ? "assisted-recognition"
+              : "unassisted-recognition",
+        });
+        r.recognitionHistory = r.recognitionHistory.slice(-300);
         r.unit++;
         if (ayahFinished) {
           r.completed++;
@@ -1174,15 +1347,22 @@ export async function mountAdventure(
     audioLease = null;
     root.querySelector(".gameplay-settings").hidden = true;
   }
-  function restartEntire() {
+  async function restartEntire(nextSettings = null) {
     try {
-      save((r) => {
-        const old = structuredClone(r);
-        Object.assign(r, newAdventure(game, refs, settings), {
+      await flushRewards();
+      if (!alive()) return;
+      if (nextSettings) settings = { ...settings, ...nextSettings };
+      const old = structuredClone(record),
+        fresh = {
+          ...newAdventure(game, refs, settings),
           evidence: old.evidence,
           history: [
             ...(old.history || []),
             {
+              plannerVersion: old.plannerVersion || 3,
+              recognitionHistory: old.recognitionHistory || [],
+              audioAssistedRefs: old.audioAssistedRefs || [],
+              hintUnits: old.hintUnits || [],
               completed: old.completed,
               unit: old.unit,
               accepted: old.accepted,
@@ -1193,13 +1373,27 @@ export async function mountAdventure(
               settings: old.settings,
             },
           ].slice(-50),
+        };
+      if (id === legacyId) {
+        store.transact((d) => {
+          if (d.runs[modernId])
+            throw Error(
+              "Another window has a new revision attempt. Reopen to resume it."
+            );
+          d.runs[modernId] = fresh;
         });
-      }, true);
+        id = modernId;
+        record = structuredClone(fresh);
+      } else
+        save((r) => {
+          for (const key of Object.keys(r)) delete r[key];
+          Object.assign(r, fresh);
+        }, true);
       prepareFreshAttempt();
       void load();
       focusGameplay(field, { force: true });
     } catch (e) {
-      fail(e);
+      if (alive()) fail(e);
     }
   }
   function persistDefense() {
@@ -1534,6 +1728,17 @@ export async function mountAdventure(
   }
   function paintAll() {
     paint();
+    const viewport = root.querySelector(".gameplay-viewport");
+    if (viewport) {
+      const tools = root.querySelector(".flow-toolbar");
+      if (tools && !viewport.contains(tools))
+        viewport.insertBefore(tools, field);
+      if (instructions && !viewport.contains(instructions))
+        viewport.insertBefore(instructions, field);
+      const offer = root.querySelector(".saved-plan-offer");
+      if (offer && !viewport.contains(offer))
+        viewport.insertBefore(offer, field);
+    }
     paintRibbon();
   }
   field.addEventListener(
@@ -1650,6 +1855,11 @@ export async function mountAdventure(
       paint();
     }
     if (b.hasAttribute("data-flow-hint") && region) {
+      save((r) => {
+        r.hintUnits ??= [];
+        const u = region.units[record.unit].id;
+        if (!r.hintUnits.includes(u)) r.hintUnits.push(u);
+      });
       save((r) => r.assistance++);
       message = region.bundle.textUthmani;
       const hint = document.createElement("p");
@@ -1831,6 +2041,14 @@ export async function mountAdventure(
   );
   root.querySelector("[data-adventure-audio]").onchange = (e) => {
     audioMode = e.target.value;
+    audioPaused = false;
+    root.querySelector("[data-flow-audio-pause]").textContent = "Pause audio";
+    audioReference = null;
+    audioEpoch++;
+    settings.audioMode = audioMode;
+    save((r) => {
+      r.settings = { ...settings };
+    });
     audio.stop();
     if (listeningBefore && audioMode === "paused") {
       listeningBefore = false;
@@ -1844,17 +2062,29 @@ export async function mountAdventure(
   root.querySelector("[data-flow-mute]").onclick = (e) => {
     muted = !muted;
     audio.mute(muted);
+    if (!muted) markAudible();
     e.target.textContent = muted ? "Unmute recitation" : "Mute recitation";
   };
   root.addEventListener("keyup", (e) => heldAnswers.delete(e.code), {
     capture: true,
     signal: abort.signal,
   });
+  function persistPlayback() {
+    if (!alive() || !engine) return;
+    try {
+      save((r) => {
+        r.arcade = engine.checkpoint();
+      });
+    } catch (e) {
+      fail(e);
+    }
+  }
   const background = () => {
     pauseEpoch++;
     heldAnswers.clear();
     message = "Paused safely. Resume when ready.";
     engine?.pause();
+    persistPlayback();
     audio.pause();
     cancelFrame(raf);
     raf = 0;
@@ -1868,6 +2098,7 @@ export async function mountAdventure(
     { signal: abort.signal }
   );
   window.addEventListener("blur", background, { signal: abort.signal });
+  window.addEventListener("pagehide", background, { signal: abort.signal });
   window.addEventListener("ayahprofilechange", invalidate, {
     signal: abort.signal,
   });
@@ -1905,6 +2136,15 @@ export async function mountAdventure(
         invalidate();
     }
   }
+  const progressTimer = setInterval(() => {
+    if (
+      alive() &&
+      started &&
+      !pendingSave &&
+      currentFrame().status === "playing"
+    )
+      persistPlayback();
+  }, 5000);
   const timer = setInterval(() => {
     void revalidateAccess();
   }, 60000);
@@ -1914,6 +2154,7 @@ export async function mountAdventure(
     epoch++;
     audioEpoch++;
     clearInterval(timer);
+    clearInterval(progressTimer);
     abort.abort();
     cancelFrame(raf);
     frame?.dispose();

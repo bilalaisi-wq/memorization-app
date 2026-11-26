@@ -21,7 +21,7 @@ test("earned strategy purchases build six real illustrated tower roles and actua
     let id = 0;
     window.combat = await mountAdventure(root, {
       game: "ayah-defense",
-      refs: Array.from({ length: 40 }, (_, i) => `78:${i + 1}`),
+      refs: [...Array.from({ length: 40 }, (_, i) => `78:${i + 1}`), "79:1"],
       frameScheduler: {
         request(fn) {
           const key = ++id;
@@ -41,9 +41,11 @@ test("earned strategy purchases build six real illustrated tower roles and actua
       "/src/revision/adventures/content.js"
     );
     const { localBundle } = await import("/src/content/library.js");
-    while (window.combat.getSnapshot().completed < 39) {
+    const { TOWERS } = await import("/src/revision/adventures/defense.js");
+    const purchaseTotal = Object.values(TOWERS).reduce((n, t) => n + t.cost, 0);
+    while (window.combat.getSnapshot().engine.energy < purchaseTotal) {
       const s = window.combat.getSnapshot(),
-        unit = revisionUnits(localBundle(`78:${s.completed + 1}`))[s.unit];
+        unit = revisionUnits(localBundle(s.refs[s.completed]))[s.unit];
       const b = [...document.querySelectorAll("[data-flow-choice]")].find(
         (b) =>
           b.dataset.flowPrompt === unit.id &&
