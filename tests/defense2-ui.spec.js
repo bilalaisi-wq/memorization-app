@@ -444,5 +444,13 @@ for (const game of ["ayah-defense", "surah-rush"])
       "data-adventure-state",
       "playing"
     );
-    await expect(page.locator("[data-flow-choice]").first()).toBeEnabled();
+    await expect(
+      page
+        .locator(
+          game === "surah-rush" ? "[data-rush-sign]" : "[data-flow-choice]"
+        )
+        .first()
+    ).toBeVisible();
+    if (game !== "surah-rush")
+      await expect(page.locator("[data-flow-choice]").first()).toBeEnabled();
   });

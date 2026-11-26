@@ -8,6 +8,11 @@ const number = (n) => Number.isFinite(n) && Math.abs(n) <= 1e9;
 export function validArcade(game, a) {
   if (a === null) return true;
   if (!a || typeof a !== "object") return false;
+  if (
+    a.version !== undefined &&
+    ![1, game === "surah-rush" ? 3 : 2].includes(a.version)
+  )
+    return false;
   if (game === "ayah-defense" && a.version === 2)
     return (
       [
@@ -81,6 +86,35 @@ export function validArcade(game, a) {
       a.cooldowns &&
       ["shield", "frost", "overcharge"].every((k) => number(a.cooldowns[k]))
     );
+  if (game === "surah-rush" && a.version === 3) {
+    const unit = (v) =>
+      v === null ||
+      (typeof v?.id === "string" &&
+        v.id.length < 100 &&
+        [2, 3].includes(v.count) &&
+        integer(v.length, 100));
+    return (
+      [
+        "x",
+        "y",
+        "vx",
+        "vy",
+        "time",
+        "distance",
+        "flow",
+        "score",
+        "camera",
+        "cameraY",
+      ].every((k) => number(a[k])) &&
+      integer(a.course, 100000) &&
+      integer(a.motorErrors) &&
+      integer(a.zone, 4) &&
+      unit(a.challenge) &&
+      unit(a.pendingChallenge) &&
+      typeof a.resolved === "boolean" &&
+      typeof a.checkpointPending === "boolean"
+    );
+  }
   return (
     ["x", "y", "vx", "vy", "time", "distance", "flow", "score"]
       .filter((k) => k !== "time")
@@ -99,6 +133,12 @@ export function validAdventure(r) {
     ["ayah-defense", "surah-rush"].includes(r.game) &&
     ["guided", "standard", "expert"].includes(r.settings?.memory) &&
     ["relaxed", "normal", "arcade"].includes(r.settings?.motor) &&
+    (r.settings.environment === undefined ||
+      integer(r.settings.environment, 4)) &&
+    (r.settings.fullSurah === undefined ||
+      typeof r.settings.fullSurah === "boolean") &&
+    (r.settings.checkpointInterval === undefined ||
+      r.settings.checkpointInterval === 25) &&
     (r.settings.map === undefined || integer(r.settings.map, 3)) &&
     (r.settings.tourMaps === undefined ||
       typeof r.settings.tourMaps === "boolean") &&
@@ -131,6 +171,24 @@ export function validAdventure(r) {
     (!r.pendingRewards ||
       (Array.isArray(r.pendingRewards) &&
         r.pendingRewards.every((k) => r.refs.includes(k)))) &&
+    (!r.rushCheckpoint ||
+      (r.game === "surah-rush" &&
+        (r.rushCheckpoint.pending === null ||
+          (integer(r.rushCheckpoint.pending, r.completed) &&
+            r.rushCheckpoint.pending > 0 &&
+            r.rushCheckpoint.pending === r.completed &&
+            r.completed < r.refs.length &&
+            r.completed % 25 === 0)) &&
+        Array.isArray(r.rushCheckpoint.continued) &&
+        new Set(r.rushCheckpoint.continued).size ===
+          r.rushCheckpoint.continued.length &&
+        r.rushCheckpoint.continued.every(
+          (n) =>
+            integer(n, r.completed) &&
+            n > 0 &&
+            n % 25 === 0 &&
+            n !== r.rushCheckpoint.pending
+        ))) &&
     validArcade(r.game, r.arcade)
   );
 }

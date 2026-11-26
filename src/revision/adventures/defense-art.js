@@ -1,6 +1,6 @@
 // Original procedural SVG illustration. No third-party game artwork or Quran text in combat.
 import { mapFor, WORLD, placementCheck } from "./defense-maps.js";
-import { TOWERS, pointOnPath } from "./defense.js";
+import { TOWERS, pointOnPath, purchaseCheck, towerRange } from "./defense.js";
 const path = (p) => p.map((v, i) => `${i ? "L" : "M"}${v.x},${v.y}`).join(" ");
 const tree = (x, y, r = 24) =>
   `<g transform="translate(${x} ${y})"><ellipse cy="20" rx="${r}" ry="10" fill="#082b35" opacity=".5"/><path d="M-5 17 V-15 H5 V17" fill="#98754f"/><path d="M0 -${
@@ -178,9 +178,12 @@ export function renderDefenseScene(
         TOWERS[t.kind].name
       } Tower level ${t.level}</title>${
         selected === t.id
-          ? `<circle r="${
-              TOWERS[t.kind].range * (1 + 0.12 * (t.level - 1))
-            }" fill="#9be2d009" stroke="#e8d29a" stroke-dasharray="5 6"/>`
+          ? `<circle r="${towerRange(
+              t.kind,
+              t,
+              t.level,
+              s.towers
+            )}" fill="#9be2d009" stroke="#e8d29a" stroke-dasharray="5 6"/>`
           : ""
       }<ellipse cy="12" rx="29" ry="13" fill="#0b2d36" opacity=".6"/><path d="M-24 8 L0 -5 24 8 0 22Z" fill="#a5a888" stroke="#e2d1a3"/><g transform="translate(0 ${
         22 * (1 - growth)
@@ -255,14 +258,17 @@ export function renderDefenseScene(
     )
     .join("");
   if (placement) {
-    const check = placementCheck(s.map, placement, s.towers);
+    const check = purchaseCheck(s, placement.kind, placement);
     markup += `<g data-defense-preview data-valid="${
       check.valid
     }" transform="translate(${placement.x} ${
       placement.y
-    })" pointer-events="none"><circle r="${
-      TOWERS[placement.kind].range
-    }" fill="#aae5d00c" stroke="${
+    })" pointer-events="none"><circle r="${towerRange(
+      placement.kind,
+      placement,
+      1,
+      s.towers
+    )}" fill="#aae5d00c" stroke="${
       check.valid ? "#9bf1cd" : "#f9a4a5"
     }" stroke-dasharray="6 6"/><circle r="${WORLD.footprint}" fill="${
       check.valid ? "#83dbbe55" : "#ed878855"

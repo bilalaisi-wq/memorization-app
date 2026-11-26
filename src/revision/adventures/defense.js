@@ -78,6 +78,65 @@ const ENEMIES = {
   shielded: { hp: 30, speed: 0.9, armor: 0, shield: 15 },
   siege: { hp: 120, speed: 0.5, armor: 1 },
 };
+// One complete, pure purchase rule for preview, pointer release and engine commit.
+export function purchaseCheck(state, kind, position) {
+  if (!Object.hasOwn(TOWERS, kind))
+    return { valid: false, reason: "Choose a tower." };
+  if (!["ready", "playing", "paused"].includes(state.status))
+    return { valid: false, reason: "Repair the fortress before building." };
+  if (state.towers.length >= 24)
+    return {
+      valid: false,
+      reason: "This battlefield has its maximum 24 towers.",
+    };
+  if (state.energy < TOWERS[kind].cost)
+    return {
+      valid: false,
+      reason: `Need ${TOWERS[kind].cost} Construction Points.`,
+    };
+  if (
+    !TOWERS[kind].damage &&
+    !state.towers.some((t) => TOWERS[t.kind].damage > 0)
+  )
+    return {
+      valid: false,
+      reason: "Build an attacking tower before support towers.",
+    };
+  return placementCheck(state.map, position, state.towers);
+}
+export function towerRange(kind, position, level = 1, towers = []) {
+  const base = TOWERS[kind].range * (1 + 0.12 * (level - 1));
+  if (kind === "observatory") return base;
+  const boost = towers
+    .filter(
+      (t) =>
+        t.active &&
+        t.kind === "observatory" &&
+        Math.hypot(t.x - position.x, t.y - position.y) <
+          190 * (1 + 0.12 * (t.level - 1))
+    )
+    .reduce((n, t) => n + t.level, 0);
+  return TOWERS[kind].range * (1 + 0.12 * (level - 1) + boost * 0.12);
+}
+export function openingPace(
+  state,
+  { openingSeconds = 30, rampSeconds = 60 } = {}
+) {
+  const armed = state.towers.some((t) => TOWERS[t.kind].damage > 0),
+    grace = !armed || state.time < openingSeconds;
+  const age = armed
+    ? Math.max(
+        0,
+        state.time - Math.max(openingSeconds, state.firstBuiltAt ?? state.time)
+      )
+    : 0;
+  const ramp = Math.min(1, age / rampSeconds);
+  return {
+    grace,
+    ramp,
+    multiplier: grace ? 0.2 : state.reading > 12 ? 0.28 : 0.4 + 0.6 * ramp,
+  };
+}
 export function defensePath(map = 0, lane = 0) {
   return mapFor(map).paths[lane % mapFor(map).paths.length];
 }
@@ -195,14 +254,12 @@ export function createAyahDefense({
       s.cooldowns[k] = Math.max(0, s.cooldowns[k] - dt);
     s.overcharge = Math.max(0, s.overcharge - dt);
     s.effects = s.effects.filter((e) => (e.life -= dt) > 0);
-    const grace = !s.towers.some((t) => TOWERS[t.kind].damage > 0),
-      ramp = grace ? 0 : Math.min(1, (s.time - s.firstBuiltAt) / 45);
-    const pressure = grace ? 0.12 : s.reading > 12 ? 0.28 : 0.35 + 0.65 * ramp,
+    const { grace, ramp, multiplier: pressure } = openingPace(s),
       pace = { relaxed: 34, normal: 48, arcade: 64 }[motor];
     s.spawn -= dt;
     if (
       s.spawn <= 0 &&
-      s.enemies.length < (grace ? 2 : s.reading > 12 ? 3 : 9) &&
+      s.enemies.length < (grace ? 4 : s.reading > 12 ? 5 : 12) &&
       (!s.final || s.finalSpawns < 2)
     ) {
       const types = Object.keys(ENEMIES),
@@ -210,7 +267,7 @@ export function createAyahDefense({
           s.final && !grace
             ? "siege"
             : types[
-                (s.wave + serial) %
+                s.wave %
                   Math.min(
                     types.length,
                     1 + Math.floor(ramp * 4) + Math.floor(s.wave / 8)
@@ -239,7 +296,7 @@ export function createAyahDefense({
         });
       s.nextEnemyId = serial;
       s.spawn =
-        (grace ? 8 : motor === "arcade" ? 2.8 : 4.8) / (grace ? 1 : pressure);
+        (grace ? 1.1 : motor === "arcade" ? 2.8 : 4.8) / (grace ? 1 : pressure);
       s.wave++;
       if (s.final) s.finalSpawns++;
     }
@@ -253,11 +310,7 @@ export function createAyahDefense({
             o.kind === "observatory" &&
             Math.hypot(o.x - t.x, o.y - t.y) < 190 * (1 + 0.12 * (o.level - 1))
         ),
-        range =
-          def.range *
-          (1 +
-            0.12 * (level - 1) +
-            near.reduce((n, o) => n + o.level, 0) * 0.12),
+        range = towerRange(t.kind, t, level, s.towers),
         rate =
           def.rate /
           (1 +
@@ -387,23 +440,9 @@ export function createAyahDefense({
         if (["relaxed", "normal", "arcade"].includes(a.value)) motor = a.value;
         break;
       case "place": {
-        if (
-          !["ready", "playing", "paused"].includes(s.status) ||
-          !Object.hasOwn(TOWERS, a.kind) ||
-          s.towers.length >= 24 ||
-          s.energy < TOWERS[a.kind].cost
-        )
-          break;
-        if (
-          TOWERS[a.kind].damage === 0 &&
-          !s.towers.some((t) => TOWERS[t.kind].damage > 0)
-        ) {
-          event("support-needs-attack");
-          break;
-        }
         const position =
           a.position || (a.site !== undefined ? SITES[a.site] : null);
-        const check = placementCheck(s.map, position, s.towers);
+        const check = purchaseCheck(s, a.kind, position);
         if (!check.valid) {
           event("invalid-placement", check);
           break;

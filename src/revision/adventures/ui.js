@@ -4,6 +4,7 @@ import {
   createAyahDefense,
   migrateDefenseCheckpoint,
   TOWERS,
+  purchaseCheck,
   SITES,
   REGIONS,
   defensePath,
@@ -17,7 +18,10 @@ import {
   pointerOnMap,
 } from "./defense-maps.js";
 import { renderDefenseScene } from "./defense-art.js";
-import { createSurahRush, terrain } from "./rush.js";
+import { createSurahRush, migrateRushCheckpoint } from "./rush.js";
+import { ZONES, MOTOR_PROFILES, checkpointDue } from "./rush-course.js";
+import { renderRushScene } from "./rush-art.js";
+import { catalog } from "../../content/library.js";
 import {
   profileStorage,
   activeProfileId,
@@ -107,7 +111,10 @@ export async function mountAdventure(
     promptGeneration = 0,
     shopView = "buy",
     lastTransfer = "",
-    pendingReset = false;
+    pendingReset = false,
+    rushReplay = null,
+    lastPaintTime = 0;
+  const rushSigns = new Map();
   const requestFrame = (fn) =>
     frameScheduler ? frameScheduler.request(fn) : requestAnimationFrame(fn);
   const cancelFrame = (id) =>
@@ -133,7 +140,24 @@ export async function mountAdventure(
     });
     record = store.snapshot().runs[id];
   }
+  if (game === "surah-rush" && record.arcade && record.arcade.version !== 3) {
+    store.transact((d) => {
+      const r = d.runs[id];
+      r.legacyArcade ??= structuredClone(r.arcade);
+      r.arcade = migrateRushCheckpoint(r.arcade, r.completed);
+    });
+    record = store.snapshot().runs[id];
+  }
+  if (game === "surah-rush" && record.arcade?.legacyAdapted)
+    message =
+      "Your earlier learning is kept. The new course resumes at a safe point.";
   settings = { ...record.settings };
+  if (game === "surah-rush") {
+    const chapter = catalog.chapters.find((c) => `${c.id}:1` === refs[0]);
+    settings.fullSurah = !!chapter && chapter.verseCount === refs.length;
+    settings.checkpointInterval = 25;
+  }
+
   pendingMap = settings.map ?? record.arcade?.map ?? 0;
   pendingTours = settings.tourMaps ?? false;
   const audio = createAudioManager({
@@ -222,22 +246,13 @@ export async function mountAdventure(
     engine?.dispose();
     if (restore) {
       restore = structuredClone(restore);
-      if (game === "surah-rush")
-        Object.assign(restore, {
-          x: 60,
-          y: 310,
-          vx: 0,
-          vy: 0,
-          gateOpen: record.completed === refs.length,
-          choice: null,
-          holding: false,
-          route: null,
-          loop: null,
-        });
-      else if (restore.final) restore.finalSpawns = 0;
+      if (game === "surah-rush") {
+        restore = migrateRushCheckpoint(restore, record.completed);
+      } else if (restore.final) restore.finalSpawns = 0;
     }
     engine = (game === "ayah-defense" ? createAyahDefense : createSurahRush)({
       motor: settings.motor,
+      seed: parseInt(id.slice(0, 8), 16),
       map: settings.map ?? 0,
       tourMaps: settings.tourMaps ?? false,
       restore,
@@ -245,10 +260,19 @@ export async function mountAdventure(
         if (event.type === "map-transfer")
           message =
             lastTransfer = `Map transfer: ${event.points} Construction Points and ${event.coins} Upgrade Coins refunded for displaced towers.`;
-        if (event.type === "route-committed") void answer(event.choice);
+        if (
+          event.type === "route-committed" &&
+          region?.units[record.unit]?.id === event.challengeId
+        )
+          void answer(event.choice).then(paintAll);
         if (event.type === "section-finished") {
           pendingSection = false;
-          void load();
+          if (!region && !record.rushCheckpoint?.pending) void load();
+          try {
+            save((r) => (r.arcade = engine.checkpoint()));
+          } catch (e) {
+            fail(e);
+          }
         }
         if (event.type === "motor-error") {
           try {
@@ -284,7 +308,7 @@ export async function mountAdventure(
   }</p><div class="flow-toolbar"><label>Recitation<select data-adventure-audio><option value="continuous">Continuous full ayah</option><option value="before">Listen before play</option><option value="paused">Pause recitation</option></select></label><button data-flow-mute>Mute recitation</button></div><div class="flow-battlefield" tabindex="0" role="region" aria-label="${
     game === "ayah-defense"
       ? "Fortress battlefield. Digit or Numpad 1–3 answers. Earn points, choose a tower and place it on land."
-      : "Momentum course. Arrows move, Space jumps, S slides, Shift dashes. Number keys choose a route."
+      : "Physical route adventure. Arrows or A/D move, Space or Up jumps, Down drops, S slides, Shift dashes. Run through a route to answer."
   }"><div class="flow-hud" role=status></div><div class="flow-scene"><svg viewBox="0 0 900 400" aria-label="${
     game === "ayah-defense" ? "Tower-defense battlefield" : "Platform course"
   }"></svg></div><div class="flow-ribbon" aria-label="Quran revision ribbon"></div><div class="flow-actions"></div><div class="flow-pad"></div><p data-flow-message role=status></p><button data-flow-start disabled>Preparing verified passage…</button><small class="flow-integrity">Pieces are study groups, not recitation stops. Game recognition is separate from independent recitation.</small></div></section>`;
@@ -300,6 +324,17 @@ export async function mountAdventure(
     tools.innerHTML =
       '<button data-defense-zoom aria-label="Zoom battlefield">Zoom map</button><button data-defense-cancel hidden>Cancel placement</button>';
     root.querySelector(".flow-scene").append(tools);
+  }
+  if (game === "surah-rush") {
+    const overlay = document.createElement("div");
+    overlay.className = "rush-route-signs";
+    overlay.setAttribute("aria-label", "Physical Arabic route signs");
+    root.querySelector(".flow-scene").append(overlay);
+    const checkpoint = document.createElement("section");
+    checkpoint.className = "rush-checkpoint";
+    checkpoint.hidden = true;
+    checkpoint.setAttribute("aria-label", "Expedition checkpoint");
+    root.querySelector(".flow-scene").append(checkpoint);
   }
   mountReadingSetting(root);
   const dispatch = (a) => {
@@ -349,11 +384,15 @@ export async function mountAdventure(
       r.arcade = engine.checkpoint();
     });
     buildEngine(record.arcade);
+    if (game === "surah-rush" && !record.rushCheckpoint?.pending)
+      engine.dispatch({ type: "retry-challenge" });
     mapChanged = false;
     await load();
     started = true;
-    engine.start();
-    wake();
+    if (!record.rushCheckpoint?.pending) {
+      engine.start();
+      wake();
+    }
     if (audioMode !== "paused") void recite();
     focusGameplay(field, { force: true });
     paint();
@@ -470,7 +509,7 @@ export async function mountAdventure(
         );
         const a = document.createElement("a");
         a.href = url;
-        a.download = "ayah-defense-pending-recovery.json";
+        a.download = `${game}-pending-recovery.json`;
         a.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
       };
@@ -553,8 +592,186 @@ export async function mountAdventure(
       }
     }
   }
+  function installRushChallenge() {
+    if (!region || record.completed >= refs.length) return;
+    const unit = region.units[record.unit];
+    rushSigns.set(unit.id, {
+      unit,
+      choices: choices.map((c) => ({ ...c })),
+      transitionCue: region.transitionCue,
+    });
+    while (rushSigns.size > 3) rushSigns.delete(rushSigns.keys().next().value);
+    engine.dispatch({
+      type: "challenge",
+      id: unit.id,
+      count: choices.length,
+      length: Math.max(...choices.map((c) => c.text.length)),
+      zone:
+        ((settings.environment || 0) + Math.floor(record.completed / 25)) % 5,
+      held: !readyRecall,
+    });
+  }
+  function paintRushSigns() {
+    const overlay = root.querySelector(".rush-route-signs");
+    if (!overlay) return;
+    const state = currentFrame(),
+      info = rushSigns.get(state.challenge?.id);
+    overlay.hidden =
+      !!record.rushCheckpoint?.pending ||
+      !!retrySourceControl ||
+      record.finished;
+    if (!info) {
+      overlay.replaceChildren();
+      return;
+    }
+    const key = `${info.unit.id}:${readyRecall}:${state.resolved}:${state.detour}:${state.route}:${promptGeneration}`;
+    if (overlay.dataset.signKey !== key) {
+      overlay.dataset.signKey = key;
+      overlay.innerHTML =
+        !readyRecall && !state.resolved
+          ? "<button data-flow-ready>Try recalling, then show the route signs</button>"
+          : info.choices
+              .map(
+                (c, i) =>
+                  `<div class="rush-route-sign ${
+                    state.resolved && state.route === i
+                      ? "rush-route-correct"
+                      : state.detour && state.route === i
+                      ? "rush-route-wrong"
+                      : ""
+                  }" data-rush-sign="${i}"><small>${
+                    ["↑ Upper route", "→ Middle route", "↓ Lower route"][i]
+                  }</small><span class="arabic" dir="rtl" lang="ar">${esc(
+                    c.text
+                  )}</span>${readingHTML(c)}</div>`
+              )
+              .join("");
+    }
+    const height = svg.clientHeight;
+    let bottom = 0;
+    const signs = [...overlay.querySelectorAll("[data-rush-sign]")];
+    for (const node of signs) {
+      const route = state.plan.commits[Number(node.dataset.rushSign)];
+      const top = Math.max(
+        4,
+        bottom + 4,
+        ((route.y - state.cameraY) / state.viewHeight) * height -
+          node.offsetHeight -
+          18
+      );
+      node.style.top = top + "px";
+      bottom = top + node.offsetHeight;
+    }
+    if (bottom > height - 4)
+      for (const node of signs)
+        node.style.top =
+          Math.max(4, parseFloat(node.style.top) - (bottom - height + 4)) +
+          "px";
+  }
+  function paintRushCheckpoint() {
+    const panel = root.querySelector(".rush-checkpoint");
+    if (!panel) return;
+    const pending = record.rushCheckpoint?.pending;
+    panel.hidden = !pending;
+    if (!pending) {
+      panel.dataset.at = "";
+      return;
+    }
+    if (panel.dataset.at === String(pending)) return;
+    panel.dataset.at = String(pending);
+    panel.innerHTML = `<h4>Section Complete</h4><p>${pending}/${refs.length} ayahs · your full-surah journey is saved.</p><button data-rush-checkpoint="continue">Continue Next Section</button><button data-rush-checkpoint="replay">Replay Previous Section</button><button data-rush-checkpoint="exit">Save & Exit</button><button data-rush-checkpoint="difficulty">Change Difficulty</button><button data-rush-checkpoint="progress">Review Progress</button><p data-rush-section-progress></p>`;
+  }
+  async function continueRushCheckpoint() {
+    try {
+      const at = record.rushCheckpoint.pending;
+      save((r) => {
+        r.rushCheckpoint.continued.push(at);
+        r.rushCheckpoint.pending = null;
+        r.arcade = engine.checkpoint();
+        r.arcade.checkpointPending = false;
+      });
+      engine.dispatch({ type: "continue-checkpoint" });
+      started = true;
+      await load();
+      if (!region) return;
+      wake();
+      paintAll();
+      focusGameplay(field, { force: true });
+    } catch (e) {
+      fail(e);
+    }
+  }
+  root.addEventListener(
+    "click",
+    (e) => {
+      const action = e.target.closest("[data-rush-checkpoint]")?.dataset
+        .rushCheckpoint;
+      if (!action) return;
+      if (action === "continue") {
+        void continueRushCheckpoint();
+        return;
+      }
+      if (action === "difficulty") {
+        root.querySelector('[data-game-command="settings"]').click();
+        return;
+      }
+      if (action === "progress") {
+        root.querySelector(
+          "[data-rush-section-progress]"
+        ).textContent = `Original journey ${refs[0]}–${refs.at(
+          -1
+        )}. Completed ${
+          record.completed
+        } ayahs. Arcade recognition remains separate from independent recall.`;
+        return;
+      }
+      if (action === "exit") {
+        root
+          .querySelector('.gameplay-toolbar [data-game-command="exit"]')
+          .click();
+        return;
+      }
+      if (action === "replay") {
+        void (async () => {
+          const at = record.rushCheckpoint.pending,
+            section = refs.slice(Math.max(0, at - 25), at);
+          audio.stop();
+          const shell = document.createElement("section");
+          shell.className = "rush-replay-shell";
+          root.after(shell);
+          root.hidden = true;
+          try {
+            rushReplay = await mountAdventure(shell, {
+              game,
+              refs: section,
+              client,
+              settings: { ...settings, fullSurah: false },
+              isCurrent: alive,
+              verifyBundle,
+              onExit: () => {
+                shell.remove();
+                root.hidden = false;
+                rushReplay = null;
+                paintAll();
+                focusGameplay(field, { force: true });
+              },
+            });
+          } catch (e) {
+            shell.remove();
+            root.hidden = false;
+            fail(e);
+          }
+        })();
+      }
+    },
+    { signal: abort.signal }
+  );
   async function load() {
     retrySourceControl = null;
+    if (game === "surah-rush" && record.rushCheckpoint?.pending) {
+      paintAll();
+      return;
+    }
     readyRecall = settings.memory !== "expert";
     if (region && region.bundle.key === refs[record.completed]) {
       choices = revisionChoices(region.units[record.unit], {
@@ -564,12 +781,12 @@ export async function mountAdventure(
       });
       promptGeneration++;
       reportStudyExposure([...new Set(choices.map((c) => c.key))]);
-      if (game === "surah-rush") engine.dispatch({ type: "next" });
+      if (game === "surah-rush") installRushChallenge();
       paintAll();
       return;
     }
     if (record.completed >= refs.length) {
-      if (game === "ayah-defense") engine.dispatch({ type: "final" });
+      engine.dispatch({ type: "final" });
       paintAll();
       return;
     }
@@ -620,7 +837,10 @@ export async function mountAdventure(
           .join(" ");
       }
       region = loaded;
-      save((r) => (r.pins[loaded.bundle.key] = loaded.fingerprint));
+      save((r) => {
+        r.pins[loaded.bundle.key] = loaded.fingerprint;
+        r.settings = { ...settings };
+      });
       choices = revisionChoices(loaded.units[record.unit], {
         seed: parseInt(id.slice(0, 8), 16),
         turn: record.completed * 17 + record.unit,
@@ -628,7 +848,7 @@ export async function mountAdventure(
       });
       promptGeneration++;
       reportStudyExposure([...new Set(choices.map((c) => c.key))]);
-      if (game === "surah-rush") engine.dispatch({ type: "next" });
+      if (game === "surah-rush") installRushChallenge();
       if (started) void recite();
       paintAll();
     } catch (e) {
@@ -668,7 +888,10 @@ export async function mountAdventure(
           r.strikes = (r.strikes || 0) + 1;
         });
         message = "Not this continuation. Compare the full ayah and try again.";
-        if (game === "surah-rush") engine.dispatch({ type: "wrong" });
+        if (game === "surah-rush") {
+          engine.dispatch({ type: "wrong" });
+          save((r) => (r.arcade = engine.checkpoint()));
+        }
         if ((record.strikes || 0) >= 3) {
           engine.pause();
           message =
@@ -702,6 +925,7 @@ export async function mountAdventure(
           type: "region",
           index: Math.floor((record.completed + 1) / 5),
         });
+      if (game === "surah-rush") engine.dispatch({ type: "correct", index });
       save((r) => {
         if (!r.accepted.includes(acceptedId)) r.accepted.push(acceptedId);
         r.unit++;
@@ -713,15 +937,24 @@ export async function mountAdventure(
           r.pendingRewards ??= [];
           if (!r.pendingRewards.includes(key)) r.pendingRewards.push(key);
         }
+        if (
+          game === "surah-rush" &&
+          ayahFinished &&
+          checkpointDue(refs, r.completed, settings)
+        ) {
+          r.rushCheckpoint ??= { pending: null, continued: [] };
+          if (!r.rushCheckpoint.continued.includes(r.completed)) {
+            r.rushCheckpoint.pending = r.completed;
+            engine.dispatch({ type: "checkpoint" });
+          }
+        }
         r.arcade = engine.checkpoint();
       });
-      if (game === "ayah-defense") {
-        // Coverage, construction receipts and region changes are already in one checkpoint.
-      } else {
-        engine.dispatch({ type: "correct", index });
-        pendingSection = true;
-        if (record.completed === refs.length)
-          engine.dispatch({ type: "final" });
+      if (record.completed === refs.length) engine.dispatch({ type: "final" });
+      if (record.rushCheckpoint?.pending) {
+        audio.pause();
+        cancelFrame(raf);
+        raf = 0;
       }
       message =
         lastTransfer ||
@@ -732,11 +965,7 @@ export async function mountAdventure(
       await flushRewards();
       if (!alive()) return;
       save((r) => (r.arcade = engine.checkpoint()));
-      if (game === "ayah-defense") await load();
-      else {
-        choices = [];
-        paintRibbon();
-      }
+      await load();
     } catch (e) {
       if (alive()) fail(e);
     } finally {
@@ -757,6 +986,7 @@ export async function mountAdventure(
     }
     const s = currentFrame();
     if (record.finished || s.status === "won") {
+      if (game === "surah-rush") paintRushSigns();
       ribbon.innerHTML = `<h4>Passage complete · ${refs.length}/${refs.length} ayahs</h4><p>Supported recognition, not certified spoken mastery.</p><button data-flow-end="replay">Replay</button><button data-flow-end="harder">Harder memory</button><button data-flow-end="faster">Faster game speed</button><button data-flow-end="next">Next ayah batch</button><button data-flow-end="recall">Independent self-assessment</button><button data-flow-end="exit">Other revision games</button>`;
       return;
     }
@@ -780,6 +1010,19 @@ export async function mountAdventure(
       return;
     }
     const unit = region.units[record.unit];
+    if (game === "surah-rush") {
+      ribbon.innerHTML = `<span>${esc(unit.key)} · ${record.completed}/${
+        refs.length
+      } ayahs · ${esc(
+        ZONES[currentFrame().zone % 5].name
+      )}</span><button data-flow-hint>Full verified ayah · hint</button>${
+        (record.strikes || 0) >= 3
+          ? "<button data-flow-retry>Retry current challenge</button>"
+          : ""
+      }`;
+      paintRushSigns();
+      return;
+    }
     ribbon.innerHTML = `<p>${unit.key} · words ${
       unit.positions[0]
     }–${unit.positions.at(-1)} · ${record.completed}/${refs.length} ayahs${
@@ -816,15 +1059,6 @@ export async function mountAdventure(
   function paint() {
     if (!alive() || !engine) return;
     const s = currentFrame();
-    const narrowCourse = game === "surah-rush" && svg.clientWidth < 600;
-    if (game !== "ayah-defense")
-      svg.setAttribute(
-        "viewBox",
-        narrowCourse ? "0 110 480 290" : "0 0 900 400"
-      );
-    const renderCamera = narrowCourse
-      ? Math.max(0, Math.min(810, s.x - 160))
-      : s.camera;
     const minimalMotion =
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
       experiencePreferences().effects !== "full";
@@ -850,9 +1084,30 @@ export async function mountAdventure(
           } · momentum ${Math.round(Math.abs(s.vx))} · flow ${s.flow} · ${
             s.motorErrors
           } motor recoveries`;
-    root.querySelector("[data-flow-message]").textContent = message;
+    const announcement = root.querySelector("[data-flow-message]");
+    if (announcement.textContent !== message)
+      announcement.textContent = message;
+    if (game === "surah-rush") {
+      hud.setAttribute("role", "group");
+      hud.setAttribute("aria-label", "Journey progress");
+      const info = rushSigns.get(s.challenge?.id),
+        cue =
+          settings.memory === "expert"
+            ? ""
+            : info?.unit.cue || info?.transitionCue || "";
+      hud.innerHTML = `<span>${esc(ZONES[s.zone % 5].name)} · ${esc(
+        info?.unit.key || refs[Math.min(refs.length - 1, record.completed)]
+      )} · ${record.completed}/${refs.length} ayahs · flow ${s.flow}</span>${
+        cue
+          ? `<span class="rush-context"><small>Continue after</small><span class="arabic" dir="rtl" lang="ar">${esc(
+              cue
+            )}</span></span>`
+          : ""
+      }`;
+    }
     const startButton = root.querySelector("[data-flow-start]");
-    startButton.hidden = started || record.finished;
+    startButton.hidden =
+      started || record.finished || !!record.rushCheckpoint?.pending;
     startButton.disabled =
       pendingSave ||
       !!retrySourceControl ||
@@ -870,43 +1125,20 @@ export async function mountAdventure(
       });
       paintDefenseShop(s);
     } else {
-      let ground = "";
-      for (let x = 0; x <= 1320; x += 10) {
-        const y = terrain(x, s.course);
-        if (y !== null)
-          ground += `<rect x="${x}" y="${y}" width=12 height="${
-            500 - y
-          }" fill="#34576d"/>`;
-      }
-      drawScene(
-        `<rect width=900 height=400 fill="#152342"/><g transform="translate(${-renderCamera},0)">${ground}<path d="M185 ${
-          settings.motor === "relaxed" ? 282 : terrain(220, s.course) - 40
-        } H265" stroke="#c3cfe0" stroke-width=12/><text x=190 y=260 fill=white font-size=12>Slide / jump</text><path d="M940 310 C930 170 1110 160 1080 310" stroke="#89dce4" stroke-width=8 fill=none/><path d="M${
-          [525, 585, 520][s.course % 3] - 5
-        } ${terrain(
-          [525, 585, 520][s.course % 3],
-          s.course
-        )} l12 -12 12 12 12 -12 12 12" stroke=gold stroke-width=5 fill=none/>${[
-          0, 1, 2,
-        ]
-          .map(
-            (n) =>
-              `<path d="M730 300 Q840 ${140 + n * 75} 960 ${
-                200 + n * 55
-              }" stroke="${
-                s.gateOpen && s.route === n ? "#ffdb6f" : "#5e929d"
-              }" stroke-width=7 fill=none/>`
-          )
-          .join("")}<path d="M760 170 V320" stroke="${
-          s.gateOpen ? "#f5ce63" : "#9cd7d7"
-        }" stroke-width=5/><g data-flow-runner transform="translate(${s.x},${
-          s.y
-        })"><ellipse rx="${s.slide ? 22 : 16}" ry="${
-          s.slide ? 10 : 19
-        }" fill="#7bd9cd"/><path d="M-4 -16 Q-20 -36 8 -25" stroke="#f6ce68" stroke-width=6 fill=none/><circle cx=7 cy=-5 r=3 fill="#152342"/>${
-          s.dash > 0 ? '<path d="M-18 0 H-70" stroke=gold stroke-width=8/>' : ""
-        }</g><path d="M1260 200 V355" stroke=gold stroke-width=6/></g>`
+      const box = svg.getBoundingClientRect(),
+        height = box.height < 240 ? 380 : 700,
+        width = Math.max(
+          360,
+          Math.min(4000, (height * box.width) / Math.max(1, box.height))
+        );
+      engine.dispatch({ type: "viewport", width, height });
+      renderRushScene(
+        svg,
+        { ...s, viewWidth: width, viewHeight: height },
+        { minimal: minimalMotion, effects: experiencePreferences().effects }
       );
+      paintRushSigns();
+      paintRushCheckpoint();
     }
     if (
       game === "ayah-defense" &&
@@ -920,7 +1152,7 @@ export async function mountAdventure(
     }
     if (game === "surah-rush" && !pad.children.length)
       pad.innerHTML =
-        '<button data-flow-move="-1">←</button><button data-flow-control="jump">Jump</button><button data-flow-move="1">→</button><button data-flow-control="dash">Dash</button><button data-flow-slide>Slide</button>';
+        '<button data-flow-move="-1" aria-label="Move left">←</button><button data-flow-control="jump">Jump ↑</button><button data-flow-move="1" aria-label="Move right">→</button><button data-flow-control="drop">Drop ↓</button><button data-flow-control="dash">Dash</button><button data-flow-slide>Slide</button>';
     frame.update(snapshot());
   }
   window.addEventListener("resize", () => paint(), { signal: abort.signal });
@@ -1001,7 +1233,7 @@ export async function mountAdventure(
   function placeDefense(position) {
     if (!placement || pendingSave || retrySourceControl) return;
     const s = currentFrame(),
-      check = placementCheck(s.map, position, s.towers);
+      check = purchaseCheck(s, placement.kind, position);
     if (!check.valid) {
       message = check.reason;
       placement = { ...placement, ...position };
@@ -1124,8 +1356,8 @@ export async function mountAdventure(
     actions.querySelector("[data-defense-confirm]").hidden = !placement;
     actions.querySelector("[data-defense-placement-status]").textContent =
       placement
-        ? `${placementCheck(s.map, placement, s.towers).valid ? "✓" : "×"} ${
-            placementCheck(s.map, placement, s.towers).reason
+        ? `${purchaseCheck(s, placement.kind, placement).valid ? "✓" : "×"} ${
+            purchaseCheck(s, placement.kind, placement).reason
           } · ✦ ${TOWERS[placement.kind].cost}`
         : !s.towers.some((t) => TOWERS[t.kind].damage > 0)
         ? "Grace Wave: earn ✦ 50, choose Arrow, then tap land. A short completed passage earns a bounded first-defense bonus."
@@ -1161,16 +1393,57 @@ export async function mountAdventure(
       "<summary>Restart entire selected range</summary><p>Completed evidence is archived; the new attempt starts at the beginning with zero currencies.</p><button data-defense-entire-confirm>Restart entire range · keep previous history</button>";
     options.append(restart);
     restart.querySelector("button").onclick = restartEntire;
+    let placementGesture = null,
+      skipPlacementClick = false;
     svg.addEventListener(
       "pointerdown",
       (e) => {
-        if (!placement) {
+        skipPlacementClick = false;
+        if (placement) {
+          placementGesture = {
+            id: e.pointerId,
+            x: e.clientX,
+            y: e.clientY,
+            kind: placement.kind,
+          };
+          svg.setPointerCapture?.(e.pointerId);
+          e.preventDefault();
+        } else {
           const t = e.target.closest("[data-defense-tower]");
           if (t) {
             selectedTowerId = Number(t.dataset.defenseTower);
             paint();
           }
         }
+      },
+      { signal: abort.signal }
+    );
+    svg.addEventListener(
+      "pointerup",
+      (e) => {
+        const gesture = placementGesture;
+        placementGesture = null;
+        if (
+          !gesture ||
+          gesture.id !== e.pointerId ||
+          !placement ||
+          placement.kind !== gesture.kind
+        )
+          return;
+        const p = pointerOnMap(svg, e.clientX, e.clientY);
+        skipPlacementClick = true;
+        if (p) placeDefense(p);
+        else {
+          message = "Map coordinates changed. Move the preview and try again.";
+          paint();
+        }
+      },
+      { signal: abort.signal }
+    );
+    svg.addEventListener(
+      "pointercancel",
+      () => {
+        placementGesture = null;
       },
       { signal: abort.signal }
     );
@@ -1189,6 +1462,10 @@ export async function mountAdventure(
     svg.addEventListener(
       "click",
       (e) => {
+        if (skipPlacementClick) {
+          skipPlacementClick = false;
+          return;
+        }
         if (placement) {
           const p = pointerOnMap(svg, e.clientX, e.clientY);
           if (p) placeDefense(p);
@@ -1303,17 +1580,11 @@ export async function mountAdventure(
       paintAll();
       focusGameplay(field, { force: true });
     }
-    if (b.dataset.flowChoice !== undefined) {
-      if (game === "surah-rush") {
-        engine.dispatch({ type: "route", index: Number(b.dataset.flowChoice) });
-        message = "Route selected. Move right into the gateway.";
-        paint();
-        focusGameplay(field, { force: true });
-      } else
-        void answer(
-          Number(b.dataset.flowChoice),
-          Number(b.dataset.flowGeneration)
-        ).then(paintAll);
+    if (b.dataset.flowChoice !== undefined && game === "ayah-defense") {
+      void answer(
+        Number(b.dataset.flowChoice),
+        Number(b.dataset.flowGeneration)
+      ).then(paintAll);
     }
     if (e.detail === 0 && b.dataset.flowControl)
       engine.dispatch({ type: b.dataset.flowControl });
@@ -1322,6 +1593,7 @@ export async function mountAdventure(
       engine.dispatch({ type: "slide", active: !currentFrame().slide });
     if (b.hasAttribute("data-flow-ready")) {
       readyRecall = true;
+      if (game === "surah-rush") installRushChallenge();
       paintRibbon();
     }
     if (b.hasAttribute("data-defense-shop-view")) {
@@ -1515,13 +1787,12 @@ export async function mountAdventure(
           ["Space", "ShiftLeft", "ShiftRight"].includes(key))
       )
         return;
-      if (/^(?:Digit|Numpad)[1-3]$/.test(key)) {
+      if (game === "ayah-defense" && /^(?:Digit|Numpad)[1-3]$/.test(key)) {
         if (heldAnswers.has(key)) return;
         heldAnswers.add(key);
         e.preventDefault();
         const index = Number(key.at(-1)) - 1;
         if (game === "ayah-defense") void answer(index).then(paintAll);
-        else engine.dispatch({ type: "route", index });
         return;
       }
       const command = {
@@ -1530,7 +1801,8 @@ export async function mountAdventure(
         ArrowRight: ["move", 1],
         KeyD: ["move", 1],
         Space: ["jump"],
-        ArrowDown: ["slide"],
+        ArrowUp: ["jump"],
+        ArrowDown: ["drop"],
         KeyS: ["slide"],
         ShiftLeft: ["dash"],
         ShiftRight: ["dash"],
@@ -1611,19 +1883,30 @@ export async function mountAdventure(
       },
       { signal: abort.signal }
     );
-  const timer = setInterval(async () => {
-    if (!alive() || !region || freeReference(region.bundle.key)) return;
+  async function revalidateAccess() {
+    const observedRegion = region,
+      observedEpoch = epoch;
+    if (!alive() || !observedRegion || freeReference(observedRegion.bundle.key))
+      return;
     try {
-      const current = await loadBundle(region.bundle.key, client);
-      if (!alive()) return;
+      const current = await loadBundle(observedRegion.bundle.key, client);
+      const currentPin = await fingerprints(current);
+      if (!alive() || region !== observedRegion || epoch !== observedEpoch)
+        return;
       if (
-        JSON.stringify(await fingerprints(current)) !==
-        JSON.stringify(region.fingerprint)
+        JSON.stringify(currentPin) !==
+        JSON.stringify(observedRegion.fingerprint)
       )
         invalidate();
     } catch {
-      if (alive()) invalidate();
+      // A newly loaded source is independently authorized. A stale network result
+      // must not be compared to it; authoritative denial events still revoke all private content.
+      if (alive() && region === observedRegion && epoch === observedEpoch)
+        invalidate();
     }
+  }
+  const timer = setInterval(() => {
+    void revalidateAccess();
   }, 60000);
   function dispose() {
     if (disposed) return;
@@ -1638,6 +1921,8 @@ export async function mountAdventure(
     audio.dispose();
     audioLease?.revoke();
     studio?.dispose();
+    rushReplay?.dispose();
+    rushSigns.clear();
     delete root.__ayahRestartChallenge;
     region = null;
     choices = [];
@@ -1648,6 +1933,7 @@ export async function mountAdventure(
   function wake() {
     if (!raf && alive()) {
       last = 0;
+      lastPaintTime = 0;
       raf = requestFrame(loop);
     }
   }
@@ -1657,12 +1943,19 @@ export async function mountAdventure(
       if (!disposed) dispose();
       return;
     }
+    if (t < lastPaintTime) lastPaintTime = 0;
     const dt = last ? (t - last) / 1000 : 0;
     last = t;
     if (dt > 0.5) {
       background();
     } else engine.dispatch({ type: "tick", dt });
-    paint();
+    if (
+      game !== "surah-rush" ||
+      t - lastPaintTime >= (frameScheduler?.renderIntervalMs || 33)
+    ) {
+      paint();
+      lastPaintTime = t;
+    }
     if (currentFrame().status === "playing") raf = requestFrame(loop);
   }
   buildEngine();
@@ -1680,6 +1973,7 @@ export async function mountAdventure(
       focusGameplay(field, { force: true });
     },
     pause: background,
+    revalidateAccess,
     resume: () => dispatch({ type: "resume" }),
     getSnapshot: () => ({
       game,

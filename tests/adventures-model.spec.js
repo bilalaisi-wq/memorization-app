@@ -1,3 +1,4 @@
+import { crossRush } from "./rush3-helper.js";
 import { legalPositions } from "../src/revision/adventures/defense-maps.js";
 import { test, expect } from "@playwright/test";
 import {
@@ -77,12 +78,13 @@ test("six distinct earned towers retain damage, support, upgrades and lifecycle"
   g.dispose();
   expect(g.getSnapshot().status).toBe("disposed");
 });
-test("surah rush has acceleration, coyote/buffer, springs, safe junctions, wrong recovery and actual final crossing", () => {
+test("surah rush retains acceleration, jumping, dash, physical route commitment and recoverable traversal", () => {
   const events = [],
-    g = createSurahRush({ onEvent: (e) => events.push(e) });
+    g = createSurahRush({ seed: 1, onEvent: (e) => events.push(e) });
+  g.dispatch({ type: "challenge", id: "1:1:1-4", count: 3 });
   g.start();
   g.dispatch({ type: "move", direction: 1 });
-  for (let i = 0; i < 20; i++) g.dispatch({ type: "tick", dt: 0.05 });
+  for (let i = 0; i < 12; i++) g.dispatch({ type: "tick", dt: 0.05 });
   expect(g.getSnapshot().vx).toBeGreaterThan(0);
   g.dispatch({ type: "jump" });
   g.dispatch({ type: "tick", dt: 0.03 });
@@ -91,29 +93,22 @@ test("surah rush has acceleration, coyote/buffer, springs, safe junctions, wrong
   expect(g.getSnapshot().dash).toBeGreaterThan(0);
   g.dispatch({ type: "slide", active: true });
   expect(g.getSnapshot().slide).toBe(true);
-  for (let i = 0; i < 400; i++) {
-    g.dispatch({ type: "move", direction: 1 });
-    g.dispatch({ type: "tick", dt: 0.05 });
-  }
-  expect(g.getSnapshot().x).toBe(730);
-  expect(events.some((e) => e.type === "spring")).toBe(true);
-  g.dispatch({ type: "route", index: 1 });
-  g.dispatch({ type: "tick", dt: 0.02 });
+  g.dispatch({ type: "slide", active: false });
+  crossRush(g, 1, { until: (s) => s.committed });
   expect(
     events.some((e) => e.type === "route-committed" && e.choice === 1)
   ).toBe(true);
   g.dispatch({ type: "wrong" });
-  expect(g.getSnapshot().x).toBe(620);
+  expect(g.getSnapshot().detour).toBe(true);
+  crossRush(g, 2, { until: (s) => !s.detour });
+  crossRush(g, 2, { until: (s) => s.committed });
   g.dispatch({ type: "correct", index: 2 });
   g.dispatch({ type: "final" });
-  for (let i = 0; i < 800 && g.getSnapshot().status !== "won"; i++) {
-    g.dispatch({ type: "move", direction: 1 });
-    g.dispatch({ type: "tick", dt: 0.05 });
-  }
-  expect(g.getSnapshot().status).toBe("won");
-  expect(terrain(380)).toBeNull();
+  crossRush(g, 2, { until: (s) => s.status === "won" });
   expect(g.getSnapshot().flow).toBe(1);
+  expect(Number.isFinite(terrain(380))).toBe(true);
 });
+
 test("additive adventure storage keeps malformed bytes and old arcade restart keeps earlier checkpoints", () => {
   const map = new Map(),
     db = {
@@ -228,14 +223,15 @@ test("balanced candidate blocks, independent motor profiles and recoverable malf
     relaxed.getSnapshot().enemies[0].d
   );
   const rush = createSurahRush({ motor: "normal" });
+  rush.dispatch({ type: "challenge", id: "1:1:1-4", count: 3 });
   rush.start();
   rush.dispatch({ type: "move", direction: 1 });
   for (let i = 0; i < 100; i++) rush.dispatch({ type: "tick", dt: 0.03 });
-  expect(rush.getSnapshot().x).toBeCloseTo(185);
+  expect(rush.getSnapshot().x).toBeGreaterThan(265);
   const errors = rush.getSnapshot().motorErrors;
   rush.dispatch({ type: "slide", active: true });
   for (let i = 0; i < 25; i++) rush.dispatch({ type: "tick", dt: 0.03 });
-  expect(rush.getSnapshot().x).toBeGreaterThan(265);
+  expect(rush.getSnapshot().slide).toBe(true);
   expect(rush.getSnapshot().motorErrors).toBe(errors);
 });
 test("supplied source candidates stay request-local and do not contaminate the cached free-source pool", () => {

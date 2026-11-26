@@ -86,64 +86,38 @@ test("Ayah Defense earns and places real towers, fights waves and keeps source c
     .locator(".flow-adventure")
     .screenshot({ path: "docs/gameplay-overhaul/defense-desktop.png" });
 });
-test("Surah Rush requires actual traversal, number route choice, no Space answer submission and continues through successive ayahs", async ({
+test("Surah Rush navigation opens physical route signs and focuses real movement controls without an answer panel", async ({
   page,
 }) => {
-  test.setTimeout(120000);
   await open(page, "surah-rush", { last: 2 });
-  await page.keyboard.press("Space");
-  await page.clock.runFor(150);
-  await expect(page.locator(".flow-battlefield")).toHaveAttribute(
-    "data-covered",
-    "0"
+  await expect(page.locator("[data-flow-choice]")).toHaveCount(0);
+  await expect(page.locator("[data-rush-sign]")).toHaveCount(2);
+  const x = Number(
+    await page.locator(".flow-battlefield").getAttribute("data-player-x")
   );
-  for (const ref of ["1:1", "1:2"]) {
-    await choose(page, ref);
-    await page.locator(".flow-battlefield").focus();
-    await page.keyboard.down("ArrowRight");
-    for (let n = 0; n < 250; n++) {
-      await page.clock.runFor(100);
-      const covered = Number(
-        await page.locator(".flow-battlefield").getAttribute("data-covered")
-      );
-      if (covered >= Number(ref.split(":")[1])) break;
-    }
-    await page.keyboard.up("ArrowRight");
-    await expect(page.locator(".flow-battlefield")).toHaveAttribute(
-      "data-covered",
-      ref.split(":")[1]
-    );
-    if (ref === "1:1") {
-      await page.keyboard.down("ArrowRight");
-      for (let n = 0; n < 100; n++) {
-        await page.clock.runFor(100);
-        if (await page.locator("[data-flow-choice]").count()) break;
-      }
-      await page.keyboard.up("ArrowRight");
-    }
-  }
   await page.keyboard.down("ArrowRight");
-  await page.clock.runFor(10000);
+  await page.clock.runFor(400);
   await page.keyboard.up("ArrowRight");
-  await expect(page.locator(".flow-ribbon")).toContainText("Passage complete");
-  await page
-    .locator(".flow-adventure")
-    .screenshot({ path: "docs/gameplay-overhaul/rush-desktop.png" });
-  await page.locator('[data-flow-end="replay"]').click();
+  expect(
+    Number(
+      await page.locator(".flow-battlefield").getAttribute("data-player-x")
+    )
+  ).toBeGreaterThan(x);
   await expect(page.locator(".flow-battlefield")).toHaveAttribute(
     "data-covered",
     "0"
   );
-  await expect(page.locator("[data-flow-start]")).toBeVisible();
-  const replayed = await page.evaluate(
-    () =>
-      Object.values(
-        JSON.parse(localStorage.getItem("ayah-flow-adventures-v1")).runs
-      )[0]
+  await page.keyboard.press("Digit1");
+  await expect(page.locator(".flow-battlefield")).toHaveAttribute(
+    "data-covered",
+    "0"
   );
-  expect(replayed.history.at(-1).completed).toBe(2);
-  expect(replayed.history.at(-1).finished).toBe(true);
+  await page.locator("[data-game-command=settings]").click();
+  await expect(page.locator(".gameplay-settings")).toBeVisible();
+  await page.locator(".gameplay-settings [data-game-command=resume]").click();
+  await expect(page.locator(".flow-battlefield")).toBeFocused();
 });
+
 test("new game pause applies independent settings to the current challenge, restores focus and preserves earlier ayah coverage", async ({
   page,
 }) => {
@@ -234,7 +208,11 @@ for (const game of ["ayah-defense", "surah-rush"])
         (await page.locator("[data-flow-runner]").boundingBox()).width
       ).toBeGreaterThan(14);
     const arabic = await page
-      .locator(".flow-choices .arabic")
+      .locator(
+        game === "surah-rush"
+          ? ".rush-route-sign .arabic"
+          : ".flow-choices .arabic"
+      )
       .first()
       .evaluate((n) => Number.parseFloat(getComputedStyle(n).fontSize));
     expect(arabic).toBeGreaterThanOrEqual(24);
